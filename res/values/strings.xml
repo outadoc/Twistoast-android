@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Twistoast</string>
+    <string name="action_settings">Settings</string>
+    <string name="lbl_line">Ligne</string>
+    <string name="lbl_direction">Direction</string>
+    <string name="lbl_stop">Arrêt</string>
+    <string name="title_activity_add_stop">Ajouter un arrêt</string>
+    <string name="action_add">Ajouter un arrêt</string>
+    <string name="action_ok">Ajouter</string>
+    <string name="action_delete">Supprimer</string>
+    <string name="action_refresh">Rafraîchir</string>
+    <string name="loading_data">Chargement&#8230;</string>
+    <string name="loading_error">Erreur de chargement</string>
+    <string name="select_items">Sélectionnez des éléments</string>
+    <string name="one_stop_selected">Un arrêt sélectionné</string>
+    <string name="multi_stops_selected">%1$d arrêts sélectionnés</string>
+    <string name="confirm_delete_title">Suppression des arrêts</string>
+    <string name="confirm_delete_msg_multi">Voulez-vous vraiment supprimer %1$d arrêts ?</string>
+    <string name="confirm_delete_msg_single">Voulez-vous vraiment supprimer cet arrêt ?</string>
+    <string name="confirm_yes">Oui</string>
+    <string name="confirm_no">Non</string>
+    <string name="confirm_delete_success">Succès de la suppression</string>
+
+</resources>
