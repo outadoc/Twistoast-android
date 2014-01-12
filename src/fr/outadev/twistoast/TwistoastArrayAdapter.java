@@ -1,6 +1,5 @@
 package fr.outadev.twistoast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONException;
@@ -17,12 +16,10 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.SparseBooleanArray;
 import android.util.TypedValue;
-import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.TextView;
