@@ -6,7 +6,7 @@
 
     <uses-sdk
         android:minSdkVersion="11"
-        android:targetSdkVersion="18" />
+        android:targetSdkVersion="19" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
 
@@ -35,9 +35,11 @@
                 android:value="fr.outadev.twistoast.MainActivity" />
         </activity>
         
-        <service
-            android:name="fr.outadev.twistoast.PebbleMessageListenerService"
-            android:exported="false"/>
+        <receiver android:name="fr.outadev.twistoast.TwistoastPebbleReceiver" >
+			<intent-filter>
+		    	<action android:name="com.getpebble.action.app.RECEIVE" />
+		    </intent-filter>
+		</receiver>
         
     </application>
 

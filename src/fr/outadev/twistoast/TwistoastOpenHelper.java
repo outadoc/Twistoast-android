@@ -8,9 +8,10 @@ public class TwistoastOpenHelper extends SQLiteOpenHelper {
 
 	private static final int DATABASE_VERSION = 1;
 	private static final String DATABASE_NAME = "twistoast";
-	private static final String LINES_TABLE_CREATE = "CREATE TABLE lines(line_id INTEGER PRIMARY KEY, line_timeoID TEXT UNIQUE NOT NULL, line_name TEXT);";
-	private static final String STOPS_TABLE_CREATE = "CREATE TABLE stops(stop_id INTEGER PRIMARY KEY, stop_timeoID TEXT NOT NULL, stop_name TEXT, line_id INTEGER NOT NULL, direction_id INTEGER NOT NULL);";
-	private static final String DIRECTIONS_TABLE_CREATE = "CREATE TABLE directions(direction_id INTEGER PRIMARY KEY, direction_timeoID TEXT NOT NULL, direction_name TEXT, line_id INTEGER NOT NULL);";
+	
+	private static final String LINES_TABLE_CREATE = "CREATE TABLE twi_line(line_id TEXT PRIMARY KEY, line_name TEXT);";
+	private static final String DIRECTIONS_TABLE_CREATE = "CREATE TABLE twi_direction(dir_id TEXT, line_id TEXT, dir_name TEXT, PRIMARY KEY(dir_id, line_id));";
+	private static final String STOPS_TABLE_CREATE = "CREATE TABLE twi_stop(stop_id TEXT, line_id TEXT, dir_id TEXT, stop_name TEXT, PRIMARY KEY(stop_id, line_id, dir_id));";
 
 	TwistoastOpenHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -19,8 +20,8 @@ public class TwistoastOpenHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(LINES_TABLE_CREATE);
-		db.execSQL(STOPS_TABLE_CREATE);
 		db.execSQL(DIRECTIONS_TABLE_CREATE);
+		db.execSQL(STOPS_TABLE_CREATE);
 	}
 
 	@Override

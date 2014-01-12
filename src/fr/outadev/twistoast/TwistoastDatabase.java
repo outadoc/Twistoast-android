@@ -8,6 +8,7 @@ import fr.outadev.twistoast.timeo.TimeoScheduleObject;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 
@@ -25,68 +26,21 @@ public class TwistoastDatabase {
 			addLineToDatabase(line);
 			addDirectionToDatabase(line, direction);
 
-			// select all lines that have this timeo id
-			Cursor linesCursor = db
-					.rawQuery(
-							"SELECT line_id FROM lines WHERE UPPER(line_timeoID)=UPPER(?)",
-							new String[] { line.getId() });
-			linesCursor.moveToFirst();
+			ContentValues values = new ContentValues();
 
-			// select all the directions that have this timeo id and correspond
-			// to this line
-			Cursor directionsCursor = db
-					.rawQuery(
-							"SELECT direction_id FROM directions WHERE UPPER(direction_timeoID)=UPPER(?) AND UPPER(line_id)=UPPER(?)",
-							new String[] {
-									direction.getId(),
-									linesCursor.getString(linesCursor
-											.getColumnIndex("line_id")) });
-			directionsCursor.moveToFirst();
+			values.put("stop_id", stop.getId());
+			values.put("line_id", line.getId());
+			values.put("dir_id", direction.getId());
+			values.put("stop_name", stop.getName());
 
-			// and select all the stops that have this timeo id, this line and
-			// this direction
-			Cursor stopsCursor = db
-					.rawQuery(
-							"SELECT stop_id FROM stops WHERE UPPER(stop_timeoID)=UPPER(?) AND UPPER(line_id)=UPPER(?) AND UPPER(direction_id)=UPPER(?)",
-							new String[] {
-									stop.getId(),
-									linesCursor.getString(linesCursor
-											.getColumnIndex("line_id")),
-									directionsCursor.getString(directionsCursor
-											.getColumnIndex("direction_id")) });
-			stopsCursor.moveToFirst();
-
-			// if the stop we're trying to add doesn't exist yet
-			if(stopsCursor.getCount() == 0) {
-				ContentValues values = new ContentValues();
-
-				values.put("stop_timeoID", stop.getId());
-				values.put("stop_name", stop.getName());
-				values.put("line_id", linesCursor.getString(linesCursor
-						.getColumnIndex("line_id")));
-				values.put("direction_id", directionsCursor
-						.getString(directionsCursor
-								.getColumnIndex("direction_id")));
-
+			try {
 				// insert the stop with the specified columns
-				db.insert("stops", null, values);
-
-				// close everything
-				linesCursor.close();
-				directionsCursor.close();
-				stopsCursor.close();
-
-				db.close();
-				return DBStatus.SUCCESS;
-			} else {
-				// if the stop already exists, close everything anyway
-				linesCursor.close();
-				directionsCursor.close();
-				stopsCursor.close();
-
-				db.close();
+				db.insertOrThrow("twi_stop", null, values);
+			} catch(SQLiteConstraintException e) {
 				return DBStatus.ERROR_DUPLICATE;
 			}
+			
+			return DBStatus.SUCCESS;
 		} else {
 			// something is null
 			return DBStatus.ERROR_NOT_ENOUGH_PARAMETERS;
@@ -96,25 +50,12 @@ public class TwistoastDatabase {
 	private void addLineToDatabase(TimeoIDNameObject line) {
 		if(line != null) {
 			SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
+			ContentValues values = new ContentValues();
 
-			// check if the line already exists
-			Cursor linesCursor = db
-					.rawQuery(
-							"SELECT line_id FROM lines WHERE UPPER(line_timeoID)=UPPER(?)",
-							new String[] { line.getId() });
-			linesCursor.moveToFirst();
+			values.put("line_id", line.getId());
+			values.put("line_name", line.getName());
 
-			// if it doesn't, add it
-			if(linesCursor.getCount() == 0) {
-				ContentValues values = new ContentValues();
-
-				values.put("line_timeoID", line.getId());
-				values.put("line_name", line.getName());
-
-				db.insert("lines", null, values);
-			}
-
-			linesCursor.close();
+			db.insert("twi_line", null, values);
 		}
 	}
 
@@ -122,38 +63,13 @@ public class TwistoastDatabase {
 			TimeoIDNameObject direction) {
 		if(line != null && direction != null) {
 			SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
+			ContentValues values = new ContentValues();
 
-			// get the line (it should exist)
-			Cursor linesCursor = db
-					.rawQuery(
-							"SELECT line_id FROM lines WHERE UPPER(line_timeoID)=UPPER(?)",
-							new String[] { line.getId() });
-			linesCursor.moveToFirst();
+			values.put("dir_id", direction.getId());
+			values.put("line_id", line.getId());
+			values.put("dir_name", direction.getName());
 
-			// check if the direction already exists
-			Cursor directionsCursor = db
-					.rawQuery(
-							"SELECT direction_id FROM directions WHERE UPPER(direction_timeoID)=UPPER(?) AND UPPER(line_id)=UPPER(?)",
-							new String[] {
-									direction.getId(),
-									linesCursor.getString(linesCursor
-											.getColumnIndex("line_id")) });
-			directionsCursor.moveToFirst();
-
-			// if it doesn't, add it
-			if(directionsCursor.getCount() == 0) {
-				ContentValues values = new ContentValues();
-
-				values.put("direction_timeoID", direction.getId());
-				values.put("direction_name", direction.getName());
-				values.put("line_id", linesCursor.getString(linesCursor
-						.getColumnIndex("line_id")));
-
-				db.insert("directions", null, values);
-			}
-
-			linesCursor.close();
-			directionsCursor.close();
+			db.insert("twi_direction", null, values);
 		}
 	}
 
@@ -162,31 +78,30 @@ public class TwistoastDatabase {
 
 		Cursor results = db.rawQuery(
 			"SELECT "
-				+ "lines.line_name, "
-				+ "lines.line_timeoID, "
-				+ "directions.direction_name, "
-				+ "directions.direction_timeoID, "
-				+ "stops.stop_id, "
-				+ "stops.stop_name, "
-				+ "stops.stop_timeoID "
-				+ "FROM stops "
-				+ "JOIN directions USING(direction_id, line_id) "
-				+ "JOIN lines USING(line_id) "
-				+ "ORDER BY CAST(lines.line_timeoID AS INTEGER), stops.stop_name, directions.direction_name",
+				+ "stop.stop_id, "
+				+ "stop.stop_name, "
+				+ "line.line_id, "
+				+ "line.line_name, "
+				+ "dir.dir_id, "
+				+ "dir.dir_name "
+				+ "FROM twi_stop stop "
+				+ "JOIN twi_direction dir USING(dir_id, line_id) "
+				+ "JOIN twi_line line USING(line_id) "
+				+ "ORDER BY line.line_id, stop.stop_name, dir.dir_name",
 			null);
 
 		ArrayList<TimeoScheduleObject> stopsList = new ArrayList<TimeoScheduleObject>();
 
 		while(results.moveToNext()) {
 			stopsList.add(new TimeoScheduleObject(new TimeoIDNameObject(results
-					.getString(results.getColumnIndex("line_timeoID")), results
+					.getString(results.getColumnIndex("line_id")), results
 					.getString(results.getColumnIndex("line_name"))),
 					new TimeoIDNameObject(results.getString(results
-							.getColumnIndex("direction_timeoID")),
+							.getColumnIndex("dir_id")),
 							results.getString(results
-									.getColumnIndex("direction_name"))),
+									.getColumnIndex("dir_name"))),
 					new TimeoIDNameObject(results.getString(results
-							.getColumnIndex("stop_timeoID")), results
+							.getColumnIndex("stop_id")), results
 							.getString(results.getColumnIndex("stop_name"))),
 					null));
 		}
@@ -199,20 +114,13 @@ public class TwistoastDatabase {
 
 	public void deleteStop(TimeoScheduleObject stop) {
 		SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
-
-		Cursor results = db
-				.rawQuery(
-						"SELECT stops.stop_id FROM stops NATURAL JOIN directions NATURAL JOIN lines WHERE stop_timeoID=? AND direction_timeoID=? AND line_timeoID=?",
-						new String[] { stop.getStop().getId(),
-								stop.getDirection().getId(),
-								stop.getLine().getId() });
-
-		while(results.moveToNext()) {
-			String id = results.getString(results.getColumnIndex("stop_id"));
-			db.delete("stops", "stop_id=?", new String[] { id });
-		}
-
-		results.close();
+		
+		db.delete("twi_stop", "stop_id=? AND line_id=? AND dir_id=?", new String[] { 
+				stop.getStop().getId(),
+				stop.getLine().getId(),
+				stop.getDirection().getId()
+		});
+		
 		db.close();
 	}
 

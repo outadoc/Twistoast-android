@@ -17,8 +17,8 @@ public final class R {
          screen margins) for sw720dp devices (e.g. 10" tablets) in landscape here.
     
          */
-        public static final int activity_horizontal_margin=0x7f040000;
-        public static final int activity_vertical_margin=0x7f040001;
+        public static final int activity_horizontal_margin=0x7f050000;
+        public static final int activity_vertical_margin=0x7f050001;
     }
     public static final class drawable {
         public static final int ic_action_new=0x7f020000;
@@ -50,7 +50,8 @@ public final class R {
     public static final class layout {
         public static final int activity_add_stop=0x7f030000;
         public static final int activity_main=0x7f030001;
-        public static final int schedule_row=0x7f030002;
+        public static final int main=0x7f030002;
+        public static final int schedule_row=0x7f030003;
     }
     public static final class menu {
         public static final int add_stop=0x7f070000;
@@ -58,27 +59,27 @@ public final class R {
         public static final int main_edit=0x7f070002;
     }
     public static final class string {
-        public static final int action_add=0x7f050006;
-        public static final int action_delete=0x7f050008;
-        public static final int action_ok=0x7f050007;
-        public static final int action_refresh=0x7f050009;
-        public static final int action_settings=0x7f050001;
-        public static final int app_name=0x7f050000;
-        public static final int confirm_delete_msg_multi=0x7f050010;
-        public static final int confirm_delete_msg_single=0x7f050011;
-        public static final int confirm_delete_success=0x7f050014;
-        public static final int confirm_delete_title=0x7f05000f;
-        public static final int confirm_no=0x7f050013;
-        public static final int confirm_yes=0x7f050012;
-        public static final int lbl_direction=0x7f050003;
-        public static final int lbl_line=0x7f050002;
-        public static final int lbl_stop=0x7f050004;
-        public static final int loading_data=0x7f05000a;
-        public static final int loading_error=0x7f05000b;
-        public static final int multi_stops_selected=0x7f05000e;
-        public static final int one_stop_selected=0x7f05000d;
-        public static final int select_items=0x7f05000c;
-        public static final int title_activity_add_stop=0x7f050005;
+        public static final int action_add=0x7f040006;
+        public static final int action_delete=0x7f040008;
+        public static final int action_ok=0x7f040007;
+        public static final int action_refresh=0x7f040009;
+        public static final int action_settings=0x7f040001;
+        public static final int app_name=0x7f040000;
+        public static final int confirm_delete_msg_multi=0x7f040010;
+        public static final int confirm_delete_msg_single=0x7f040011;
+        public static final int confirm_delete_success=0x7f040014;
+        public static final int confirm_delete_title=0x7f04000f;
+        public static final int confirm_no=0x7f040013;
+        public static final int confirm_yes=0x7f040012;
+        public static final int lbl_direction=0x7f040003;
+        public static final int lbl_line=0x7f040002;
+        public static final int lbl_stop=0x7f040004;
+        public static final int loading_data=0x7f04000a;
+        public static final int loading_error=0x7f04000b;
+        public static final int multi_stops_selected=0x7f04000e;
+        public static final int one_stop_selected=0x7f04000d;
+        public static final int select_items=0x7f04000c;
+        public static final int title_activity_add_stop=0x7f040005;
     }
     public static final class style {
         /** 

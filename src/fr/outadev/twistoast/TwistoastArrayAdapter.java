@@ -1,5 +1,6 @@
 package fr.outadev.twistoast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONException;
@@ -14,10 +15,14 @@ import fr.outadev.twistoast.timeo.TimeoRequestHandler.EndPoints;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.SparseBooleanArray;
 import android.util.TypedValue;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -36,7 +41,7 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(final int position, View convertView, ViewGroup parent) {
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -93,6 +98,24 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 			lbl_schedule_2.setText("- "
 					+ objects.get(position).getSchedule()[1]);
 		}
+		
+		view_line_id.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				
+				MainActivity mainActivity = (MainActivity) TwistoastArrayAdapter.this.context;
+				SparseBooleanArray checked = mainActivity.listView.getCheckedItemPositions();
+				
+				if(checked.get(position)) {
+					mainActivity.listView.setItemChecked(position, false);
+				} else {
+					mainActivity.listView.setItemChecked(position, true);
+				}
+			}
+					
+		});
 
 		return rowView;
 	}
