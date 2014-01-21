@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import fr.outadev.twistoast.timeo.TimeoScheduleObject;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -14,9 +15,14 @@ import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 public class MainActivity extends Activity implements MultiChoiceModeListener {
 
@@ -24,6 +30,26 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		// Now find the PullToRefreshLayout to setup
+	    mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.ptr_layout);
+	    
+	    // Now setup the PullToRefreshLayout
+	    ActionBarPullToRefresh.from(this)
+	            // Mark All Children as pullable
+	            .allChildrenArePullable()
+	            // Set the OnRefreshListener
+	            .listener(new OnRefreshListener() {
+
+					@Override
+					public void onRefreshStarted(View view) {
+						// TODO Auto-generated method stub
+						refreshListFromDB();
+					}
+	            	
+	            })
+	            // Finally commit the setup to our PullToRefreshLayout
+	            .setup(mPullToRefreshLayout);
 
 		listView = (ListView) findViewById(R.id.list);
 		databaseHandler = new TwistoastDatabase(this);
@@ -80,6 +106,30 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 		ArrayList<TimeoScheduleObject> stopsList = databaseHandler.getAllStops();
 		listAdapter = new TwistoastArrayAdapter(this, android.R.layout.simple_list_item_1, stopsList);
 		listView.setAdapter(listAdapter);
+		
+		/**
+         * Simulate Refresh with 4 seconds sleep
+         */
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                super.onPostExecute(result);
+
+                // Notify PullToRefreshLayout that the refresh has finished
+                mPullToRefreshLayout.setRefreshComplete();
+            }
+        }.execute();
 	}
 
 	@Override
@@ -178,6 +228,7 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 	}
 
 	public ListView listView;
+	private PullToRefreshLayout mPullToRefreshLayout;
 
 	private TwistoastDatabase databaseHandler;
 	private TwistoastArrayAdapter listAdapter;
