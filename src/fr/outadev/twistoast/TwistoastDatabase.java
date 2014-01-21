@@ -87,7 +87,7 @@ public class TwistoastDatabase {
 				+ "FROM twi_stop stop "
 				+ "JOIN twi_direction dir USING(dir_id, line_id) "
 				+ "JOIN twi_line line USING(line_id) "
-				+ "ORDER BY line.line_id, stop.stop_name, dir.dir_name",
+				+ "ORDER BY CAST(line.line_id AS INTEGER), stop.stop_name, dir.dir_name",
 			null);
 
 		ArrayList<TimeoScheduleObject> stopsList = new ArrayList<TimeoScheduleObject>();
