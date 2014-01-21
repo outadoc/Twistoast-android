@@ -76,7 +76,7 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 		lbl_stop.setText(objects.get(position).getStop().getName());
 
 		// direction
-		lbl_direction.setText(objects.get(position).getDirection().getName());
+		lbl_direction.setText("→ " + objects.get(position).getDirection().getName());
 
 		// schedule
 		if(objects.get(position).getSchedule() != null 
