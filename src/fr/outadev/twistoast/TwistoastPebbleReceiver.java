@@ -3,13 +3,20 @@ package fr.outadev.twistoast;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import org.json.JSONException;
+
 import android.content.Context;
+import android.os.AsyncTask;
 
 import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.PebbleKit.PebbleDataReceiver;
 import com.getpebble.android.kit.util.PebbleDictionary;
 
+import fr.outadev.twistoast.timeo.TimeoRequestHandler;
+import fr.outadev.twistoast.timeo.TimeoRequestObject;
+import fr.outadev.twistoast.timeo.TimeoResultParser;
 import fr.outadev.twistoast.timeo.TimeoScheduleObject;
+import fr.outadev.twistoast.timeo.TimeoRequestHandler.EndPoints;
 
 public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 	
@@ -41,7 +48,7 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 	}
 
 	@Override
-	public void receiveData(Context context, int transactionId, PebbleDictionary data) {
+	public void receiveData(final Context context, final int transactionId, PebbleDictionary data) {
 		if((data.getInteger(TWISTOAST_MESSAGE_TYPE) == BUS_STOP_REQUEST)
 				&& PebbleKit.areAppMessagesSupported(context)) {
 			short busIndex = (data.getInteger(BUS_INDEX)).shortValue();
@@ -54,6 +61,55 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 				PebbleKit.sendNackToPebble(context, transactionId);
 			} else {
 				PebbleKit.sendAckToPebble(context, transactionId);
+				
+				TimeoScheduleObject schedule = stopsList.get(busIndex);
+				
+				//fetch schedule
+				new AsyncTask<TimeoScheduleObject, Void, String>() {
+					
+		            @Override
+		            protected String doInBackground(TimeoScheduleObject... params) {
+		            	this.object = params[0];
+
+		    			String url = TimeoRequestHandler.getFullUrlFromEndPoint(
+		    					EndPoints.SCHEDULE, new TimeoRequestObject(object.getLine()
+		    							.getId(), object.getDirection().getId(), object
+		    							.getStop().getId()));
+
+		    			return TimeoRequestHandler.requestWebPage(url);
+		            }
+
+		            @Override
+		    		protected void onPostExecute(String result) {
+		    			try {
+		    				try {
+		    					// parse the schedule and set in for our
+		    					// TimeoScheduleObject, then refresh
+		    					String[] scheduleArray = TimeoResultParser
+		    							.parseSchedule(result);
+
+		    					if(scheduleArray != null) {
+		    						object.setSchedule(scheduleArray);
+		    					} else {
+		    						object.setSchedule(new String[] { context
+		    								.getResources().getString(
+		    										R.string.loading_error) });
+		    					}
+		    				} catch(ClassCastException e) {
+		    					PebbleKit.sendNackToPebble(context, transactionId);
+		    				}
+		    			} catch(JSONException e) {
+		    				object.setSchedule(new String[] { context.getResources()
+		    						.getString(R.string.loading_error) });
+		    			} catch(ClassCastException e) {
+		    				object.setSchedule(new String[] { context.getResources()
+		    						.getString(R.string.loading_error) });
+		    			}
+		    		}
+		            
+		            TimeoScheduleObject object;
+		            
+		        }.execute(schedule);
 				
 				response.addInt8(TWISTOAST_MESSAGE_TYPE, BUS_STOP_DATA_RESPONSE);
 				response.addInt16(BUS_INDEX, busIndex);
