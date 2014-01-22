@@ -11,6 +11,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.util.Log;
+
 public abstract class TimeoRequestHandler {
 
 	public static String requestWebPage(String url) {
@@ -30,40 +32,55 @@ public abstract class TimeoRequestHandler {
 	}
 
 	public static String getFullUrlFromEndPoint(EndPoints endPoint,
-			TimeoRequestObject data) {
-		if(endPoint == EndPoints.LINES || endPoint == EndPoints.DIRECTIONS
-				|| endPoint == EndPoints.STOPS
-				|| endPoint == EndPoints.SCHEDULE) {
-			String url = baseUrl;
-			String charset = "UTF-8";
+			TimeoRequestObject[] data) {
+		if(data.length > 0) {
+			if(endPoint == EndPoints.LINES 
+					|| endPoint == EndPoints.DIRECTIONS
+					|| endPoint == EndPoints.STOPS
+					|| endPoint == EndPoints.SCHEDULE
+					|| endPoint == EndPoints.FULL_SCHEDULE) {
+				
+				String url = baseUrl;
+				String charset = "UTF-8";
 
-			try {
-				if(endPoint == EndPoints.LINES) {
-					url += "?func=getLines";
-				} else if(endPoint == EndPoints.DIRECTIONS
-						&& data.getLine() != null) {
-					url += "?func=getDirections&line="
-							+ URLEncoder.encode(data.getLine(), charset);
-				} else if(endPoint == EndPoints.STOPS && data.getLine() != null
-						&& data.getDirection() != null) {
-					url += "?func=getStops&line="
-							+ URLEncoder.encode(data.getLine(), charset)
-							+ "&direction="
-							+ URLEncoder.encode(data.getDirection(), charset);
-				} else if(endPoint == EndPoints.SCHEDULE
-						&& data.getLine() != null
-						&& data.getDirection() != null
-						&& data.getStop() != null) {
-					url += "?func=getSchedule&line="
-							+ URLEncoder.encode(data.getLine(), charset)
-							+ "&direction="
-							+ URLEncoder.encode(data.getDirection(), charset)
-							+ "&stop="
-							+ URLEncoder.encode(data.getStop(), charset);
+				try {
+					if(endPoint == EndPoints.LINES) {
+						url += "?func=getLines";
+					} else if(endPoint == EndPoints.DIRECTIONS
+							&& data[0].getLine() != null) {
+						url += "?func=getDirections&line="
+								+ URLEncoder.encode(data[0].getLine(), charset);
+					} else if(endPoint == EndPoints.STOPS && data[0].getLine() != null
+							&& data[0].getDirection() != null) {
+						url += "?func=getStops&line="
+								+ URLEncoder.encode(data[0].getLine(), charset)
+								+ "&direction="
+								+ URLEncoder.encode(data[0].getDirection(), charset);
+					} else if(endPoint == EndPoints.SCHEDULE
+							&& data[0].getLine() != null
+							&& data[0].getDirection() != null
+							&& data[0].getStop() != null) {
+						url += "?func=getSchedule&line="
+								+ URLEncoder.encode(data[0].getLine(), charset)
+								+ "&direction="
+								+ URLEncoder.encode(data[0].getDirection(), charset)
+								+ "&stop="
+								+ URLEncoder.encode(data[0].getStop(), charset);
+					} else if(endPoint == EndPoints.FULL_SCHEDULE) {
+						String cookie = "";
+						
+						for(int i = 0; i < data.length; i++) {
+							if(i != 0) cookie += ';';
+							cookie += data[i].getStop() + '|' + data[i].getLine() + '|' + data[i].getDirection();
+						}
+						
+						url += "?func=getSchedule&data=" + URLEncoder.encode(cookie, charset);
+						Log.i("TWISTOAST", url);
+					}
+
+					return url;
+				} catch(UnsupportedEncodingException e) {
 				}
-
-				return url;
-			} catch(UnsupportedEncodingException e) {
 			}
 		}
 
@@ -80,7 +97,7 @@ public abstract class TimeoRequestHandler {
 	private final static String baseUrl = "http://apps.outadoc.fr/twisto-realtime/twisto-api.php";
 
 	public enum EndPoints {
-		LINES, DIRECTIONS, STOPS, SCHEDULE
+		LINES, DIRECTIONS, STOPS, SCHEDULE, FULL_SCHEDULE
 	}
 
 }

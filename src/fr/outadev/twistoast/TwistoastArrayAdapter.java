@@ -1,5 +1,6 @@
 package fr.outadev.twistoast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONException;
@@ -125,25 +126,27 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 
 			notifyDataSetChanged();
 		}
-
-		for(int i = 0; i < objects.size(); i++) {
-			GetTimeoDataFromAPITask task = new GetTimeoDataFromAPITask();
-			task.execute(objects.get(i));
-		}
+		
+		GetTimeoDataFromAPITask task = new GetTimeoDataFromAPITask();
+		task.execute();
 	}
 
 	private class GetTimeoDataFromAPITask extends
-			AsyncTask<TimeoScheduleObject, Void, String> {
+			AsyncTask<Void, Void, String> {
+
 		@Override
-		protected String doInBackground(TimeoScheduleObject... params) {
-			this.object = params[0];
+		protected String doInBackground(Void... params) {
+			TimeoRequestObject[] requestObj = new TimeoRequestObject[objects.size()];
+			
+			for(int i = 0; i < objects.size(); i++) {
+				requestObj[i] = new TimeoRequestObject(
+						objects.get(i).getLine().getId(),
+						objects.get(i).getDirection().getId(),
+						objects.get(i).getStop().getId());
+			}
 
-			String url = TimeoRequestHandler.getFullUrlFromEndPoint(
-					EndPoints.SCHEDULE, new TimeoRequestObject(object.getLine()
-							.getId(), object.getDirection().getId(), object
-							.getStop().getId()));
-
-			return TimeoRequestHandler.requestWebPage(url);
+			return TimeoRequestHandler.requestWebPage(TimeoRequestHandler
+					.getFullUrlFromEndPoint(EndPoints.FULL_SCHEDULE, requestObj));
 		}
 
 		@Override
@@ -152,16 +155,18 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 				try {
 					// parse the schedule and set in for our
 					// TimeoScheduleObject, then refresh
-					String[] scheduleArray = TimeoResultParser
-							.parseSchedule(result);
+					ArrayList<String[]> scheduleArray = TimeoResultParser
+							.parseMultipleSchedules(result);
 
-					if(scheduleArray != null) {
-						object.setSchedule(scheduleArray);
-						notifyDataSetChanged();
-					} else {
-						object.setSchedule(new String[] { context
-								.getResources().getString(
-										R.string.loading_error) });
+					for(int i = 0; i < scheduleArray.size(); i++) {
+						if(scheduleArray.get(i) != null) {
+							objects.get(i).setSchedule(scheduleArray.get(i));
+							notifyDataSetChanged();
+						} else {
+							objects.get(i).setSchedule(new String[] { context
+									.getResources().getString(
+											R.string.loading_error) });
+						}
 					}
 				} catch(ClassCastException e) {
 					Toast.makeText(
@@ -171,15 +176,11 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 							.show();
 				}
 			} catch(JSONException e) {
-				object.setSchedule(new String[] { context.getResources()
-						.getString(R.string.loading_error) });
+				Toast.makeText(context, R.string.loading_error, Toast.LENGTH_LONG).show();
 			} catch(ClassCastException e) {
-				object.setSchedule(new String[] { context.getResources()
-						.getString(R.string.loading_error) });
+				Toast.makeText(context, R.string.loading_error, Toast.LENGTH_LONG).show();
 			}
 		}
-
-		public TimeoScheduleObject object;
 	}
 
 	private List<TimeoScheduleObject> objects;

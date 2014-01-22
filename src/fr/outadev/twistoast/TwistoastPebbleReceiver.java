@@ -71,10 +71,13 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 		            protected String doInBackground(TimeoScheduleObject... params) {
 		            	this.object = params[0];
 
-		    			String url = TimeoRequestHandler.getFullUrlFromEndPoint(
-		    					EndPoints.SCHEDULE, new TimeoRequestObject(object.getLine()
-		    							.getId(), object.getDirection().getId(), object
-		    							.getStop().getId()));
+		            	String url = TimeoRequestHandler.getFullUrlFromEndPoint(
+		    					EndPoints.SCHEDULE, new TimeoRequestObject[]{
+		    						new TimeoRequestObject(
+		    							object.getLine().getId(), 
+		    							object.getDirection().getId(), 
+		    							object.getStop().getId()
+		    						)});
 
 		    			return TimeoRequestHandler.requestWebPage(url);
 		            }

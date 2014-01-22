@@ -33,6 +33,36 @@ public abstract class TimeoResultParser {
 
 		return null;
 	}
+	
+	public static ArrayList<String[]> parseMultipleSchedules(String source)
+			throws JSONException, ClassCastException {
+		if(source != null) {
+			JSONArray resultArray = (JSONArray) new JSONTokener(source)
+					.nextValue();
+			
+			ArrayList<String[]> dataList = new ArrayList<String[]>();
+			
+			for(int i = 0; i < resultArray.length(); i++) {
+				if(resultArray != null
+						&& resultArray.getJSONObject(i) != null
+						&& resultArray.getJSONObject(i).getJSONArray("next") != null) {
+					
+					JSONArray scheduleJSONArray = resultArray.getJSONObject(i)
+							.getJSONArray("next");
+					
+					dataList.add(i, new String[2]);
+
+					for(int j = 0; j < scheduleJSONArray.length() && j < 2; j++) {
+						dataList.get(i)[j] = scheduleJSONArray.getString(j);
+					}
+				}
+			}
+			
+			return dataList;
+		}
+
+		return null;
+	}
 
 	public static ArrayList<TimeoIDNameObject> parseList(String source)
 			throws JSONException, ClassCastException {

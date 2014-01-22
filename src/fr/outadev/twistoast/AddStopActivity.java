@@ -178,7 +178,7 @@ public class AddStopActivity extends Activity {
 		setProgressBarIndeterminateVisibility(true);
 
 		currentRequestedUrl = TimeoRequestHandler.getFullUrlFromEndPoint(
-				endPoint, data);
+				endPoint, new TimeoRequestObject[]{data});
 		GetTimeoDataFromAPITask task = new GetTimeoDataFromAPITask();
 		task.execute(endPoint);
 	}

@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.Menu;
@@ -56,10 +57,10 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 		listView.setMultiChoiceModeListener(this);
-
-		ArrayList<TimeoScheduleObject> stopsList = databaseHandler.getAllStops();
-		listAdapter = new TwistoastArrayAdapter(this, android.R.layout.simple_list_item_activated_1, stopsList);
-		listView.setAdapter(listAdapter);
+		
+		isRefreshing = false;
+		
+		refreshListFromDB();
 	}
 
 	@Override
@@ -102,7 +103,13 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 	}
 
 	public void refreshListFromDB() {
-		listAdapter.clear();
+		if(isRefreshing) return;
+		else isRefreshing = true;
+		
+		if(listAdapter != null) listAdapter.clear();
+		
+		Log.i("TWISTOAST", "REFRESH>>>>>");
+		
 		ArrayList<TimeoScheduleObject> stopsList = databaseHandler.getAllStops();
 		listAdapter = new TwistoastArrayAdapter(this, android.R.layout.simple_list_item_1, stopsList);
 		listView.setAdapter(listAdapter);
@@ -128,6 +135,7 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 
                 // Notify PullToRefreshLayout that the refresh has finished
                 mPullToRefreshLayout.setRefreshComplete();
+                isRefreshing = false;
             }
         }.execute();
 	}
@@ -229,6 +237,8 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 
 	public ListView listView;
 	private PullToRefreshLayout mPullToRefreshLayout;
+	
+	private boolean isRefreshing;
 
 	private TwistoastDatabase databaseHandler;
 	private TwistoastArrayAdapter listAdapter;
