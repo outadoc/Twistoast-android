@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import fr.outadev.twistoast.timeo.TimeoScheduleObject;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -106,38 +105,19 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 		if(isRefreshing) return;
 		else isRefreshing = true;
 		
-		if(listAdapter != null) listAdapter.clear();
-		
 		Log.i("TWISTOAST", "REFRESH>>>>>");
+		
+		if(listAdapter != null) listAdapter.clear();
 		
 		ArrayList<TimeoScheduleObject> stopsList = databaseHandler.getAllStops();
 		listAdapter = new TwistoastArrayAdapter(this, android.R.layout.simple_list_item_1, stopsList);
 		listView.setAdapter(listAdapter);
-		
-		/**
-         * Simulate Refresh with 4 seconds sleep
-         */
-        new AsyncTask<Void, Void, Void>() {
-
-            @Override
-            protected Void doInBackground(Void... params) {
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void result) {
-                super.onPostExecute(result);
-
-                // Notify PullToRefreshLayout that the refresh has finished
-                mPullToRefreshLayout.setRefreshComplete();
-                isRefreshing = false;
-            }
-        }.execute();
+	}
+	
+	public void endRefresh() {
+		// Notify PullToRefreshLayout that the refresh has finished
+        mPullToRefreshLayout.setRefreshComplete();
+        isRefreshing = false;
 	}
 
 	@Override

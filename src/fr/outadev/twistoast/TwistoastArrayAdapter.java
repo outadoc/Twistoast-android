@@ -180,6 +180,8 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 			} catch(ClassCastException e) {
 				Toast.makeText(context, R.string.loading_error, Toast.LENGTH_LONG).show();
 			}
+			
+			((MainActivity) context).endRefresh();
 		}
 	}
 
