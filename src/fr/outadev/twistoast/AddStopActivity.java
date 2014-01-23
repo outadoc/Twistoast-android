@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
@@ -45,6 +46,13 @@ public class AddStopActivity extends Activity {
 		spinLine = (Spinner) findViewById(R.id.spin_line);
 		spinDirection = (Spinner) findViewById(R.id.spin_direction);
 		spinStop = (Spinner) findViewById(R.id.spin_stop);
+		
+		lbl_line = (TextView) findViewById(R.id.lbl_line_id);
+		lbl_stop = (TextView) findViewById(R.id.lbl_stop_name);
+		lbl_direction = (TextView) findViewById(R.id.lbl_direction_name);
+
+		lbl_schedule_1 = (TextView) findViewById(R.id.lbl_schedule_1);
+		lbl_schedule_2 = (TextView) findViewById(R.id.lbl_schedule_2);
 
 		fetchDataFromAPI(EndPoints.LINES, (new TimeoRequestObject()));
 	}
@@ -57,10 +65,19 @@ public class AddStopActivity extends Activity {
 			@Override
 			public void onItemSelected(AdapterView<?> parentView, View view,
 					int position, long id) {
+				//set loading labels
+				lbl_line.setText("?");
+				lbl_direction.setText(getResources().getString(R.string.loading_data));
+				lbl_stop.setText(getResources().getString(R.string.loading_data));
+				
+				lbl_schedule_1.setText(getResources().getString(R.string.loading_data));
+				lbl_schedule_2.setText(getResources().getString(R.string.loading_data));
+				
 				TimeoIDNameObject item = (TimeoIDNameObject) parentView
 						.getItemAtPosition(position);
 
 				if(item.getId() != null) {
+					lbl_line.setText(item.getId());
 					fetchDataFromAPI(EndPoints.DIRECTIONS,
 							(new TimeoRequestObject(item.getId())));
 				}
@@ -82,6 +99,7 @@ public class AddStopActivity extends Activity {
 						.getItemAtPosition(spinLine.getSelectedItemPosition());
 
 				if(line.getId() != null && direction.getId() != null) {
+					lbl_direction.setText(direction.getName());
 					fetchDataFromAPI(EndPoints.STOPS, (new TimeoRequestObject(
 							line.getId(), direction.getId())));
 				}
@@ -107,6 +125,7 @@ public class AddStopActivity extends Activity {
 
 				if(line.getId() != null && direction.getId() != null
 						&& stop.getId() != null) {
+					lbl_stop.setText(stop.getName());
 					fetchDataFromAPI(
 							EndPoints.SCHEDULE,
 							(new TimeoRequestObject(line.getId(), direction
@@ -246,17 +265,8 @@ public class AddStopActivity extends Activity {
 									.parseSchedule(result);
 
 							if(scheduleArray != null) {
-								String scheduleString = "";
-
-								for(int i = 0; i < scheduleArray.length
-										&& scheduleArray[i] != null; i++) {
-									if(i != 0)
-										scheduleString += "\n";
-									scheduleString += scheduleArray[i];
-								}
-
-								Toast.makeText(appContext, scheduleString,
-										Toast.LENGTH_SHORT).show();
+								lbl_schedule_1.setText(scheduleArray[0]);
+								lbl_schedule_2.setText(scheduleArray[1]);
 							}
 						} catch(ClassCastException e) {
 							Toast.makeText(
@@ -283,7 +293,13 @@ public class AddStopActivity extends Activity {
 	private Spinner spinLine;
 	private Spinner spinDirection;
 	private Spinner spinStop;
-
+	
+	private TextView lbl_line;
+	private TextView lbl_stop;
+	private TextView lbl_direction;
+	private TextView lbl_schedule_1;
+	private TextView lbl_schedule_2;
+	
 	private String currentRequestedUrl;
 
 	TwistoastDatabase databaseHandler;

@@ -56,10 +56,9 @@
                 android:layout_height="0dp"
                 android:layout_margin="10dp"
                 android:layout_weight="1.74"
-                android:background="#555555"
                 android:orientation="vertical" >
                 
-                <include layout="@layout/schedule_row"/>
+                <include layout="@layout/schedule_row" />
                 
             </LinearLayout>
         </LinearLayout>
