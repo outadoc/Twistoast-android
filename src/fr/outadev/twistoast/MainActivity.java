@@ -109,6 +109,7 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 		else isRefreshing = true;
 		
 		setProgressBarIndeterminateVisibility(true);
+		mPullToRefreshLayout.setRefreshing(true);
 		
 		ArrayList<TimeoScheduleObject> stopsList = databaseHandler.getAllStops();
 		if(listAdapter != null) listAdapter.clear();
