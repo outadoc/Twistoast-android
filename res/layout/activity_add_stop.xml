@@ -19,44 +19,55 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/lbl_line"
+                android:textStyle="italic"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <Spinner
                 android:id="@+id/spin_line"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="40dp"
+                android:layout_marginBottom="10dp" />
 
             <TextView
                 android:id="@+id/lbl_direction"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/lbl_direction"
+                android:textStyle="italic"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <Spinner
                 android:id="@+id/spin_direction"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="40dp"
+                android:layout_marginBottom="10dp" />
 
             <TextView
                 android:id="@+id/lbl_stop"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/lbl_stop"
+                android:textStyle="italic"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <Spinner
                 android:id="@+id/spin_stop"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="40dp"
+                android:layout_marginBottom="20dp" />
+            
+            <TextView
+	                android:id="@+id/lbl_preview"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="@string/lbl_preview"
+	                android:textStyle="italic"
+	                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <LinearLayout
                 android:id="@+id/view_preview"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_margin="10dp"
-                android:layout_weight="1.74"
-                android:orientation="vertical" >
+                android:layout_height="wrap_content" >
                 
                 <include layout="@layout/schedule_row" />
                 

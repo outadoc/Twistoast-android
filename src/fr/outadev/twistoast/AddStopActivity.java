@@ -13,12 +13,14 @@ import fr.outadev.twistoast.timeo.TimeoRequestHandler.EndPoints;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,6 +52,8 @@ public class AddStopActivity extends Activity {
 		lbl_line = (TextView) findViewById(R.id.lbl_line_id);
 		lbl_stop = (TextView) findViewById(R.id.lbl_stop_name);
 		lbl_direction = (TextView) findViewById(R.id.lbl_direction_name);
+		
+		view_line_id = (FrameLayout) findViewById(R.id.view_line_id);
 
 		lbl_schedule_1 = (TextView) findViewById(R.id.lbl_schedule_1);
 		lbl_schedule_2 = (TextView) findViewById(R.id.lbl_schedule_2);
@@ -78,6 +82,16 @@ public class AddStopActivity extends Activity {
 
 				if(item.getId() != null) {
 					lbl_line.setText(item.getId());
+					view_line_id.setBackgroundColor(TwistoastDatabase.getColorFromLineID(item.getId()));
+					
+					if(lbl_line.getText().length() > 3) {
+						lbl_line.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+					} else if(lbl_line.getText().length() > 2) {
+						lbl_line.setTextSize(TypedValue.COMPLEX_UNIT_SP, 23);
+					} else {
+						lbl_line.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
+					}
+					
 					fetchDataFromAPI(EndPoints.DIRECTIONS,
 							(new TimeoRequestObject(item.getId())));
 				}
@@ -99,7 +113,8 @@ public class AddStopActivity extends Activity {
 						.getItemAtPosition(spinLine.getSelectedItemPosition());
 
 				if(line.getId() != null && direction.getId() != null) {
-					lbl_direction.setText(direction.getName());
+					lbl_direction.setText("→ " + direction.getName());
+					
 					fetchDataFromAPI(EndPoints.STOPS, (new TimeoRequestObject(
 							line.getId(), direction.getId())));
 				}
@@ -126,6 +141,7 @@ public class AddStopActivity extends Activity {
 				if(line.getId() != null && direction.getId() != null
 						&& stop.getId() != null) {
 					lbl_stop.setText(stop.getName());
+					
 					fetchDataFromAPI(
 							EndPoints.SCHEDULE,
 							(new TimeoRequestObject(line.getId(), direction
@@ -186,7 +202,7 @@ public class AddStopActivity extends Activity {
 		} else {
 			Toast.makeText(
 					this,
-					"Ajout� : " + line.getName() + " - " + direction.getName()
+					"Ajouté : " + line.getName() + " - " + direction.getName()
 							+ " - " + stop.getName(), Toast.LENGTH_SHORT)
 					.show();
 			this.finish();
@@ -265,8 +281,12 @@ public class AddStopActivity extends Activity {
 									.parseSchedule(result);
 
 							if(scheduleArray != null) {
-								lbl_schedule_1.setText(scheduleArray[0]);
-								lbl_schedule_2.setText(scheduleArray[1]);
+								if(scheduleArray[0] != null)
+									lbl_schedule_1.setText("- " + scheduleArray[0]);
+								if(scheduleArray[1] != null)
+									lbl_schedule_2.setText("- " + scheduleArray[1]);
+								else 
+									lbl_schedule_2.setText("");
 							}
 						} catch(ClassCastException e) {
 							Toast.makeText(
@@ -295,6 +315,7 @@ public class AddStopActivity extends Activity {
 	private Spinner spinStop;
 	
 	private TextView lbl_line;
+	private FrameLayout view_line_id;
 	private TextView lbl_stop;
 	private TextView lbl_direction;
 	private TextView lbl_schedule_1;

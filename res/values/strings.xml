@@ -6,6 +6,7 @@
     <string name="lbl_line">Ligne</string>
     <string name="lbl_direction">Direction</string>
     <string name="lbl_stop">Arrêt</string>
+    <string name="lbl_preview">Aperçu de l\'arrêt</string>
     <string name="title_activity_add_stop">Ajouter un arrêt</string>
     <string name="action_add">Ajouter un arrêt</string>
     <string name="action_ok">Ajouter</string>
