@@ -15,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -29,10 +28,7 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.activity_main);
-		
-		setProgressBarIndeterminateVisibility(false);
 		
 		// Now find the PullToRefreshLayout to setup
 	    mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.ptr_layout);
@@ -80,7 +76,7 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 			addBusStop();
 			return true;
 		case R.id.action_refresh:
-			listAdapter.updateScheduleData(true);
+			refreshListFromDB();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -108,7 +104,6 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 		if(isRefreshing) return;
 		else isRefreshing = true;
 		
-		setProgressBarIndeterminateVisibility(true);
 		mPullToRefreshLayout.setRefreshing(true);
 		
 		ArrayList<TimeoScheduleObject> stopsList = databaseHandler.getAllStops();
@@ -121,7 +116,6 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 	public void endRefresh() {
 		// Notify PullToRefreshLayout that the refresh has finished
         mPullToRefreshLayout.setRefreshComplete();
-        setProgressBarIndeterminateVisibility(false);
         isRefreshing = false;
 	}
 
