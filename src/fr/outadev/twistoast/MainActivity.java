@@ -56,6 +56,9 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 		listView.setMultiChoiceModeListener(this);
 		
+		listAdapter = new TwistoastArrayAdapter(this, android.R.layout.simple_list_item_1, databaseHandler.getAllStops());
+		listView.setAdapter(listAdapter);
+		
 		isRefreshing = false;
 		
 		refreshListFromDB();
@@ -106,11 +109,8 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 		
 		mPullToRefreshLayout.setRefreshing(true);
 		
-		ArrayList<TimeoScheduleObject> stopsList = databaseHandler.getAllStops();
-		if(listAdapter != null) listAdapter.clear();
-		
-		listAdapter = new TwistoastArrayAdapter(this, android.R.layout.simple_list_item_1, stopsList);
-		listView.setAdapter(listAdapter);
+		listAdapter.setObjects(databaseHandler.getAllStops());
+		listAdapter.updateScheduleData();
 	}
 	
 	public void endRefresh() {

@@ -34,8 +34,14 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 
 		this.objects = objects;
 		this.context = context;
+	}
 
-		updateScheduleData(true);
+	public List<TimeoScheduleObject> getObjects() {
+		return objects;
+	}
+
+	public void setObjects(List<TimeoScheduleObject> objects) {
+		this.objects = objects;
 	}
 
 	@Override
@@ -118,15 +124,7 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 		return rowView;
 	}
 
-	public void updateScheduleData(boolean resetBeforeFetch) {
-		if(resetBeforeFetch) {
-			for(int i = 0; i < objects.size(); i++) {
-				objects.get(i).setSchedule(null);
-			}
-
-			notifyDataSetChanged();
-		}
-		
+	public void updateScheduleData() {
 		GetTimeoDataFromAPITask task = new GetTimeoDataFromAPITask();
 		task.execute();
 	}
