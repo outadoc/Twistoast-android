@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -29,7 +30,10 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.activity_main);
+		
+		setProgressBarIndeterminateVisibility(false);
 		
 		// Now find the PullToRefreshLayout to setup
 	    mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.ptr_layout);
@@ -105,11 +109,11 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 		if(isRefreshing) return;
 		else isRefreshing = true;
 		
-		Log.i("TWISTOAST", "REFRESH>>>>>");
-		
-		if(listAdapter != null) listAdapter.clear();
+		setProgressBarIndeterminateVisibility(true);
 		
 		ArrayList<TimeoScheduleObject> stopsList = databaseHandler.getAllStops();
+		if(listAdapter != null) listAdapter.clear();
+		
 		listAdapter = new TwistoastArrayAdapter(this, android.R.layout.simple_list_item_1, stopsList);
 		listView.setAdapter(listAdapter);
 	}
@@ -117,6 +121,7 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 	public void endRefresh() {
 		// Notify PullToRefreshLayout that the refresh has finished
         mPullToRefreshLayout.setRefreshComplete();
+        setProgressBarIndeterminateVisibility(false);
         isRefreshing = false;
 	}
 
