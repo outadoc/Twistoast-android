@@ -8,11 +8,11 @@ import fr.outadev.twistoast.timeo.TimeoScheduleObject;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.Menu;
@@ -61,14 +61,6 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 		listView.setMultiChoiceModeListener(this);
 		
 		isRefreshing = false;
-		
-		/*Timer refreshTimer = new Timer();
-		refreshTimer.schedule(new TimerTask() {
-			@Override
-			public void run() {
-				refreshListFromDB();
-			}
-		}, 0, 60000L);*/
 	}
 
 	@Override
@@ -125,6 +117,9 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 		// Notify PullToRefreshLayout that the refresh has finished
         mPullToRefreshLayout.setRefreshComplete();
         isRefreshing = false;
+        
+        handler.removeCallbacks(runnable);
+        handler.postDelayed(runnable, REFRESH_INTERVAL);
 	}
 
 	@Override
@@ -226,6 +221,14 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 	private PullToRefreshLayout mPullToRefreshLayout;
 	
 	private boolean isRefreshing;
+	private final long REFRESH_INTERVAL = 60000L;
+	
+	private Handler handler = new Handler();
+	private Runnable runnable = new Runnable(){
+	    public void run() {
+	        refreshListFromDB();
+	    }
+	};
 
 	private TwistoastDatabase databaseHandler;
 	private TwistoastArrayAdapter listAdapter;
