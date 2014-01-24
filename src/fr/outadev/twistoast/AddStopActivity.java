@@ -111,6 +111,10 @@ public class AddStopActivity extends Activity {
 						.getItemAtPosition(position);
 				TimeoIDNameObject line = (TimeoIDNameObject) spinLine
 						.getItemAtPosition(spinLine.getSelectedItemPosition());
+				
+				lbl_direction.setText(getResources().getString(R.string.loading_data));
+				lbl_schedule_1.setText(getResources().getString(R.string.loading_data));
+				lbl_schedule_2.setText(getResources().getString(R.string.loading_data));
 
 				if(line.getId() != null && direction.getId() != null) {
 					lbl_direction.setText("→ " + direction.getName());
@@ -130,6 +134,10 @@ public class AddStopActivity extends Activity {
 			@Override
 			public void onItemSelected(AdapterView<?> parentView, View view,
 					int position, long id) {
+				lbl_stop.setText(getResources().getString(R.string.loading_data));
+				lbl_schedule_1.setText(getResources().getString(R.string.loading_data));
+				lbl_schedule_2.setText(getResources().getString(R.string.loading_data));
+				
 				TimeoIDNameObject stop = (TimeoIDNameObject) spinStop
 						.getItemAtPosition(spinStop.getSelectedItemPosition());
 				TimeoIDNameObject line = (TimeoIDNameObject) spinLine
