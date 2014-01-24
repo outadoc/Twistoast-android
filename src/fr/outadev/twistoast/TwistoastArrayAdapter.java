@@ -159,7 +159,6 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 					for(int i = 0; i < scheduleArray.size(); i++) {
 						if(scheduleArray.get(i) != null) {
 							objects.get(i).setSchedule(scheduleArray.get(i));
-							notifyDataSetChanged();
 						} else {
 							objects.get(i).setSchedule(new String[] { context
 									.getResources().getString(
@@ -179,6 +178,7 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 				Toast.makeText(context, R.string.loading_error, Toast.LENGTH_LONG).show();
 			}
 			
+			notifyDataSetChanged();
 			((MainActivity) context).endRefresh();
 		}
 	}

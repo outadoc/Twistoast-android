@@ -1,14 +1,18 @@
 package fr.outadev.twistoast;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import fr.outadev.twistoast.timeo.TimeoScheduleObject;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.Menu;
@@ -56,12 +60,15 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 		listView.setMultiChoiceModeListener(this);
 		
-		listAdapter = new TwistoastArrayAdapter(this, android.R.layout.simple_list_item_1, databaseHandler.getAllStops());
-		listView.setAdapter(listAdapter);
-		
 		isRefreshing = false;
 		
-		refreshListFromDB();
+		/*Timer refreshTimer = new Timer();
+		refreshTimer.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				refreshListFromDB();
+			}
+		}, 0, 60000L);*/
 	}
 
 	@Override
@@ -108,8 +115,9 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 		else isRefreshing = true;
 		
 		mPullToRefreshLayout.setRefreshing(true);
-		
-		listAdapter.setObjects(databaseHandler.getAllStops());
+				
+		listAdapter = new TwistoastArrayAdapter(this, android.R.layout.simple_list_item_1, databaseHandler.getAllStops());
+		listView.setAdapter(listAdapter);
 		listAdapter.updateScheduleData();
 	}
 	
