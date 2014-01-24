@@ -21,10 +21,10 @@ public class TwistoastDatabase {
 	public DBStatus addStopToDatabase(TimeoIDNameObject line,
 			TimeoIDNameObject direction, TimeoIDNameObject stop) {
 		if(line != null && direction != null && stop != null) {
-			SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
-
 			addLineToDatabase(line);
 			addDirectionToDatabase(line, direction);
+			
+			SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
 
 			ContentValues values = new ContentValues();
 
@@ -38,6 +38,8 @@ public class TwistoastDatabase {
 				db.insertOrThrow("twi_stop", null, values);
 			} catch(SQLiteConstraintException e) {
 				return DBStatus.ERROR_DUPLICATE;
+			} finally {
+				db.close();
 			}
 			
 			return DBStatus.SUCCESS;
@@ -56,6 +58,7 @@ public class TwistoastDatabase {
 			values.put("line_name", line.getName());
 
 			db.insert("twi_line", null, values);
+			db.close();
 		}
 	}
 
@@ -70,11 +73,12 @@ public class TwistoastDatabase {
 			values.put("dir_name", direction.getName());
 
 			db.insert("twi_direction", null, values);
+			db.close();
 		}
 	}
 
 	public ArrayList<TimeoScheduleObject> getAllStops() {
-		SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
+		SQLiteDatabase db = databaseOpenHelper.getReadableDatabase();
 
 		Cursor results = db.rawQuery(
 			"SELECT "
