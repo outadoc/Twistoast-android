@@ -44,6 +44,7 @@ public class AddStopActivity extends Activity {
 		setProgressBarIndeterminateVisibility(false);
 
 		databaseHandler = new TwistoastDatabase(this);
+		emptyAdapter = new ArrayAdapter<TimeoIDNameObject>(this, 0);
 
 		// get all the UI elements we'll need in the future
 
@@ -87,6 +88,10 @@ public class AddStopActivity extends Activity {
 				lbl_schedule_2.setText(getResources()
 						.getString(R.string.loading_data));
 
+				// empty adapters
+				spinDirection.setAdapter(emptyAdapter);
+				spinStop.setAdapter(emptyAdapter);
+
 				// get the selected line
 				TimeoIDNameObject item = (TimeoIDNameObject) parentView
 						.getItemAtPosition(position);
@@ -126,12 +131,16 @@ public class AddStopActivity extends Activity {
 				TimeoIDNameObject line = (TimeoIDNameObject) spinLine
 						.getItemAtPosition(spinLine.getSelectedItemPosition());
 
+				// set loading labels
 				lbl_direction.setText(getResources()
 						.getString(R.string.loading_data));
 				lbl_schedule_1.setText(getResources()
 						.getString(R.string.loading_data));
 				lbl_schedule_2.setText(getResources()
 						.getString(R.string.loading_data));
+
+				// empty adapters
+				spinStop.setAdapter(emptyAdapter);
 
 				if(line.getId() != null && direction.getId() != null) {
 					lbl_direction.setText("→ " + direction.getName());
@@ -339,6 +348,7 @@ public class AddStopActivity extends Activity {
 	private TextView lbl_schedule_2;
 
 	private String currentRequestedUrl;
+	private ArrayAdapter<TimeoIDNameObject> emptyAdapter;
 
 	TwistoastDatabase databaseHandler;
 
