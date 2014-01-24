@@ -28,8 +28,7 @@ import android.widget.Toast;
 
 public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 
-	public TwistoastArrayAdapter(Context context, int resource,
-			List<TimeoScheduleObject> objects) {
+	public TwistoastArrayAdapter(Context context, int resource, List<TimeoScheduleObject> objects) {
 		super(context, resource, objects);
 
 		this.objects = objects;
@@ -83,68 +82,72 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 		lbl_stop.setText(objects.get(position).getStop().getName());
 
 		// direction
-		lbl_direction.setText("→ " + objects.get(position).getDirection().getName());
+		lbl_direction.setText("→ " + objects.get(position).getDirection()
+				.getName());
 
 		// schedule
-		if(objects.get(position).getSchedule() != null 
-				&& objects.get(position).getSchedule().length > 0
-				&& objects.get(position).getSchedule()[0] != null) {
-			lbl_schedule_1.setText("- "
-					+ objects.get(position).getSchedule()[0]);
+		if(objects.get(position).getSchedule() != null && objects.get(position)
+				.getSchedule().length > 0 && objects.get(position)
+				.getSchedule()[0] != null) {
+			lbl_schedule_1
+					.setText("- " + objects.get(position).getSchedule()[0]);
 		} else {
-			lbl_schedule_1.setText("- "
-					+ context.getResources().getString(R.string.loading_data));
+			lbl_schedule_1.setText("- " + context.getResources()
+					.getString(R.string.loading_data));
 		}
 
-		if(objects.get(position).getSchedule() != null 
-				&& objects.get(position).getSchedule().length > 1
-				&& objects.get(position).getSchedule()[1] != null) {
-			lbl_schedule_2.setText("- "
-					+ objects.get(position).getSchedule()[1]);
+		if(objects.get(position).getSchedule() != null && objects.get(position)
+				.getSchedule().length > 1 && objects.get(position)
+				.getSchedule()[1] != null) {
+			lbl_schedule_2
+					.setText("- " + objects.get(position).getSchedule()[1]);
 		}
-		
+
 		view_line_id.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				
+
 				MainActivity mainActivity = (MainActivity) TwistoastArrayAdapter.this.context;
-				SparseBooleanArray checked = mainActivity.listView.getCheckedItemPositions();
-				
+				SparseBooleanArray checked = mainActivity.listView
+						.getCheckedItemPositions();
+
 				if(checked.get(position)) {
 					mainActivity.listView.setItemChecked(position, false);
 				} else {
 					mainActivity.listView.setItemChecked(position, true);
 				}
 			}
-					
+
 		});
 
 		return rowView;
 	}
 
 	public void updateScheduleData() {
+		// start refreshing schedules
 		GetTimeoDataFromAPITask task = new GetTimeoDataFromAPITask();
 		task.execute();
 	}
 
-	private class GetTimeoDataFromAPITask extends
-			AsyncTask<Void, Void, String> {
+	private class GetTimeoDataFromAPITask extends AsyncTask<Void, Void, String> {
 
 		@Override
 		protected String doInBackground(Void... params) {
-			TimeoRequestObject[] requestObj = new TimeoRequestObject[objects.size()];
-			
+			TimeoRequestObject[] requestObj = new TimeoRequestObject[objects
+					.size()];
+
+			// add every stop to the request
 			for(int i = 0; i < objects.size(); i++) {
-				requestObj[i] = new TimeoRequestObject(
-						objects.get(i).getLine().getId(),
-						objects.get(i).getDirection().getId(),
-						objects.get(i).getStop().getId());
+				requestObj[i] = new TimeoRequestObject(objects.get(i).getLine()
+						.getId(), objects.get(i).getDirection().getId(), objects
+						.get(i).getStop().getId());
 			}
 
-			return TimeoRequestHandler.requestWebPage(TimeoRequestHandler
-					.getFullUrlFromEndPoint(EndPoints.FULL_SCHEDULE, requestObj));
+			return TimeoRequestHandler
+					.requestWebPage(TimeoRequestHandler
+							.getFullUrlFromEndPoint(EndPoints.FULL_SCHEDULE, requestObj));
 		}
 
 		@Override
@@ -161,23 +164,24 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 							objects.get(i).setSchedule(scheduleArray.get(i));
 						} else {
 							objects.get(i).setSchedule(new String[] { context
-									.getResources().getString(
-											R.string.loading_error) });
+									.getResources()
+									.getString(R.string.loading_error) });
 						}
 					}
 				} catch(ClassCastException e) {
-					Toast.makeText(
-							context,
-							((JSONObject) new JSONTokener(result).nextValue())
-									.getString("error"), Toast.LENGTH_LONG)
+					Toast.makeText(context, ((JSONObject) new JSONTokener(result)
+							.nextValue()).getString("error"), Toast.LENGTH_LONG)
 							.show();
 				}
 			} catch(JSONException e) {
-				Toast.makeText(context, R.string.loading_error, Toast.LENGTH_LONG).show();
+				Toast.makeText(context, R.string.loading_error, Toast.LENGTH_LONG)
+						.show();
 			} catch(ClassCastException e) {
-				Toast.makeText(context, R.string.loading_error, Toast.LENGTH_LONG).show();
+				Toast.makeText(context, R.string.loading_error, Toast.LENGTH_LONG)
+						.show();
 			}
-			
+
+			// refresh the display and callback MainActivity to end refresh
 			notifyDataSetChanged();
 			((MainActivity) context).endRefresh();
 		}

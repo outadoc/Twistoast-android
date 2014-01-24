@@ -2,9 +2,7 @@ package fr.outadev.twistoast.timeo;
 
 public class TimeoScheduleObject {
 
-	public TimeoScheduleObject(TimeoIDNameObject line,
-			TimeoIDNameObject direction, TimeoIDNameObject stop,
-			String[] schedule) {
+	public TimeoScheduleObject(TimeoIDNameObject line, TimeoIDNameObject direction, TimeoIDNameObject stop, String[] schedule) {
 		this.line = line;
 		this.direction = direction;
 		this.stop = stop;

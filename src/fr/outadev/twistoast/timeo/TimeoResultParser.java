@@ -8,8 +8,7 @@ import org.json.JSONTokener;
 
 public abstract class TimeoResultParser {
 
-	public static String[] parseSchedule(String source) throws JSONException,
-			ClassCastException {
+	public static String[] parseSchedule(String source) throws JSONException, ClassCastException {
 		if(source != null) {
 			String[] scheduleArray = new String[2];
 
@@ -17,9 +16,8 @@ public abstract class TimeoResultParser {
 			JSONArray resultArray = (JSONArray) new JSONTokener(source)
 					.nextValue();
 
-			if(resultArray != null
-					&& resultArray.getJSONObject(0) != null
-					&& resultArray.getJSONObject(0).getJSONArray("next") != null) {
+			if(resultArray != null && resultArray.getJSONObject(0) != null && resultArray
+					.getJSONObject(0).getJSONArray("next") != null) {
 				JSONArray scheduleJSONArray = resultArray.getJSONObject(0)
 						.getJSONArray("next");
 
@@ -33,23 +31,21 @@ public abstract class TimeoResultParser {
 
 		return null;
 	}
-	
-	public static ArrayList<String[]> parseMultipleSchedules(String source)
-			throws JSONException, ClassCastException {
+
+	public static ArrayList<String[]> parseMultipleSchedules(String source) throws JSONException, ClassCastException {
 		if(source != null) {
 			JSONArray resultArray = (JSONArray) new JSONTokener(source)
 					.nextValue();
-			
+
 			ArrayList<String[]> dataList = new ArrayList<String[]>();
-			
+
 			for(int i = 0; i < resultArray.length(); i++) {
-				if(resultArray != null
-						&& resultArray.getJSONObject(i) != null
-						&& resultArray.getJSONObject(i).getJSONArray("next") != null) {
-					
+				if(resultArray != null && resultArray.getJSONObject(i) != null && resultArray
+						.getJSONObject(i).getJSONArray("next") != null) {
+
 					JSONArray scheduleJSONArray = resultArray.getJSONObject(i)
 							.getJSONArray("next");
-					
+
 					dataList.add(i, new String[2]);
 
 					for(int j = 0; j < scheduleJSONArray.length() && j < 2; j++) {
@@ -57,15 +53,14 @@ public abstract class TimeoResultParser {
 					}
 				}
 			}
-			
+
 			return dataList;
 		}
 
 		return null;
 	}
 
-	public static ArrayList<TimeoIDNameObject> parseList(String source)
-			throws JSONException, ClassCastException {
+	public static ArrayList<TimeoIDNameObject> parseList(String source) throws JSONException, ClassCastException {
 		if(source != null) {
 			JSONArray resultArray = (JSONArray) new JSONTokener(source)
 					.nextValue();
