@@ -144,7 +144,7 @@ public class AddStopActivity extends Activity {
 
 				if(line != null && direction != null 
 						&& line.getId() != null && direction.getId() != null) {
-					lbl_direction.setText("→ " + direction.getName());
+					lbl_direction.setText("→ Dir. " + direction.getName());
 
 					fetchDataFromAPI(EndPoints.STOPS, (new TimeoRequestObject(line
 							.getId(), direction.getId())));
@@ -177,7 +177,7 @@ public class AddStopActivity extends Activity {
 
 				if(line != null && direction != null && stop != null
 						&& line.getId() != null && direction.getId() != null && stop.getId() != null) {
-					lbl_stop.setText(stop.getName());
+					lbl_stop.setText("Arrêt " + stop.getName());
 
 					fetchDataFromAPI(EndPoints.SCHEDULE, (new TimeoRequestObject(line
 							.getId(), direction.getId(), stop.getId())));
@@ -203,7 +203,7 @@ public class AddStopActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
 		case R.id.action_ok:
-			// add the current stop to the dataabse
+			// add the current stop to the database
 			registerStopToDatabase();
 			return true;
 		case android.R.id.home:

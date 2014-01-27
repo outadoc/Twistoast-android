@@ -80,10 +80,10 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 		}
 
 		// stop
-		lbl_stop.setText(objects.get(position).getStop().getName());
+		lbl_stop.setText("Arrêt " + objects.get(position).getStop().getName());
 
 		// direction
-		lbl_direction.setText("→ " + objects.get(position).getDirection()
+		lbl_direction.setText("→ Dir. " + objects.get(position).getDirection()
 				.getName());
 
 		// schedule
