@@ -3,7 +3,6 @@ package fr.outadev.twistoast;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import org.apache.http.client.ClientProtocolException;
 import org.json.*;
 
 import fr.outadev.twistoast.timeo.TimeoIDNameObject;
@@ -11,7 +10,6 @@ import fr.outadev.twistoast.timeo.TimeoRequestHandler;
 import fr.outadev.twistoast.timeo.TimeoRequestObject;
 import fr.outadev.twistoast.timeo.TimeoResultParser;
 import fr.outadev.twistoast.timeo.TimeoRequestHandler.EndPoints;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
@@ -265,9 +263,12 @@ public class AddStopActivity extends Activity {
 
 				try {
 					return TimeoRequestHandler.requestWebPage(currentRequestedUrl);
-				} catch(ClientProtocolException e) {
-					e.printStackTrace();
-				} catch(IOException e) {
+				} catch(final IOException e) {
+					AddStopActivity.this.runOnUiThread(new Runnable(){
+					    public void run(){
+					    	Toast.makeText(AddStopActivity.this, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+					    }
+					});
 					e.printStackTrace();
 				}
 			}

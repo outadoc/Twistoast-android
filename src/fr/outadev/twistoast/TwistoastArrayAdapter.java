@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -14,7 +13,7 @@ import fr.outadev.twistoast.timeo.TimeoRequestObject;
 import fr.outadev.twistoast.timeo.TimeoResultParser;
 import fr.outadev.twistoast.timeo.TimeoScheduleObject;
 import fr.outadev.twistoast.timeo.TimeoRequestHandler.EndPoints;
-
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.SparseBooleanArray;
@@ -151,9 +150,12 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 				return TimeoRequestHandler
 						.requestWebPage(TimeoRequestHandler
 								.getFullUrlFromEndPoint(EndPoints.FULL_SCHEDULE, requestObj));
-			} catch(ClientProtocolException e) {
-				e.printStackTrace();
-			} catch(IOException e) {
+			} catch(final IOException e) {
+				((Activity) context).runOnUiThread(new Runnable(){
+				    public void run(){
+				    	Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+				    }
+				});
 				e.printStackTrace();
 			}
 			
