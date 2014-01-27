@@ -1,7 +1,9 @@
 package fr.outadev.twistoast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
+import org.apache.http.client.ClientProtocolException;
 import org.json.*;
 
 import fr.outadev.twistoast.timeo.TimeoIDNameObject;
@@ -262,10 +264,16 @@ public class AddStopActivity extends Activity {
 					spinner = spinStop;
 				}
 
-				return TimeoRequestHandler.requestWebPage(currentRequestedUrl);
-			} else {
-				return null;
+				try {
+					return TimeoRequestHandler.requestWebPage(currentRequestedUrl);
+				} catch(ClientProtocolException e) {
+					e.printStackTrace();
+				} catch(IOException e) {
+					e.printStackTrace();
+				}
 			}
+			
+			return null;
 		}
 
 		@Override

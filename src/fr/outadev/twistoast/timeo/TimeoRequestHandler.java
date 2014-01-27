@@ -15,21 +15,13 @@ import android.util.Log;
 
 public abstract class TimeoRequestHandler {
 
-	public static String requestWebPage(String url) {
+	public static String requestWebPage(String url) throws ClientProtocolException, IOException {
 		HttpClient client = new DefaultHttpClient();
 		HttpGet request = new HttpGet(url);
 
-		try {
-			// request our web page by url
-			HttpResponse response = client.execute(request);
-			return readIt(response.getEntity().getContent(), 2000);
-		} catch(ClientProtocolException e) {
-			e.printStackTrace();
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
-
-		return null;
+		// request our web page by url
+		HttpResponse response = client.execute(request);
+		return readIt(response.getEntity().getContent(), 2000);
 	}
 
 	public static String getFullUrlFromEndPoint(EndPoints endPoint, TimeoRequestObject[] data) {

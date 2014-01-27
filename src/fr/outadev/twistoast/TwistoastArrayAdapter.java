@@ -1,8 +1,10 @@
 package fr.outadev.twistoast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -144,10 +146,18 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 						.getId(), objects.get(i).getDirection().getId(), objects
 						.get(i).getStop().getId());
 			}
-
-			return TimeoRequestHandler
-					.requestWebPage(TimeoRequestHandler
-							.getFullUrlFromEndPoint(EndPoints.FULL_SCHEDULE, requestObj));
+			
+			try {
+				return TimeoRequestHandler
+						.requestWebPage(TimeoRequestHandler
+								.getFullUrlFromEndPoint(EndPoints.FULL_SCHEDULE, requestObj));
+			} catch(ClientProtocolException e) {
+				e.printStackTrace();
+			} catch(IOException e) {
+				e.printStackTrace();
+			}
+			
+			return null;
 		}
 
 		@Override
@@ -158,15 +168,19 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 					// TimeoScheduleObject, then refresh
 					ArrayList<String[]> scheduleArray = TimeoResultParser
 							.parseMultipleSchedules(result);
-
-					for(int i = 0; i < scheduleArray.size(); i++) {
-						if(scheduleArray.get(i) != null) {
-							objects.get(i).setSchedule(scheduleArray.get(i));
-						} else {
-							objects.get(i).setSchedule(new String[] { context
-									.getResources()
-									.getString(R.string.loading_error) });
+					
+					if(scheduleArray != null) {
+						for(int i = 0; i < scheduleArray.size(); i++) {
+							if(scheduleArray.get(i) != null) {
+								objects.get(i).setSchedule(scheduleArray.get(i));
+							} else {
+								objects.get(i).setSchedule(new String[] { context
+										.getResources()
+										.getString(R.string.loading_error) });
+							}
 						}
+					} else {
+						Toast.makeText(context, R.string.loading_error, Toast.LENGTH_LONG).show();
 					}
 				} catch(ClassCastException e) {
 					Toast.makeText(context, ((JSONObject) new JSONTokener(result)
