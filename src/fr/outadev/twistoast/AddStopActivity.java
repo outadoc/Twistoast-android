@@ -98,7 +98,7 @@ public class AddStopActivity extends Activity {
 				TimeoIDNameObject item = (TimeoIDNameObject) parentView
 						.getItemAtPosition(position);
 
-				if(item.getId() != null) {
+				if(item != null && item.getId() != null) {
 					// set the line view
 					lbl_line.setText(item.getId());
 					view_line_id.setBackgroundColor(TwistoastDatabase
@@ -144,7 +144,8 @@ public class AddStopActivity extends Activity {
 				// empty adapters
 				spinStop.setAdapter(emptyAdapter);
 
-				if(line.getId() != null && direction.getId() != null) {
+				if(line != null && direction != null 
+						&& line.getId() != null && direction.getId() != null) {
 					lbl_direction.setText("→ " + direction.getName());
 
 					fetchDataFromAPI(EndPoints.STOPS, (new TimeoRequestObject(line
@@ -176,8 +177,8 @@ public class AddStopActivity extends Activity {
 						.getItemAtPosition(spinDirection
 								.getSelectedItemPosition());
 
-				if(line.getId() != null && direction.getId() != null && stop
-						.getId() != null) {
+				if(line != null && direction != null && stop != null
+						&& line.getId() != null && direction.getId() != null && stop.getId() != null) {
 					lbl_stop.setText(stop.getName());
 
 					fetchDataFromAPI(EndPoints.SCHEDULE, (new TimeoRequestObject(line
@@ -229,11 +230,9 @@ public class AddStopActivity extends Activity {
 
 		if(status != TwistoastDatabase.DBStatus.SUCCESS) {
 			// meh, something went wrong
-			Toast.makeText(this, "Erreur : " + status, Toast.LENGTH_LONG)
-					.show();
+			Toast.makeText(this, "Erreur : " + status, Toast.LENGTH_LONG).show();
 		} else {
-			Toast.makeText(this, "Ajouté : " + line.getName() + " - " + direction.getName() + " - " + stop.getName(), Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(this, "Ajouté : " + line.getName() + " - " + direction.getName() + " - " + stop.getName(), Toast.LENGTH_SHORT).show();
 			this.finish();
 		}
 	}
