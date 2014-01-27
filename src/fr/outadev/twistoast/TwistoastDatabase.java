@@ -86,7 +86,7 @@ public class TwistoastDatabase {
 
 		// that's a nice query you got tthhhere
 		Cursor results = db
-				.rawQuery("SELECT " + "stop.stop_id, " + "stop.stop_name, " + "line.line_id, " + "line.line_name, " + "dir.dir_id, " + "dir.dir_name " + "FROM twi_stop stop " + "JOIN twi_direction dir USING(dir_id, line_id) " + "JOIN twi_line line USING(line_id) " + "ORDER BY CAST(line.line_id AS INTEGER), stop.stop_name, dir.dir_name", null);
+				.rawQuery("SELECT stop.stop_id, stop.stop_name, line.line_id, line.line_name, dir.dir_id, dir.dir_name FROM twi_stop stop JOIN twi_direction dir USING(dir_id, line_id) JOIN twi_line line USING(line_id) ORDER BY stop.stop_name, CAST(line.line_id AS INTEGER), dir.dir_name", null);
 
 		ArrayList<TimeoScheduleObject> stopsList = new ArrayList<TimeoScheduleObject>();
 
