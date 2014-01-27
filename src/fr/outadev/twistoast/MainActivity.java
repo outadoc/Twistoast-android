@@ -99,6 +99,13 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 		// when the activity is resuming, refresh
 		refreshListFromDB();
 	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		// when the activity is pausing, stop refreshing automatically
+		handler.removeCallbacks(runnable);
+	}
 
 	public void refreshListFromDB() {
 		// we don't want to try to refresh if we're already refreshing (causes
