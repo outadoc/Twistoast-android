@@ -42,7 +42,7 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 					@Override
 					public void onRefreshStarted(View view) {
 						// TODO Auto-generated method stub
-						refreshListFromDB();
+						refreshListFromDB(false);
 					}
 
 				}).setup(pullToRefresh);
@@ -54,6 +54,8 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 		listView.setMultiChoiceModeListener(this);
 
 		isRefreshing = false;
+		
+		refreshListFromDB(true);
 	}
 
 	@Override
@@ -73,7 +75,7 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 			return true;
 		case R.id.action_refresh:
 			// refresh the list
-			refreshListFromDB();
+			refreshListFromDB(false);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -83,21 +85,21 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 	public void addBusStop() {
 		// start an intent to AddStopActivity
 		Intent intent = new Intent(this, AddStopActivity.class);
-		startActivity(intent);
+		startActivityForResult(intent, 0);
 	}
-
-	@Override
-	protected void onRestart() {
-		super.onRestart();
-		// when the activity is restarting, refresh
-		refreshListFromDB();
-	}
+	
+	protected void onActivityResult(int requestCode, int resultCode,
+            Intent data) {
+        if(requestCode == 0) {
+            refreshListFromDB(true);
+        }
+    }
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		// when the activity is resuming, refresh
-		refreshListFromDB();
+		refreshListFromDB(false);
 	}
 	
 	@Override
@@ -107,7 +109,7 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 		handler.removeCallbacks(runnable);
 	}
 
-	public void refreshListFromDB() {
+	public void refreshListFromDB(boolean resetList) {
 		// we don't want to try to refresh if we're already refreshing (causes
 		// bugs)
 		if(isRefreshing)
@@ -121,9 +123,11 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 		// we have to reset the adapter so it correctly loads the stops
 		// if we don't do that, bugs will appear when the database has been
 		// modified
-		listAdapter = new TwistoastArrayAdapter(this, android.R.layout.simple_list_item_1, databaseHandler
-				.getAllStops());
-		listView.setAdapter(listAdapter);
+		if(resetList) {
+			listAdapter = new TwistoastArrayAdapter(this, android.R.layout.simple_list_item_1, databaseHandler
+					.getAllStops());
+			listView.setAdapter(listAdapter);
+		}
 
 		// finally, get the schedule
 		listAdapter.updateScheduleData();
@@ -267,7 +271,7 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 	private Handler handler = new Handler();
 	private Runnable runnable = new Runnable() {
 		public void run() {
-			refreshListFromDB();
+			refreshListFromDB(false);
 		}
 	};
 
