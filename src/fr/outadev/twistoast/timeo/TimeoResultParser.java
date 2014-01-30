@@ -4,7 +4,12 @@ import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.json.JSONTokener;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.widget.Toast;
 
 public abstract class TimeoResultParser {
 
@@ -84,6 +89,32 @@ public abstract class TimeoResultParser {
 		}
 
 		return null;
+	}
+	
+	public static void displayErrorMessageFromTextResult(String result, Activity activity) throws JSONException {
+		JSONObject obj = (JSONObject) new JSONTokener(result).nextValue();
+		String errorMessage = null;
+		
+		try {
+			errorMessage = obj.getString("message");
+		} catch(Exception ex) {}
+		
+		if(errorMessage == null) {
+			Toast.makeText(activity, obj.getString("error"), Toast.LENGTH_LONG).show();
+		} else {
+			AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
+			// add the buttons
+			builder.setPositiveButton("OK", null);
+
+			// set dialog title
+			builder.setTitle(obj.getString("error"));
+			builder.setMessage(errorMessage);
+
+			// create the AlertDialog and show it
+			AlertDialog dialog = builder.create();
+			dialog.show();
+		}
 	}
 
 }

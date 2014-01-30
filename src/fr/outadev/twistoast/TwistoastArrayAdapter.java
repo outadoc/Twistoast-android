@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
 
 import fr.outadev.twistoast.timeo.TimeoRequestHandler;
 import fr.outadev.twistoast.timeo.TimeoRequestObject;
@@ -14,7 +12,6 @@ import fr.outadev.twistoast.timeo.TimeoResultParser;
 import fr.outadev.twistoast.timeo.TimeoScheduleObject;
 import fr.outadev.twistoast.timeo.TimeoRequestHandler.EndPoints;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.SparseBooleanArray;
@@ -186,34 +183,9 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 						Toast.makeText(context, R.string.loading_error, Toast.LENGTH_LONG).show();
 					}
 				} catch(ClassCastException e) {
-					JSONObject obj = (JSONObject) new JSONTokener(result).nextValue();
-					String errorMessage = null;
-					
-					try {
-						errorMessage = obj.getString("message");
-					} catch(Exception ex) {}
-					
-					if(errorMessage == null) {
-						Toast.makeText(context, obj.getString("error"), Toast.LENGTH_LONG).show();
-					} else {
-						AlertDialog.Builder builder = new AlertDialog.Builder((MainActivity) context);
-
-						// add the buttons
-						builder.setPositiveButton("OK", null);
-
-						// set dialog title
-						builder.setTitle(obj.getString("error"));
-						builder.setMessage(errorMessage);
-
-						// create the AlertDialog and show it
-						AlertDialog dialog = builder.create();
-						dialog.show();
-					}
+					TimeoResultParser.displayErrorMessageFromTextResult(result, (Activity) context); 
 				}
 			} catch(JSONException e) {
-				Toast.makeText(context, R.string.loading_error, Toast.LENGTH_LONG)
-						.show();
-			} catch(ClassCastException e) {
 				Toast.makeText(context, R.string.loading_error, Toast.LENGTH_LONG)
 						.show();
 			}

@@ -284,28 +284,28 @@ public class AddStopActivity extends Activity {
 			if(result != null) {
 				if((endPoint == EndPoints.LINES || endPoint == EndPoints.DIRECTIONS || endPoint == EndPoints.STOPS) && spinner != null) {
 					try {
-						ArrayList<TimeoIDNameObject> dataList = new ArrayList<TimeoIDNameObject>();
-
-						// parse the data
-						dataList = TimeoResultParser.parseList(result);
-
-						if(dataList != null) {
-							// load the data into our ArrayAdapter to populate
-							// the list
-							ArrayAdapter<TimeoIDNameObject> adapter = new ArrayAdapter<TimeoIDNameObject>(AddStopActivity.this, android.R.layout.simple_spinner_item, dataList
-									.toArray(new TimeoIDNameObject[dataList
-											.size()]));
-							adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-							spinner.setAdapter(adapter);
+						try {
+							ArrayList<TimeoIDNameObject> dataList = new ArrayList<TimeoIDNameObject>();
+	
+							// parse the data
+							dataList = TimeoResultParser.parseList(result);
+	
+							if(dataList != null) {
+								// load the data into our ArrayAdapter to populate
+								// the list
+								ArrayAdapter<TimeoIDNameObject> adapter = new ArrayAdapter<TimeoIDNameObject>(AddStopActivity.this, android.R.layout.simple_spinner_item, dataList
+										.toArray(new TimeoIDNameObject[dataList
+												.size()]));
+								adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+								spinner.setAdapter(adapter);
+							} else {
+								Toast.makeText(appContext, result, Toast.LENGTH_LONG).show();
+							}
+						} catch(ClassCastException e) {
+							TimeoResultParser.displayErrorMessageFromTextResult(result, (Activity) AddStopActivity.this);
 						}
 					} catch(JSONException e) {
-						Toast.makeText(appContext, result, Toast.LENGTH_LONG)
-								.show();
-						e.printStackTrace();
-					} catch(ClassCastException e) {
-						Toast.makeText(appContext, result, Toast.LENGTH_LONG)
-								.show();
-						e.printStackTrace();
+						Toast.makeText(appContext, result, Toast.LENGTH_LONG).show();
 					}
 				} else if(endPoint == EndPoints.SCHEDULE) {
 					try {
