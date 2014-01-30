@@ -35,11 +35,11 @@
                 android:value="fr.outadev.twistoast.MainActivity" />
         </activity>
         
-        <receiver android:name="fr.outadev.twistoast.TwistoastPebbleReceiver" >
-			<intent-filter>
-		    	<action android:name="com.getpebble.action.app.RECEIVE" />
-		    </intent-filter>
-		</receiver>
+        <receiver android:name=".TwistoastPebbleReceiver">
+            <intent-filter>
+                <action android:name="com.getpebble.action.app.RECEIVE"/>
+            </intent-filter>
+        </receiver>
         
     </application>
 

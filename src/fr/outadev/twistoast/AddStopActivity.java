@@ -26,7 +26,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
-import android.content.Context;
 
 public class AddStopActivity extends Activity {
 
@@ -250,7 +249,6 @@ public class AddStopActivity extends Activity {
 		@Override
 		protected String doInBackground(EndPoints... params) {
 			this.endPoint = params[0];
-			this.appContext = getApplicationContext();
 
 			if(endPoint == EndPoints.LINES || endPoint == EndPoints.DIRECTIONS || endPoint == EndPoints.STOPS || endPoint == EndPoints.SCHEDULE) {
 				if(endPoint == EndPoints.LINES) {
@@ -299,13 +297,13 @@ public class AddStopActivity extends Activity {
 								adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 								spinner.setAdapter(adapter);
 							} else {
-								Toast.makeText(appContext, result, Toast.LENGTH_LONG).show();
+								Toast.makeText(AddStopActivity.this, result, Toast.LENGTH_LONG).show();
 							}
 						} catch(ClassCastException e) {
 							TimeoResultParser.displayErrorMessageFromTextResult(result, (Activity) AddStopActivity.this);
 						}
 					} catch(JSONException e) {
-						Toast.makeText(appContext, result, Toast.LENGTH_LONG).show();
+						Toast.makeText(AddStopActivity.this, result, Toast.LENGTH_LONG).show();
 					}
 				} else if(endPoint == EndPoints.SCHEDULE) {
 					try {
@@ -325,7 +323,7 @@ public class AddStopActivity extends Activity {
 									lbl_schedule_2.setText("");
 							}
 						} catch(ClassCastException e) {
-							Toast.makeText(appContext, ((JSONObject) new JSONTokener(result)
+							Toast.makeText(AddStopActivity.this, ((JSONObject) new JSONTokener(result)
 									.nextValue()).getString("error"), Toast.LENGTH_LONG)
 									.show();
 						}
@@ -339,7 +337,6 @@ public class AddStopActivity extends Activity {
 			}
 		}
 
-		private Context appContext;
 		private EndPoints endPoint;
 		private Spinner spinner;
 	}

@@ -106,6 +106,7 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 	protected void onPause() {
 		super.onPause();
 		// when the activity is pausing, stop refreshing automatically
+		Log.i("twistoast", "stopping automatic refresh, app paused");
 		handler.removeCallbacks(runnable);
 	}
 
@@ -138,7 +139,7 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 		pullToRefresh.setRefreshComplete();
 		isRefreshing = false;
 
-		Log.i("TWISTOAST", "Refreshed, " + listAdapter.getObjects().size() + " stops in DB");
+		Log.i("twistoast", "refreshed, " + listAdapter.getObjects().size() + " stops in db");
 
 		// reset the timer loop, and start it again
 		// this ensures the list is refreshed automatically every 60 seconds

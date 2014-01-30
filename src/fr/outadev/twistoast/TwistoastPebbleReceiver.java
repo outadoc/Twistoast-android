@@ -9,6 +9,7 @@ import org.json.JSONException;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.PebbleKit.PebbleDataReceiver;
@@ -41,13 +42,9 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 	private static final int BUS_NEXT_SCHEDULE = 0x25;
 	private static final int BUS_SECOND_SCHEDULE = 0x26;
 
-	protected TwistoastPebbleReceiver(UUID arg0) {
-		super(arg0);
-		// TODO Auto-generated constructor stub
-	}
-
 	public TwistoastPebbleReceiver() {
 		super(PEBBLE_UUID);
+		Log.i("twistoast", "initialized pebble listener");
 	}
 
 	@Override
