@@ -39,11 +39,9 @@ public class AddStopActivity extends Activity {
 
 		// setup everything
 		setContentView(R.layout.activity_add_stop);
-
 		setProgressBarIndeterminateVisibility(false);
 
 		databaseHandler = new TwistoastDatabase(this);
-		emptyAdapter = new ArrayAdapter<TimeoIDNameObject>(this, 0);
 
 		// get all the UI elements we'll need in the future
 
@@ -51,6 +49,10 @@ public class AddStopActivity extends Activity {
 		spinLine = (Spinner) findViewById(R.id.spin_line);
 		spinDirection = (Spinner) findViewById(R.id.spin_direction);
 		spinStop = (Spinner) findViewById(R.id.spin_stop);
+		
+		spinLine.setEnabled(false);
+		spinDirection.setEnabled(false);
+		spinStop.setEnabled(false);
 
 		// labels
 		lbl_line = (TextView) findViewById(R.id.lbl_line_id);
@@ -87,9 +89,9 @@ public class AddStopActivity extends Activity {
 				lbl_schedule_2.setText(getResources()
 						.getString(R.string.loading_data));
 
-				// empty adapters
-				spinDirection.setAdapter(emptyAdapter);
-				spinStop.setAdapter(emptyAdapter);
+				// disable adapters
+				spinDirection.setEnabled(false);
+				spinStop.setEnabled(false);
 
 				// get the selected line
 				TimeoIDNameObject item = (TimeoIDNameObject) parentView
@@ -138,8 +140,8 @@ public class AddStopActivity extends Activity {
 				lbl_schedule_2.setText(getResources()
 						.getString(R.string.loading_data));
 
-				// empty adapters
-				spinStop.setAdapter(emptyAdapter);
+				// disable adapters
+				spinStop.setEnabled(false);
 
 				if(line != null && direction != null 
 						&& line.getId() != null && direction.getId() != null) {
@@ -296,6 +298,7 @@ public class AddStopActivity extends Activity {
 												.size()]));
 								adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 								spinner.setAdapter(adapter);
+								spinner.setEnabled(true);
 							} else {
 								Toast.makeText(AddStopActivity.this, result, Toast.LENGTH_LONG).show();
 							}
@@ -353,7 +356,6 @@ public class AddStopActivity extends Activity {
 	private TextView lbl_schedule_2;
 
 	private String currentRequestedUrl;
-	private ArrayAdapter<TimeoIDNameObject> emptyAdapter;
 
 	TwistoastDatabase databaseHandler;
 
