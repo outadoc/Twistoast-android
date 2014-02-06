@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class TwistoastOpenHelper extends SQLiteOpenHelper {
 
 	private static final int DATABASE_VERSION = 1;
-	private static final String DATABASE_NAME = "twistoast";
+	private static final String DATABASE_NAME = "twistoast.db";
 
 	private static final String LINES_TABLE_CREATE = "CREATE TABLE twi_line(line_id TEXT PRIMARY KEY, line_name TEXT);";
 	private static final String DIRECTIONS_TABLE_CREATE = "CREATE TABLE twi_direction(dir_id TEXT, line_id TEXT, dir_name TEXT, PRIMARY KEY(dir_id, line_id), FOREIGN KEY(line_id) REFERENCES twi_line(line_id));";
