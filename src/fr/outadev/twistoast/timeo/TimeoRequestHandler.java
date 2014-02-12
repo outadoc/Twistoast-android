@@ -1,27 +1,28 @@
 package fr.outadev.twistoast.timeo;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.net.URLEncoder;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.util.Log;
 
 public abstract class TimeoRequestHandler {
 
-	public static String requestWebPage(String url) throws ClientProtocolException, IOException {
-		HttpClient client = new DefaultHttpClient();
-		HttpGet request = new HttpGet(url);
+	public static String requestWebPage(String urlString) throws IOException {		
+		URL url = new URL(urlString);
+		HttpURLConnection urlConnection = (HttpURLConnection) url
+				.openConnection();
 
-		// request our web page by url
-		HttpResponse response = client.execute(request);
-		return readIt(response.getEntity().getContent(), 2000);
+		try {
+			InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+			return readStream(in);
+		} finally {
+			urlConnection.disconnect();
+		}
 	}
 
 	public static String getFullUrlFromEndPoint(EndPoints endPoint, TimeoRequestObject[] data) {
@@ -75,7 +76,7 @@ public abstract class TimeoRequestHandler {
 	}
 
 	// Reads an InputStream and converts it to a String.
-	public static String readIt(InputStream stream, int len) throws IOException, UnsupportedEncodingException {
+	public static String readStream(InputStream stream) throws IOException, UnsupportedEncodingException {
 		java.util.Scanner s = new java.util.Scanner(stream).useDelimiter("\\A");
 		return s.hasNext() ? s.next() : "";
 	}
