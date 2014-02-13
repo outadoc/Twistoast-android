@@ -2,29 +2,30 @@ package fr.outadev.twistoast;
 
 import java.util.ArrayList;
 
-import com.actionbarsherlock.app.SherlockActivity;
-
 import fr.outadev.twistoast.timeo.TimeoScheduleObject;
+
 import android.os.Bundle;
 import android.os.Handler;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.ListView;
 import android.widget.Toast;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.MenuInflater;
+
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
-public class MainActivity extends SherlockActivity implements MultiChoiceModeListener {
+public class MainActivity extends Activity implements MultiChoiceModeListener {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,7 @@ public class MainActivity extends SherlockActivity implements MultiChoiceModeLis
 
 					@Override
 					public void onRefreshStarted(View view) {
+						// TODO Auto-generated method stub
 						refreshListFromDB(false);
 					}
 
@@ -58,7 +60,7 @@ public class MainActivity extends SherlockActivity implements MultiChoiceModeLis
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getSupportMenuInflater().inflate(R.menu.main, menu);
+		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
 
@@ -146,7 +148,7 @@ public class MainActivity extends SherlockActivity implements MultiChoiceModeLis
 	}
 
 	@Override
-	public boolean onActionItemClicked(final ActionMode mode, android.view.MenuItem item) {
+	public boolean onActionItemClicked(final ActionMode mode, MenuItem item) {
 		switch(item.getItemId()) {
 		case R.id.action_delete:
 			// if we want to remove a bus stop, we'll have to ask a confirmation
@@ -212,11 +214,11 @@ public class MainActivity extends SherlockActivity implements MultiChoiceModeLis
 	}
 
 	@Override
-	public boolean onCreateActionMode(ActionMode mode, android.view.Menu menu) {
+	public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 		// yay, inflation
-		MenuInflater inflater = getSupportMenuInflater();
+		MenuInflater inflater = getMenuInflater();
 
-		inflater.inflate(R.menu.main_edit, (Menu) menu);
+		inflater.inflate(R.menu.main_edit, menu);
 		mode.setTitle(MainActivity.this.getResources()
 				.getString(R.string.select_items));
 		setSubtitle(mode);
@@ -226,16 +228,19 @@ public class MainActivity extends SherlockActivity implements MultiChoiceModeLis
 
 	@Override
 	public void onDestroyActionMode(ActionMode mode) {
+		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public boolean onPrepareActionMode(ActionMode mode, android.view.Menu menu) {
+	public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
 	public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+		// TODO Auto-generated method stub
 		setSubtitle(mode);
 	}
 

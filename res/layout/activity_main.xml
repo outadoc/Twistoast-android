@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity" >
 	
-    <uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout
+    <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
 	    xmlns:android="http://schemas.android.com/apk/res/android"
 	    android:id="@+id/ptr_layout"
 	    android:layout_width="match_parent"
@@ -18,6 +18,6 @@
 	        android:paddingRight="5dp" >
 	    </ListView>
 	   	
-	</uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout>
+	</uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
 
 </LinearLayout>

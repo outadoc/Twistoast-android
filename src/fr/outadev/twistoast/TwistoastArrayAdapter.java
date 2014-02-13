@@ -107,6 +107,7 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 
 			@Override
 			public void onClick(View v) {
+				// TODO Auto-generated method stub
 
 				MainActivity mainActivity = (MainActivity) TwistoastArrayAdapter.this.context;
 				SparseBooleanArray checked = mainActivity.listView
