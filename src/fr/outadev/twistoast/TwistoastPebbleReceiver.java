@@ -1,10 +1,8 @@
 package fr.outadev.twistoast;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
 
 import android.content.Context;
@@ -80,9 +78,7 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 
 						try {
 							return TimeoRequestHandler.requestWebPage(url);
-						} catch(ClientProtocolException e) {
-							e.printStackTrace();
-						} catch(IOException e) {
+						} catch(Exception e) {
 							e.printStackTrace();
 						}
 						

@@ -1,6 +1,7 @@
 package fr.outadev.twistoast;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 
 import org.json.*;
@@ -263,12 +264,15 @@ public class AddStopActivity extends Activity {
 
 				try {
 					return TimeoRequestHandler.requestWebPage(currentRequestedUrl);
-				} catch(final IOException e) {
-					AddStopActivity.this.runOnUiThread(new Runnable(){
-					    public void run(){
-					    	Toast.makeText(AddStopActivity.this, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-					    }
-					});
+				} catch(final Exception e) {
+					if(e instanceof IOException || e instanceof SocketTimeoutException) {
+						AddStopActivity.this.runOnUiThread(new Runnable(){
+						    public void run(){
+						    	Toast.makeText(AddStopActivity.this, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+						    }
+						});
+					}
+					
 					e.printStackTrace();
 				}
 			}

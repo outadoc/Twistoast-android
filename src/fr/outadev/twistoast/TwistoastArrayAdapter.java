@@ -1,6 +1,7 @@
 package fr.outadev.twistoast;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -148,12 +149,15 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 				return TimeoRequestHandler
 						.requestWebPage(TimeoRequestHandler
 								.getFullUrlFromEndPoint(EndPoints.FULL_SCHEDULE, requestObj));
-			} catch(final IOException e) {
-				((Activity) context).runOnUiThread(new Runnable(){
-				    public void run(){
-				    	Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-				    }
-				});
+			} catch(final Exception e) {
+				if(e instanceof IOException || e instanceof SocketTimeoutException) {
+					((Activity) context).runOnUiThread(new Runnable(){
+					    public void run(){
+					    	Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+					    }
+					});
+				}
+				
 				e.printStackTrace();
 			}
 			

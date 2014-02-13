@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLEncoder;
 
@@ -12,10 +13,11 @@ import android.util.Log;
 
 public abstract class TimeoRequestHandler {
 
-	public static String requestWebPage(String urlString) throws IOException {		
+	public static String requestWebPage(String urlString) throws IOException, SocketTimeoutException {		
 		URL url = new URL(urlString);
 		HttpURLConnection urlConnection = (HttpURLConnection) url
 				.openConnection();
+		urlConnection.setConnectTimeout(15000);
 
 		try {
 			InputStream in = new BufferedInputStream(urlConnection.getInputStream());
