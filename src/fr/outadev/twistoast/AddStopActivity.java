@@ -6,6 +6,8 @@ import java.util.ArrayList;
 
 import org.json.*;
 
+import com.actionbarsherlock.app.SherlockActivity;
+
 import fr.outadev.twistoast.timeo.TimeoIDNameObject;
 import fr.outadev.twistoast.timeo.TimeoRequestHandler;
 import fr.outadev.twistoast.timeo.TimeoRequestObject;
@@ -13,9 +15,8 @@ import fr.outadev.twistoast.timeo.TimeoResultParser;
 import fr.outadev.twistoast.timeo.TimeoRequestHandler.EndPoints;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.Activity;
+import android.support.v4.app.NavUtils;
 import android.util.TypedValue;
-import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -25,10 +26,11 @@ import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.view.MenuItem;
-import android.support.v4.app.NavUtils;
 
-public class AddStopActivity extends Activity {
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
+public class AddStopActivity extends SherlockActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -197,7 +199,7 @@ public class AddStopActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.add_stop, menu);
+		getSupportMenuInflater().inflate(R.menu.add_stop, menu);
 		return true;
 	}
 
@@ -307,7 +309,7 @@ public class AddStopActivity extends Activity {
 								Toast.makeText(AddStopActivity.this, result, Toast.LENGTH_LONG).show();
 							}
 						} catch(ClassCastException e) {
-							TimeoResultParser.displayErrorMessageFromTextResult(result, (Activity) AddStopActivity.this);
+							TimeoResultParser.displayErrorMessageFromTextResult(result, AddStopActivity.this);
 						}
 					} catch(JSONException e) {
 						Toast.makeText(AddStopActivity.this, result, Toast.LENGTH_LONG).show();
