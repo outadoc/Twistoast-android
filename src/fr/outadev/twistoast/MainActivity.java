@@ -31,6 +31,10 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		//start background listener 
+		Intent intent = new Intent(this, TwistoastPebbleService.class);
+		startService(intent);
 
 		// get pull to refresh view
 		pullToRefresh = (PullToRefreshLayout) findViewById(R.id.ptr_layout);
@@ -105,7 +109,7 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 	protected void onPause() {
 		super.onPause();
 		// when the activity is pausing, stop refreshing automatically
-		Log.i("twistoast", "stopping automatic refresh, app paused");
+		Log.i("Twistoast", "stopping automatic refresh, app paused");
 		handler.removeCallbacks(runnable);
 	}
 
@@ -138,7 +142,7 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 		pullToRefresh.setRefreshComplete();
 		isRefreshing = false;
 
-		Log.i("twistoast", "refreshed, " + listAdapter.getObjects().size() + " stops in db");
+		Log.i("Twistoast", "refreshed, " + listAdapter.getObjects().size() + " stops in db");
 		Toast.makeText(this, "Horaires rafra”chis", Toast.LENGTH_SHORT).show();
 
 		// reset the timer loop, and start it again

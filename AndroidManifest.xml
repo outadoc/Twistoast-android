@@ -24,7 +24,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
         <activity
             android:name="fr.outadev.twistoast.AddStopActivity"
             android:label="@string/title_activity_add_stop"
@@ -33,14 +32,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="fr.outadev.twistoast.MainActivity" />
         </activity>
-        
-        <receiver 
-            android:name=".TwistoastPebbleReceiver"
-            android:exported="false" >
-            <intent-filter>
-                <action android:name="com.getpebble.action.app.RECEIVE"/>
-            </intent-filter>
-        </receiver>
+        <service android:name=".TwistoastPebbleService"/>
         
     </application>
 

@@ -42,101 +42,100 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 
 	public TwistoastPebbleReceiver() {
 		super(PEBBLE_UUID);
-		Log.i("twistoast", "initialized pebble listener");
+		Log.d("TwistoastPebbleReceiver", "initialized pebble listener");
 	}
 
 	@Override
 	public void receiveData(final Context context, final int transactionId, PebbleDictionary data) {
-		if((data.getInteger(TWISTOAST_MESSAGE_TYPE) == BUS_STOP_REQUEST) && PebbleKit
-				.areAppMessagesSupported(context)) {
-			short busIndex = (data.getInteger(BUS_INDEX)).shortValue();
-
+		Log.d("TwistoastPebbleReceiver", "received a message from pebble " + PEBBLE_UUID);
+		
+		if((data.getInteger(TWISTOAST_MESSAGE_TYPE) == BUS_STOP_REQUEST)) {
+			PebbleKit.sendAckToPebble(context, transactionId);
 			databaseHandler = new TwistoastDatabase(context);
-			ArrayList<TimeoScheduleObject> stopsList = databaseHandler
-					.getAllStops();
-			PebbleDictionary response = new PebbleDictionary();
+			
+			short index = (data.getInteger(BUS_INDEX)).shortValue();
+			final ArrayList<TimeoScheduleObject> stopsList = databaseHandler.getAllStops();
+			final PebbleDictionary response = new PebbleDictionary();
+			
+			final short busIndex = (short) (index % stopsList.size());
+			TimeoScheduleObject schedule = stopsList.get(busIndex);
 
-			if(stopsList.size() < busIndex) {
-				PebbleKit.sendNackToPebble(context, transactionId);
-			} else {
-				PebbleKit.sendAckToPebble(context, transactionId);
+			// fetch schedule
+			new AsyncTask<TimeoScheduleObject, Void, String>() {
 
-				TimeoScheduleObject schedule = stopsList.get(busIndex);
+				@Override
+				protected String doInBackground(TimeoScheduleObject... params) {
+					this.object = params[0];
 
-				// fetch schedule
-				new AsyncTask<TimeoScheduleObject, Void, String>() {
+					String url = TimeoRequestHandler
+							.getFullUrlFromEndPoint(EndPoints.SCHEDULE, new TimeoRequestObject[] { new TimeoRequestObject(object
+									.getLine().getId(), object
+									.getDirection().getId(), object
+									.getStop().getId()) });
 
-					@Override
-					protected String doInBackground(TimeoScheduleObject... params) {
-						this.object = params[0];
-
-						String url = TimeoRequestHandler
-								.getFullUrlFromEndPoint(EndPoints.SCHEDULE, new TimeoRequestObject[] { new TimeoRequestObject(object
-										.getLine().getId(), object
-										.getDirection().getId(), object
-										.getStop().getId()) });
-
-						try {
-							return TimeoRequestHandler.requestWebPage(url);
-						} catch(Exception e) {
-							e.printStackTrace();
-						}
-						
-						return null;
+					try {
+						return TimeoRequestHandler.requestWebPage(url);
+					} catch(Exception e) {
+						e.printStackTrace();
 					}
 
-					@Override
-					protected void onPostExecute(String result) {
-						try {
-							try {
-								// parse the schedule and set it for our
-								// TimeoScheduleObject, then refresh
-								String[] scheduleArray = TimeoResultParser
-										.parseSchedule(result);
+					return null;
+				}
 
-								if(scheduleArray != null) {
-									object.setSchedule(scheduleArray);
-								} else {
-									object.setSchedule(new String[] { context
-											.getResources()
-											.getString(R.string.loading_error) });
-								}
-							} catch(ClassCastException e) {
-								PebbleKit
-										.sendNackToPebble(context, transactionId);
+				@Override
+				protected void onPostExecute(String result) {
+					try {
+						try {
+							// parse the schedule and set it for our
+							// TimeoScheduleObject, then refresh
+							String[] scheduleArray = TimeoResultParser
+									.parseSchedule(result);
+
+							if(scheduleArray != null) {
+								object.setSchedule(scheduleArray);
+							} else {
+								object.setSchedule(new String[] { context
+										.getResources()
+										.getString(R.string.loading_error) });
 							}
-						} catch(JSONException e) {
-							object.setSchedule(new String[] { context
-									.getResources()
-									.getString(R.string.loading_error) });
+
+							response.addInt8(TWISTOAST_MESSAGE_TYPE, BUS_STOP_DATA_RESPONSE);
+							response.addInt16(BUS_INDEX, busIndex);
+							response.addString(BUS_STOP_NAME, stopsList
+									.get(busIndex).getStop().getName());
+							response.addString(BUS_DIRECTION_NAME, stopsList
+									.get(busIndex).getDirection().getName());
+							response.addString(BUS_LINE_ID, stopsList
+									.get(busIndex).getLine().getId());
+							response.addString(BUS_LINE_NAME, stopsList
+									.get(busIndex).getLine().getName());
+							response.addString(BUS_NEXT_SCHEDULE, stopsList
+									.get(busIndex).getSchedule()[0]);
+							response.addString(BUS_SECOND_SCHEDULE, stopsList
+									.get(busIndex).getSchedule()[1]);
+
+							PebbleKit
+									.sendDataToPebble(context, PEBBLE_UUID, response);
+
 						} catch(ClassCastException e) {
-							object.setSchedule(new String[] { context
-									.getResources()
-									.getString(R.string.loading_error) });
+							PebbleKit
+									.sendNackToPebble(context, transactionId);
 						}
+					} catch(JSONException e) {
+						object.setSchedule(new String[] { context
+								.getResources()
+								.getString(R.string.loading_error) });
+					} catch(ClassCastException e) {
+						object.setSchedule(new String[] { context
+								.getResources()
+								.getString(R.string.loading_error) });
 					}
+				}
 
-					TimeoScheduleObject object;
+				TimeoScheduleObject object;
 
-				}.execute(schedule);
+			}.execute(schedule);
 
-				response.addInt8(TWISTOAST_MESSAGE_TYPE, BUS_STOP_DATA_RESPONSE);
-				response.addInt16(BUS_INDEX, busIndex);
-				response.addString(BUS_STOP_NAME, stopsList.get(busIndex)
-						.getStop().getName());
-				response.addString(BUS_DIRECTION_NAME, stopsList.get(busIndex)
-						.getDirection().getName());
-				response.addString(BUS_LINE_ID, stopsList.get(busIndex)
-						.getLine().getId());
-				response.addString(BUS_LINE_NAME, stopsList.get(busIndex)
-						.getLine().getName());
-				response.addString(BUS_NEXT_SCHEDULE, stopsList.get(busIndex)
-						.getSchedule()[0]);
-				response.addString(BUS_SECOND_SCHEDULE, stopsList.get(busIndex)
-						.getSchedule()[1]);
-
-				PebbleKit.sendDataToPebble(context, PEBBLE_UUID, response);
-			}
 		} else {
 			PebbleKit.sendNackToPebble(context, transactionId);
 		}
