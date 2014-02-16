@@ -101,8 +101,8 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 							response.addString(BUS_LINE_NAME, processStringForPebble(object.getLine().getName(), 10));
 							response.addString(BUS_DIRECTION_NAME, processStringForPebble(object.getDirection().getName(), 15));
 							response.addString(BUS_STOP_NAME, processStringForPebble(object.getStop().getName(), 15));
-							response.addString(BUS_NEXT_SCHEDULE, processStringForPebble(object.getSchedule()[0], 15));
-							response.addString(BUS_SECOND_SCHEDULE, (object.getSchedule().length > 1) ? processStringForPebble(object.getSchedule()[1], 15) : "");
+							response.addString(BUS_NEXT_SCHEDULE, processStringForPebble(object.getSchedule()[0], 15, true));
+							response.addString(BUS_SECOND_SCHEDULE, (object.getSchedule().length > 1) ? processStringForPebble(object.getSchedule()[1], 15, true) : "");
 
 							Log.d("TwistoastPebbleReceiver", "sending back: " + response);
 
@@ -129,11 +129,17 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 	}
 	
 	private String processStringForPebble(String str, int length) {
+		return processStringForPebble(str, length, false);
+	}
+	
+	private String processStringForPebble(String str, int length, boolean stripLine) {
 		if(str == null) return "";
 		
-		// don't keep the part that's before the ":", it's making it less readable
-		String[] stra = str.split("Ligne ");
-		str = (stra.length > 1) ? stra[1] : str;
+		if(stripLine) {
+			// don't keep the part that's before the ":", it's making it less readable
+			String[] stra = str.split("Ligne ");
+			str = (stra.length > 1) ? stra[1] : str;
+		}
 		
 		try {
 			return str.substring(0, length);
