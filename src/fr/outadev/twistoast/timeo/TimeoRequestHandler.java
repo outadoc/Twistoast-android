@@ -13,11 +13,12 @@ import android.util.Log;
 
 public abstract class TimeoRequestHandler {
 
-	public static String requestWebPage(String urlString) throws IOException, SocketTimeoutException {		
+	public static String requestWebPage(String urlString) throws IOException, SocketTimeoutException {
 		URL url = new URL(urlString);
-		HttpURLConnection urlConnection = (HttpURLConnection) url
-				.openConnection();
+		HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+		
 		urlConnection.setConnectTimeout(15000);
+		urlConnection.setReadTimeout(30000);
 
 		try {
 			InputStream in = new BufferedInputStream(urlConnection.getInputStream());
@@ -39,19 +40,14 @@ public abstract class TimeoRequestHandler {
 				if(endPoint == EndPoints.LINES) {
 					url += "?func=getLines";
 				} else if(endPoint == EndPoints.DIRECTIONS && data[0].getLine() != null) {
-					url += "?func=getDirections&line=" + URLEncoder
-							.encode(data[0].getLine(), charset);
-				} else if(endPoint == EndPoints.STOPS && data[0].getLine() != null && data[0]
-						.getDirection() != null) {
-					url += "?func=getStops&line=" + URLEncoder.encode(data[0]
-							.getLine(), charset) + "&direction=" + URLEncoder
+					url += "?func=getDirections&line=" + URLEncoder.encode(data[0].getLine(), charset);
+				} else if(endPoint == EndPoints.STOPS && data[0].getLine() != null && data[0].getDirection() != null) {
+					url += "?func=getStops&line=" + URLEncoder.encode(data[0].getLine(), charset) + "&direction=" + URLEncoder
 							.encode(data[0].getDirection(), charset);
-				} else if(endPoint == EndPoints.SCHEDULE && data[0].getLine() != null && data[0]
-						.getDirection() != null && data[0].getStop() != null) {
-					url += "?func=getSchedule&line=" + URLEncoder
-							.encode(data[0].getLine(), charset) + "&direction=" + URLEncoder
-							.encode(data[0].getDirection(), charset) + "&stop=" + URLEncoder
-							.encode(data[0].getStop(), charset);
+				} else if(endPoint == EndPoints.SCHEDULE && data[0].getLine() != null && data[0].getDirection() != null && data[0]
+						.getStop() != null) {
+					url += "?func=getSchedule&line=" + URLEncoder.encode(data[0].getLine(), charset) + "&direction=" + URLEncoder
+							.encode(data[0].getDirection(), charset) + "&stop=" + URLEncoder.encode(data[0].getStop(), charset);
 				} else if(endPoint == EndPoints.FULL_SCHEDULE) {
 					String cookie = "";
 
@@ -60,12 +56,10 @@ public abstract class TimeoRequestHandler {
 					for(int i = 0; i < data.length; i++) {
 						if(i != 0)
 							cookie += ';';
-						cookie += data[i].getStop() + '|' + data[i].getLine() + '|' + data[i]
-								.getDirection();
+						cookie += data[i].getStop() + '|' + data[i].getLine() + '|' + data[i].getDirection();
 					}
 
-					url += "?func=getSchedule&data=" + URLEncoder
-							.encode(cookie, charset);
+					url += "?func=getSchedule&data=" + URLEncoder.encode(cookie, charset);
 					Log.d("Twistoast", "sending request for " + url);
 				}
 
