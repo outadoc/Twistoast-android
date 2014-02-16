@@ -59,8 +59,8 @@ public abstract class TimeoResultParser {
 						while(!stopsList.get(i+indexShift).getLine().getName().equalsIgnoreCase(resultArray.getJSONObject(i).getString("line"))
 								&& !stopsList.get(i+indexShift).getDirection().getName().equalsIgnoreCase(resultArray.getJSONObject(i).getString("direction"))
 								&& !stopsList.get(i+indexShift).getStop().getName().equalsIgnoreCase(resultArray.getJSONObject(i).getString("stop"))) {
+							Log.d("Twistoast", "missing schedule for " + stopsList.get(i+indexShift) + ", shifting");
 							indexShift++;
-							Log.d("Twistoast", "SHIFTING");
 						}
 					}
 					
