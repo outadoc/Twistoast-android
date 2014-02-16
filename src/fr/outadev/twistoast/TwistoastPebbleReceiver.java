@@ -132,7 +132,7 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 		if(str == null) return "";
 		
 		// don't keep the part that's before the ":", it's making it less readable
-		String[] stra = str.split(": ");
+		String[] stra = str.split("Ligne ");
 		str = (stra.length > 1) ? stra[1] : str;
 		
 		try {
