@@ -31,10 +31,6 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
-		//start background listener 
-		Intent intent = new Intent(this, TwistoastPebbleService.class);
-		startService(intent);
 
 		// get pull to refresh view
 		pullToRefresh = (PullToRefreshLayout) findViewById(R.id.ptr_layout);

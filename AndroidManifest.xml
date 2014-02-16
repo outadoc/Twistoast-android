@@ -2,13 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="fr.outadev.twistoast"
     android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionName="1.0"
+    android:permission="android.permission.RECEIVE_BOOT_COMPLETED" >
 
     <uses-sdk
         android:minSdkVersion="11"
         android:targetSdkVersion="19" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
         android:allowBackup="true"
@@ -24,6 +26,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
         <activity
             android:name="fr.outadev.twistoast.AddStopActivity"
             android:label="@string/title_activity_add_stop"
@@ -32,7 +35,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="fr.outadev.twistoast.MainActivity" />
         </activity>
-        <service android:name=".TwistoastPebbleService"/>
+        
+        <receiver android:name="fr.outadev.twistoast.BootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        
+        <service android:name="fr.outadev.twistoast.TwistoastPebbleService" />
         
     </application>
 

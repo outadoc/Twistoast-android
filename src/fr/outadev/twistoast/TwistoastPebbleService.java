@@ -24,7 +24,7 @@ public class TwistoastPebbleService extends Service {
 		receiver = new TwistoastPebbleReceiver();
 		PebbleKit.registerReceivedDataHandler(this, receiver);
 
-		return START_REDELIVER_INTENT;
+		return START_STICKY;
 	}
 
 }
