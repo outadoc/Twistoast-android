@@ -2,7 +2,6 @@ package fr.outadev.twistoast;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONException;
@@ -45,29 +44,23 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
-		LayoutInflater inflater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		// that's our row XML
 		View rowView = inflater.inflate(R.layout.schedule_row, parent, false);
 
 		// get all the stuff in it that we'll have to modify
-		FrameLayout view_line_id = (FrameLayout) rowView
-				.findViewById(R.id.view_line_id);
+		FrameLayout view_line_id = (FrameLayout) rowView.findViewById(R.id.view_line_id);
 
 		TextView lbl_line = (TextView) rowView.findViewById(R.id.lbl_line_id);
 		TextView lbl_stop = (TextView) rowView.findViewById(R.id.lbl_stop_name);
-		TextView lbl_direction = (TextView) rowView
-				.findViewById(R.id.lbl_direction_name);
+		TextView lbl_direction = (TextView) rowView.findViewById(R.id.lbl_direction_name);
 
-		TextView lbl_schedule_1 = (TextView) rowView
-				.findViewById(R.id.lbl_schedule_1);
-		TextView lbl_schedule_2 = (TextView) rowView
-				.findViewById(R.id.lbl_schedule_2);
+		TextView lbl_schedule_1 = (TextView) rowView.findViewById(R.id.lbl_schedule_1);
+		TextView lbl_schedule_2 = (TextView) rowView.findViewById(R.id.lbl_schedule_2);
 
 		// line
-		view_line_id.setBackgroundColor(TwistoastDatabase
-				.getColorFromLineID(objects.get(position).getLine().getId()));
+		view_line_id.setBackgroundColor(TwistoastDatabase.getColorFromLineID(objects.get(position).getLine().getId()));
 		lbl_line.setText(objects.get(position).getLine().getId());
 
 		if(lbl_line.getText().length() > 3) {
@@ -82,25 +75,19 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 		lbl_stop.setText("Arrêt " + objects.get(position).getStop().getName());
 
 		// direction
-		lbl_direction.setText("→ Dir. " + objects.get(position).getDirection()
-				.getName());
+		lbl_direction.setText("→ Dir. " + objects.get(position).getDirection().getName());
 
 		// schedule
-		if(objects.get(position).getSchedule() != null && objects.get(position)
-				.getSchedule().length > 0 && objects.get(position)
+		if(objects.get(position).getSchedule() != null && objects.get(position).getSchedule().length > 0 && objects.get(position)
 				.getSchedule()[0] != null) {
-			lbl_schedule_1
-					.setText("- " + objects.get(position).getSchedule()[0]);
+			lbl_schedule_1.setText("- " + objects.get(position).getSchedule()[0]);
 		} else {
-			lbl_schedule_1.setText("- " + context.getResources()
-					.getString(R.string.loading_data));
+			lbl_schedule_1.setText("- " + context.getResources().getString(R.string.loading_data));
 		}
 
-		if(objects.get(position).getSchedule() != null && objects.get(position)
-				.getSchedule().length > 1 && objects.get(position)
+		if(objects.get(position).getSchedule() != null && objects.get(position).getSchedule().length > 1 && objects.get(position)
 				.getSchedule()[1] != null) {
-			lbl_schedule_2
-					.setText("- " + objects.get(position).getSchedule()[1]);
+			lbl_schedule_2.setText("- " + objects.get(position).getSchedule()[1]);
 		}
 
 		view_line_id.setOnClickListener(new OnClickListener() {
@@ -110,8 +97,7 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 				// TODO Auto-generated method stub
 
 				MainActivity mainActivity = (MainActivity) TwistoastArrayAdapter.this.context;
-				SparseBooleanArray checked = mainActivity.listView
-						.getCheckedItemPositions();
+				SparseBooleanArray checked = mainActivity.listView.getCheckedItemPositions();
 
 				if(checked.get(position)) {
 					mainActivity.listView.setItemChecked(position, false);
@@ -135,32 +121,29 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 
 		@Override
 		protected String doInBackground(Void... params) {
-			TimeoRequestObject[] requestObj = new TimeoRequestObject[objects
-					.size()];
+			TimeoRequestObject[] requestObj = new TimeoRequestObject[objects.size()];
 
 			// add every stop to the request
 			for(int i = 0; i < objects.size(); i++) {
-				requestObj[i] = new TimeoRequestObject(objects.get(i).getLine()
-						.getId(), objects.get(i).getDirection().getId(), objects
+				requestObj[i] = new TimeoRequestObject(objects.get(i).getLine().getId(), objects.get(i).getDirection().getId(), objects
 						.get(i).getStop().getId());
 			}
-			
+
 			try {
-				return TimeoRequestHandler
-						.requestWebPage(TimeoRequestHandler
-								.getFullUrlFromEndPoint(EndPoints.FULL_SCHEDULE, requestObj));
+				return TimeoRequestHandler.requestWebPage(TimeoRequestHandler
+						.getFullUrlFromEndPoint(EndPoints.FULL_SCHEDULE, requestObj));
 			} catch(final Exception e) {
 				if(e instanceof IOException || e instanceof SocketTimeoutException) {
-					((Activity) context).runOnUiThread(new Runnable(){
-					    public void run(){
-					    	Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-					    }
+					((Activity) context).runOnUiThread(new Runnable() {
+						public void run() {
+							Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+						}
 					});
 				}
-				
+
 				e.printStackTrace();
 			}
-			
+
 			return null;
 		}
 
@@ -170,21 +153,14 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 				try {
 					// parse the schedule and set in for our
 					// TimeoScheduleObject, then refresh
-					ArrayList<String[]> scheduleArray = TimeoResultParser
-							.parseMultipleSchedules(result);
+					TimeoResultParser.parseMultipleSchedules(result, objects);
 					
-					if(scheduleArray != null) {
-						for(int i = 0; i < scheduleArray.size(); i++) {
-							if(scheduleArray.get(i) != null) {
-								objects.get(i).setSchedule(scheduleArray.get(i));
-							} else {
-								objects.get(i).setSchedule(new String[] { context
-										.getResources()
-										.getString(R.string.loading_error) });
-							}
+					for(int i = 0; i < objects.size(); i++) {
+						if(objects.get(i).getSchedule() == null) {
+							objects.get(i).setSchedule(new String[] { context
+									.getResources()
+									.getString(R.string.loading_error) });
 						}
-					} else {
-						Toast.makeText(context, R.string.loading_error, Toast.LENGTH_LONG).show();
 					}
 				} catch(ClassCastException e) {
 					TimeoResultParser.displayErrorMessageFromTextResult(result, (Activity) context); 
