@@ -66,7 +66,7 @@ public abstract class TimeoRequestHandler {
 
 					url += "?func=getSchedule&data=" + URLEncoder
 							.encode(cookie, charset);
-					Log.i("Twistoast", "sending request for " + url);
+					Log.d("Twistoast", "sending request for " + url);
 				}
 
 				return url;
