@@ -93,6 +93,8 @@ public class AddStopActivity extends Activity {
 				// disable adapters
 				spinDirection.setEnabled(false);
 				spinStop.setEnabled(false);
+				
+				item_next.setEnabled(false);
 
 				// get the selected line
 				TimeoIDNameObject item = (TimeoIDNameObject) parentView
@@ -143,6 +145,8 @@ public class AddStopActivity extends Activity {
 
 				// disable adapters
 				spinStop.setEnabled(false);
+				
+				item_next.setEnabled(false);
 
 				if(line != null && direction != null 
 						&& line.getId() != null && direction.getId() != null) {
@@ -176,6 +180,8 @@ public class AddStopActivity extends Activity {
 				TimeoIDNameObject direction = (TimeoIDNameObject) spinDirection
 						.getItemAtPosition(spinDirection
 								.getSelectedItemPosition());
+				
+				item_next.setEnabled(true);
 
 				if(line != null && direction != null && stop != null
 						&& line.getId() != null && direction.getId() != null && stop.getId() != null) {
@@ -198,6 +204,7 @@ public class AddStopActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.add_stop, menu);
+		item_next = (MenuItem) menu.findItem(R.id.action_ok);
 		return true;
 	}
 
@@ -358,6 +365,8 @@ public class AddStopActivity extends Activity {
 	private TextView lbl_direction;
 	private TextView lbl_schedule_1;
 	private TextView lbl_schedule_2;
+	
+	private MenuItem item_next;
 
 	private String currentRequestedUrl;
 

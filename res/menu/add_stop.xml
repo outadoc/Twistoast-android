@@ -2,6 +2,7 @@
     
     <item android:id="@+id/action_ok"
           android:title="@string/action_ok"
-          android:showAsAction="ifRoom" />
+          android:showAsAction="ifRoom"
+          android:enabled="false" />
 
 </menu>
