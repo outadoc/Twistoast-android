@@ -1,5 +1,7 @@
 package fr.outadev.twistoast.timeo;
 
+import java.util.Arrays;
+
 public class TimeoScheduleObject {
 
 	public TimeoScheduleObject(TimeoIDNameObject line, TimeoIDNameObject direction, TimeoIDNameObject stop, String[] schedule) {
@@ -39,6 +41,12 @@ public class TimeoScheduleObject {
 
 	public void setSchedule(String[] schedule) {
 		this.schedule = schedule;
+	}
+
+	@Override
+	public String toString() {
+		return "TimeoScheduleObject [line=" + line + ", direction=" + direction + ", stop=" + stop + ", schedule=" + Arrays
+				.toString(schedule) + "]";
 	}
 
 	private TimeoIDNameObject line;
