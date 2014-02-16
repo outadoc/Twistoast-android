@@ -58,6 +58,8 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 		listView.setMultiChoiceModeListener(this);
 
 		isRefreshing = false;
+		isInBackground = false;
+		
 		refreshListFromDB(true);
 	}
 
@@ -101,6 +103,8 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		
+		isInBackground = false;
 		// when the activity is resuming, refresh
 		refreshListFromDB(false);
 	}
@@ -110,6 +114,7 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 		super.onPause();
 		// when the activity is pausing, stop refreshing automatically
 		Log.i("Twistoast", "stopping automatic refresh, app paused");
+		isInBackground = true;
 		handler.removeCallbacks(runnable);
 	}
 
@@ -148,7 +153,7 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 		// reset the timer loop, and start it again
 		// this ensures the list is refreshed automatically every 60 seconds
 		handler.removeCallbacks(runnable);
-		handler.postDelayed(runnable, REFRESH_INTERVAL);
+		if(!isInBackground) handler.postDelayed(runnable, REFRESH_INTERVAL);
 	}
 
 	@Override
@@ -282,5 +287,7 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 
 	private TwistoastDatabase databaseHandler;
 	private TwistoastArrayAdapter listAdapter;
+	
+	private boolean isInBackground;
 
 }
