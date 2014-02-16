@@ -46,15 +46,17 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 	@Override
 	public void receiveData(final Context context, final int transactionId, PebbleDictionary data) {
 		Log.d("TwistoastPebbleReceiver", "received a message from pebble " + PEBBLE_UUID);
+		
+		databaseHandler = new TwistoastDatabase(context);
+		final ArrayList<TimeoScheduleObject> stopsList = databaseHandler.getAllStops();
 
-		if((data.getInteger(TWISTOAST_MESSAGE_TYPE) == BUS_STOP_REQUEST)) {
+		if(data.getInteger(TWISTOAST_MESSAGE_TYPE) == BUS_STOP_REQUEST
+				&& stopsList.size() > 0) {
 			Log.d("TwistoastPebbleReceiver", "pebble request acknowledged");
 
 			PebbleKit.sendAckToPebble(context, transactionId);
-			databaseHandler = new TwistoastDatabase(context);
 
 			short index = (data.getInteger(BUS_INDEX)).shortValue();
-			final ArrayList<TimeoScheduleObject> stopsList = databaseHandler.getAllStops();
 			final PebbleDictionary response = new PebbleDictionary();
 
 			final short busIndex = (short) (index % stopsList.size());
