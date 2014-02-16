@@ -50,7 +50,7 @@ public class AddStopActivity extends Activity {
 		spinLine = (Spinner) findViewById(R.id.spin_line);
 		spinDirection = (Spinner) findViewById(R.id.spin_direction);
 		spinStop = (Spinner) findViewById(R.id.spin_stop);
-		
+
 		spinLine.setEnabled(false);
 		spinDirection.setEnabled(false);
 		spinStop.setEnabled(false);
@@ -79,32 +79,26 @@ public class AddStopActivity extends Activity {
 			@Override
 			public void onItemSelected(AdapterView<?> parentView, View view, int position, long id) {
 				// set loading labels
-				lbl_line.setText("?");
-				lbl_direction.setText(getResources()
-						.getString(R.string.loading_data));
-				lbl_stop.setText(getResources()
-						.getString(R.string.loading_data));
+				lbl_line.setText(getResources().getString(R.string.unknown_line_id));
+				lbl_direction.setText(getResources().getString(R.string.loading_data));
+				lbl_stop.setText(getResources().getString(R.string.loading_data));
 
-				lbl_schedule_1.setText(getResources()
-						.getString(R.string.loading_data));
-				lbl_schedule_2.setText(getResources()
-						.getString(R.string.loading_data));
+				lbl_schedule_1.setText(getResources().getString(R.string.loading_data));
+				lbl_schedule_2.setText(getResources().getString(R.string.loading_data));
 
 				// disable adapters
 				spinDirection.setEnabled(false);
 				spinStop.setEnabled(false);
-				
+
 				item_next.setEnabled(false);
 
 				// get the selected line
-				TimeoIDNameObject item = (TimeoIDNameObject) parentView
-						.getItemAtPosition(position);
+				TimeoIDNameObject item = (TimeoIDNameObject) parentView.getItemAtPosition(position);
 
 				if(item != null && item.getId() != null) {
 					// set the line view
 					lbl_line.setText(item.getId());
-					view_line_id.setBackgroundColor(TwistoastDatabase
-							.getColorFromLineID(item.getId()));
+					view_line_id.setBackgroundColor(TwistoastDatabase.getColorFromLineID(item.getId()));
 
 					// adapt the size based on the size of the line ID
 					if(lbl_line.getText().length() > 3) {
@@ -116,8 +110,7 @@ public class AddStopActivity extends Activity {
 					}
 
 					// fetch the directions
-					fetchDataFromAPI(EndPoints.DIRECTIONS, (new TimeoRequestObject(item
-							.getId())));
+					fetchDataFromAPI(EndPoints.DIRECTIONS, (new TimeoRequestObject(item.getId())));
 				}
 			}
 
@@ -130,30 +123,23 @@ public class AddStopActivity extends Activity {
 		spinDirection.setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parentView, View view, int position, long id) {
-				TimeoIDNameObject direction = (TimeoIDNameObject) parentView
-						.getItemAtPosition(position);
-				TimeoIDNameObject line = (TimeoIDNameObject) spinLine
-						.getItemAtPosition(spinLine.getSelectedItemPosition());
+				TimeoIDNameObject direction = (TimeoIDNameObject) parentView.getItemAtPosition(position);
+				TimeoIDNameObject line = (TimeoIDNameObject) spinLine.getItemAtPosition(spinLine.getSelectedItemPosition());
 
 				// set loading labels
-				lbl_direction.setText(getResources()
-						.getString(R.string.loading_data));
-				lbl_schedule_1.setText(getResources()
-						.getString(R.string.loading_data));
-				lbl_schedule_2.setText(getResources()
-						.getString(R.string.loading_data));
+				lbl_direction.setText(getResources().getString(R.string.loading_data));
+				lbl_schedule_1.setText(getResources().getString(R.string.loading_data));
+				lbl_schedule_2.setText(getResources().getString(R.string.loading_data));
 
 				// disable adapters
 				spinStop.setEnabled(false);
-				
+
 				item_next.setEnabled(false);
 
-				if(line != null && direction != null 
-						&& line.getId() != null && direction.getId() != null) {
-					lbl_direction.setText("→ Dir. " + direction.getName());
+				if(line != null && direction != null && line.getId() != null && direction.getId() != null) {
+					lbl_direction.setText(getResources().getString(R.string.direction_name, direction.getName()));
 
-					fetchDataFromAPI(EndPoints.STOPS, (new TimeoRequestObject(line
-							.getId(), direction.getId())));
+					fetchDataFromAPI(EndPoints.STOPS, (new TimeoRequestObject(line.getId(), direction.getId())));
 				}
 			}
 
@@ -166,29 +152,22 @@ public class AddStopActivity extends Activity {
 		spinStop.setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parentView, View view, int position, long id) {
-				lbl_stop.setText(getResources()
-						.getString(R.string.loading_data));
-				lbl_schedule_1.setText(getResources()
-						.getString(R.string.loading_data));
-				lbl_schedule_2.setText(getResources()
-						.getString(R.string.loading_data));
+				lbl_stop.setText(getResources().getString(R.string.loading_data));
+				lbl_schedule_1.setText(getResources().getString(R.string.loading_data));
+				lbl_schedule_2.setText(getResources().getString(R.string.loading_data));
 
-				TimeoIDNameObject stop = (TimeoIDNameObject) spinStop
-						.getItemAtPosition(spinStop.getSelectedItemPosition());
-				TimeoIDNameObject line = (TimeoIDNameObject) spinLine
-						.getItemAtPosition(spinLine.getSelectedItemPosition());
-				TimeoIDNameObject direction = (TimeoIDNameObject) spinDirection
-						.getItemAtPosition(spinDirection
-								.getSelectedItemPosition());
-				
+				TimeoIDNameObject stop = (TimeoIDNameObject) spinStop.getItemAtPosition(spinStop.getSelectedItemPosition());
+				TimeoIDNameObject line = (TimeoIDNameObject) spinLine.getItemAtPosition(spinLine.getSelectedItemPosition());
+				TimeoIDNameObject direction = (TimeoIDNameObject) spinDirection.getItemAtPosition(spinDirection
+						.getSelectedItemPosition());
+
 				item_next.setEnabled(true);
 
-				if(line != null && direction != null && stop != null
-						&& line.getId() != null && direction.getId() != null && stop.getId() != null) {
-					lbl_stop.setText("Arrêt " + stop.getName());
+				if(line != null && direction != null && stop != null && line.getId() != null && direction.getId() != null && stop
+						.getId() != null) {
+					lbl_stop.setText(getResources().getString(R.string.stop_name, stop.getName()));
 
-					fetchDataFromAPI(EndPoints.SCHEDULE, (new TimeoRequestObject(line
-							.getId(), direction.getId(), stop.getId())));
+					fetchDataFromAPI(EndPoints.SCHEDULE, (new TimeoRequestObject(line.getId(), direction.getId(), stop.getId())));
 				}
 			}
 
@@ -225,21 +204,20 @@ public class AddStopActivity extends Activity {
 	}
 
 	public void registerStopToDatabase() {
-		TimeoIDNameObject line = (TimeoIDNameObject) spinLine
-				.getItemAtPosition(spinLine.getSelectedItemPosition());
+		TimeoIDNameObject line = (TimeoIDNameObject) spinLine.getItemAtPosition(spinLine.getSelectedItemPosition());
 		TimeoIDNameObject direction = (TimeoIDNameObject) spinDirection
 				.getItemAtPosition(spinDirection.getSelectedItemPosition());
-		TimeoIDNameObject stop = (TimeoIDNameObject) spinStop
-				.getItemAtPosition(spinStop.getSelectedItemPosition());
+		TimeoIDNameObject stop = (TimeoIDNameObject) spinStop.getItemAtPosition(spinStop.getSelectedItemPosition());
 
-		TwistoastDatabase.DBStatus status = databaseHandler
-				.addStopToDatabase(line, direction, stop);
+		TwistoastDatabase.DBStatus status = databaseHandler.addStopToDatabase(line, direction, stop);
 
 		if(status != TwistoastDatabase.DBStatus.SUCCESS) {
 			// meh, something went wrong
-			Toast.makeText(this, "Erreur : " + status, Toast.LENGTH_LONG).show();
+			Toast.makeText(this, getResources().getString(R.string.error_toast, status), Toast.LENGTH_LONG).show();
 		} else {
-			Toast.makeText(this, "Ajouté : " + line.getName() + " - " + direction.getName() + " - " + stop.getName(), Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, getResources()
+					.getString(R.string.added_toast, line.getName(), direction.getName(), stop.getName()), Toast.LENGTH_SHORT)
+					.show();
 			this.finish();
 		}
 	}
@@ -248,14 +226,12 @@ public class AddStopActivity extends Activity {
 		setProgressBarIndeterminateVisibility(true);
 
 		// start loading the requested data
-		currentRequestedUrl = TimeoRequestHandler
-				.getFullUrlFromEndPoint(endPoint, new TimeoRequestObject[] { data });
+		currentRequestedUrl = TimeoRequestHandler.getFullUrlFromEndPoint(endPoint, new TimeoRequestObject[] { data });
 		GetTimeoDataFromAPITask task = new GetTimeoDataFromAPITask();
 		task.execute(endPoint);
 	}
 
-	private class GetTimeoDataFromAPITask extends
-			AsyncTask<EndPoints, Void, String> {
+	private class GetTimeoDataFromAPITask extends AsyncTask<EndPoints, Void, String> {
 		@Override
 		protected String doInBackground(EndPoints... params) {
 			this.endPoint = params[0];
@@ -273,17 +249,17 @@ public class AddStopActivity extends Activity {
 					return TimeoRequestHandler.requestWebPage(currentRequestedUrl);
 				} catch(final Exception e) {
 					if(e instanceof IOException || e instanceof SocketTimeoutException) {
-						AddStopActivity.this.runOnUiThread(new Runnable(){
-						    public void run(){
-						    	Toast.makeText(AddStopActivity.this, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-						    }
+						AddStopActivity.this.runOnUiThread(new Runnable() {
+							public void run() {
+								Toast.makeText(AddStopActivity.this, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+							}
 						});
 					}
-					
+
 					e.printStackTrace();
 				}
 			}
-			
+
 			return null;
 		}
 
@@ -297,16 +273,16 @@ public class AddStopActivity extends Activity {
 					try {
 						try {
 							ArrayList<TimeoIDNameObject> dataList = new ArrayList<TimeoIDNameObject>();
-	
+
 							// parse the data
 							dataList = TimeoResultParser.parseList(result);
-	
+
 							if(dataList != null) {
-								// load the data into our ArrayAdapter to populate
+								// load the data into our ArrayAdapter to
+								// populate
 								// the list
 								ArrayAdapter<TimeoIDNameObject> adapter = new ArrayAdapter<TimeoIDNameObject>(AddStopActivity.this, android.R.layout.simple_spinner_item, dataList
-										.toArray(new TimeoIDNameObject[dataList
-												.size()]));
+										.toArray(new TimeoIDNameObject[dataList.size()]));
 								adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 								spinner.setAdapter(adapter);
 								spinner.setEnabled(true);
@@ -322,23 +298,19 @@ public class AddStopActivity extends Activity {
 				} else if(endPoint == EndPoints.SCHEDULE) {
 					try {
 						try {
-							String[] scheduleArray = TimeoResultParser
-									.parseSchedule(result);
+							String[] scheduleArray = TimeoResultParser.parseSchedule(result);
 
 							// set the schedule labels, if we need to
 							if(scheduleArray != null) {
 								if(scheduleArray[0] != null)
-									lbl_schedule_1
-											.setText("- " + scheduleArray[0]);
+									lbl_schedule_1.setText("- " + scheduleArray[0]);
 								if(scheduleArray[1] != null)
-									lbl_schedule_2
-											.setText("- " + scheduleArray[1]);
+									lbl_schedule_2.setText("- " + scheduleArray[1]);
 								else
 									lbl_schedule_2.setText("");
 							}
 						} catch(ClassCastException e) {
-							Toast.makeText(AddStopActivity.this, ((JSONObject) new JSONTokener(result)
-									.nextValue()).getString("error"), Toast.LENGTH_LONG)
+							Toast.makeText(AddStopActivity.this, ((JSONObject) new JSONTokener(result).nextValue()).getString("error"), Toast.LENGTH_LONG)
 									.show();
 						}
 					} catch(JSONException e) {
@@ -365,7 +337,7 @@ public class AddStopActivity extends Activity {
 	private TextView lbl_direction;
 	private TextView lbl_schedule_1;
 	private TextView lbl_schedule_2;
-	
+
 	private MenuItem item_next;
 
 	private String currentRequestedUrl;

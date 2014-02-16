@@ -72,10 +72,11 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 		}
 
 		// stop
-		lbl_stop.setText("Arrêt " + objects.get(position).getStop().getName());
+		lbl_stop.setText(context.getResources().getString(R.string.stop_name, objects.get(position).getStop().getName()));
 
 		// direction
-		lbl_direction.setText("→ Dir. " + objects.get(position).getDirection().getName());
+		lbl_direction.setText(context.getResources().getString(R.string.direction_name, objects.get(position).getDirection()
+				.getName()));
 
 		// schedule
 		if(objects.get(position).getSchedule() != null && objects.get(position).getSchedule().length > 0 && objects.get(position)
@@ -154,20 +155,17 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 					// parse the schedule and set in for our
 					// TimeoScheduleObject, then refresh
 					TimeoResultParser.parseMultipleSchedules(result, objects);
-					
+
 					for(int i = 0; i < objects.size(); i++) {
 						if(objects.get(i).getSchedule() == null) {
-							objects.get(i).setSchedule(new String[] { context
-									.getResources()
-									.getString(R.string.loading_error) });
+							objects.get(i).setSchedule(new String[] { context.getResources().getString(R.string.loading_error) });
 						}
 					}
 				} catch(ClassCastException e) {
-					TimeoResultParser.displayErrorMessageFromTextResult(result, (Activity) context); 
+					TimeoResultParser.displayErrorMessageFromTextResult(result, (Activity) context);
 				}
 			} catch(JSONException e) {
-				Toast.makeText(context, R.string.loading_error, Toast.LENGTH_LONG)
-						.show();
+				Toast.makeText(context, R.string.loading_error, Toast.LENGTH_LONG).show();
 			}
 
 			// refresh the display and callback MainActivity to end refresh

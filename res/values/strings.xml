@@ -23,5 +23,11 @@
     <string name="confirm_yes">Oui</string>
     <string name="confirm_no">Non</string>
     <string name="confirm_delete_success">Succès de la suppression</string>
+    <string name="refreshed_stops">Horaires rafraîchis</string>
+    <string name="unknown_line_id">\?</string>
+    <string name="direction_name">→ Dir. %1$s</string>
+    <string name="stop_name">Arrêt %1$s</string>
+    <string name="error_toast">Erreur : %1$s</string>
+    <string name="added_toast">Ajouté : %1$s - %2$s - %3$s</string>
 
 </resources>

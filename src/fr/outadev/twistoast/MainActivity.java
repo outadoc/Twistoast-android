@@ -148,7 +148,8 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 		isRefreshing = false;
 
 		Log.i("Twistoast", "refreshed, " + listAdapter.getObjects().size() + " stops in db");
-		Toast.makeText(this, "Horaires rafra”chis", Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, getResources()
+				.getString(R.string.refreshed_stops), Toast.LENGTH_SHORT).show();
 
 		// reset the timer loop, and start it again
 		// this ensures the list is refreshed automatically every 60 seconds
