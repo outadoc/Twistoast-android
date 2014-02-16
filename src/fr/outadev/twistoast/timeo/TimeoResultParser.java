@@ -10,6 +10,7 @@ import org.json.JSONTokener;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.util.Log;
 import android.widget.Toast;
 
 public abstract class TimeoResultParser {
@@ -59,6 +60,7 @@ public abstract class TimeoResultParser {
 								&& !stopsList.get(i+indexShift).getDirection().getName().equalsIgnoreCase(resultArray.getJSONObject(i).getString("direction"))
 								&& !stopsList.get(i+indexShift).getStop().getName().equalsIgnoreCase(resultArray.getJSONObject(i).getString("stop"))) {
 							indexShift++;
+							Log.d("Twistoast", "SHIFTING");
 						}
 					}
 					
