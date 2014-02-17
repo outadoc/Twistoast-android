@@ -37,6 +37,8 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 	private static final int BUS_LINE_NAME = 0x23;
 	private static final int BUS_NEXT_SCHEDULE = 0x24;
 	private static final int BUS_SECOND_SCHEDULE = 0x25;
+	
+	private static final int SHOULD_VIBRATE = 0x30;
 
 	public TwistoastPebbleReceiver() {
 		super(PEBBLE_UUID);
@@ -106,8 +108,11 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 							response.addString(BUS_NEXT_SCHEDULE, processStringForPebble(object.getSchedule()[0], 15, true));
 							response.addString(BUS_SECOND_SCHEDULE, (object.getSchedule().length > 1) ? processStringForPebble(object.getSchedule()[1], 15, true) : "");
 
+							if(object.getSchedule()[0].contains("imminent") || object.getSchedule()[0].contains("en cours")) {
+								response.addInt8(SHOULD_VIBRATE, (byte) 1);
+							}
+							
 							Log.d("TwistoastPebbleReceiver", "sending back: " + response);
-
 							PebbleKit.sendDataToPebble(context, PEBBLE_UUID, response);
 
 						} catch(ClassCastException e) {
