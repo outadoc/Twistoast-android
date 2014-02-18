@@ -44,7 +44,6 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 
 			@Override
 			public void onRefreshStarted(View view) {
-				// TODO Auto-generated method stub
 				refreshListFromDB(false);
 			}
 
@@ -228,19 +227,16 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 
 	@Override
 	public void onDestroyActionMode(ActionMode mode) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
 	public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-		// TODO Auto-generated method stub
 		setSubtitle(mode);
 	}
 
