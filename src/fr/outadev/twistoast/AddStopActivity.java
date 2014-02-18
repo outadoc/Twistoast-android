@@ -11,6 +11,7 @@ import fr.outadev.twistoast.timeo.TimeoRequestHandler;
 import fr.outadev.twistoast.timeo.TimeoRequestObject;
 import fr.outadev.twistoast.timeo.TimeoResultParser;
 import fr.outadev.twistoast.timeo.TimeoRequestHandler.EndPoints;
+import fr.outadev.twistoast.timeo.TimeoScheduleObject;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
@@ -222,109 +223,153 @@ public class AddStopActivity extends Activity {
 		}
 	}
 
-	public void fetchDataFromAPI(EndPoints endPoint, TimeoRequestObject data) {
+	public void fetchDataFromAPI(final EndPoints endPoint, final TimeoRequestObject data) {
 		setProgressBarIndeterminateVisibility(true);
 
-		// start loading the requested data
-		currentRequestedUrl = TimeoRequestHandler.getFullUrlFromEndPoint(endPoint, new TimeoRequestObject[] { data });
-		GetTimeoDataFromAPITask task = new GetTimeoDataFromAPITask();
-		task.execute(endPoint);
-	}
+		final TimeoRequestHandler handler = new TimeoRequestHandler();
 
-	private class GetTimeoDataFromAPITask extends AsyncTask<EndPoints, Void, String> {
-		@Override
-		protected String doInBackground(EndPoints... params) {
-			this.endPoint = params[0];
+		if(endPoint == EndPoints.SCHEDULE) {
+			new AsyncTask<Void, Void, TimeoScheduleObject>() {
+				@Override
+				protected TimeoScheduleObject doInBackground(Void... params) {
 
-			if(endPoint == EndPoints.LINES || endPoint == EndPoints.DIRECTIONS || endPoint == EndPoints.STOPS || endPoint == EndPoints.SCHEDULE) {
-				if(endPoint == EndPoints.LINES) {
-					spinner = spinLine;
-				} else if(endPoint == EndPoints.DIRECTIONS) {
-					spinner = spinDirection;
-				} else if(endPoint == EndPoints.STOPS) {
-					spinner = spinStop;
-				}
-
-				try {
-					return TimeoRequestHandler.requestWebPage(currentRequestedUrl);
-				} catch(final Exception e) {
-					if(e instanceof IOException || e instanceof SocketTimeoutException) {
+					try {
+						try {
+							return handler.getSingleSchedule(data, new TimeoScheduleObject(null, null, null, null));
+						} catch(ClassCastException e) {
+							AddStopActivity.this.runOnUiThread(new Runnable() {
+								public void run() {
+									try {
+										TimeoResultParser.displayErrorMessageFromTextResult(handler.getLastWebResponse(), (Activity) AddStopActivity.this);
+									} catch(JSONException e) {
+										Toast.makeText(AddStopActivity.this, handler.getLastWebResponse(), Toast.LENGTH_LONG)
+												.show();
+										e.printStackTrace();
+									}
+								}
+							});
+						}
+					} catch(JSONException e) {
 						AddStopActivity.this.runOnUiThread(new Runnable() {
 							public void run() {
-								Toast.makeText(AddStopActivity.this, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+								Toast.makeText(AddStopActivity.this, handler.getLastWebResponse(), Toast.LENGTH_LONG).show();
 							}
 						});
-					}
-
-					e.printStackTrace();
-				}
-			}
-
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			setProgressBarIndeterminateVisibility(false);
-
-			// when we're done loading
-			if(result != null) {
-				if((endPoint == EndPoints.LINES || endPoint == EndPoints.DIRECTIONS || endPoint == EndPoints.STOPS) && spinner != null) {
-					try {
-						try {
-							ArrayList<TimeoIDNameObject> dataList = new ArrayList<TimeoIDNameObject>();
-
-							// parse the data
-							dataList = TimeoResultParser.parseList(result);
-
-							if(dataList != null) {
-								// load the data into our ArrayAdapter to
-								// populate
-								// the list
-								ArrayAdapter<TimeoIDNameObject> adapter = new ArrayAdapter<TimeoIDNameObject>(AddStopActivity.this, android.R.layout.simple_spinner_item, dataList
-										.toArray(new TimeoIDNameObject[dataList.size()]));
-								adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-								spinner.setAdapter(adapter);
-								spinner.setEnabled(true);
-							} else {
-								Toast.makeText(AddStopActivity.this, result, Toast.LENGTH_LONG).show();
-							}
-						} catch(ClassCastException e) {
-							TimeoResultParser.displayErrorMessageFromTextResult(result, (Activity) AddStopActivity.this);
+					} catch(final Exception e) {
+						if(e instanceof IOException || e instanceof SocketTimeoutException) {
+							AddStopActivity.this.runOnUiThread(new Runnable() {
+								public void run() {
+									Toast.makeText(AddStopActivity.this, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+								}
+							});
 						}
-					} catch(JSONException e) {
-						Toast.makeText(AddStopActivity.this, result, Toast.LENGTH_LONG).show();
-					}
-				} else if(endPoint == EndPoints.SCHEDULE) {
-					try {
-						try {
-							String[] scheduleArray = TimeoResultParser.parseSchedule(result);
 
-							// set the schedule labels, if we need to
-							if(scheduleArray != null) {
-								if(scheduleArray[0] != null)
-									lbl_schedule_1.setText("- " + scheduleArray[0]);
-								if(scheduleArray[1] != null)
-									lbl_schedule_2.setText("- " + scheduleArray[1]);
-								else
-									lbl_schedule_2.setText("");
-							}
-						} catch(ClassCastException e) {
-							Toast.makeText(AddStopActivity.this, ((JSONObject) new JSONTokener(result).nextValue()).getString("error"), Toast.LENGTH_LONG)
-									.show();
-						}
-					} catch(JSONException e) {
-						e.printStackTrace();
-					} catch(ClassCastException e) {
 						e.printStackTrace();
 					}
 
+					return null;
 				}
-			}
-		}
 
-		private EndPoints endPoint;
-		private Spinner spinner;
+				@Override
+				protected void onPostExecute(TimeoScheduleObject result) {
+					setProgressBarIndeterminateVisibility(false);
+
+					String[] scheduleArray = result.getSchedule();
+
+					// set the schedule labels, if we need to
+					if(scheduleArray != null) {
+						if(scheduleArray[0] != null)
+							lbl_schedule_1.setText("- " + scheduleArray[0]);
+						if(scheduleArray[1] != null)
+							lbl_schedule_2.setText("- " + scheduleArray[1]);
+						else
+							lbl_schedule_2.setText("");
+					}
+
+					result.setSchedule(scheduleArray);
+				}
+
+			}.execute();
+		} else {
+			// start loading the requested data
+			new AsyncTask<Void, Void, ArrayList<TimeoIDNameObject>>() {
+				@Override
+				protected ArrayList<TimeoIDNameObject> doInBackground(Void... params) {
+
+					if(endPoint == EndPoints.LINES || endPoint == EndPoints.DIRECTIONS || endPoint == EndPoints.STOPS || endPoint == EndPoints.SCHEDULE) {
+						try {
+							try {
+								if(endPoint == EndPoints.LINES) {
+									spinner = spinLine;
+									return handler.getLines(data);
+								} else if(endPoint == EndPoints.DIRECTIONS) {
+									spinner = spinDirection;
+									return handler.getDirections(data);
+								} else if(endPoint == EndPoints.STOPS) {
+									spinner = spinStop;
+									return handler.getStops(data);
+								}
+
+							} catch(ClassCastException e) {
+								AddStopActivity.this.runOnUiThread(new Runnable() {
+									public void run() {
+										try {
+											TimeoResultParser.displayErrorMessageFromTextResult(handler.getLastWebResponse(), (Activity) AddStopActivity.this);
+										} catch(JSONException e) {
+											Toast.makeText(AddStopActivity.this, handler.getLastWebResponse(), Toast.LENGTH_LONG)
+													.show();
+											e.printStackTrace();
+										}
+									}
+								});
+							}
+						} catch(JSONException e) {
+							AddStopActivity.this.runOnUiThread(new Runnable() {
+								public void run() {
+									Toast.makeText(AddStopActivity.this, handler.getLastWebResponse(), Toast.LENGTH_LONG).show();
+								}
+							});
+						} catch(final Exception e) {
+							if(e instanceof IOException || e instanceof SocketTimeoutException) {
+								AddStopActivity.this.runOnUiThread(new Runnable() {
+									public void run() {
+										Toast.makeText(AddStopActivity.this, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+									}
+								});
+							}
+
+							e.printStackTrace();
+						}
+					}
+
+					return null;
+				}
+
+				@Override
+				protected void onPostExecute(ArrayList<TimeoIDNameObject> result) {
+					setProgressBarIndeterminateVisibility(false);
+
+					// when we're done loading
+					if((endPoint == EndPoints.LINES || endPoint == EndPoints.DIRECTIONS || endPoint == EndPoints.STOPS) && spinner != null) {
+						if(result != null) {
+							// load the data into our ArrayAdapter to
+							// populate the list
+							ArrayAdapter<TimeoIDNameObject> adapter = new ArrayAdapter<TimeoIDNameObject>(AddStopActivity.this, android.R.layout.simple_spinner_item, result
+									.toArray(new TimeoIDNameObject[result.size()]));
+
+							adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+							spinner.setAdapter(adapter);
+							spinner.setEnabled(true);
+						} else {
+							Toast.makeText(AddStopActivity.this, handler.getLastWebResponse(), Toast.LENGTH_LONG).show();
+						}
+					}
+				}
+
+				private Spinner spinner;
+
+			}.execute();
+		}
 	}
 
 	private Spinner spinLine;
@@ -339,8 +384,6 @@ public class AddStopActivity extends Activity {
 	private TextView lbl_schedule_2;
 
 	private MenuItem item_next;
-
-	private String currentRequestedUrl;
 
 	TwistoastDatabase databaseHandler;
 

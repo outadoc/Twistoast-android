@@ -5,82 +5,146 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
-import android.util.Log;
+import org.json.JSONException;
 
-public abstract class TimeoRequestHandler {
+public class TimeoRequestHandler {
+	
+	public TimeoRequestHandler() {
+		this.lastWebResponse = null;
+	}
 
-	public static String requestWebPage(String urlString) throws IOException, SocketTimeoutException {
-		URL url = new URL(urlString);
-		HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-
-		urlConnection.setConnectTimeout(15000);
-		urlConnection.setReadTimeout(30000);
-
+	private String requestWebPage(URL url) throws IOException, SocketTimeoutException {
+		HttpURLConnection urlConnection = null;
+		
 		try {
+			urlConnection = (HttpURLConnection) url.openConnection();
+
+			urlConnection.setConnectTimeout(15000);
+			urlConnection.setReadTimeout(30000);
+			
 			InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-			return readStream(in);
+			lastWebResponse = readStream(in);
+			
+			return lastWebResponse;
 		} finally {
 			urlConnection.disconnect();
 		}
 	}
 
-	public static String getFullUrlFromEndPoint(EndPoints endPoint, TimeoRequestObject[] data) {
-		if(endPoint == EndPoints.LINES || endPoint == EndPoints.DIRECTIONS || endPoint == EndPoints.STOPS || endPoint == EndPoints.SCHEDULE || endPoint == EndPoints.FULL_SCHEDULE) {
+	public ArrayList<TimeoScheduleObject> getMultipleSchedules(TimeoRequestObject[] request, ArrayList<TimeoScheduleObject> stopsList) throws ClassCastException, JSONException, SocketTimeoutException, IOException {
+		String cookie = new String();
+		String result = new String();
 
-			String url = baseUrl;
-			String charset = "UTF-8";
-
-			try {
-				// adapt the request URL depending on the API end point
-				// requested
-				if(endPoint == EndPoints.LINES) {
-					url += "?func=getLines";
-				} else if(endPoint == EndPoints.DIRECTIONS && data[0].getLine() != null) {
-					url += "?func=getDirections&line=" + URLEncoder.encode(data[0].getLine(), charset);
-				} else if(endPoint == EndPoints.STOPS && data[0].getLine() != null && data[0].getDirection() != null) {
-					url += "?func=getStops&line=" + URLEncoder.encode(data[0].getLine(), charset) + "&direction=" + URLEncoder
-							.encode(data[0].getDirection(), charset);
-				} else if(endPoint == EndPoints.SCHEDULE && data[0].getLine() != null && data[0].getDirection() != null && data[0]
-						.getStop() != null) {
-					url += "?func=getSchedule&line=" + URLEncoder.encode(data[0].getLine(), charset) + "&direction=" + URLEncoder
-							.encode(data[0].getDirection(), charset) + "&stop=" + URLEncoder.encode(data[0].getStop(), charset);
-				} else if(endPoint == EndPoints.FULL_SCHEDULE) {
-					String cookie = "";
-
-					// craft a cookie in the form
-					// STOP_ID|LINE_ID|DIRECTION_ID;STOP_ID|LINE_ID|DIRECTION_ID;...
-					for(int i = 0; i < data.length; i++) {
-						if(i != 0)
-							cookie += ';';
-						cookie += data[i].getStop() + '|' + data[i].getLine() + '|' + data[i].getDirection();
-					}
-
-					url += "?func=getSchedule&data=" + URLEncoder.encode(cookie, charset);
-					Log.d("Twistoast", "sending request for " + url);
-				}
-
-				return url;
-			} catch(UnsupportedEncodingException e) {
-			}
+		// craft a cookie in the form
+		// STOP_ID|LINE_ID|DIRECTION_ID;STOP_ID|LINE_ID|DIRECTION_ID;...
+		for(int i = 0; i < request.length; i++) {
+			if(i != 0)
+				cookie += ';';
+			cookie += request[i].getStop() + '|' + request[i].getLine() + '|' + request[i].getDirection();
 		}
 
-		return "";
+		try {
+			URL url = new URL(baseUrl + "?func=getSchedule&data=" + URLEncoder.encode(cookie, charset));
+			result = requestWebPage(url);
+			TimeoResultParser.parseMultipleSchedules(result, stopsList);
+
+			return stopsList;
+		} catch(MalformedURLException e) {
+			e.printStackTrace();
+		} catch(UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+
+		return stopsList;
+	}
+
+	public TimeoScheduleObject getSingleSchedule(TimeoRequestObject request, TimeoScheduleObject stopSchedule) throws ClassCastException, JSONException, SocketTimeoutException, IOException {
+		
+		String result = null;
+		
+		try {
+			URL url = new URL(baseUrl + "?func=getSchedule&line=" + URLEncoder.encode(request.getLine(), charset) + "&direction=" + URLEncoder
+					.encode(request.getDirection(), charset) + "&stop=" + URLEncoder.encode(request.getStop(), charset));
+			result = requestWebPage(url);
+			stopSchedule.setSchedule(TimeoResultParser.parseSchedule(result));
+
+			return stopSchedule;
+		} catch(MalformedURLException e) {
+			e.printStackTrace();
+		} catch(UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+
+		return stopSchedule;
+	}
+
+	public ArrayList<TimeoIDNameObject> getLines(TimeoRequestObject request) throws ClassCastException, JSONException, SocketTimeoutException, IOException {
+		try {
+			return getGenericList(new URL(baseUrl + "?func=getLines"));
+		} catch(MalformedURLException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	public ArrayList<TimeoIDNameObject> getDirections(TimeoRequestObject request) throws ClassCastException, JSONException, SocketTimeoutException, IOException {
+		try {
+			return getGenericList(new URL(baseUrl + "?func=getDirections&line=" + URLEncoder.encode(request.getLine(), charset)));
+		} catch(MalformedURLException e) {
+			e.printStackTrace();
+		} catch(UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	public ArrayList<TimeoIDNameObject> getStops(TimeoRequestObject request) throws ClassCastException, JSONException, SocketTimeoutException, IOException {
+		try {
+			return getGenericList(new URL(baseUrl + "?func=getStops&line=" + URLEncoder.encode(request.getLine(), charset) + "&direction=" + URLEncoder
+					.encode(request.getDirection(), charset)));
+		} catch(MalformedURLException e) {
+			e.printStackTrace();
+		} catch(UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	private ArrayList<TimeoIDNameObject> getGenericList(URL url) throws ClassCastException, JSONException, SocketTimeoutException, IOException  {
+		String result = requestWebPage(url);
+		return TimeoResultParser.parseList(result);
 	}
 
 	// Reads an InputStream and converts it to a String.
-	public static String readStream(InputStream stream) throws IOException, UnsupportedEncodingException {
+	private String readStream(InputStream stream) throws IOException, UnsupportedEncodingException {
 		java.util.Scanner s = new java.util.Scanner(stream).useDelimiter("\\A");
 		return s.hasNext() ? s.next() : "";
 	}
 
-	private final static String baseUrl = "http://apps.outadoc.fr/twisto-realtime/twisto-api.php";
+	public String getLastWebResponse() {
+		return lastWebResponse;
+	}
 
+	public void setLastWebResponse(String lastWebResponse) {
+		this.lastWebResponse = lastWebResponse;
+	}
+
+	private final static String baseUrl = "http://apps.outadoc.fr/twisto-realtime/twisto-api.php";
+	private final static String charset = "UTF-8";
+	
+	private String lastWebResponse;
+		
 	public enum EndPoints {
-		LINES, DIRECTIONS, STOPS, SCHEDULE, FULL_SCHEDULE
+		LINES, DIRECTIONS, STOPS, SCHEDULE
 	}
 
 }

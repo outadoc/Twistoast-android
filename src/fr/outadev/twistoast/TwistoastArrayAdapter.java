@@ -2,7 +2,7 @@ package fr.outadev.twistoast;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
-import java.util.List;
+import java.util.ArrayList;
 
 import org.json.JSONException;
 
@@ -10,7 +10,6 @@ import fr.outadev.twistoast.timeo.TimeoRequestHandler;
 import fr.outadev.twistoast.timeo.TimeoRequestObject;
 import fr.outadev.twistoast.timeo.TimeoResultParser;
 import fr.outadev.twistoast.timeo.TimeoScheduleObject;
-import fr.outadev.twistoast.timeo.TimeoRequestHandler.EndPoints;
 import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -27,18 +26,18 @@ import android.widget.Toast;
 
 public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 
-	public TwistoastArrayAdapter(Context context, int resource, List<TimeoScheduleObject> objects) {
+	public TwistoastArrayAdapter(Context context, int resource, ArrayList<TimeoScheduleObject> objects) {
 		super(context, resource, objects);
 
 		this.objects = objects;
 		this.context = context;
 	}
 
-	public List<TimeoScheduleObject> getObjects() {
+	public ArrayList<TimeoScheduleObject> getObjects() {
 		return objects;
 	}
 
-	public void setObjects(List<TimeoScheduleObject> objects) {
+	public void setObjects(ArrayList<TimeoScheduleObject> objects) {
 		this.objects = objects;
 	}
 
@@ -118,10 +117,10 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 		task.execute();
 	}
 
-	private class GetTimeoDataFromAPITask extends AsyncTask<Void, Void, String> {
+	private class GetTimeoDataFromAPITask extends AsyncTask<Void, Void, ArrayList<TimeoScheduleObject>> {
 
 		@Override
-		protected String doInBackground(Void... params) {
+		protected ArrayList<TimeoScheduleObject> doInBackground(Void... params) {
 			TimeoRequestObject[] requestObj = new TimeoRequestObject[objects.size()];
 
 			// add every stop to the request
@@ -130,14 +129,35 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 						.get(i).getStop().getId());
 			}
 
+			final TimeoRequestHandler handler = new TimeoRequestHandler();
+			ArrayList<TimeoScheduleObject> result = objects;
+
 			try {
-				return TimeoRequestHandler.requestWebPage(TimeoRequestHandler
-						.getFullUrlFromEndPoint(EndPoints.FULL_SCHEDULE, requestObj));
+				try {
+					result = handler.getMultipleSchedules(requestObj, objects);
+				} catch(ClassCastException e) {
+					((Activity) context).runOnUiThread(new Runnable() {
+						public void run() {
+							try {
+								TimeoResultParser.displayErrorMessageFromTextResult(handler.getLastWebResponse(), ((Activity) context));
+							} catch(JSONException e) {
+								Toast.makeText(((Activity) context), handler.getLastWebResponse(), Toast.LENGTH_LONG).show();
+								e.printStackTrace();
+							}
+						}
+					});
+				}
+			} catch(JSONException e) {
+				((Activity) context).runOnUiThread(new Runnable() {
+					public void run() {
+						Toast.makeText(((Activity) context), handler.getLastWebResponse(), Toast.LENGTH_LONG).show();
+					}
+				});
 			} catch(final Exception e) {
 				if(e instanceof IOException || e instanceof SocketTimeoutException) {
 					((Activity) context).runOnUiThread(new Runnable() {
 						public void run() {
-							Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+							Toast.makeText(((Activity) context), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
 						}
 					});
 				}
@@ -145,36 +165,22 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 				e.printStackTrace();
 			}
 
-			return null;
+			return result;
 		}
 
 		@Override
-		protected void onPostExecute(String result) {
-			try {
-				try {
-					// parse the schedule and set in for our
-					// TimeoScheduleObject, then refresh
-					TimeoResultParser.parseMultipleSchedules(result, objects);
-
-					for(int i = 0; i < objects.size(); i++) {
-						if(objects.get(i).getSchedule() == null) {
-							objects.get(i).setSchedule(new String[] { context.getResources().getString(R.string.loading_error) });
-						}
-					}
-				} catch(ClassCastException e) {
-					TimeoResultParser.displayErrorMessageFromTextResult(result, (Activity) context);
-				}
-			} catch(JSONException e) {
-				Toast.makeText(context, R.string.loading_error, Toast.LENGTH_LONG).show();
+		protected void onPostExecute(ArrayList<TimeoScheduleObject> result) {
+			if(result != null) {
+				objects = result;
 			}
-
+			
 			// refresh the display and callback MainActivity to end refresh
 			notifyDataSetChanged();
 			((MainActivity) context).endRefresh();
 		}
 	}
 
-	private List<TimeoScheduleObject> objects;
+	private ArrayList<TimeoScheduleObject> objects;
 	private Context context;
 
 }
