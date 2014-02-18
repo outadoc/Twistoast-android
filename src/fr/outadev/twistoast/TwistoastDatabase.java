@@ -94,13 +94,10 @@ public class TwistoastDatabase {
 		while(results.moveToNext()) {
 			// add it to the list
 			stopsList
-					.add(new TimeoScheduleObject(new TimeoIDNameObject(results
-							.getString(results.getColumnIndex("line_id")), results
-							.getString(results.getColumnIndex("line_name"))), new TimeoIDNameObject(results
-							.getString(results.getColumnIndex("dir_id")), results
-							.getString(results.getColumnIndex("dir_name"))), new TimeoIDNameObject(results
-							.getString(results.getColumnIndex("stop_id")), results
-							.getString(results.getColumnIndex("stop_name"))), null));
+					.add(new TimeoScheduleObject(new TimeoIDNameObject(results.getString(results.getColumnIndex("line_id")), results
+							.getString(results.getColumnIndex("line_name"))), new TimeoIDNameObject(results.getString(results
+							.getColumnIndex("dir_id")), results.getString(results.getColumnIndex("dir_name"))), new TimeoIDNameObject(results
+							.getString(results.getColumnIndex("stop_id")), results.getString(results.getColumnIndex("stop_name"))), null));
 		}
 
 		// close the cursor and the database
@@ -113,9 +110,8 @@ public class TwistoastDatabase {
 	public void deleteStop(TimeoScheduleObject stop) {
 		SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
 
-		db.delete("twi_stop", "stop_id=? AND line_id=? AND dir_id=?", new String[] { stop
-				.getStop().getId(), stop.getLine().getId(), stop.getDirection()
-				.getId() });
+		db.delete("twi_stop", "stop_id=? AND line_id=? AND dir_id=?", new String[] { stop.getStop().getId(), stop.getLine()
+				.getId(), stop.getDirection().getId() });
 
 		db.close();
 	}

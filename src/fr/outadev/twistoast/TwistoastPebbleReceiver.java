@@ -37,7 +37,7 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 	private static final int KEY_BUS_LINE_NAME = 0x23;
 	private static final int KEY_BUS_NEXT_SCHEDULE = 0x24;
 	private static final int KEY_BUS_SECOND_SCHEDULE = 0x25;
-	
+
 	private static final int KEY_SHOULD_VIBRATE = 0x30;
 
 	public TwistoastPebbleReceiver() {
@@ -48,12 +48,11 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 	@Override
 	public void receiveData(final Context context, final int transactionId, PebbleDictionary data) {
 		Log.d("TwistoastPebbleReceiver", "received a message from pebble " + PEBBLE_UUID);
-		
+
 		databaseHandler = new TwistoastDatabase(context);
 		final ArrayList<TimeoScheduleObject> stopsList = databaseHandler.getAllStops();
 
-		if(data.getInteger(KEY_TWISTOAST_MESSAGE_TYPE) == BUS_STOP_REQUEST
-				&& stopsList.size() > 0) {
+		if(data.getInteger(KEY_TWISTOAST_MESSAGE_TYPE) == BUS_STOP_REQUEST && stopsList.size() > 0) {
 			Log.d("TwistoastPebbleReceiver", "pebble request acknowledged");
 
 			PebbleKit.sendAckToPebble(context, transactionId);
@@ -106,12 +105,13 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 							response.addString(KEY_BUS_DIRECTION_NAME, processStringForPebble(object.getDirection().getName(), 15));
 							response.addString(KEY_BUS_STOP_NAME, processStringForPebble(object.getStop().getName(), 15));
 							response.addString(KEY_BUS_NEXT_SCHEDULE, processStringForPebble(object.getSchedule()[0], 15, true));
-							response.addString(KEY_BUS_SECOND_SCHEDULE, (object.getSchedule().length > 1) ? processStringForPebble(object.getSchedule()[1], 15, true) : "");
+							response.addString(KEY_BUS_SECOND_SCHEDULE, (object.getSchedule().length > 1) ? processStringForPebble(object
+									.getSchedule()[1], 15, true) : "");
 
 							if(object.getSchedule()[0].contains("imminent") || object.getSchedule()[0].contains("en cours")) {
 								response.addInt8(KEY_SHOULD_VIBRATE, (byte) 1);
 							}
-							
+
 							Log.d("TwistoastPebbleReceiver", "sending back: " + response);
 							PebbleKit.sendDataToPebble(context, PEBBLE_UUID, response);
 
@@ -134,20 +134,22 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 		}
 
 	}
-	
+
 	private String processStringForPebble(String str, int length) {
 		return processStringForPebble(str, length, false);
 	}
-	
+
 	private String processStringForPebble(String str, int length, boolean stripLine) {
-		if(str == null) return "";
-		
+		if(str == null)
+			return "";
+
 		if(stripLine) {
-			// don't keep the part that's before the ":", it's making it less readable
+			// don't keep the part that's before the ":", it's making it less
+			// readable
 			String[] stra = str.split("Ligne ");
 			str = (stra.length > 1) ? stra[1] : str;
 		}
-		
+
 		try {
 			return str.substring(0, length);
 		} catch(IndexOutOfBoundsException e) {

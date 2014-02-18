@@ -42,9 +42,8 @@ public abstract class TimeoResultParser {
 			JSONArray resultArray = (JSONArray) new JSONTokener(source).nextValue();
 
 			for(int i = 0; i < resultArray.length(); i++) {
-				if(resultArray != null 
-						&& resultArray.getJSONObject(i) != null 
-						&& resultArray.getJSONObject(i).getJSONArray("next") != null) {
+				if(resultArray != null && resultArray.getJSONObject(i) != null && resultArray.getJSONObject(i)
+						.getJSONArray("next") != null) {
 
 					JSONArray scheduleJSONArray = resultArray.getJSONObject(i).getJSONArray("next");
 					String sched[] = new String[2];
@@ -52,19 +51,24 @@ public abstract class TimeoResultParser {
 					for(int j = 0; j < scheduleJSONArray.length() && j < 2; j++) {
 						sched[j] = scheduleJSONArray.getString(j);
 					}
-					
+
 					if(stopsList.size() != resultArray.length()) {
-						//sometimes, the api isn't not going to return the right number of stops: some may disappear.
-						//so, while the current stop we're parsing isn't really the current stop in our list, increase the shift
-						while(!stopsList.get(i+indexShift).getLine().getName().equalsIgnoreCase(resultArray.getJSONObject(i).getString("line"))
-								&& !stopsList.get(i+indexShift).getDirection().getName().equalsIgnoreCase(resultArray.getJSONObject(i).getString("direction"))
-								&& !stopsList.get(i+indexShift).getStop().getName().equalsIgnoreCase(resultArray.getJSONObject(i).getString("stop"))) {
-							Log.d("Twistoast", "missing schedule for " + stopsList.get(i+indexShift) + ", shifting");
+						// sometimes, the api isn't not going to return the
+						// right number of stops: some may disappear.
+						// so, while the current stop we're parsing isn't really
+						// the current stop in our list, increase the shift
+						while(!stopsList.get(i + indexShift).getLine().getName()
+								.equalsIgnoreCase(resultArray.getJSONObject(i).getString("line")) && !stopsList
+								.get(i + indexShift).getDirection().getName()
+								.equalsIgnoreCase(resultArray.getJSONObject(i).getString("direction")) && !stopsList
+								.get(i + indexShift).getStop().getName()
+								.equalsIgnoreCase(resultArray.getJSONObject(i).getString("stop"))) {
+							Log.d("Twistoast", "missing schedule for " + stopsList.get(i + indexShift) + ", shifting");
 							indexShift++;
 						}
 					}
-					
-					stopsList.get(i+indexShift).setSchedule(sched);
+
+					stopsList.get(i + indexShift).setSchedule(sched);
 				}
 			}
 		}

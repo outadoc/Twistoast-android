@@ -31,8 +31,8 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
-		//start background listener 
+
+		// start background listener
 		Intent intent = new Intent(this, TwistoastPebbleService.class);
 		startService(intent);
 
@@ -40,16 +40,15 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 		pullToRefresh = (PullToRefreshLayout) findViewById(R.id.ptr_layout);
 
 		// set it up
-		ActionBarPullToRefresh.from(this).allChildrenArePullable()
-				.listener(new OnRefreshListener() {
+		ActionBarPullToRefresh.from(this).allChildrenArePullable().listener(new OnRefreshListener() {
 
-					@Override
-					public void onRefreshStarted(View view) {
-						// TODO Auto-generated method stub
-						refreshListFromDB(false);
-					}
+			@Override
+			public void onRefreshStarted(View view) {
+				// TODO Auto-generated method stub
+				refreshListFromDB(false);
+			}
 
-				}).setup(pullToRefresh);
+		}).setup(pullToRefresh);
 
 		listView = (ListView) findViewById(R.id.list);
 		databaseHandler = new TwistoastDatabase(this);
@@ -59,7 +58,7 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 
 		isRefreshing = false;
 		isInBackground = false;
-		
+
 		refreshListFromDB(true);
 	}
 
@@ -92,23 +91,22 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 		Intent intent = new Intent(this, AddStopActivity.class);
 		startActivityForResult(intent, 0);
 	}
-	
-	protected void onActivityResult(int requestCode, int resultCode,
-            Intent data) {
-        if(requestCode == 0) {
-            refreshListFromDB(true);
-        }
-    }
+
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if(requestCode == 0) {
+			refreshListFromDB(true);
+		}
+	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
+
 		isInBackground = false;
 		// when the activity is resuming, refresh
 		refreshListFromDB(false);
 	}
-	
+
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -133,8 +131,7 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 		// if we don't do that, bugs will appear when the database has been
 		// modified
 		if(resetList) {
-			listAdapter = new TwistoastArrayAdapter(this, android.R.layout.simple_list_item_1, databaseHandler
-					.getAllStops());
+			listAdapter = new TwistoastArrayAdapter(this, android.R.layout.simple_list_item_1, databaseHandler.getAllStops());
 			listView.setAdapter(listAdapter);
 		}
 
@@ -148,13 +145,13 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 		isRefreshing = false;
 
 		Log.i("Twistoast", "refreshed, " + listAdapter.getObjects().size() + " stops in db");
-		Toast.makeText(this, getResources()
-				.getString(R.string.refreshed_stops), Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, getResources().getString(R.string.refreshed_stops), Toast.LENGTH_SHORT).show();
 
 		// reset the timer loop, and start it again
 		// this ensures the list is refreshed automatically every 60 seconds
 		handler.removeCallbacks(runnable);
-		if(!isInBackground) handler.postDelayed(runnable, REFRESH_INTERVAL);
+		if(!isInBackground)
+			handler.postDelayed(runnable, REFRESH_INTERVAL);
 	}
 
 	@Override
@@ -168,15 +165,13 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 			builder.setPositiveButton(R.string.confirm_yes, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					// get the positions of the selected elements
-					SparseBooleanArray checked = listView
-							.getCheckedItemPositions();
+					SparseBooleanArray checked = listView.getCheckedItemPositions();
 					ArrayList<TimeoScheduleObject> objectsToDelete = new ArrayList<TimeoScheduleObject>();
 
 					// add every stop we want to delete to the list
 					for(int i = 0; i < checked.size(); i++) {
 						if(checked.valueAt(i)) {
-							objectsToDelete.add(listAdapter.getItem(checked
-									.keyAt(i)));
+							objectsToDelete.add(listAdapter.getItem(checked.keyAt(i)));
 						}
 					}
 
@@ -187,8 +182,7 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 					}
 
 					// this was a triumph, say we've deleted teh stuff
-					Toast.makeText(MainActivity.this, getResources()
-							.getString(R.string.confirm_delete_success), Toast.LENGTH_SHORT)
+					Toast.makeText(MainActivity.this, getResources().getString(R.string.confirm_delete_success), Toast.LENGTH_SHORT)
 							.show();
 
 					mode.finish();
@@ -200,17 +194,14 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 			builder.setNegativeButton(R.string.confirm_no, null);
 
 			// set dialog title
-			builder.setTitle(getResources()
-					.getString(R.string.confirm_delete_title));
+			builder.setTitle(getResources().getString(R.string.confirm_delete_title));
 
 			// correctly set the message of the dialog
 			if(listView.getCheckedItemCount() > 1) {
-				builder.setMessage(String.format(getResources()
-						.getString(R.string.confirm_delete_msg_multi), listView
+				builder.setMessage(String.format(getResources().getString(R.string.confirm_delete_msg_multi), listView
 						.getCheckedItemCount()));
 			} else {
-				builder.setMessage(getResources()
-						.getString(R.string.confirm_delete_msg_single));
+				builder.setMessage(getResources().getString(R.string.confirm_delete_msg_single));
 			}
 
 			// create the AlertDialog and show it
@@ -229,8 +220,7 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 		MenuInflater inflater = getMenuInflater();
 
 		inflater.inflate(R.menu.main_edit, menu);
-		mode.setTitle(MainActivity.this.getResources()
-				.getString(R.string.select_items));
+		mode.setTitle(MainActivity.this.getResources().getString(R.string.select_items));
 		setSubtitle(mode);
 
 		return true;
@@ -263,12 +253,11 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 			mode.setSubtitle(null);
 			break;
 		case 1:
-			mode.setSubtitle(MainActivity.this.getResources()
-					.getString(R.string.one_stop_selected));
+			mode.setSubtitle(MainActivity.this.getResources().getString(R.string.one_stop_selected));
 			break;
 		default:
-			mode.setSubtitle(String.format(MainActivity.this.getResources()
-					.getString(R.string.multi_stops_selected), checkedCount));
+			mode.setSubtitle(String
+					.format(MainActivity.this.getResources().getString(R.string.multi_stops_selected), checkedCount));
 			break;
 		}
 	}
@@ -288,7 +277,7 @@ public class MainActivity extends Activity implements MultiChoiceModeListener {
 
 	private TwistoastDatabase databaseHandler;
 	private TwistoastArrayAdapter listAdapter;
-	
+
 	private boolean isInBackground;
 
 }

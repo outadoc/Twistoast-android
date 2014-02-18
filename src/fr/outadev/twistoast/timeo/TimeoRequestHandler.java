@@ -16,7 +16,7 @@ public abstract class TimeoRequestHandler {
 	public static String requestWebPage(String urlString) throws IOException, SocketTimeoutException {
 		URL url = new URL(urlString);
 		HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-		
+
 		urlConnection.setConnectTimeout(15000);
 		urlConnection.setReadTimeout(30000);
 
