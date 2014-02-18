@@ -13,9 +13,9 @@ import android.app.AlertDialog;
 import android.util.Log;
 import android.widget.Toast;
 
-public abstract class TimeoResultParser {
+public class TimeoResultParser {
 
-	public static String[] parseSchedule(String source) throws JSONException, ClassCastException {
+	public String[] parseSchedule(String source) throws JSONException, ClassCastException {
 		if(source != null) {
 			String[] scheduleArray = new String[2];
 
@@ -36,7 +36,7 @@ public abstract class TimeoResultParser {
 		return null;
 	}
 
-	public static void parseMultipleSchedules(String source, List<TimeoScheduleObject> stopsList) throws JSONException, ClassCastException {
+	public void parseMultipleSchedules(String source, List<TimeoScheduleObject> stopsList) throws JSONException, ClassCastException {
 		if(source != null) {
 			int indexShift = 0;
 			JSONArray resultArray = (JSONArray) new JSONTokener(source).nextValue();
@@ -74,7 +74,7 @@ public abstract class TimeoResultParser {
 		}
 	}
 
-	public static ArrayList<TimeoIDNameObject> parseList(String source) throws JSONException, ClassCastException {
+	public ArrayList<TimeoIDNameObject> parseList(String source) throws JSONException, ClassCastException {
 		if(source != null) {
 			JSONArray resultArray = (JSONArray) new JSONTokener(source).nextValue();
 

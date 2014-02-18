@@ -17,6 +17,7 @@ public class TimeoRequestHandler {
 
 	public TimeoRequestHandler() {
 		this.lastWebResponse = null;
+		this.parser = new TimeoResultParser();
 	}
 
 	private String requestWebPage(URL url) throws IOException, SocketTimeoutException {
@@ -52,7 +53,7 @@ public class TimeoRequestHandler {
 		try {
 			URL url = new URL(baseUrl + "?func=getSchedule&data=" + URLEncoder.encode(cookie, charset));
 			result = requestWebPage(url);
-			TimeoResultParser.parseMultipleSchedules(result, stopsList);
+			parser.parseMultipleSchedules(result, stopsList);
 
 			return stopsList;
 		} catch(MalformedURLException e) {
@@ -72,7 +73,7 @@ public class TimeoRequestHandler {
 			URL url = new URL(baseUrl + "?func=getSchedule&line=" + URLEncoder.encode(request.getLine(), charset) + "&direction=" + URLEncoder
 					.encode(request.getDirection(), charset) + "&stop=" + URLEncoder.encode(request.getStop(), charset));
 			result = requestWebPage(url);
-			stopSchedule.setSchedule(TimeoResultParser.parseSchedule(result));
+			stopSchedule.setSchedule(parser.parseSchedule(result));
 
 			return stopSchedule;
 		} catch(MalformedURLException e) {
@@ -121,7 +122,7 @@ public class TimeoRequestHandler {
 
 	private ArrayList<TimeoIDNameObject> getGenericList(URL url) throws ClassCastException, JSONException, SocketTimeoutException, IOException {
 		String result = requestWebPage(url);
-		return TimeoResultParser.parseList(result);
+		return parser.parseList(result);
 	}
 
 	// Reads an InputStream and converts it to a String.
@@ -142,6 +143,8 @@ public class TimeoRequestHandler {
 	private final static String charset = "UTF-8";
 
 	private String lastWebResponse;
+	
+	private TimeoResultParser parser;
 
 	public enum EndPoints {
 		LINES, DIRECTIONS, STOPS, SCHEDULE
