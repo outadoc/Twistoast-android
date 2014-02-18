@@ -24,21 +24,21 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 	private static final UUID PEBBLE_UUID = UUID.fromString("020f9398-c407-454b-996c-6ac341337281");
 
 	// message type key
-	private static final int TWISTOAST_MESSAGE_TYPE = 0x00;
+	private static final int KEY_TWISTOAST_MESSAGE_TYPE = 0x00;
 
 	// message type value
 	private static final byte BUS_STOP_REQUEST = 0x10;
 	private static final byte BUS_STOP_DATA_RESPONSE = 0x11;
 
 	// message keys
-	private static final int BUS_INDEX = 0x20;
-	private static final int BUS_STOP_NAME = 0x21;
-	private static final int BUS_DIRECTION_NAME = 0x22;
-	private static final int BUS_LINE_NAME = 0x23;
-	private static final int BUS_NEXT_SCHEDULE = 0x24;
-	private static final int BUS_SECOND_SCHEDULE = 0x25;
+	private static final int KEY_STOP_INDEX = 0x20;
+	private static final int KEY_BUS_STOP_NAME = 0x21;
+	private static final int KEY_BUS_DIRECTION_NAME = 0x22;
+	private static final int KEY_BUS_LINE_NAME = 0x23;
+	private static final int KEY_BUS_NEXT_SCHEDULE = 0x24;
+	private static final int KEY_BUS_SECOND_SCHEDULE = 0x25;
 	
-	private static final int SHOULD_VIBRATE = 0x30;
+	private static final int KEY_SHOULD_VIBRATE = 0x30;
 
 	public TwistoastPebbleReceiver() {
 		super(PEBBLE_UUID);
@@ -52,13 +52,13 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 		databaseHandler = new TwistoastDatabase(context);
 		final ArrayList<TimeoScheduleObject> stopsList = databaseHandler.getAllStops();
 
-		if(data.getInteger(TWISTOAST_MESSAGE_TYPE) == BUS_STOP_REQUEST
+		if(data.getInteger(KEY_TWISTOAST_MESSAGE_TYPE) == BUS_STOP_REQUEST
 				&& stopsList.size() > 0) {
 			Log.d("TwistoastPebbleReceiver", "pebble request acknowledged");
 
 			PebbleKit.sendAckToPebble(context, transactionId);
 
-			short index = (data.getInteger(BUS_INDEX)).shortValue();
+			short index = (data.getInteger(KEY_STOP_INDEX)).shortValue();
 			final PebbleDictionary response = new PebbleDictionary();
 
 			final short busIndex = (short) (index % stopsList.size());
@@ -101,15 +101,15 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 
 							Log.d("TwistoastPebbleReceiver", "got data for stop: " + object);
 
-							response.addInt8(TWISTOAST_MESSAGE_TYPE, BUS_STOP_DATA_RESPONSE);
-							response.addString(BUS_LINE_NAME, processStringForPebble(object.getLine().getName(), 10));
-							response.addString(BUS_DIRECTION_NAME, processStringForPebble(object.getDirection().getName(), 15));
-							response.addString(BUS_STOP_NAME, processStringForPebble(object.getStop().getName(), 15));
-							response.addString(BUS_NEXT_SCHEDULE, processStringForPebble(object.getSchedule()[0], 15, true));
-							response.addString(BUS_SECOND_SCHEDULE, (object.getSchedule().length > 1) ? processStringForPebble(object.getSchedule()[1], 15, true) : "");
+							response.addInt8(KEY_TWISTOAST_MESSAGE_TYPE, BUS_STOP_DATA_RESPONSE);
+							response.addString(KEY_BUS_LINE_NAME, processStringForPebble(object.getLine().getName(), 10));
+							response.addString(KEY_BUS_DIRECTION_NAME, processStringForPebble(object.getDirection().getName(), 15));
+							response.addString(KEY_BUS_STOP_NAME, processStringForPebble(object.getStop().getName(), 15));
+							response.addString(KEY_BUS_NEXT_SCHEDULE, processStringForPebble(object.getSchedule()[0], 15, true));
+							response.addString(KEY_BUS_SECOND_SCHEDULE, (object.getSchedule().length > 1) ? processStringForPebble(object.getSchedule()[1], 15, true) : "");
 
 							if(object.getSchedule()[0].contains("imminent") || object.getSchedule()[0].contains("en cours")) {
-								response.addInt8(SHOULD_VIBRATE, (byte) 1);
+								response.addInt8(KEY_SHOULD_VIBRATE, (byte) 1);
 							}
 							
 							Log.d("TwistoastPebbleReceiver", "sending back: " + response);
