@@ -172,7 +172,7 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 			if(result != null) {
 				objects = result;
 			}
-			
+
 			// refresh the display and callback MainActivity to end refresh
 			notifyDataSetChanged();
 			((MainActivity) context).endRefresh();

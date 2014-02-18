@@ -14,23 +14,23 @@ import java.util.ArrayList;
 import org.json.JSONException;
 
 public class TimeoRequestHandler {
-	
+
 	public TimeoRequestHandler() {
 		this.lastWebResponse = null;
 	}
 
 	private String requestWebPage(URL url) throws IOException, SocketTimeoutException {
 		HttpURLConnection urlConnection = null;
-		
+
 		try {
 			urlConnection = (HttpURLConnection) url.openConnection();
 
 			urlConnection.setConnectTimeout(15000);
 			urlConnection.setReadTimeout(30000);
-			
+
 			InputStream in = new BufferedInputStream(urlConnection.getInputStream());
 			lastWebResponse = readStream(in);
-			
+
 			return lastWebResponse;
 		} finally {
 			urlConnection.disconnect();
@@ -65,9 +65,9 @@ public class TimeoRequestHandler {
 	}
 
 	public TimeoScheduleObject getSingleSchedule(TimeoRequestObject request, TimeoScheduleObject stopSchedule) throws ClassCastException, JSONException, SocketTimeoutException, IOException {
-		
+
 		String result = null;
-		
+
 		try {
 			URL url = new URL(baseUrl + "?func=getSchedule&line=" + URLEncoder.encode(request.getLine(), charset) + "&direction=" + URLEncoder
 					.encode(request.getDirection(), charset) + "&stop=" + URLEncoder.encode(request.getStop(), charset));
@@ -119,7 +119,7 @@ public class TimeoRequestHandler {
 		return null;
 	}
 
-	private ArrayList<TimeoIDNameObject> getGenericList(URL url) throws ClassCastException, JSONException, SocketTimeoutException, IOException  {
+	private ArrayList<TimeoIDNameObject> getGenericList(URL url) throws ClassCastException, JSONException, SocketTimeoutException, IOException {
 		String result = requestWebPage(url);
 		return TimeoResultParser.parseList(result);
 	}
@@ -140,9 +140,9 @@ public class TimeoRequestHandler {
 
 	private final static String baseUrl = "http://apps.outadoc.fr/twisto-realtime/twisto-api.php";
 	private final static String charset = "UTF-8";
-	
+
 	private String lastWebResponse;
-		
+
 	public enum EndPoints {
 		LINES, DIRECTIONS, STOPS, SCHEDULE
 	}

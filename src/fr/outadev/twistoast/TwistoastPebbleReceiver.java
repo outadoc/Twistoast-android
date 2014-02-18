@@ -68,17 +68,17 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 
 					TimeoRequestHandler handler = new TimeoRequestHandler();
 					TimeoScheduleObject schedule = null;
-					
+
 					try {
-						schedule = handler.getSingleSchedule(new TimeoRequestObject(object.getLine().getId(), object.getDirection().getId(), object
-								.getStop().getId()), object);
-						
+						schedule = handler.getSingleSchedule(new TimeoRequestObject(object.getLine().getId(), object
+								.getDirection().getId(), object.getStop().getId()), object);
+
 						PebbleKit.sendAckToPebble(context, transactionId);
 					} catch(Exception e) {
 						PebbleKit.sendNackToPebble(context, transactionId);
 						e.printStackTrace();
 					}
-					
+
 					return schedule;
 				}
 
