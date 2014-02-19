@@ -5,6 +5,7 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.app.Activity;
@@ -25,6 +26,11 @@ public class MainActivity extends Activity {
 		drawerEntries = getResources().getStringArray(R.array.drawer_entries);
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		drawerList = (ListView) findViewById(R.id.left_drawer);
+		
+		mDrawerTitle = getTitle();
+		mTitle = drawerEntries[0];
+		
+		setTitle(mTitle);
 
 		// Set the adapter for the list view
 		drawerList.setAdapter(new ArrayAdapter<String>(this,
@@ -36,24 +42,37 @@ public class MainActivity extends Activity {
 
 			/** Called when a drawer has settled in a completely closed state. */
 			public void onDrawerClosed(View view) {
+				getActionBar().setTitle(mTitle);
 				super.onDrawerClosed(view);
 			}
 
 			/** Called when a drawer has settled in a completely open state. */
 			public void onDrawerOpened(View drawerView) {
+				getActionBar().setTitle(mDrawerTitle);
 				super.onDrawerOpened(drawerView);
 			}
 		};
 
 		// Set the drawer toggle as the DrawerListener
 		drawerLayout.setDrawerListener(drawerToggle);
+		drawerList.setOnItemClickListener(new DrawerItemClickListener());
 
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
 	}
 
-	private void selectItem(int position) {
+	private class DrawerItemClickListener implements ListView.OnItemClickListener {
+	    @Override
+	    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+	        selectItem(position);
+	    }
+	}
 
+	/** Swaps fragments in the main content view */
+	private void selectItem(int position) {
+	    // Create a new fragment and specify the planet to show based on position
+	    mTitle = drawerEntries[position];
+	    drawerLayout.closeDrawer(drawerList);
 	}
 
 	@Override
@@ -95,6 +114,10 @@ public class MainActivity extends Activity {
 	private String[] drawerEntries;
 	private DrawerLayout drawerLayout;
 	private ListView drawerList;
+
+	protected CharSequence mDrawerTitle;
+	private CharSequence mTitle;
+	
 	ActionBarDrawerToggle drawerToggle;
 
 }
