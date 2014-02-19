@@ -16,7 +16,7 @@ import org.json.JSONException;
 public class TimeoRequestHandler {
 
 	/**
-	 * Create a Timeo request handler.
+	 * Creates a Timeo request handler.
 	 */
 	public TimeoRequestHandler() {
 		this.lastWebResponse = null;
@@ -42,7 +42,7 @@ public class TimeoRequestHandler {
 	}
 
 	/**
-	 * Get multiple schedules from the API, using an ArrayList of
+	 * Gets multiple schedules from the API, using an ArrayList of
 	 * TimeoScheduleObjects.
 	 * 
 	 * @param stopsList
@@ -92,7 +92,7 @@ public class TimeoRequestHandler {
 	}
 
 	/**
-	 * Get a single schedule from the API, using a TimeoScheduleObject.
+	 * Gets a single schedule from the API, using a TimeoScheduleObject.
 	 * 
 	 * @param stopSchedule
 	 *            the TimeoScheduleObject that will be returned along with the
@@ -131,7 +131,7 @@ public class TimeoRequestHandler {
 	}
 
 	/**
-	 * Get a list of lines that are available from the API.
+	 * Gets a list of lines that are available from the API.
 	 * 
 	 * @param request
 	 *            the TimeoRequestObject that will be used to make the call
@@ -158,7 +158,7 @@ public class TimeoRequestHandler {
 	}
 
 	/**
-	 * Get a list of directions that are available from the API for the
+	 * Gets a list of directions that are available from the API for the
 	 * specified line.
 	 * 
 	 * @param request
@@ -188,7 +188,7 @@ public class TimeoRequestHandler {
 	}
 
 	/**
-	 * Get a list of stops that are available from the API for the specified
+	 * Gets a list of stops that are available from the API for the specified
 	 * line and direction.
 	 * 
 	 * @param request
@@ -230,7 +230,7 @@ public class TimeoRequestHandler {
 	}
 
 	/**
-	 * Get the last plain text web response that was returned by the API.
+	 * Gets the last plain text web response that was returned by the API.
 	 * 
 	 * @return last result of the HTTP request
 	 */

@@ -15,7 +15,7 @@ import android.widget.Toast;
 public class TimeoResultParser {
 
 	/**
-	 * Parse a schedule from a JSON response from the API.
+	 * Parses a schedule from a JSON response from the API.
 	 * 
 	 * @param source
 	 *            the JSON array returned by the API
@@ -46,7 +46,7 @@ public class TimeoResultParser {
 	}
 
 	/**
-	 * Parse multiple schedules from a JSON response from the API.
+	 * Parses multiple schedules from a JSON response from the API.
 	 * 
 	 * @param source
 	 *            the JSON array returned by the API
@@ -98,7 +98,7 @@ public class TimeoResultParser {
 	}
 
 	/**
-	 * Parse a list of ID/Names from a JSON response from the API.
+	 * Parses a list of ID/Names from a JSON response from the API.
 	 * 
 	 * @param source
 	 *            the JSON array returned by the API
@@ -135,7 +135,7 @@ public class TimeoResultParser {
 	}
 
 	/**
-	 * Display an error message based on the JSON message returned by the API,
+	 * Displays an error message based on the JSON message returned by the API,
 	 * if present.
 	 * 
 	 * @param source
