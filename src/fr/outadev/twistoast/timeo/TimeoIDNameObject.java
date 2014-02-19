@@ -35,6 +35,11 @@ public class TimeoIDNameObject {
 	public String toString() {
 		return name;
 	}
+	
+	@Override
+	public TimeoIDNameObject clone() {
+		return new TimeoIDNameObject(id, name);
+	}
 
 	private String id;
 	private String name;

@@ -127,7 +127,7 @@ public class TimeoRequestHandler {
 			e.printStackTrace();
 		}
 
-		return stopSchedule;
+		return newSchedule;
 	}
 
 	/**

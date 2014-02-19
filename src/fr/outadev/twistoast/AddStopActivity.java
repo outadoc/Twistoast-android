@@ -235,7 +235,7 @@ public class AddStopActivity extends Activity {
 					try {
 						try {
 							return handler
-									.getSingleSchedule(new TimeoScheduleObject(getCurrentStop(), getCurrentLine(), getCurrentDirection(), null));
+									.getSingleSchedule(new TimeoScheduleObject(getCurrentLine(), getCurrentDirection(), getCurrentStop(), null));
 						} catch(ClassCastException e) {
 							AddStopActivity.this.runOnUiThread(new Runnable() {
 								public void run() {
@@ -273,20 +273,22 @@ public class AddStopActivity extends Activity {
 				@Override
 				protected void onPostExecute(TimeoScheduleObject result) {
 					setProgressBarIndeterminateVisibility(false);
+					
+					if(result != null) {
+						String[] scheduleArray = result.getSchedule();
 
-					String[] scheduleArray = result.getSchedule();
+						// set the schedule labels, if we need to
+						if(scheduleArray != null) {
+							if(scheduleArray[0] != null)
+								lbl_schedule_1.setText("- " + scheduleArray[0]);
+							if(scheduleArray[1] != null)
+								lbl_schedule_2.setText("- " + scheduleArray[1]);
+							else
+								lbl_schedule_2.setText("");
+						}
 
-					// set the schedule labels, if we need to
-					if(scheduleArray != null) {
-						if(scheduleArray[0] != null)
-							lbl_schedule_1.setText("- " + scheduleArray[0]);
-						if(scheduleArray[1] != null)
-							lbl_schedule_2.setText("- " + scheduleArray[1]);
-						else
-							lbl_schedule_2.setText("");
+						result.setSchedule(scheduleArray);
 					}
-
-					result.setSchedule(scheduleArray);
 				}
 
 			}.execute();
