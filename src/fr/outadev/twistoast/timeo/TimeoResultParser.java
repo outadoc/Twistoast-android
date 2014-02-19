@@ -1,7 +1,6 @@
 package fr.outadev.twistoast.timeo;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,7 +55,7 @@ public class TimeoResultParser {
 	 * 
 	 * @see TimeoScheduleObject
 	 */
-	public void parseMultipleSchedules(String source, List<TimeoScheduleObject> stopsList) throws JSONException, ClassCastException {
+	public void parseMultipleSchedules(String source, ArrayList<TimeoScheduleObject> stopsList) throws JSONException, ClassCastException {
 		if(source != null) {
 			int indexShift = 0;
 			JSONArray resultArray = (JSONArray) new JSONTokener(source).nextValue();
