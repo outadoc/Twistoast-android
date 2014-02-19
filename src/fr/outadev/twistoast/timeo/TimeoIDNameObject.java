@@ -1,9 +1,14 @@
 package fr.outadev.twistoast.timeo;
 
+/**
+ * Associates an ID to a name. Used to associate a line ID with its name, for example.
+ * @author outadoc
+ *
+ */
 public class TimeoIDNameObject {
 
 	/**
-	 * Creates an ID/name object. Used to associate a line ID with its name, for example.
+	 * Creates an ID/name object. 
 	 * 
 	 * @param id the id of the object
 	 * @param name the name of the object

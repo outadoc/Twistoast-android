@@ -12,6 +12,11 @@ import android.app.AlertDialog;
 import android.util.Log;
 import android.widget.Toast;
 
+/**
+ * Contains methods used to parse the data retreived from the Twisto Realtime API.
+ * @author outadoc
+ *
+ */
 public class TimeoResultParser {
 
 	/**

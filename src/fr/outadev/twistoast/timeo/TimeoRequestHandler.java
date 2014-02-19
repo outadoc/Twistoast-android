@@ -13,6 +13,11 @@ import java.util.ArrayList;
 
 import org.json.JSONException;
 
+/**
+ * Handles all connections to the Twisto Realtime API.
+ * @author outadoc
+ *
+ */
 public class TimeoRequestHandler {
 
 	/**
@@ -29,8 +34,8 @@ public class TimeoRequestHandler {
 		try {
 			urlConnection = (HttpURLConnection) url.openConnection();
 
-			urlConnection.setConnectTimeout(15000);
-			urlConnection.setReadTimeout(30000);
+			urlConnection.setConnectTimeout(5000);
+			urlConnection.setReadTimeout(20000);
 
 			InputStream in = new BufferedInputStream(urlConnection.getInputStream());
 			lastWebResponse = readStream(in);
