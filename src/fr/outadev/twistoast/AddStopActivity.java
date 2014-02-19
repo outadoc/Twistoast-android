@@ -94,7 +94,7 @@ public class AddStopActivity extends Activity {
 				item_next.setEnabled(false);
 
 				// get the selected line
-				TimeoIDNameObject item = (TimeoIDNameObject) parentView.getItemAtPosition(position);
+				TimeoIDNameObject item = getCurrentLine();
 
 				if(item != null && item.getId() != null) {
 					// set the line view
@@ -124,9 +124,6 @@ public class AddStopActivity extends Activity {
 		spinDirection.setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parentView, View view, int position, long id) {
-				TimeoIDNameObject direction = (TimeoIDNameObject) parentView.getItemAtPosition(position);
-				TimeoIDNameObject line = (TimeoIDNameObject) spinLine.getItemAtPosition(spinLine.getSelectedItemPosition());
-
 				// set loading labels
 				lbl_direction.setText(getResources().getString(R.string.loading_data));
 				lbl_schedule_1.setText(getResources().getString(R.string.loading_data));
@@ -137,10 +134,9 @@ public class AddStopActivity extends Activity {
 
 				item_next.setEnabled(false);
 
-				if(line != null && direction != null && line.getId() != null && direction.getId() != null) {
-					lbl_direction.setText(getResources().getString(R.string.direction_name, direction.getName()));
-
-					fetchDataFromAPI(EndPoints.STOPS, (new TimeoRequestObject(line.getId(), direction.getId())));
+				if(getCurrentLine() != null && getCurrentDirection() != null && getCurrentLine().getId() != null && getCurrentDirection().getId() != null) {
+					lbl_direction.setText(getResources().getString(R.string.direction_name, getCurrentDirection().getName()));
+					fetchDataFromAPI(EndPoints.STOPS, (new TimeoRequestObject(getCurrentLine().getId(), getCurrentDirection().getId())));
 				}
 			}
 
@@ -157,10 +153,9 @@ public class AddStopActivity extends Activity {
 				lbl_schedule_1.setText(getResources().getString(R.string.loading_data));
 				lbl_schedule_2.setText(getResources().getString(R.string.loading_data));
 
-				TimeoIDNameObject stop = (TimeoIDNameObject) spinStop.getItemAtPosition(spinStop.getSelectedItemPosition());
-				TimeoIDNameObject line = (TimeoIDNameObject) spinLine.getItemAtPosition(spinLine.getSelectedItemPosition());
-				TimeoIDNameObject direction = (TimeoIDNameObject) spinDirection.getItemAtPosition(spinDirection
-						.getSelectedItemPosition());
+				TimeoIDNameObject stop = getCurrentStop();
+				TimeoIDNameObject line = getCurrentLine();
+				TimeoIDNameObject direction = getCurrentDirection();
 
 				item_next.setEnabled(true);
 
@@ -205,11 +200,10 @@ public class AddStopActivity extends Activity {
 	}
 
 	public void registerStopToDatabase() {
-		TimeoIDNameObject line = (TimeoIDNameObject) spinLine.getItemAtPosition(spinLine.getSelectedItemPosition());
-		TimeoIDNameObject direction = (TimeoIDNameObject) spinDirection
-				.getItemAtPosition(spinDirection.getSelectedItemPosition());
-		TimeoIDNameObject stop = (TimeoIDNameObject) spinStop.getItemAtPosition(spinStop.getSelectedItemPosition());
-
+		TimeoIDNameObject stop = getCurrentStop();
+		TimeoIDNameObject line = getCurrentLine();
+		TimeoIDNameObject direction = getCurrentDirection();
+		
 		TwistoastDatabase.DBStatus status = databaseHandler.addStopToDatabase(line, direction, stop);
 
 		if(status != TwistoastDatabase.DBStatus.SUCCESS) {
@@ -233,14 +227,9 @@ public class AddStopActivity extends Activity {
 				@Override
 				protected TimeoScheduleObject doInBackground(Void... params) {
 					
-					TimeoIDNameObject stop = (TimeoIDNameObject) spinStop.getItemAtPosition(spinStop.getSelectedItemPosition());
-					TimeoIDNameObject line = (TimeoIDNameObject) spinLine.getItemAtPosition(spinLine.getSelectedItemPosition());
-					TimeoIDNameObject direction = (TimeoIDNameObject) spinDirection.getItemAtPosition(spinDirection
-							.getSelectedItemPosition());
-
 					try {
 						try {
-							return handler.getSingleSchedule(new TimeoScheduleObject(stop, line, direction, null));
+							return handler.getSingleSchedule(new TimeoScheduleObject(getCurrentStop(), getCurrentLine(), getCurrentDirection(), null));
 						} catch(ClassCastException e) {
 							AddStopActivity.this.runOnUiThread(new Runnable() {
 								public void run() {
@@ -375,6 +364,18 @@ public class AddStopActivity extends Activity {
 
 			}.execute();
 		}
+	}
+	
+	public TimeoIDNameObject getCurrentStop() {
+		return (TimeoIDNameObject) spinStop.getItemAtPosition(spinStop.getSelectedItemPosition());
+	}
+	
+	public TimeoIDNameObject getCurrentDirection() {
+		return (TimeoIDNameObject) spinDirection.getItemAtPosition(spinDirection.getSelectedItemPosition());
+	}
+	
+	public TimeoIDNameObject getCurrentLine() {
+		return (TimeoIDNameObject) spinLine.getItemAtPosition(spinLine.getSelectedItemPosition());
 	}
 
 	private Spinner spinLine;
