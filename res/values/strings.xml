@@ -33,6 +33,7 @@
         <item>Temps Réel</item>
         <item>Horaires</item>
         <item>Itinéraires</item>
+        <item>Info Trafic</item>
     </string-array>
 
 </resources>
