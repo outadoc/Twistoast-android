@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 /**
  * Used to store a schedule, with its corresponding line, direction, and stop objects.
- * 
  * @author outadoc
  *
  */
