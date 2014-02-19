@@ -33,7 +33,7 @@ public class TimeoIDNameObject {
 	
 	@Override
 	public String toString() {
-		return name;
+		return "TimeoIDNameObject (" + id + ", " + name + ")";
 	}
 
 	private String id;
