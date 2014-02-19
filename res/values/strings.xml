@@ -29,5 +29,10 @@
     <string name="stop_name">Arrêt %1$s</string>
     <string name="error_toast">Erreur : %1$s</string>
     <string name="added_toast">Ajouté : %1$s - %2$s - %3$s</string>
+    <string-array name="drawer_entries">
+        <item>Temps Réel</item>
+        <item>Horaires</item>
+        <item>Itinéraires</item>
+    </string-array>
 
 </resources>
