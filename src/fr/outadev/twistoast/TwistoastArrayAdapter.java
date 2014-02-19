@@ -20,14 +20,16 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 
-	public TwistoastArrayAdapter(Context context, int resource, ArrayList<TimeoScheduleObject> objects) {
+	public TwistoastArrayAdapter(Context context, StopsListFragment fragment, int resource, ArrayList<TimeoScheduleObject> objects) {
 		super(context, resource, objects);
 
+		this.fragment = fragment;
 		this.objects = objects;
 		this.context = context;
 	}
@@ -41,7 +43,7 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 	}
 
 	@Override
-	public View getView(final int position, View convertView, ViewGroup parent) {
+	public View getView(final int position, View convertView, final ViewGroup parent) {
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		// that's our row XML
@@ -94,13 +96,12 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 			@Override
 			public void onClick(View v) {
 
-				MainActivity mainActivity = (MainActivity) TwistoastArrayAdapter.this.context;
-				SparseBooleanArray checked = mainActivity.listView.getCheckedItemPositions();
+				SparseBooleanArray checked = ((ListView) parent).getCheckedItemPositions();
 
 				if(checked.get(position)) {
-					mainActivity.listView.setItemChecked(position, false);
+					((ListView) parent).setItemChecked(position, false);
 				} else {
-					mainActivity.listView.setItemChecked(position, true);
+					((ListView) parent).setItemChecked(position, true);
 				}
 			}
 
@@ -167,10 +168,11 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 
 			// refresh the display and callback MainActivity to end refresh
 			notifyDataSetChanged();
-			((MainActivity) context).endRefresh();
+			fragment.endRefresh();
 		}
 	}
 
+	private StopsListFragment fragment;
 	private ArrayList<TimeoScheduleObject> objects;
 	private Context context;
 
