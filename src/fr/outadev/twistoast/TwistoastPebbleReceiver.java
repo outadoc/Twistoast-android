@@ -44,7 +44,7 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 	public void receiveData(final Context context, final int transactionId, PebbleDictionary data) {
 		Log.d("TwistoastPebbleReceiver", "received a message from pebble " + PEBBLE_UUID);
 
-		databaseHandler = new TwistoastDatabase(context);
+		TwistoastDatabase databaseHandler = new TwistoastDatabase(context);
 		final ArrayList<TimeoScheduleObject> stopsList = databaseHandler.getAllStops();
 
 		if(data.getInteger(KEY_TWISTOAST_MESSAGE_TYPE) == BUS_STOP_REQUEST && stopsList.size() > 0) {
@@ -52,8 +52,8 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 
 			short index = (data.getInteger(KEY_STOP_INDEX)).shortValue();
 			final PebbleDictionary response = new PebbleDictionary();
-
 			final short busIndex = (short) (index % stopsList.size());
+			
 			TimeoScheduleObject schedule = stopsList.get(busIndex);
 
 			Log.d("TwistoastPebbleReceiver", "loading data for stop #" + busIndex + "...");
@@ -70,7 +70,6 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 
 					try {
 						schedule = handler.getSingleSchedule(object);
-
 						PebbleKit.sendAckToPebble(context, transactionId);
 					} catch(Exception e) {
 						PebbleKit.sendNackToPebble(context, transactionId);
@@ -141,7 +140,5 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 			return str;
 		}
 	}
-
-	private TwistoastDatabase databaseHandler;
 
 }
