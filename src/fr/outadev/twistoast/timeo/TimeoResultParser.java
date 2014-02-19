@@ -15,6 +15,15 @@ import android.widget.Toast;
 
 public class TimeoResultParser {
 
+	/**
+	 * Parse a schedule from a JSON response from the API.
+	 * 
+	 * @param source the JSON array returned by the API
+	 * @return a String array containing the two schedules
+	 * 
+	 * @throws JSONException
+	 * @throws ClassCastException
+	 */
 	public String[] parseSchedule(String source) throws JSONException, ClassCastException {
 		if(source != null) {
 			String[] scheduleArray = new String[2];
@@ -36,6 +45,17 @@ public class TimeoResultParser {
 		return null;
 	}
 
+	/**
+	 * Parse multiple schedules from a JSON response from the API.
+	 * 
+	 * @param source the JSON array returned by the API
+	 * @param stopsList the List containing the TimeoScheduleObjects that we're getting schedules for
+	 * 
+	 * @throws JSONException
+	 * @throws ClassCastException
+	 * 
+	 * @see TimeoScheduleObject
+	 */
 	public void parseMultipleSchedules(String source, List<TimeoScheduleObject> stopsList) throws JSONException, ClassCastException {
 		if(source != null) {
 			int indexShift = 0;
@@ -74,6 +94,18 @@ public class TimeoResultParser {
 		}
 	}
 
+	/**
+	 * Parse a list of ID/Names from a JSON response from the API.
+	 * 
+	 * @param source the JSON array returned by the API
+	 * @return an ArrayList of TimeoIDNameObjects containing the parsed values
+	 * 
+	 * @throws JSONException
+	 * @throws ClassCastException
+	 * 
+	 * @see TimeoIDNameObject
+	 * @see ArrayList
+	 */
 	public ArrayList<TimeoIDNameObject> parseList(String source) throws JSONException, ClassCastException {
 		if(source != null) {
 			JSONArray resultArray = (JSONArray) new JSONTokener(source).nextValue();
@@ -98,8 +130,17 @@ public class TimeoResultParser {
 		return null;
 	}
 
-	public static void displayErrorMessageFromTextResult(String result, Activity activity) throws JSONException {
-		JSONObject obj = (JSONObject) new JSONTokener(result).nextValue();
+	/**
+	 * Display an error message based on the JSON message returned by the API, if present.
+	 * 
+	 * @param source the JSON array returned by the API
+	 * @param activity the Activity on which we're going to display the message
+	 * @throws JSONException
+	 * 
+	 * @see Activity
+	 */
+	public static void displayErrorMessageFromTextResult(String source, Activity activity) throws JSONException {
+		JSONObject obj = (JSONObject) new JSONTokener(source).nextValue();
 		String errorMessage = null;
 
 		try {

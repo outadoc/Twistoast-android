@@ -2,6 +2,12 @@ package fr.outadev.twistoast.timeo;
 
 import java.util.Arrays;
 
+/**
+ * Used to store a schedule, with its corresponding line, direction, and stop objects.
+ * 
+ * @author outadoc
+ *
+ */
 public class TimeoScheduleObject {
 
 	public TimeoScheduleObject(TimeoIDNameObject line, TimeoIDNameObject direction, TimeoIDNameObject stop, String[] schedule) {
@@ -47,6 +53,11 @@ public class TimeoScheduleObject {
 	public String toString() {
 		return "TimeoScheduleObject [line=" + line + ", direction=" + direction + ", stop=" + stop + ", schedule=" + Arrays
 				.toString(schedule) + "]";
+	}
+	
+	@Override
+	public TimeoScheduleObject clone() {
+		return new TimeoScheduleObject(direction, direction, direction, schedule);
 	}
 
 	private TimeoIDNameObject line;
