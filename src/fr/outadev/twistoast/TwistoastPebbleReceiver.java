@@ -12,7 +12,6 @@ import com.getpebble.android.kit.PebbleKit.PebbleDataReceiver;
 import com.getpebble.android.kit.util.PebbleDictionary;
 
 import fr.outadev.twistoast.timeo.TimeoRequestHandler;
-import fr.outadev.twistoast.timeo.TimeoRequestObject;
 import fr.outadev.twistoast.timeo.TimeoScheduleObject;
 
 public class TwistoastPebbleReceiver extends PebbleDataReceiver {
@@ -70,8 +69,7 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 					TimeoScheduleObject schedule = null;
 
 					try {
-						schedule = handler.getSingleSchedule(new TimeoRequestObject(object.getLine().getId(), object
-								.getDirection().getId(), object.getStop().getId()), object);
+						schedule = handler.getSingleSchedule(object);
 
 						PebbleKit.sendAckToPebble(context, transactionId);
 					} catch(Exception e) {

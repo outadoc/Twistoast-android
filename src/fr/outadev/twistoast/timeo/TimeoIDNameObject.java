@@ -15,10 +15,6 @@ public class TimeoIDNameObject {
 		this.name = name;
 	}
 
-	public String toString() {
-		return name;
-	}
-
 	public String getId() {
 		return id;
 	}
@@ -33,6 +29,11 @@ public class TimeoIDNameObject {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	@Override
+	public String toString() {
+		return name;
 	}
 
 	private String id;

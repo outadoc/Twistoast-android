@@ -17,7 +17,8 @@ public class TimeoResultParser {
 	/**
 	 * Parse a schedule from a JSON response from the API.
 	 * 
-	 * @param source the JSON array returned by the API
+	 * @param source
+	 *            the JSON array returned by the API
 	 * @return a String array containing the two schedules
 	 * 
 	 * @throws JSONException
@@ -27,7 +28,7 @@ public class TimeoResultParser {
 		if(source != null) {
 			String[] scheduleArray = new String[2];
 
-			// parse the whole json array
+			// parse the whole JSON array
 			JSONArray resultArray = (JSONArray) new JSONTokener(source).nextValue();
 
 			if(resultArray != null && resultArray.getJSONObject(0) != null && resultArray.getJSONObject(0).getJSONArray("next") != null) {
@@ -47,8 +48,11 @@ public class TimeoResultParser {
 	/**
 	 * Parse multiple schedules from a JSON response from the API.
 	 * 
-	 * @param source the JSON array returned by the API
-	 * @param stopsList the List containing the TimeoScheduleObjects that we're getting schedules for
+	 * @param source
+	 *            the JSON array returned by the API
+	 * @param stopsList
+	 *            the List containing the TimeoScheduleObjects that we're
+	 *            getting schedules for
 	 * 
 	 * @throws JSONException
 	 * @throws ClassCastException
@@ -72,10 +76,10 @@ public class TimeoResultParser {
 					}
 
 					if(stopsList.size() != resultArray.length()) {
-						// sometimes, the api isn't not going to return the
-						// right number of stops: some may disappear.
-						// so, while the current stop we're parsing isn't really
-						// the current stop in our list, increase the shift
+						// sometimes, the API isn't not going to return the
+						// right number of stops: some may disappear. so, while
+						// the current stop we're parsing isn't really the
+						// current stop in our list, increase the shift
 						while(!stopsList.get(i + indexShift).getLine().getName()
 								.equalsIgnoreCase(resultArray.getJSONObject(i).getString("line")) && !stopsList
 								.get(i + indexShift).getDirection().getName()
@@ -96,7 +100,8 @@ public class TimeoResultParser {
 	/**
 	 * Parse a list of ID/Names from a JSON response from the API.
 	 * 
-	 * @param source the JSON array returned by the API
+	 * @param source
+	 *            the JSON array returned by the API
 	 * @return an ArrayList of TimeoIDNameObjects containing the parsed values
 	 * 
 	 * @throws JSONException
@@ -130,10 +135,13 @@ public class TimeoResultParser {
 	}
 
 	/**
-	 * Display an error message based on the JSON message returned by the API, if present.
+	 * Display an error message based on the JSON message returned by the API,
+	 * if present.
 	 * 
-	 * @param source the JSON array returned by the API
-	 * @param activity the Activity on which we're going to display the message
+	 * @param source
+	 *            the JSON array returned by the API
+	 * @param activity
+	 *            the Activity on which we're going to display the message
 	 * @throws JSONException
 	 * 
 	 * @see Activity

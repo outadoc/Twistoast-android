@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import org.json.JSONException;
 
 import fr.outadev.twistoast.timeo.TimeoRequestHandler;
-import fr.outadev.twistoast.timeo.TimeoRequestObject;
 import fr.outadev.twistoast.timeo.TimeoResultParser;
 import fr.outadev.twistoast.timeo.TimeoScheduleObject;
 import android.app.Activity;
@@ -120,20 +119,13 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 
 		@Override
 		protected ArrayList<TimeoScheduleObject> doInBackground(Void... params) {
-			TimeoRequestObject[] requestObj = new TimeoRequestObject[objects.size()];
-
-			// add every stop to the request
-			for(int i = 0; i < objects.size(); i++) {
-				requestObj[i] = new TimeoRequestObject(objects.get(i).getLine().getId(), objects.get(i).getDirection().getId(), objects
-						.get(i).getStop().getId());
-			}
-
+			
 			final TimeoRequestHandler handler = new TimeoRequestHandler();
 			ArrayList<TimeoScheduleObject> result = objects;
 
 			try {
 				try {
-					result = handler.getMultipleSchedules(requestObj, objects);
+					result = handler.getMultipleSchedules(objects);
 				} catch(ClassCastException e) {
 					((Activity) context).runOnUiThread(new Runnable() {
 						public void run() {

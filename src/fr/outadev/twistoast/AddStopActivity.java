@@ -232,10 +232,15 @@ public class AddStopActivity extends Activity {
 			new AsyncTask<Void, Void, TimeoScheduleObject>() {
 				@Override
 				protected TimeoScheduleObject doInBackground(Void... params) {
+					
+					TimeoIDNameObject stop = (TimeoIDNameObject) spinStop.getItemAtPosition(spinStop.getSelectedItemPosition());
+					TimeoIDNameObject line = (TimeoIDNameObject) spinLine.getItemAtPosition(spinLine.getSelectedItemPosition());
+					TimeoIDNameObject direction = (TimeoIDNameObject) spinDirection.getItemAtPosition(spinDirection
+							.getSelectedItemPosition());
 
 					try {
 						try {
-							return handler.getSingleSchedule(data, new TimeoScheduleObject(null, null, null, null));
+							return handler.getSingleSchedule(new TimeoScheduleObject(stop, line, direction, null));
 						} catch(ClassCastException e) {
 							AddStopActivity.this.runOnUiThread(new Runnable() {
 								public void run() {
