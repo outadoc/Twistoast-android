@@ -68,7 +68,7 @@ public class MainActivity extends Activity {
 		getActionBar().setHomeButtonEnabled(true);
 
 		if (savedInstanceState == null) {
-			selectItem(0);
+			selectItem(0, false);
 		}
 	}
 
@@ -84,6 +84,10 @@ public class MainActivity extends Activity {
 
 	/** Swaps fragments in the main content view */
 	private void selectItem(int position) {
+		selectItem(position, true);
+	}
+
+	private void selectItem(int position, boolean addToBackStack) {
 		Fragment fragment = null;
 
 		if (position == 0) {
@@ -116,9 +120,15 @@ public class MainActivity extends Activity {
 
 		// Insert the fragment by replacing any existing fragment
 		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction()
-				.replace(R.id.content_frame, fragment).addToBackStack(null)
-				.commit();
+
+		if (addToBackStack) {
+			fragmentManager.beginTransaction()
+					.replace(R.id.content_frame, fragment).addToBackStack(null)
+					.commit();
+		} else {
+			fragmentManager.beginTransaction()
+					.replace(R.id.content_frame, fragment).commit();
+		}
 
 		// Highlight the selected item, update the title, and close the
 		// drawer
