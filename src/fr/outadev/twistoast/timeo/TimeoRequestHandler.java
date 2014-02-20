@@ -15,8 +15,9 @@ import org.json.JSONException;
 
 /**
  * Handles all connections to the Twisto Realtime API.
+ * 
  * @author outadoc
- *
+ * 
  */
 public class TimeoRequestHandler {
 
@@ -28,7 +29,8 @@ public class TimeoRequestHandler {
 		this.parser = new TimeoResultParser();
 	}
 
-	protected String requestWebPage(URL url) throws IOException, SocketTimeoutException {
+	protected String requestWebPage(URL url) throws IOException,
+			SocketTimeoutException {
 		HttpURLConnection urlConnection = null;
 
 		try {
@@ -37,7 +39,8 @@ public class TimeoRequestHandler {
 			urlConnection.setConnectTimeout(5000);
 			urlConnection.setReadTimeout(20000);
 
-			InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+			InputStream in = new BufferedInputStream(
+					urlConnection.getInputStream());
 			lastWebResponse = readStream(in);
 
 			return lastWebResponse;
@@ -65,31 +68,37 @@ public class TimeoRequestHandler {
 	 * @see TimeoRequestObject
 	 * @see ArrayList
 	 */
-	public ArrayList<TimeoScheduleObject> getMultipleSchedules(ArrayList<TimeoScheduleObject> stopsList) throws ClassCastException, JSONException, SocketTimeoutException, IOException {
+	public ArrayList<TimeoScheduleObject> getMultipleSchedules(
+			ArrayList<TimeoScheduleObject> stopsList)
+			throws ClassCastException, JSONException, SocketTimeoutException,
+			IOException {
 		@SuppressWarnings("unchecked")
-		ArrayList<TimeoScheduleObject> newStopsList = (ArrayList<TimeoScheduleObject>) stopsList.clone();
+		ArrayList<TimeoScheduleObject> newStopsList = (ArrayList<TimeoScheduleObject>) stopsList
+				.clone();
 
 		String cookie = new String();
 		String result = new String();
 
 		// craft a cookie in the form
 		// STOP_ID|LINE_ID|DIRECTION_ID;STOP_ID|LINE_ID|DIRECTION_ID;...
-		for(int i = 0; i < stopsList.size(); i++) {
-			if(i != 0)
+		for (int i = 0; i < stopsList.size(); i++) {
+			if (i != 0)
 				cookie += ';';
-			cookie += newStopsList.get(i).getStop().getId() + '|' + newStopsList.get(i).getLine().getId() + '|' + newStopsList
-					.get(i).getDirection().getId();
+			cookie += newStopsList.get(i).getStop().getId() + '|'
+					+ newStopsList.get(i).getLine().getId() + '|'
+					+ newStopsList.get(i).getDirection().getId();
 		}
 
 		try {
-			URL url = new URL(baseUrl + "?func=getSchedule&data=" + URLEncoder.encode(cookie, charset));
+			URL url = new URL(baseUrl + "?func=getSchedule&data="
+					+ URLEncoder.encode(cookie, charset));
 			result = requestWebPage(url);
 			parser.parseMultipleSchedules(result, newStopsList);
 
 			return newStopsList;
-		} catch(MalformedURLException e) {
+		} catch (MalformedURLException e) {
 			e.printStackTrace();
-		} catch(UnsupportedEncodingException e) {
+		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
 
@@ -113,22 +122,28 @@ public class TimeoRequestHandler {
 	 * @see TimeoScheduleObject
 	 * @see TimeoRequestObject
 	 */
-	public TimeoScheduleObject getSingleSchedule(TimeoScheduleObject stopSchedule) throws ClassCastException, JSONException, SocketTimeoutException, IOException {
+	public TimeoScheduleObject getSingleSchedule(
+			TimeoScheduleObject stopSchedule) throws ClassCastException,
+			JSONException, SocketTimeoutException, IOException {
 		String result = null;
 		TimeoScheduleObject newSchedule = stopSchedule.clone();
 
 		try {
-			URL url = new URL(baseUrl + "?func=getSchedule&line=" + URLEncoder.encode(newSchedule.getLine().getId(), charset) + "&direction=" + URLEncoder
-					.encode(newSchedule.getDirection().getId(), charset) + "&stop=" + URLEncoder.encode(newSchedule.getStop()
-					.getId(), charset));
+			URL url = new URL(baseUrl
+					+ "?func=getSchedule&line="
+					+ URLEncoder.encode(newSchedule.getLine().getId(), charset)
+					+ "&direction="
+					+ URLEncoder.encode(newSchedule.getDirection().getId(),
+							charset) + "&stop="
+					+ URLEncoder.encode(newSchedule.getStop().getId(), charset));
 
 			result = requestWebPage(url);
 			newSchedule.setSchedule(parser.parseSchedule(result));
 
 			return newSchedule;
-		} catch(MalformedURLException e) {
+		} catch (MalformedURLException e) {
 			e.printStackTrace();
-		} catch(UnsupportedEncodingException e) {
+		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
 
@@ -152,10 +167,12 @@ public class TimeoRequestHandler {
 	 * @see TimeoIDNameObject
 	 * @see ArrayList
 	 */
-	public ArrayList<TimeoIDNameObject> getLines(TimeoRequestObject request) throws ClassCastException, JSONException, SocketTimeoutException, IOException {
+	public ArrayList<TimeoIDNameObject> getLines(TimeoRequestObject request)
+			throws ClassCastException, JSONException, SocketTimeoutException,
+			IOException {
 		try {
 			return getGenericList(new URL(baseUrl + "?func=getLines"));
-		} catch(MalformedURLException e) {
+		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
 
@@ -180,12 +197,15 @@ public class TimeoRequestHandler {
 	 * @see TimeoIDNameObject
 	 * @see ArrayList
 	 */
-	public ArrayList<TimeoIDNameObject> getDirections(TimeoRequestObject request) throws ClassCastException, JSONException, SocketTimeoutException, IOException {
+	public ArrayList<TimeoIDNameObject> getDirections(TimeoRequestObject request)
+			throws ClassCastException, JSONException, SocketTimeoutException,
+			IOException {
 		try {
-			return getGenericList(new URL(baseUrl + "?func=getDirections&line=" + URLEncoder.encode(request.getLine(), charset)));
-		} catch(MalformedURLException e) {
+			return getGenericList(new URL(baseUrl + "?func=getDirections&line="
+					+ URLEncoder.encode(request.getLine(), charset)));
+		} catch (MalformedURLException e) {
 			e.printStackTrace();
-		} catch(UnsupportedEncodingException e) {
+		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
 
@@ -210,26 +230,33 @@ public class TimeoRequestHandler {
 	 * @see TimeoIDNameObject
 	 * @see ArrayList
 	 */
-	public ArrayList<TimeoIDNameObject> getStops(TimeoRequestObject request) throws ClassCastException, JSONException, SocketTimeoutException, IOException {
+	public ArrayList<TimeoIDNameObject> getStops(TimeoRequestObject request)
+			throws ClassCastException, JSONException, SocketTimeoutException,
+			IOException {
 		try {
-			return getGenericList(new URL(baseUrl + "?func=getStops&line=" + URLEncoder.encode(request.getLine(), charset) + "&direction=" + URLEncoder
-					.encode(request.getDirection(), charset)));
-		} catch(MalformedURLException e) {
+			return getGenericList(new URL(baseUrl + "?func=getStops&line="
+					+ URLEncoder.encode(request.getLine(), charset)
+					+ "&direction="
+					+ URLEncoder.encode(request.getDirection(), charset)));
+		} catch (MalformedURLException e) {
 			e.printStackTrace();
-		} catch(UnsupportedEncodingException e) {
+		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
 
 		return null;
 	}
 
-	protected ArrayList<TimeoIDNameObject> getGenericList(URL url) throws ClassCastException, JSONException, SocketTimeoutException, IOException {
+	protected ArrayList<TimeoIDNameObject> getGenericList(URL url)
+			throws ClassCastException, JSONException, SocketTimeoutException,
+			IOException {
 		String result = requestWebPage(url);
 		return parser.parseList(result);
 	}
 
 	// Reads an InputStream and converts it to a String.
-	protected String readStream(InputStream stream) throws IOException, UnsupportedEncodingException {
+	protected String readStream(InputStream stream) throws IOException,
+			UnsupportedEncodingException {
 		java.util.Scanner s = new java.util.Scanner(stream).useDelimiter("\\A");
 		return s.hasNext() ? s.next() : "";
 	}

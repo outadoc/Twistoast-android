@@ -25,31 +25,37 @@ import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class StopsListFragment extends Fragment implements MultiChoiceModeListener {
+public class StopsListFragment extends Fragment
+		implements
+			MultiChoiceModeListener {
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		View view = inflater.inflate(R.layout.fragment_stops_list, container, false);
-		
+		View view = inflater.inflate(R.layout.fragment_stops_list, container,
+				false);
+
 		// get pull to refresh view
-		pullToRefresh = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
+		pullToRefresh = (PullToRefreshLayout) view
+				.findViewById(R.id.ptr_layout);
 
 		// set it up
-		ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable().listener(new OnRefreshListener() {
+		ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable()
+				.listener(new OnRefreshListener() {
 
-			@Override
-			public void onRefreshStarted(View view) {
-				refreshListFromDB(false);
-			}
+					@Override
+					public void onRefreshStarted(View view) {
+						refreshListFromDB(false);
+					}
 
-		}).setup(pullToRefresh);
+				}).setup(pullToRefresh);
 
 		listView = (ListView) view.findViewById(R.id.stops_list);
 
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 		listView.setMultiChoiceModeListener(this);
-		
+
 		return view;
 	}
 
@@ -65,7 +71,7 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 		isRefreshing = false;
 		isInBackground = false;
 	}
-	
+
 	@Override
 	public void onStart() {
 		super.onStart();
@@ -100,17 +106,17 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle presses on the action bar items
-		switch(item.getItemId()) {
-		case R.id.action_add:
-			// add a new stop
-			addBusStop();
-			return true;
-		case R.id.action_refresh:
-			// refresh the list
-			refreshListFromDB(false);
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
+		switch (item.getItemId()) {
+			case R.id.action_add :
+				// add a new stop
+				addBusStop();
+				return true;
+			case R.id.action_refresh :
+				// refresh the list
+				refreshListFromDB(false);
+				return true;
+			default :
+				return super.onOptionsItemSelected(item);
 		}
 	}
 
@@ -121,7 +127,7 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 	}
 
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if(requestCode == 0) {
+		if (requestCode == 0) {
 			refreshListFromDB(true);
 		}
 	}
@@ -129,7 +135,7 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 	public void refreshListFromDB(boolean resetList) {
 		// we don't want to try to refresh if we're already refreshing (causes
 		// bugs)
-		if(isRefreshing)
+		if (isRefreshing)
 			return;
 		else
 			isRefreshing = true;
@@ -140,8 +146,10 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 		// we have to reset the adapter so it correctly loads the stops
 		// if we don't do that, bugs will appear when the database has been
 		// modified
-		if(resetList) {
-			listAdapter = new TwistoastArrayAdapter(getActivity(), this, android.R.layout.simple_list_item_1, databaseHandler.getAllStops());
+		if (resetList) {
+			listAdapter = new TwistoastArrayAdapter(getActivity(), this,
+					android.R.layout.simple_list_item_1,
+					databaseHandler.getAllStops());
 			listView.setAdapter(listAdapter);
 		}
 
@@ -154,71 +162,90 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 		pullToRefresh.setRefreshComplete();
 		isRefreshing = false;
 
-		Log.i("Twistoast", "refreshed, " + listAdapter.getObjects().size() + " stops in db");
-		Toast.makeText(getActivity(), getResources().getString(R.string.refreshed_stops), Toast.LENGTH_SHORT).show();
+		Log.i("Twistoast", "refreshed, " + listAdapter.getObjects().size()
+				+ " stops in db");
+		Toast.makeText(getActivity(),
+				getResources().getString(R.string.refreshed_stops),
+				Toast.LENGTH_SHORT).show();
 
 		// reset the timer loop, and start it again
 		// this ensures the list is refreshed automatically every 60 seconds
 		handler.removeCallbacks(runnable);
-		if(!isInBackground)
+		if (!isInBackground)
 			handler.postDelayed(runnable, REFRESH_INTERVAL);
 	}
 
 	@Override
 	public boolean onActionItemClicked(final ActionMode mode, MenuItem item) {
-		switch(item.getItemId()) {
-		case R.id.action_delete:
-			// if we want to remove a bus stop, we'll have to ask a confirmation
-			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		switch (item.getItemId()) {
+			case R.id.action_delete :
+				// if we want to remove a bus stop, we'll have to ask a
+				// confirmation
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						getActivity());
 
-			// add the buttons
-			builder.setPositiveButton(R.string.confirm_yes, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-					// get the positions of the selected elements
-					SparseBooleanArray checked = listView.getCheckedItemPositions();
-					ArrayList<TimeoScheduleObject> objectsToDelete = new ArrayList<TimeoScheduleObject>();
+				// add the buttons
+				builder.setPositiveButton(R.string.confirm_yes,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								// get the positions of the selected elements
+								SparseBooleanArray checked = listView
+										.getCheckedItemPositions();
+								ArrayList<TimeoScheduleObject> objectsToDelete = new ArrayList<TimeoScheduleObject>();
 
-					// add every stop we want to delete to the list
-					for(int i = 0; i < checked.size(); i++) {
-						if(checked.valueAt(i)) {
-							objectsToDelete.add(listAdapter.getItem(checked.keyAt(i)));
-						}
-					}
+								// add every stop we want to delete to the list
+								for (int i = 0; i < checked.size(); i++) {
+									if (checked.valueAt(i)) {
+										objectsToDelete.add(listAdapter
+												.getItem(checked.keyAt(i)));
+									}
+								}
 
-					// DELETE EVERYTHING AAAAAAAAA-
-					for(int i = 0; i < objectsToDelete.size(); i++) {
-						databaseHandler.deleteStop(objectsToDelete.get(i));
-						listAdapter.remove(objectsToDelete.get(i));
-					}
+								// DELETE EVERYTHING AAAAAAAAA-
+								for (int i = 0; i < objectsToDelete.size(); i++) {
+									databaseHandler.deleteStop(objectsToDelete
+											.get(i));
+									listAdapter.remove(objectsToDelete.get(i));
+								}
 
-					// this was a triumph, say we've deleted teh stuff
-					Toast.makeText(getActivity(), getResources().getString(R.string.confirm_delete_success), Toast.LENGTH_SHORT)
-							.show();
+								// this was a triumph, say we've deleted teh
+								// stuff
+								Toast.makeText(
+										getActivity(),
+										getResources()
+												.getString(
+														R.string.confirm_delete_success),
+										Toast.LENGTH_SHORT).show();
 
-					mode.finish();
+								mode.finish();
+							}
+						});
+
+				// on the other hand, if we don't actually want to delete
+				// anything,
+				// well.
+				builder.setNegativeButton(R.string.confirm_no, null);
+
+				// set dialog title
+				builder.setTitle(getResources().getString(
+						R.string.confirm_delete_title));
+
+				// correctly set the message of the dialog
+				if (listView.getCheckedItemCount() > 1) {
+					builder.setMessage(String.format(
+							getResources().getString(
+									R.string.confirm_delete_msg_multi),
+							listView.getCheckedItemCount()));
+				} else {
+					builder.setMessage(getResources().getString(
+							R.string.confirm_delete_msg_single));
 				}
-			});
 
-			// on the other hand, if we don't actually want to delete anything,
-			// well.
-			builder.setNegativeButton(R.string.confirm_no, null);
+				// create the AlertDialog and show it
+				AlertDialog dialog = builder.create();
+				dialog.show();
 
-			// set dialog title
-			builder.setTitle(getResources().getString(R.string.confirm_delete_title));
-
-			// correctly set the message of the dialog
-			if(listView.getCheckedItemCount() > 1) {
-				builder.setMessage(String.format(getResources().getString(R.string.confirm_delete_msg_multi), listView
-						.getCheckedItemCount()));
-			} else {
-				builder.setMessage(getResources().getString(R.string.confirm_delete_msg_single));
-			}
-
-			// create the AlertDialog and show it
-			AlertDialog dialog = builder.create();
-			dialog.show();
-
-			break;
+				break;
 		}
 
 		return true;
@@ -230,7 +257,8 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 		MenuInflater inflater = getActivity().getMenuInflater();
 
 		inflater.inflate(R.menu.main_edit, menu);
-		mode.setTitle(getActivity().getResources().getString(R.string.select_items));
+		mode.setTitle(getActivity().getResources().getString(
+				R.string.select_items));
 		setSubtitle(mode);
 
 		return true;
@@ -247,7 +275,8 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 	}
 
 	@Override
-	public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+	public void onItemCheckedStateChanged(ActionMode mode, int position,
+			long id, boolean checked) {
 		setSubtitle(mode);
 	}
 
@@ -255,16 +284,19 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 		// set the action bar subtitle accordingly
 		final int checkedCount = listView.getCheckedItemCount();
 
-		switch(checkedCount) {
-		case 0:
-			mode.setSubtitle(null);
-			break;
-		case 1:
-			mode.setSubtitle(getActivity().getResources().getString(R.string.one_stop_selected));
-			break;
-		default:
-			mode.setSubtitle(String.format(getActivity().getResources().getString(R.string.multi_stops_selected), checkedCount));
-			break;
+		switch (checkedCount) {
+			case 0 :
+				mode.setSubtitle(null);
+				break;
+			case 1 :
+				mode.setSubtitle(getActivity().getResources().getString(
+						R.string.one_stop_selected));
+				break;
+			default :
+				mode.setSubtitle(String
+						.format(getActivity().getResources().getString(
+								R.string.multi_stops_selected), checkedCount));
+				break;
 		}
 	}
 

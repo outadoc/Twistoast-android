@@ -2,8 +2,9 @@ package fr.outadev.twistoast.timeo;
 
 /**
  * Contains the data necessary to make a call to the API.
+ * 
  * @author outadoc
- *
+ * 
  */
 public class TimeoRequestObject {
 

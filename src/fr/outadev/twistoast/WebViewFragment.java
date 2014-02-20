@@ -16,12 +16,12 @@ public class WebViewFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		WebView webview = new WebView(getActivity());
-		
+
 		webview.setWebViewClient(new WebViewClient());
 		webview.getSettings().setJavaScriptEnabled(true);
-		
+
 		webview.loadUrl(getArguments().getString("url"));
-		
+
 		return webview;
 	}
 

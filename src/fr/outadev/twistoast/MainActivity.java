@@ -90,25 +90,25 @@ public class MainActivity extends Activity {
 			String url = new String();
 			fragment = new WebViewFragment();
 
-			switch(position) {
-				case 1:
+			switch (position) {
+				case 1 :
 					url = "http://twisto.fr/515-Horaires-aux-arrets.html";
 					break;
-				case 2:
+				case 2 :
 					url = "http://twisto.mobi/774-Itin%C3%A9raire.html";
 					break;
-				case 3:
+				case 3 :
 					url = "http://twisto.mobi/777-Info%20trafic.html";
 					break;
-				default:
+				default :
 					url = "http://perdu.com";
 					break;
 			}
-			
+
 			Bundle args = new Bundle();
 			args.putString("url", url);
 			fragment.setArguments(args);
-			
+
 		} else {
 			fragment = new StopsListFragment();
 		}

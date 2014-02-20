@@ -26,7 +26,8 @@ import android.widget.Toast;
 
 public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 
-	public TwistoastArrayAdapter(Context context, StopsListFragment fragment, int resource, ArrayList<TimeoScheduleObject> objects) {
+	public TwistoastArrayAdapter(Context context, StopsListFragment fragment,
+			int resource, ArrayList<TimeoScheduleObject> objects) {
 		super(context, resource, objects);
 
 		this.fragment = fragment;
@@ -43,52 +44,66 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 	}
 
 	@Override
-	public View getView(final int position, View convertView, final ViewGroup parent) {
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	public View getView(final int position, View convertView,
+			final ViewGroup parent) {
+		LayoutInflater inflater = (LayoutInflater) context
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		// that's our row XML
 		View rowView = inflater.inflate(R.layout.schedule_row, parent, false);
 
 		// get all the stuff in it that we'll have to modify
-		FrameLayout view_line_id = (FrameLayout) rowView.findViewById(R.id.view_line_id);
+		FrameLayout view_line_id = (FrameLayout) rowView
+				.findViewById(R.id.view_line_id);
 
 		TextView lbl_line = (TextView) rowView.findViewById(R.id.lbl_line_id);
 		TextView lbl_stop = (TextView) rowView.findViewById(R.id.lbl_stop_name);
-		TextView lbl_direction = (TextView) rowView.findViewById(R.id.lbl_direction_name);
+		TextView lbl_direction = (TextView) rowView
+				.findViewById(R.id.lbl_direction_name);
 
-		TextView lbl_schedule_1 = (TextView) rowView.findViewById(R.id.lbl_schedule_1);
-		TextView lbl_schedule_2 = (TextView) rowView.findViewById(R.id.lbl_schedule_2);
+		TextView lbl_schedule_1 = (TextView) rowView
+				.findViewById(R.id.lbl_schedule_1);
+		TextView lbl_schedule_2 = (TextView) rowView
+				.findViewById(R.id.lbl_schedule_2);
 
 		// line
-		view_line_id.setBackgroundColor(TwistoastDatabase.getColorFromLineID(objects.get(position).getLine().getId()));
+		view_line_id.setBackgroundColor(TwistoastDatabase
+				.getColorFromLineID(objects.get(position).getLine().getId()));
 		lbl_line.setText(objects.get(position).getLine().getId());
 
-		if(lbl_line.getText().length() > 3) {
+		if (lbl_line.getText().length() > 3) {
 			lbl_line.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-		} else if(lbl_line.getText().length() > 2) {
+		} else if (lbl_line.getText().length() > 2) {
 			lbl_line.setTextSize(TypedValue.COMPLEX_UNIT_SP, 23);
 		} else {
 			lbl_line.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
 		}
 
 		// stop
-		lbl_stop.setText(context.getResources().getString(R.string.stop_name, objects.get(position).getStop().getName()));
+		lbl_stop.setText(context.getResources().getString(R.string.stop_name,
+				objects.get(position).getStop().getName()));
 
 		// direction
-		lbl_direction.setText(context.getResources().getString(R.string.direction_name, objects.get(position).getDirection()
-				.getName()));
+		lbl_direction.setText(context.getResources().getString(
+				R.string.direction_name,
+				objects.get(position).getDirection().getName()));
 
 		// schedule
-		if(objects.get(position).getSchedule() != null && objects.get(position).getSchedule().length > 0 && objects.get(position)
-				.getSchedule()[0] != null) {
-			lbl_schedule_1.setText("- " + objects.get(position).getSchedule()[0]);
+		if (objects.get(position).getSchedule() != null
+				&& objects.get(position).getSchedule().length > 0
+				&& objects.get(position).getSchedule()[0] != null) {
+			lbl_schedule_1.setText("- "
+					+ objects.get(position).getSchedule()[0]);
 		} else {
-			lbl_schedule_1.setText("- " + context.getResources().getString(R.string.loading_data));
+			lbl_schedule_1.setText("- "
+					+ context.getResources().getString(R.string.loading_data));
 		}
 
-		if(objects.get(position).getSchedule() != null && objects.get(position).getSchedule().length > 1 && objects.get(position)
-				.getSchedule()[1] != null) {
-			lbl_schedule_2.setText("- " + objects.get(position).getSchedule()[1]);
+		if (objects.get(position).getSchedule() != null
+				&& objects.get(position).getSchedule().length > 1
+				&& objects.get(position).getSchedule()[1] != null) {
+			lbl_schedule_2.setText("- "
+					+ objects.get(position).getSchedule()[1]);
 		}
 
 		view_line_id.setOnClickListener(new OnClickListener() {
@@ -96,9 +111,10 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 			@Override
 			public void onClick(View v) {
 
-				SparseBooleanArray checked = ((ListView) parent).getCheckedItemPositions();
+				SparseBooleanArray checked = ((ListView) parent)
+						.getCheckedItemPositions();
 
-				if(checked.get(position)) {
+				if (checked.get(position)) {
 					((ListView) parent).setItemChecked(position, false);
 				} else {
 					((ListView) parent).setItemChecked(position, true);
@@ -116,40 +132,54 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 		task.execute();
 	}
 
-	private class GetTimeoDataFromAPITask extends AsyncTask<Void, Void, ArrayList<TimeoScheduleObject>> {
+	private class GetTimeoDataFromAPITask
+			extends
+				AsyncTask<Void, Void, ArrayList<TimeoScheduleObject>> {
 
 		@Override
 		protected ArrayList<TimeoScheduleObject> doInBackground(Void... params) {
-			
+
 			final TimeoRequestHandler handler = new TimeoRequestHandler();
 			ArrayList<TimeoScheduleObject> result = objects;
 
 			try {
 				try {
 					result = handler.getMultipleSchedules(objects);
-				} catch(ClassCastException e) {
+				} catch (ClassCastException e) {
 					((Activity) context).runOnUiThread(new Runnable() {
 						public void run() {
 							try {
-								TimeoResultParser.displayErrorMessageFromTextResult(handler.getLastWebResponse(), ((Activity) context));
-							} catch(JSONException e) {
-								Toast.makeText(((Activity) context), handler.getLastWebResponse(), Toast.LENGTH_LONG).show();
+								TimeoResultParser
+										.displayErrorMessageFromTextResult(
+												handler.getLastWebResponse(),
+												((Activity) context));
+							} catch (JSONException e) {
+								Toast.makeText(((Activity) context),
+										handler.getLastWebResponse(),
+										Toast.LENGTH_LONG).show();
 								e.printStackTrace();
 							}
 						}
 					});
 				}
-			} catch(JSONException e) {
+			} catch (JSONException e) {
 				((Activity) context).runOnUiThread(new Runnable() {
 					public void run() {
-						Toast.makeText(((Activity) context), handler.getLastWebResponse(), Toast.LENGTH_LONG).show();
+						Toast.makeText(((Activity) context),
+								handler.getLastWebResponse(), Toast.LENGTH_LONG)
+								.show();
 					}
 				});
-			} catch(final Exception e) {
-				if(e instanceof IOException || e instanceof SocketTimeoutException) {
+			} catch (final Exception e) {
+				if (e instanceof IOException
+						|| e instanceof SocketTimeoutException) {
 					((Activity) context).runOnUiThread(new Runnable() {
 						public void run() {
-							Toast.makeText(((Activity) context), ((Activity) context).getResources().getString(R.string.load_timeout), Toast.LENGTH_LONG).show();
+							Toast.makeText(
+									((Activity) context),
+									((Activity) context).getResources()
+											.getString(R.string.load_timeout),
+									Toast.LENGTH_LONG).show();
 						}
 					});
 				}
@@ -162,7 +192,7 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 
 		@Override
 		protected void onPostExecute(ArrayList<TimeoScheduleObject> result) {
-			if(result != null) {
+			if (result != null) {
 				objects = result;
 			}
 

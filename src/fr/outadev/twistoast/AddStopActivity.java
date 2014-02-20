@@ -79,14 +79,20 @@ public class AddStopActivity extends Activity {
 		// when a line has been selected
 		spinLine.setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override
-			public void onItemSelected(AdapterView<?> parentView, View view, int position, long id) {
+			public void onItemSelected(AdapterView<?> parentView, View view,
+					int position, long id) {
 				// set loading labels
-				lbl_line.setText(getResources().getString(R.string.unknown_line_id));
-				lbl_direction.setText(getResources().getString(R.string.loading_data));
-				lbl_stop.setText(getResources().getString(R.string.loading_data));
+				lbl_line.setText(getResources().getString(
+						R.string.unknown_line_id));
+				lbl_direction.setText(getResources().getString(
+						R.string.loading_data));
+				lbl_stop.setText(getResources()
+						.getString(R.string.loading_data));
 
-				lbl_schedule_1.setText(getResources().getString(R.string.loading_data));
-				lbl_schedule_2.setText(getResources().getString(R.string.loading_data));
+				lbl_schedule_1.setText(getResources().getString(
+						R.string.loading_data));
+				lbl_schedule_2.setText(getResources().getString(
+						R.string.loading_data));
 
 				// disable adapters
 				spinDirection.setEnabled(false);
@@ -97,22 +103,24 @@ public class AddStopActivity extends Activity {
 				// get the selected line
 				TimeoIDNameObject item = getCurrentLine();
 
-				if(item != null && item.getId() != null) {
+				if (item != null && item.getId() != null) {
 					// set the line view
 					lbl_line.setText(item.getId());
-					view_line_id.setBackgroundColor(TwistoastDatabase.getColorFromLineID(item.getId()));
+					view_line_id.setBackgroundColor(TwistoastDatabase
+							.getColorFromLineID(item.getId()));
 
 					// adapt the size based on the size of the line ID
-					if(lbl_line.getText().length() > 3) {
+					if (lbl_line.getText().length() > 3) {
 						lbl_line.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-					} else if(lbl_line.getText().length() > 2) {
+					} else if (lbl_line.getText().length() > 2) {
 						lbl_line.setTextSize(TypedValue.COMPLEX_UNIT_SP, 23);
 					} else {
 						lbl_line.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
 					}
 
 					// fetch the directions
-					fetchDataFromAPI(EndPoints.DIRECTIONS, (new TimeoRequestObject(item.getId())));
+					fetchDataFromAPI(EndPoints.DIRECTIONS,
+							(new TimeoRequestObject(item.getId())));
 				}
 			}
 
@@ -125,22 +133,30 @@ public class AddStopActivity extends Activity {
 		// when a direction has been selected
 		spinDirection.setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override
-			public void onItemSelected(AdapterView<?> parentView, View view, int position, long id) {
+			public void onItemSelected(AdapterView<?> parentView, View view,
+					int position, long id) {
 				// set loading labels
-				lbl_direction.setText(getResources().getString(R.string.loading_data));
-				lbl_schedule_1.setText(getResources().getString(R.string.loading_data));
-				lbl_schedule_2.setText(getResources().getString(R.string.loading_data));
+				lbl_direction.setText(getResources().getString(
+						R.string.loading_data));
+				lbl_schedule_1.setText(getResources().getString(
+						R.string.loading_data));
+				lbl_schedule_2.setText(getResources().getString(
+						R.string.loading_data));
 
 				// disable adapters
 				spinStop.setEnabled(false);
 
 				item_next.setEnabled(false);
 
-				if(getCurrentLine() != null && getCurrentDirection() != null && getCurrentLine().getId() != null && getCurrentDirection()
-						.getId() != null) {
-					lbl_direction.setText(getResources().getString(R.string.direction_name, getCurrentDirection().getName()));
-					fetchDataFromAPI(EndPoints.STOPS, (new TimeoRequestObject(getCurrentLine().getId(), getCurrentDirection()
-							.getId())));
+				if (getCurrentLine() != null && getCurrentDirection() != null
+						&& getCurrentLine().getId() != null
+						&& getCurrentDirection().getId() != null) {
+					lbl_direction.setText(getResources().getString(
+							R.string.direction_name,
+							getCurrentDirection().getName()));
+					fetchDataFromAPI(EndPoints.STOPS, (new TimeoRequestObject(
+							getCurrentLine().getId(), getCurrentDirection()
+									.getId())));
 				}
 			}
 
@@ -153,10 +169,14 @@ public class AddStopActivity extends Activity {
 		// when a stop has been selected
 		spinStop.setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override
-			public void onItemSelected(AdapterView<?> parentView, View view, int position, long id) {
-				lbl_stop.setText(getResources().getString(R.string.loading_data));
-				lbl_schedule_1.setText(getResources().getString(R.string.loading_data));
-				lbl_schedule_2.setText(getResources().getString(R.string.loading_data));
+			public void onItemSelected(AdapterView<?> parentView, View view,
+					int position, long id) {
+				lbl_stop.setText(getResources()
+						.getString(R.string.loading_data));
+				lbl_schedule_1.setText(getResources().getString(
+						R.string.loading_data));
+				lbl_schedule_2.setText(getResources().getString(
+						R.string.loading_data));
 
 				TimeoIDNameObject stop = getCurrentStop();
 				TimeoIDNameObject line = getCurrentLine();
@@ -164,11 +184,16 @@ public class AddStopActivity extends Activity {
 
 				item_next.setEnabled(true);
 
-				if(line != null && direction != null && stop != null && line.getId() != null && direction.getId() != null && stop
-						.getId() != null) {
-					lbl_stop.setText(getResources().getString(R.string.stop_name, stop.getName()));
+				if (line != null && direction != null && stop != null
+						&& line.getId() != null && direction.getId() != null
+						&& stop.getId() != null) {
+					lbl_stop.setText(getResources().getString(
+							R.string.stop_name, stop.getName()));
 
-					fetchDataFromAPI(EndPoints.SCHEDULE, (new TimeoRequestObject(line.getId(), direction.getId(), stop.getId())));
+					fetchDataFromAPI(
+							EndPoints.SCHEDULE,
+							(new TimeoRequestObject(line.getId(), direction
+									.getId(), stop.getId())));
 				}
 			}
 
@@ -190,17 +215,17 @@ public class AddStopActivity extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch(item.getItemId()) {
-		case R.id.action_ok:
-			// add the current stop to the database
-			registerStopToDatabase();
-			return true;
-		case android.R.id.home:
-			// go back
-			NavUtils.navigateUpFromSameTask(this);
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
+		switch (item.getItemId()) {
+			case R.id.action_ok :
+				// add the current stop to the database
+				registerStopToDatabase();
+				return true;
+			case android.R.id.home :
+				// go back
+				NavUtils.navigateUpFromSameTask(this);
+				return true;
+			default :
+				return super.onOptionsItemSelected(item);
 		}
 	}
 
@@ -209,25 +234,32 @@ public class AddStopActivity extends Activity {
 		TimeoIDNameObject line = getCurrentLine();
 		TimeoIDNameObject direction = getCurrentDirection();
 
-		TwistoastDatabase.DBStatus status = databaseHandler.addStopToDatabase(line, direction, stop);
+		TwistoastDatabase.DBStatus status = databaseHandler.addStopToDatabase(
+				line, direction, stop);
 
-		if(status != TwistoastDatabase.DBStatus.SUCCESS) {
+		if (status != TwistoastDatabase.DBStatus.SUCCESS) {
 			// meh, something went wrong
-			Toast.makeText(this, getResources().getString(R.string.error_toast, status), Toast.LENGTH_LONG).show();
+			Toast.makeText(this,
+					getResources().getString(R.string.error_toast, status),
+					Toast.LENGTH_LONG).show();
 		} else {
-			Toast.makeText(this, getResources()
-					.getString(R.string.added_toast, line.getName(), direction.getName(), stop.getName()), Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(
+					this,
+					getResources()
+							.getString(R.string.added_toast, line.getName(),
+									direction.getName(), stop.getName()),
+					Toast.LENGTH_SHORT).show();
 			this.finish();
 		}
 	}
 
-	public void fetchDataFromAPI(final EndPoints endPoint, final TimeoRequestObject data) {
+	public void fetchDataFromAPI(final EndPoints endPoint,
+			final TimeoRequestObject data) {
 		setProgressBarIndeterminateVisibility(true);
 
 		final TimeoRequestHandler handler = new TimeoRequestHandler();
 
-		if(endPoint == EndPoints.SCHEDULE) {
+		if (endPoint == EndPoints.SCHEDULE) {
 			new AsyncTask<Void, Void, TimeoScheduleObject>() {
 				@Override
 				protected TimeoScheduleObject doInBackground(Void... params) {
@@ -235,31 +267,47 @@ public class AddStopActivity extends Activity {
 					try {
 						try {
 							return handler
-									.getSingleSchedule(new TimeoScheduleObject(getCurrentLine(), getCurrentDirection(), getCurrentStop(), null));
-						} catch(ClassCastException e) {
+									.getSingleSchedule(new TimeoScheduleObject(
+											getCurrentLine(),
+											getCurrentDirection(),
+											getCurrentStop(), null));
+						} catch (ClassCastException e) {
 							AddStopActivity.this.runOnUiThread(new Runnable() {
 								public void run() {
 									try {
-										TimeoResultParser.displayErrorMessageFromTextResult(handler.getLastWebResponse(), (Activity) AddStopActivity.this);
-									} catch(JSONException e) {
-										Toast.makeText(AddStopActivity.this, handler.getLastWebResponse(), Toast.LENGTH_LONG)
-												.show();
+										TimeoResultParser
+												.displayErrorMessageFromTextResult(
+														handler.getLastWebResponse(),
+														(Activity) AddStopActivity.this);
+									} catch (JSONException e) {
+										Toast.makeText(AddStopActivity.this,
+												handler.getLastWebResponse(),
+												Toast.LENGTH_LONG).show();
 										e.printStackTrace();
 									}
 								}
 							});
 						}
-					} catch(JSONException e) {
+					} catch (JSONException e) {
 						AddStopActivity.this.runOnUiThread(new Runnable() {
 							public void run() {
-								Toast.makeText(AddStopActivity.this, handler.getLastWebResponse(), Toast.LENGTH_LONG).show();
+								Toast.makeText(AddStopActivity.this,
+										handler.getLastWebResponse(),
+										Toast.LENGTH_LONG).show();
 							}
 						});
-					} catch(final Exception e) {
-						if(e instanceof IOException || e instanceof SocketTimeoutException) {
+					} catch (final Exception e) {
+						if (e instanceof IOException
+								|| e instanceof SocketTimeoutException) {
 							AddStopActivity.this.runOnUiThread(new Runnable() {
 								public void run() {
-									Toast.makeText(AddStopActivity.this, AddStopActivity.this.getResources().getString(R.string.load_timeout), Toast.LENGTH_LONG).show();
+									Toast.makeText(
+											AddStopActivity.this,
+											AddStopActivity.this
+													.getResources()
+													.getString(
+															R.string.load_timeout),
+											Toast.LENGTH_LONG).show();
 								}
 							});
 						}
@@ -273,15 +321,15 @@ public class AddStopActivity extends Activity {
 				@Override
 				protected void onPostExecute(TimeoScheduleObject result) {
 					setProgressBarIndeterminateVisibility(false);
-					
-					if(result != null) {
+
+					if (result != null) {
 						String[] scheduleArray = result.getSchedule();
 
 						// set the schedule labels, if we need to
-						if(scheduleArray != null) {
-							if(scheduleArray[0] != null)
+						if (scheduleArray != null) {
+							if (scheduleArray[0] != null)
 								lbl_schedule_1.setText("- " + scheduleArray[0]);
-							if(scheduleArray[1] != null)
+							if (scheduleArray[1] != null)
 								lbl_schedule_2.setText("- " + scheduleArray[1]);
 							else
 								lbl_schedule_2.setText("");
@@ -296,48 +344,70 @@ public class AddStopActivity extends Activity {
 			// start loading the requested data
 			new AsyncTask<Void, Void, ArrayList<TimeoIDNameObject>>() {
 				@Override
-				protected ArrayList<TimeoIDNameObject> doInBackground(Void... params) {
+				protected ArrayList<TimeoIDNameObject> doInBackground(
+						Void... params) {
 
-					if(endPoint == EndPoints.LINES || endPoint == EndPoints.DIRECTIONS || endPoint == EndPoints.STOPS || endPoint == EndPoints.SCHEDULE) {
+					if (endPoint == EndPoints.LINES
+							|| endPoint == EndPoints.DIRECTIONS
+							|| endPoint == EndPoints.STOPS
+							|| endPoint == EndPoints.SCHEDULE) {
 						try {
 							try {
-								if(endPoint == EndPoints.LINES) {
+								if (endPoint == EndPoints.LINES) {
 									spinner = spinLine;
 									return handler.getLines(data);
-								} else if(endPoint == EndPoints.DIRECTIONS) {
+								} else if (endPoint == EndPoints.DIRECTIONS) {
 									spinner = spinDirection;
 									return handler.getDirections(data);
-								} else if(endPoint == EndPoints.STOPS) {
+								} else if (endPoint == EndPoints.STOPS) {
 									spinner = spinStop;
 									return handler.getStops(data);
 								}
 
-							} catch(ClassCastException e) {
-								AddStopActivity.this.runOnUiThread(new Runnable() {
-									public void run() {
-										try {
-											TimeoResultParser.displayErrorMessageFromTextResult(handler.getLastWebResponse(), (Activity) AddStopActivity.this);
-										} catch(JSONException e) {
-											Toast.makeText(AddStopActivity.this, handler.getLastWebResponse(), Toast.LENGTH_LONG)
-													.show();
-											e.printStackTrace();
-										}
-									}
-								});
+							} catch (ClassCastException e) {
+								AddStopActivity.this
+										.runOnUiThread(new Runnable() {
+											public void run() {
+												try {
+													TimeoResultParser
+															.displayErrorMessageFromTextResult(
+																	handler.getLastWebResponse(),
+																	(Activity) AddStopActivity.this);
+												} catch (JSONException e) {
+													Toast.makeText(
+															AddStopActivity.this,
+															handler.getLastWebResponse(),
+															Toast.LENGTH_LONG)
+															.show();
+													e.printStackTrace();
+												}
+											}
+										});
 							}
-						} catch(JSONException e) {
+						} catch (JSONException e) {
 							AddStopActivity.this.runOnUiThread(new Runnable() {
 								public void run() {
-									Toast.makeText(AddStopActivity.this, handler.getLastWebResponse(), Toast.LENGTH_LONG).show();
+									Toast.makeText(AddStopActivity.this,
+											handler.getLastWebResponse(),
+											Toast.LENGTH_LONG).show();
 								}
 							});
-						} catch(final Exception e) {
-							if(e instanceof IOException || e instanceof SocketTimeoutException) {
-								AddStopActivity.this.runOnUiThread(new Runnable() {
-									public void run() {
-										Toast.makeText(AddStopActivity.this, AddStopActivity.this.getResources().getString(R.string.load_timeout), Toast.LENGTH_LONG).show();
-									}
-								});
+						} catch (final Exception e) {
+							if (e instanceof IOException
+									|| e instanceof SocketTimeoutException) {
+								AddStopActivity.this
+										.runOnUiThread(new Runnable() {
+											public void run() {
+												Toast.makeText(
+														AddStopActivity.this,
+														AddStopActivity.this
+																.getResources()
+																.getString(
+																		R.string.load_timeout),
+														Toast.LENGTH_LONG)
+														.show();
+											}
+										});
 							}
 
 							e.printStackTrace();
@@ -352,18 +422,25 @@ public class AddStopActivity extends Activity {
 					setProgressBarIndeterminateVisibility(false);
 
 					// when we're done loading
-					if((endPoint == EndPoints.LINES || endPoint == EndPoints.DIRECTIONS || endPoint == EndPoints.STOPS) && spinner != null) {
-						if(result != null) {
+					if ((endPoint == EndPoints.LINES
+							|| endPoint == EndPoints.DIRECTIONS || endPoint == EndPoints.STOPS)
+							&& spinner != null) {
+						if (result != null) {
 							// load the data into our ArrayAdapter to
 							// populate the list
-							ArrayAdapter<TimeoIDNameObject> adapter = new ArrayAdapter<TimeoIDNameObject>(AddStopActivity.this, android.R.layout.simple_spinner_item, result
-									.toArray(new TimeoIDNameObject[result.size()]));
+							ArrayAdapter<TimeoIDNameObject> adapter = new ArrayAdapter<TimeoIDNameObject>(
+									AddStopActivity.this,
+									android.R.layout.simple_spinner_item,
+									result.toArray(new TimeoIDNameObject[result
+											.size()]));
 
 							adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 							spinner.setAdapter(adapter);
 							spinner.setEnabled(true);
 						} else {
-							Toast.makeText(AddStopActivity.this, handler.getLastWebResponse(), Toast.LENGTH_LONG).show();
+							Toast.makeText(AddStopActivity.this,
+									handler.getLastWebResponse(),
+									Toast.LENGTH_LONG).show();
 						}
 					}
 				}
@@ -375,15 +452,18 @@ public class AddStopActivity extends Activity {
 	}
 
 	public TimeoIDNameObject getCurrentStop() {
-		return (TimeoIDNameObject) spinStop.getItemAtPosition(spinStop.getSelectedItemPosition());
+		return (TimeoIDNameObject) spinStop.getItemAtPosition(spinStop
+				.getSelectedItemPosition());
 	}
 
 	public TimeoIDNameObject getCurrentDirection() {
-		return (TimeoIDNameObject) spinDirection.getItemAtPosition(spinDirection.getSelectedItemPosition());
+		return (TimeoIDNameObject) spinDirection
+				.getItemAtPosition(spinDirection.getSelectedItemPosition());
 	}
 
 	public TimeoIDNameObject getCurrentLine() {
-		return (TimeoIDNameObject) spinLine.getItemAtPosition(spinLine.getSelectedItemPosition());
+		return (TimeoIDNameObject) spinLine.getItemAtPosition(spinLine
+				.getSelectedItemPosition());
 	}
 
 	private Spinner spinLine;
