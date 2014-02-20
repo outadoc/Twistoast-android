@@ -164,10 +164,13 @@ public class StopsListFragment extends Fragment
 
 		Log.i("Twistoast", "refreshed, " + listAdapter.getObjects().size()
 				+ " stops in db");
-		Toast.makeText(getActivity(),
-				getResources().getString(R.string.refreshed_stops),
-				Toast.LENGTH_SHORT).show();
-
+		
+		if(getActivity() != null) {
+			Toast.makeText(getActivity(),
+					getResources().getString(R.string.refreshed_stops),
+					Toast.LENGTH_SHORT).show();
+		}
+		
 		// reset the timer loop, and start it again
 		// this ensures the list is refreshed automatically every 60 seconds
 		handler.removeCallbacks(runnable);
