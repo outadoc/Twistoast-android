@@ -22,22 +22,22 @@ public class WebViewFragment extends Fragment {
 
 		webview.setWebViewClient(new WebViewClient());
 		webview.getSettings().setJavaScriptEnabled(true);
-		
+
 		String url = getArguments().getString("url");
-		
-		if(url == SCHEDULES_URL)
+
+		if (url == SCHEDULES_URL)
 			webview.setInitialScale(180);
-	    
+
 		webview.loadUrl(url);
 		return webview;
 	}
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 	}
-	
+
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -56,9 +56,9 @@ public class WebViewFragment extends Fragment {
 				return super.onOptionsItemSelected(item);
 		}
 	}
-	
+
 	private WebView webview;
-	
+
 	public static final String SCHEDULES_URL = "http://caen.prod.navitia.com/Navitia/HP_2_Line.asp?NetworkList=1|CAE8|twisto";
 	public static final String ROUTES_URL = "http://twisto.mobi/774-Itin%C3%A9raire.html";
 	public static final String TRAFFIC_INFO_URL = "http://twisto.mobi/777-Info%20trafic.html";
