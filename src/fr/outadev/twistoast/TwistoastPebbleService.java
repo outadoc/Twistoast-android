@@ -4,7 +4,9 @@ import com.getpebble.android.kit.PebbleKit;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 public class TwistoastPebbleService extends Service {
@@ -16,8 +18,15 @@ public class TwistoastPebbleService extends Service {
 		super.onCreate();
 		Log.d("TwistoastPebbleService", "initialized pebble listener");
 
-		receiver = new TwistoastPebbleReceiver();
-		PebbleKit.registerReceivedDataHandler(this, receiver);
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+		boolean usePebble = sharedPref.getBoolean("pref_pebble", false);
+		
+		if(usePebble) {
+			receiver = new TwistoastPebbleReceiver();
+			PebbleKit.registerReceivedDataHandler(this, receiver);
+		} else {
+			stopSelf();
+		}
 	}
 
 	@Override
