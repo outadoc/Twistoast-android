@@ -18,18 +18,21 @@ public class WebViewFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		webview = new WebView(getActivity());
+		webView = new WebView(getActivity());
 
-		webview.setWebViewClient(new WebViewClient());
-		webview.getSettings().setJavaScriptEnabled(true);
+		webView.setWebViewClient(new WebViewClient());
+		
+		webView.getSettings().setBuiltInZoomControls(true);
+		webView.getSettings().setDisplayZoomControls(false);
+		webView.getSettings().setJavaScriptEnabled(true);
 
 		String url = getArguments().getString("url");
 
 		if (url == SCHEDULES_URL)
-			webview.setInitialScale(180);
+			webView.setInitialScale(180);
 
-		webview.loadUrl(url);
-		return webview;
+		webView.loadUrl(url);
+		return webView;
 	}
 
 	@Override
@@ -50,14 +53,14 @@ public class WebViewFragment extends Fragment {
 		// Handle presses on the action bar items
 		switch (item.getItemId()) {
 			case R.id.action_refresh_page :
-				webview.reload();
+				webView.reload();
 				return true;
 			default :
 				return super.onOptionsItemSelected(item);
 		}
 	}
 
-	private WebView webview;
+	private WebView webView;
 
 	public static final String SCHEDULES_URL = "http://caen.prod.navitia.com/Navitia/HP_2_Line.asp?NetworkList=1|CAE8|twisto";
 	public static final String ROUTES_URL = "http://twisto.mobi/774-Itin%C3%A9raire.html";
