@@ -89,6 +89,7 @@ public class MainActivity extends Activity {
 
 	private void selectItem(int position, boolean addToBackStack) {
 		Fragment fragment = null;
+		String tag = String.valueOf(position);
 
 		if (position == 0) {
 			fragment = new StopsListFragment();
@@ -108,9 +109,6 @@ public class MainActivity extends Activity {
 				case 3 :
 					url = WebViewFragment.TRAFFIC_INFO_URL;
 					break;
-				default :
-					url = "http://perdu.com";
-					break;
 			}
 
 			Bundle args = new Bundle();
@@ -123,7 +121,7 @@ public class MainActivity extends Activity {
 
 		if (addToBackStack) {
 			fragmentManager.beginTransaction()
-					.replace(R.id.content_frame, fragment).addToBackStack(null)
+					.replace(R.id.content_frame, fragment).addToBackStack(tag)
 					.commit();
 		} else {
 			fragmentManager.beginTransaction()
@@ -132,11 +130,37 @@ public class MainActivity extends Activity {
 
 		// Highlight the selected item, update the title, and close the
 		// drawer
-		drawerList.setItemChecked(position, true);
-
-		mTitle = drawerEntries[position];
+		checkDrawerItem(position);
 		drawerLayout.closeDrawer(drawerList);
 
+	}
+
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+
+		int pos = 0;
+		FragmentManager fm = getFragmentManager();
+
+		if (fm.getBackStackEntryCount() - 1 >= 0) {
+			pos = fm.getBackStackEntryCount() - 1;
+
+			if (fm.getBackStackEntryAt(pos).getName() != null) {
+				checkDrawerItem(Integer.valueOf(fm.getBackStackEntryAt(pos)
+						.getName()));
+			} else {
+				checkDrawerItem(0);
+			}
+		} else {
+			checkDrawerItem(0);
+		}
+	}
+
+	public void checkDrawerItem(int position) {
+		mTitle = drawerEntries[position];
+		getActionBar().setTitle(mTitle);
+
+		drawerList.setItemChecked(position, true);
 	}
 
 	@Override
