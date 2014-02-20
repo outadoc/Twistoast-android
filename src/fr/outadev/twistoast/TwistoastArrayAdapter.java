@@ -149,7 +149,7 @@ public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 				if(e instanceof IOException || e instanceof SocketTimeoutException) {
 					((Activity) context).runOnUiThread(new Runnable() {
 						public void run() {
-							Toast.makeText(((Activity) context), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+							Toast.makeText(((Activity) context), ((Activity) context).getResources().getString(R.string.load_timeout), Toast.LENGTH_LONG).show();
 						}
 					});
 				}

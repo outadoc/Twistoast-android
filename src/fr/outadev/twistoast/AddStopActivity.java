@@ -259,7 +259,7 @@ public class AddStopActivity extends Activity {
 						if(e instanceof IOException || e instanceof SocketTimeoutException) {
 							AddStopActivity.this.runOnUiThread(new Runnable() {
 								public void run() {
-									Toast.makeText(AddStopActivity.this, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+									Toast.makeText(AddStopActivity.this, AddStopActivity.this.getResources().getString(R.string.load_timeout), Toast.LENGTH_LONG).show();
 								}
 							});
 						}
@@ -335,7 +335,7 @@ public class AddStopActivity extends Activity {
 							if(e instanceof IOException || e instanceof SocketTimeoutException) {
 								AddStopActivity.this.runOnUiThread(new Runnable() {
 									public void run() {
-										Toast.makeText(AddStopActivity.this, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+										Toast.makeText(AddStopActivity.this, AddStopActivity.this.getResources().getString(R.string.load_timeout), Toast.LENGTH_LONG).show();
 									}
 								});
 							}
