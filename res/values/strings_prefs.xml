@@ -4,5 +4,5 @@
     <string name="pref_pebble_title">Activer le support de l\'app Pebble</string>
     <string name="pref_pebble_sum">Rend possible l\'interaction avec la watchapp Pebble Twistoast</string>
     <string name="pref_pebble_dl_title">Télécharger la watchapp Pebble</string>
-    <string name="pref_pebble_dl_sum">Vous pouvez télécharger l\'app Twistoast pour Pebble depuis le Pebble app store.</string>
+    <string name="pref_pebble_dl_sum">Vous pouvez télécharger l\'app Twistoast pour Pebble depuis le Pebble appstore.</string>
 </resources>
