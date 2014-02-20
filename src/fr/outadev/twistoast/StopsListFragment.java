@@ -107,23 +107,18 @@ public class StopsListFragment extends Fragment
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle presses on the action bar items
 		switch (item.getItemId()) {
-			case R.id.action_add :
-				// add a new stop
-				addBusStop();
+			case R.id.action_add : {
+				Intent intent = new Intent(getActivity(), AddStopActivity.class);
+				startActivityForResult(intent, 0);
 				return true;
-			case R.id.action_refresh :
+			}
+			case R.id.action_refresh : 
 				// refresh the list
 				refreshListFromDB(false);
 				return true;
 			default :
 				return super.onOptionsItemSelected(item);
 		}
-	}
-
-	public void addBusStop() {
-		// start an intent to AddStopActivity
-		Intent intent = new Intent(getActivity(), AddStopActivity.class);
-		startActivityForResult(intent, 0);
 	}
 
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -86,7 +86,11 @@ public class MainActivity extends Activity {
 	private void selectItem(int position) {
 		Fragment fragment = null;
 
-		if (position > 0) {
+		if (position == 0) {
+			fragment = new StopsListFragment();
+		} else if (position == 4){
+			fragment = new PrefsFragment();
+		} else {
 			String url = new String();
 			fragment = new WebViewFragment();
 
@@ -108,9 +112,6 @@ public class MainActivity extends Activity {
 			Bundle args = new Bundle();
 			args.putString("url", url);
 			fragment.setArguments(args);
-
-		} else {
-			fragment = new StopsListFragment();
 		}
 
 		// Insert the fragment by replacing any existing fragment
