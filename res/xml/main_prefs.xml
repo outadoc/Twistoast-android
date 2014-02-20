@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
     
-    <CheckBoxPreference android:title="@string/pebble_title"
-        android:summary="@string/pebble_sum" 
-        android:key="pref_pebble" 
-        android:defaultValue="false"/>
+    <PreferenceCategory 
+        android:title="@string/pref_pebble_category"
+        android:key="pref_key_pebble_settings">
+        
+	    <CheckBoxPreference android:title="@string/pref_pebble_title"
+	        android:summary="@string/pref_pebble_sum" 
+	        android:key="pref_pebble" 
+	        android:defaultValue="false"/>
+	    
+	    <Preference android:title="@string/pref_pebble_dl_title"
+	        android:summary="@string/pref_pebble_dl_sum" >
+		    <intent android:action="android.intent.action.VIEW"
+		            android:data="pebble://appstore/" />
+		</Preference>
+	
+    </PreferenceCategory>
     
 </PreferenceScreen>
