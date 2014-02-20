@@ -92,13 +92,13 @@ public class MainActivity extends Activity {
 
 			switch (position) {
 				case 1 :
-					url = "http://twisto.fr/515-Horaires-aux-arrets.html";
+					url = WebViewFragment.SCHEDULES_URL;
 					break;
 				case 2 :
-					url = "http://twisto.mobi/774-Itin%C3%A9raire.html";
+					url = WebViewFragment.ROUTES_URL;
 					break;
 				case 3 :
-					url = "http://twisto.mobi/777-Info%20trafic.html";
+					url = WebViewFragment.TRAFFIC_INFO_URL;
 					break;
 				default :
 					url = "http://perdu.com";

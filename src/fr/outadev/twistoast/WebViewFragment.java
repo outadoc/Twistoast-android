@@ -19,10 +19,18 @@ public class WebViewFragment extends Fragment {
 
 		webview.setWebViewClient(new WebViewClient());
 		webview.getSettings().setJavaScriptEnabled(true);
-
-		webview.loadUrl(getArguments().getString("url"));
-
+		
+		String url = getArguments().getString("url");
+		
+		if(url == SCHEDULES_URL)
+			webview.setInitialScale(180);
+	    
+		webview.loadUrl(url);
 		return webview;
 	}
+	
+	public static final String SCHEDULES_URL = "http://caen.prod.navitia.com/Navitia/HP_2_Line.asp?NetworkList=1|CAE8|twisto";
+	public static final String ROUTES_URL = "http://twisto.mobi/774-Itin%C3%A9raire.html";
+	public static final String TRAFFIC_INFO_URL = "http://twisto.mobi/777-Info%20trafic.html";
 
 }
