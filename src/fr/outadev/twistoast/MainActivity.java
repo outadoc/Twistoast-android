@@ -88,7 +88,7 @@ public class MainActivity extends Activity {
 
 		if (position == 0) {
 			fragment = new StopsListFragment();
-		} else if (position == 4){
+		} else if (position == 4) {
 			fragment = new PrefsFragment();
 		} else {
 			String url = new String();
@@ -117,7 +117,8 @@ public class MainActivity extends Activity {
 		// Insert the fragment by replacing any existing fragment
 		FragmentManager fragmentManager = getFragmentManager();
 		fragmentManager.beginTransaction()
-				.replace(R.id.content_frame, fragment).commit();
+				.replace(R.id.content_frame, fragment).addToBackStack(null)
+				.commit();
 
 		// Highlight the selected item, update the title, and close the
 		// drawer
