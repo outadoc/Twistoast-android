@@ -6,4 +6,6 @@
     android:fontFamily="Helvetica-light"
     android:textSize="20sp"
     android:padding="15dp" 
-    android:state_pressed="true" />
+    android:state_pressed="true"
+    android:background="?android:attr/activatedBackgroundIndicator"
+    android:minHeight="?android:attr/listPreferredItemHeightSmall" />

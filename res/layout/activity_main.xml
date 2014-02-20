@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 	
-    <FrameLayout 
-		android:id="@+id/content_frame"
+    <FrameLayout android:id="@+id/content_frame"
 		android:layout_width="match_parent"
         android:layout_height="match_parent" />
     
@@ -15,7 +14,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:choiceMode="singleChoice"
-        android:divider="#bbbbbb"
+        android:divider="#eeeeee"
         android:dividerHeight="1dp"
         android:background="@android:color/background_light"/>
 
