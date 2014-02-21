@@ -14,13 +14,12 @@
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
+
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
         <item name="android:actionBarStyle">@style/ActionBarStyle</item>
     </style>
-    
+
     <!-- ActionBar styles -->
-    <style name="ActionBarStyle" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
-        
-    </style>
+    <style name="ActionBarStyle" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse"></style>
 
 </resources>

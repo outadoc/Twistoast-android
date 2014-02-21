@@ -8,70 +8,69 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
-    
-        <LinearLayout
-            android:layout_width="match_parent"
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/lbl_line"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:text="@string/lbl_line"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textStyle="italic" />
 
-            <TextView
-                android:id="@+id/lbl_line"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/lbl_line"
-                android:textStyle="italic"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+        <Spinner
+            android:id="@+id/spin_line"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginBottom="10dp" />
 
-            <Spinner
-                android:id="@+id/spin_line"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginBottom="10dp" />
+        <TextView
+            android:id="@+id/lbl_direction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_direction"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textStyle="italic" />
 
-            <TextView
-                android:id="@+id/lbl_direction"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/lbl_direction"
-                android:textStyle="italic"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+        <Spinner
+            android:id="@+id/spin_direction"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginBottom="10dp" />
 
-            <Spinner
-                android:id="@+id/spin_direction"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginBottom="10dp" />
+        <TextView
+            android:id="@+id/lbl_stop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_stop"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textStyle="italic" />
 
-            <TextView
-                android:id="@+id/lbl_stop"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/lbl_stop"
-                android:textStyle="italic"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+        <Spinner
+            android:id="@+id/spin_stop"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginBottom="20dp" />
 
-            <Spinner
-                android:id="@+id/spin_stop"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginBottom="20dp" />
-            
-            <TextView
-	                android:id="@+id/lbl_preview"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:text="@string/lbl_preview"
-	                android:textStyle="italic"
-	                android:textAppearance="?android:attr/textAppearanceMedium" />
+        <TextView
+            android:id="@+id/lbl_preview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_preview"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textStyle="italic" />
 
-            <LinearLayout
-                android:id="@+id/view_preview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-                
-                <include layout="@layout/schedule_row" />
-                
-            </LinearLayout>
+        <LinearLayout
+            android:id="@+id/view_preview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <include layout="@layout/schedule_row" />
         </LinearLayout>
+    </LinearLayout>
 
 </ScrollView>

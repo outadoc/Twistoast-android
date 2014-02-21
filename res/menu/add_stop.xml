@@ -1,8 +1,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    
-    <item android:id="@+id/action_ok"
-          android:title="@string/action_ok"
-          android:showAsAction="ifRoom"
-          android:enabled="false" />
+
+    <item
+        android:id="@+id/action_ok"
+        android:enabled="false"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_ok"/>
 
 </menu>

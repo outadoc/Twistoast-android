@@ -3,9 +3,9 @@
     android:id="@+id/textTitle"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fontFamily="Helvetica-light"
-    android:textSize="20sp"
-    android:padding="15dp" 
-    android:state_pressed="true"
     android:background="?android:attr/activatedBackgroundIndicator"
-    android:minHeight="?android:attr/listPreferredItemHeightSmall" />
+    android:fontFamily="Helvetica-light"
+    android:minHeight="?android:attr/listPreferredItemHeightSmall"
+    android:padding="15dp"
+    android:state_pressed="true"
+    android:textSize="20sp" />
