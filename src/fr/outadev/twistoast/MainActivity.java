@@ -34,9 +34,8 @@ public class MainActivity extends Activity {
 		mTitle = drawerEntries[0];
 		setTitle(mTitle);
 
-		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
-				R.drawable.ic_drawer, R.string.action_ok,
-				R.string.action_delete) {
+		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer, R.string.action_ok,
+		        R.string.action_delete) {
 
 			/** Called when a drawer has settled in a completely closed state. */
 			public void onDrawerClosed(View view) {
@@ -53,31 +52,26 @@ public class MainActivity extends Activity {
 
 		// set a custom shadow that overlays the main content when the drawer
 		// opens
-		drawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
-				GravityCompat.START);
+		drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 		// Set the drawer toggle as the DrawerListener
 		drawerLayout.setDrawerListener(drawerToggle);
 
 		// Set the adapter for the list view
-		drawerList.setAdapter(new ArrayAdapter<String>(this,
-				R.layout.drawer_list_item, drawerEntries));
+		drawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, drawerEntries));
 		drawerList.setOnItemClickListener(new DrawerItemClickListener());
 		drawerList.setItemChecked(0, true);
 
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
 
-		if (savedInstanceState == null) {
+		if(savedInstanceState == null) {
 			selectItem(0, false);
 		}
 	}
 
-	private class DrawerItemClickListener
-			implements
-				ListView.OnItemClickListener {
+	private class DrawerItemClickListener implements ListView.OnItemClickListener {
 		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position,
-				long id) {
+		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			selectItem(position);
 		}
 	}
@@ -91,22 +85,22 @@ public class MainActivity extends Activity {
 		Fragment fragment = null;
 		String tag = String.valueOf(position);
 
-		if (position == 0) {
+		if(position == 0) {
 			fragment = new StopsListFragment();
-		} else if (position == 4) {
+		} else if(position == 4) {
 			fragment = new PrefsFragment();
 		} else {
 			String url = new String();
 			fragment = new WebViewFragment();
 
-			switch (position) {
-				case 1 :
+			switch(position) {
+				case 1:
 					url = WebViewFragment.SCHEDULES_URL;
 					break;
-				case 2 :
+				case 2:
 					url = WebViewFragment.ROUTES_URL;
 					break;
-				case 3 :
+				case 3:
 					url = WebViewFragment.TRAFFIC_INFO_URL;
 					break;
 			}
@@ -119,13 +113,10 @@ public class MainActivity extends Activity {
 		// Insert the fragment by replacing any existing fragment
 		FragmentManager fragmentManager = getFragmentManager();
 
-		if (addToBackStack) {
-			fragmentManager.beginTransaction()
-					.replace(R.id.content_frame, fragment).addToBackStack(tag)
-					.commit();
+		if(addToBackStack) {
+			fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(tag).commit();
 		} else {
-			fragmentManager.beginTransaction()
-					.replace(R.id.content_frame, fragment).commit();
+			fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 		}
 
 		// Highlight the selected item, update the title, and close the
@@ -142,12 +133,11 @@ public class MainActivity extends Activity {
 		int pos = 0;
 		FragmentManager fm = getFragmentManager();
 
-		if (fm.getBackStackEntryCount() - 1 >= 0) {
+		if(fm.getBackStackEntryCount() - 1 >= 0) {
 			pos = fm.getBackStackEntryCount() - 1;
 
-			if (fm.getBackStackEntryAt(pos).getName() != null) {
-				checkDrawerItem(Integer.valueOf(fm.getBackStackEntryAt(pos)
-						.getName()));
+			if(fm.getBackStackEntryAt(pos).getName() != null) {
+				checkDrawerItem(Integer.valueOf(fm.getBackStackEntryAt(pos).getName()));
 			} else {
 				checkDrawerItem(0);
 			}
@@ -190,7 +180,7 @@ public class MainActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Pass the event to ActionBarDrawerToggle, if it returns
 		// true, then it has handled the app icon touch event
-		if (drawerToggle.onOptionsItemSelected(item)) {
+		if(drawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
 		// Handle your other action bar items...

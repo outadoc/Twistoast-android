@@ -11,9 +11,7 @@ import java.util.Arrays;
  */
 public class TimeoScheduleObject {
 
-	public TimeoScheduleObject(TimeoIDNameObject line,
-			TimeoIDNameObject direction, TimeoIDNameObject stop,
-			String[] schedule) {
+	public TimeoScheduleObject(TimeoIDNameObject line, TimeoIDNameObject direction, TimeoIDNameObject stop, String[] schedule) {
 		this.line = line;
 		this.direction = direction;
 		this.stop = stop;
@@ -54,17 +52,14 @@ public class TimeoScheduleObject {
 
 	@Override
 	public String toString() {
-		return "TimeoScheduleObject [line=" + line + ", direction=" + direction
-				+ ", stop=" + stop + ", schedule=" + Arrays.toString(schedule)
-				+ "]";
+		return "TimeoScheduleObject [line=" + line + ", direction=" + direction + ", stop=" + stop + ", schedule="
+		        + Arrays.toString(schedule) + "]";
 	}
 
 	@Override
 	public TimeoScheduleObject clone() {
-		return new TimeoScheduleObject((line != null) ? line.clone() : null,
-				(direction != null) ? direction.clone() : null, (stop != null)
-						? stop.clone()
-						: null, (schedule != null) ? schedule.clone() : null);
+		return new TimeoScheduleObject((line != null) ? line.clone() : null, (direction != null) ? direction.clone() : null,
+		        (stop != null) ? stop.clone() : null, (schedule != null) ? schedule.clone() : null);
 	}
 
 	private TimeoIDNameObject line;

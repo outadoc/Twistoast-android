@@ -9,23 +9,23 @@ import android.preference.PreferenceManager;
 public class PrefsFragment extends PreferenceFragment {
 
 	@Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-        // Load the preferences from an XML resource
-        addPreferencesFromResource(R.xml.main_prefs);
-    }
-	
+		// Load the preferences from an XML resource
+		addPreferencesFromResource(R.xml.main_prefs);
+	}
+
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals("pref_pebble")) {            
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-    		boolean usePebble = sharedPref.getBoolean("pref_pebble", false);
-    		
-    		if(usePebble) {
-    			Intent intent = new Intent(getActivity(), TwistoastPebbleService.class);
-    			getActivity().startService(intent);
-    		}
-        }
-    }
-	
+		if(key.equals("pref_pebble")) {
+			SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+			boolean usePebble = sharedPref.getBoolean("pref_pebble", false);
+
+			if(usePebble) {
+				Intent intent = new Intent(getActivity(), TwistoastPebbleService.class);
+				getActivity().startService(intent);
+			}
+		}
+	}
+
 }

@@ -20,7 +20,7 @@ public class TwistoastPebbleService extends Service {
 
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 		boolean usePebble = sharedPref.getBoolean("pref_pebble", false);
-		
+
 		if(usePebble) {
 			receiver = new TwistoastPebbleReceiver();
 			PebbleKit.registerReceivedDataHandler(this, receiver);

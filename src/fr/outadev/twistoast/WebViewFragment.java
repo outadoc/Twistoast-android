@@ -16,20 +16,18 @@ public class WebViewFragment extends Fragment {
 
 	@SuppressLint("SetJavaScriptEnabled")
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		webView = new WebView(getActivity());
 
 		webView.setWebViewClient(new WebViewClient());
-		
+
 		webView.getSettings().setBuiltInZoomControls(true);
 		webView.getSettings().setDisplayZoomControls(false);
 		webView.getSettings().setJavaScriptEnabled(true);
 
 		String url = getArguments().getString("url");
 
-		if (url == SCHEDULES_URL)
-			webView.setInitialScale(180);
+		if(url == SCHEDULES_URL) webView.setInitialScale(180);
 
 		webView.loadUrl(url);
 		return webView;
@@ -51,11 +49,11 @@ public class WebViewFragment extends Fragment {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle presses on the action bar items
-		switch (item.getItemId()) {
-			case R.id.action_refresh_page :
+		switch(item.getItemId()) {
+			case R.id.action_refresh_page:
 				webView.reload();
 				return true;
-			default :
+			default:
 				return super.onOptionsItemSelected(item);
 		}
 	}
