@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="pref_pebble_category">Support Pebble</string>
+
     <string name="pref_pebble_title">Activer le support de l\'app Pebble</string>
     <string name="pref_pebble_sum">Rend possible l\'interaction avec la watchapp Pebble Twistoast</string>
     <string name="pref_pebble_dl_title">Télécharger la watchapp Pebble</string>
     <string name="pref_pebble_dl_sum">Vous pouvez télécharger l\'app Twistoast pour Pebble depuis le Pebble appstore.</string>
-	<string name="pref_auto_refresh_title">Rafraîchissement automatique</string>
-	<string name="pref_auto_refresh_sum">Permet de rafraîchir automatiquement les horaires toutes les minutes quand l\'app est au premier plan.</string>
+    <string name="pref_auto_refresh_title">Rafraîchissement automatique</string>
+    <string name="pref_auto_refresh_sum">Permet de rafraîchir automatiquement les horaires toutes les minutes quand l\'app est au premier plan.</string>
+    <string name="pref_cat_pebble">Support Pebble</string>
+    <string name="pref_cat_stops">Liste des arrêts</string>
+    <string name="pref_cat_other">Autres</string>
+    <string name="pref_legal_title">Mentions légales</string>
+    <string name="pref_legal_sum">Twistoast est une application de outa[dev] - 2014.\nTwisto est une marque de Keolis Caen.</string>
+
 </resources>

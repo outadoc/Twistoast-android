@@ -1,26 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-    
-    <CheckBoxPreference android:title="@string/pref_auto_refresh_title"
-        android:summary="@string/pref_auto_refresh_sum" 
-        android:key="pref_auto_refresh" 
-        android:defaultValue="true"/>
-    
-    <PreferenceCategory 
-        android:title="@string/pref_pebble_category"
-        android:key="pref_key_pebble_settings">
-        
-	    <CheckBoxPreference android:title="@string/pref_pebble_title"
-	        android:summary="@string/pref_pebble_sum" 
-	        android:key="pref_pebble" 
-	        android:defaultValue="false"/>
-	    
-	    <Preference android:title="@string/pref_pebble_dl_title"
-	        android:summary="@string/pref_pebble_dl_sum" >
-		    <intent android:action="android.intent.action.VIEW"
-		            android:data="pebble://appstore/" />
-		</Preference>
-	
+
+    <PreferenceCategory android:title="@string/pref_cat_stops" >
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pref_auto_refresh"
+            android:summary="@string/pref_auto_refresh_sum"
+            android:title="@string/pref_auto_refresh_title" />
     </PreferenceCategory>
-    
+    <PreferenceCategory android:title="@string/pref_cat_pebble" >
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_pebble"
+            android:summary="@string/pref_pebble_sum"
+            android:title="@string/pref_pebble_title" />
+
+        <Preference
+            android:summary="@string/pref_pebble_dl_sum"
+            android:title="@string/pref_pebble_dl_title" >
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="pebble://appstore/" />
+        </Preference>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_cat_other" >
+        <Preference
+            android:summary="@string/pref_legal_sum"
+            android:title="@string/pref_legal_title" />
+    </PreferenceCategory>
+
 </PreferenceScreen>
