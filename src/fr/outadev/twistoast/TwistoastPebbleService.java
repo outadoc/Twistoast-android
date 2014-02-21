@@ -11,18 +11,6 @@ import android.util.Log;
 
 public class TwistoastPebbleService extends Service {
 
-	private TwistoastPebbleReceiver receiver;
-
-	@Override
-	public void onCreate() {
-		super.onCreate();
-	}
-
-	@Override
-	public IBinder onBind(Intent arg0) {
-		return null;
-	}
-
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		super.onStartCommand(intent, flags, startId);
@@ -48,5 +36,13 @@ public class TwistoastPebbleService extends Service {
 
 		return START_STICKY;
 	}
+
+	@Override
+    public IBinder onBind(Intent intent) {
+	    // TODO Auto-generated method stub
+	    return null;
+    }
+	
+	private TwistoastPebbleReceiver receiver;
 
 }
