@@ -10,8 +10,10 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
@@ -67,6 +69,9 @@ public class StopsListFragment extends Fragment
 		setHasOptionsMenu(true);
 
 		databaseHandler = new TwistoastDatabase(getActivity());
+		
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+		autoRefresh = sharedPref.getBoolean("pref_auto_refresh", true);
 
 		isRefreshing = false;
 		isInBackground = false;
@@ -307,13 +312,16 @@ public class StopsListFragment extends Fragment
 	private Handler handler = new Handler();
 	private Runnable runnable = new Runnable() {
 		public void run() {
-			refreshListFromDB(false);
+			if(autoRefresh) {
+				refreshListFromDB(false);
+			}
 		}
 	};
 
 	private TwistoastDatabase databaseHandler;
 	private TwistoastArrayAdapter listAdapter;
 
+	private boolean autoRefresh;
 	private boolean isInBackground;
 
 }
