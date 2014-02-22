@@ -31,6 +31,7 @@ public class PrefsFragment extends PreferenceFragment implements OnSharedPrefere
 		getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
 	}
 
+	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
 		boolean usePebble = sharedPref.getBoolean("pref_pebble", false);
