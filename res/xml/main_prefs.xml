@@ -20,7 +20,7 @@
             android:title="@string/pref_pebble_dl_title" >
             <intent
                 android:action="android.intent.action.VIEW"
-                android:data="pebble://appstore/" />
+                android:data="pebble://appstore/53088e81ab1ae2f12900034e" />
         </Preference>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_cat_other" >
