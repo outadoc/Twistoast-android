@@ -30,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.ListView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 public class StopsListFragment extends Fragment implements MultiChoiceModeListener {
@@ -79,17 +80,25 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 	@Override
 	public void onStart() {
 		super.onStart();
+		
+		AdView adView = (AdView) getView().findViewById(R.id.adView);
 
-		int hasGPS = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity());
+		if(getActivity().getResources().getBoolean(R.bool.enableAds)) {
+			//if we want ads, check for availability and load them
+			int hasGPS = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity());
 
-		if(hasGPS != ConnectionResult.SUCCESS) {
-			GooglePlayServicesUtil.getErrorDialog(hasGPS, getActivity(), 1).show();
+			if(hasGPS != ConnectionResult.SUCCESS) {
+				GooglePlayServicesUtil.getErrorDialog(hasGPS, getActivity(), 1).show();
+			} else {
+				AdRequest adRequest = new AdRequest.Builder().addTestDevice("4A75A651AD45105DB97E1E0ECE162D0B").build();
+				adView.loadAd(adRequest);
+			}
 		} else {
-			AdView adView = (AdView) getView().findViewById(R.id.adView);
-			AdRequest adRequest = new AdRequest.Builder().addTestDevice("4A75A651AD45105DB97E1E0ECE162D0B").build();
-			adView.loadAd(adRequest);
+			//if we don't want ads, remove the view from the layout
+			LinearLayout linLay = (LinearLayout) getView().findViewById(R.id.main_lin_layout);
+			linLay.removeView(adView); 
 		}
-
+		
 		refreshListFromDB(true);
 	}
 
