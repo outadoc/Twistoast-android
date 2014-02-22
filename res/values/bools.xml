@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <bool name="enableAds">false</bool>
+    <bool name="enableAds">true</bool>
 
 </resources>
