@@ -32,10 +32,10 @@
     <string name="load_timeout">Chargement interrompu (timeout)</string>
 
     <string-array name="drawer_entries">
-        <item>Temps Réel</item>
+        <item>Temps réel</item>
         <item>Horaires</item>
         <item>Itinéraires</item>
-        <item>Info Trafic</item>
+        <item>Info trafic</item>
         <item>Préférences</item>
     </string-array>
 
