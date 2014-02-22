@@ -1,15 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ptr_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <ListView
-        android:id="@+id/stops_list"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp" >
-    </ListView>
+        android:orientation="vertical" >
+
+        <ListView
+            android:id="@+id/stops_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dip"
+            android:layout_weight="1"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp" >
+        </ListView>
+
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            ads:adSize="SMART_BANNER"
+            ads:adUnitId="@string/admob_adunitid" />
+    </LinearLayout>
 
 </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>

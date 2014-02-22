@@ -2,6 +2,11 @@ package fr.outadev.twistoast;
 
 import java.util.ArrayList;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
@@ -74,6 +79,17 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 	@Override
 	public void onStart() {
 		super.onStart();
+
+		int hasGPS = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity());
+
+		if(hasGPS != ConnectionResult.SUCCESS) {
+			GooglePlayServicesUtil.getErrorDialog(hasGPS, getActivity(), 1).show();
+		} else {
+			AdView adView = (AdView) getView().findViewById(R.id.adView);
+			AdRequest adRequest = new AdRequest.Builder().addTestDevice("4A75A651AD45105DB97E1E0ECE162D0B").build();
+			adView.loadAd(adRequest);
+		}
+
 		refreshListFromDB(true);
 	}
 
