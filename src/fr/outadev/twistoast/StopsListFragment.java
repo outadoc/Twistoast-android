@@ -139,7 +139,7 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 		// if we don't do that, bugs will appear when the database has been
 		// modified
 		if(resetList) {
-			listAdapter = new TwistoastArrayAdapter(getActivity(), this, android.R.layout.simple_list_item_1,
+			listAdapter = new StopsListArrayAdapter(getActivity(), this, android.R.layout.simple_list_item_1,
 			        databaseHandler.getAllStops());
 			listView.setAdapter(listAdapter);
 		}
@@ -289,7 +289,7 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 	};
 
 	private TwistoastDatabase databaseHandler;
-	private TwistoastArrayAdapter listAdapter;
+	private StopsListArrayAdapter listAdapter;
 
 	private boolean autoRefresh;
 	private boolean isInBackground;

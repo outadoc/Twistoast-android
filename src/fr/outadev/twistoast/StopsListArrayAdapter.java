@@ -24,9 +24,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class TwistoastArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
+public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 
-	public TwistoastArrayAdapter(Context context, StopsListFragment fragment, int resource, ArrayList<TimeoScheduleObject> objects) {
+	public StopsListArrayAdapter(Context context, StopsListFragment fragment, int resource, ArrayList<TimeoScheduleObject> objects) {
 		super(context, resource, objects);
 
 		this.fragment = fragment;
