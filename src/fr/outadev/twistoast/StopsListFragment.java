@@ -224,6 +224,7 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 						        Toast.LENGTH_SHORT).show();
 
 						mode.finish();
+						refreshListFromDB(true);
 					}
 				});
 
