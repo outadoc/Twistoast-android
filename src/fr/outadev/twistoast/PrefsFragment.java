@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 
 public class PrefsFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
 
@@ -33,10 +32,7 @@ public class PrefsFragment extends PreferenceFragment implements OnSharedPrefere
 
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-		boolean usePebble = sharedPref.getBoolean("pref_pebble", false);
-
-		if(usePebble) {
+		if(key == "pref_pebble") {
 			Intent intent = new Intent(getActivity(), TwistoastPebbleService.class);
 			getActivity().startService(intent);
 		}

@@ -15,11 +15,9 @@ public class TwistoastPebbleService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		super.onStartCommand(intent, flags, startId);
 		
-		try {
+		if(receiver != null) {
 			this.unregisterReceiver(receiver);
 			Log.d("TwistoastPebbleService", "killed an existing pebble receiver");
-		} catch(IllegalArgumentException e) {
-			e.printStackTrace();
 		}
 
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
