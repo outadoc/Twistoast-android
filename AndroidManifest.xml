@@ -44,14 +44,12 @@
         </activity>
 
         <receiver
-            android:name="fr.outadev.twistoast.BootReceiver"
-            android:permission="android.permission.RECEIVE_BOOT_COMPLETED" >
+            android:name="fr.outadev.twistoast.TwistoastPebbleReceiver" >
             <intent-filter>
+                <action android:name="com.getpebble.action.app.RECEIVE" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
-        <service android:name="fr.outadev.twistoast.TwistoastPebbleService" />
     </application>
 
 </manifest>

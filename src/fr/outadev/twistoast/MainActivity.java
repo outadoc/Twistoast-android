@@ -12,7 +12,6 @@ import android.widget.ListView;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Intent;
 import android.content.res.Configuration;
 
 public class MainActivity extends Activity {
@@ -21,10 +20,6 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
-		// start background listener
-		Intent intent = new Intent(this, TwistoastPebbleService.class);
-		startService(intent);
 
 		drawerEntries = getResources().getStringArray(R.array.drawer_entries);
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);

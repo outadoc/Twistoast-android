@@ -1,6 +1,5 @@
 package fr.outadev.twistoast;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
@@ -32,10 +31,7 @@ public class PrefsFragment extends PreferenceFragment implements OnSharedPrefere
 
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		if(key == "pref_pebble") {
-			Intent intent = new Intent(getActivity(), TwistoastPebbleService.class);
-			getActivity().startService(intent);
-		}
+		
 	}
 
 }
