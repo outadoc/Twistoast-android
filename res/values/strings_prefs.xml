@@ -8,6 +8,6 @@
     <string name="pref_cat_stops">Liste des arrêts</string>
     <string name="pref_cat_other">Autres</string>
     <string name="pref_legal_title">Mentions légales</string>
-    <string name="pref_legal_sum">Twistoast est une application de outa[dev] - 2014.\nTwisto est une marque de Keolis Caen.</string>
+    <string name="pref_legal_sum">Twistoast est une application développée par Baptiste Candellier. &#169; outa[dev] - 2014.\nTwisto est une marque de Keolis Caen.\nouta[dev] décline toute responsabilité en cas de données erronées.</string>
 
 </resources>
