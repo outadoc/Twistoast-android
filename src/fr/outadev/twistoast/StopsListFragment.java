@@ -2,6 +2,7 @@ package fr.outadev.twistoast;
 
 import java.util.ArrayList;
 
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.common.ConnectionResult;
@@ -80,11 +81,26 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 	@Override
 	public void onStart() {
 		super.onStart();
-		
-		AdView adView = (AdView) getView().findViewById(R.id.adView);
+
+		final AdView adView = (AdView) getView().findViewById(R.id.adView);
+		adView.setAdListener(new AdListener() {
+
+			@Override
+			public void onAdFailedToLoad(int errorCode) {
+				adView.setVisibility(View.GONE);
+				super.onAdFailedToLoad(errorCode);
+			}
+
+			@Override
+			public void onAdLoaded() {
+				adView.setVisibility(View.VISIBLE);
+				super.onAdLoaded();
+			}
+
+		});
 
 		if(getActivity().getResources().getBoolean(R.bool.enableAds)) {
-			//if we want ads, check for availability and load them
+			// if we want ads, check for availability and load them
 			int hasGPS = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity());
 
 			if(hasGPS != ConnectionResult.SUCCESS) {
@@ -94,11 +110,11 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 				adView.loadAd(adRequest);
 			}
 		} else {
-			//if we don't want ads, remove the view from the layout
+			// if we don't want ads, remove the view from the layout
 			LinearLayout linLay = (LinearLayout) getView().findViewById(R.id.main_lin_layout);
-			linLay.removeView(adView); 
+			linLay.removeView(adView);
 		}
-		
+
 		refreshListFromDB(true);
 	}
 
