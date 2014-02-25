@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import fr.outadev.twistoast.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.util.Log;
@@ -156,31 +157,33 @@ public class TimeoResultParser {
 	 * @see Activity
 	 */
 	public static void displayErrorMessageFromTextResult(String source, Activity activity) throws JSONException {
-		JSONObject obj = null;
-		String errorMessage = null;
 
 		try {
-			obj = (JSONObject) new JSONTokener(source).nextValue();
-			errorMessage = obj.getString("message");
-		} catch(Exception ex) {
+			JSONObject obj = (JSONObject) new JSONTokener(source).nextValue();
+
+			try {
+				String errorMessage = obj.getString("message");
+				AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
+				// add the buttons
+				builder.setPositiveButton("OK", null);
+
+				// set dialog title
+				builder.setTitle(obj.getString("error"));
+				builder.setMessage(errorMessage);
+
+				// create the AlertDialog and show it
+				AlertDialog dialog = builder.create();
+				dialog.show();
+				
+			} catch(ClassCastException ex) {
+				Toast.makeText(activity, obj.getString("error"), Toast.LENGTH_LONG).show();
+			}
+
+		} catch(ClassCastException e) {
+			Toast.makeText(activity, activity.getResources().getString(R.string.loading_error), Toast.LENGTH_LONG).show();
 		}
 
-		if(errorMessage == null) {
-			Toast.makeText(activity, obj.getString("error"), Toast.LENGTH_LONG).show();
-		} else {
-			AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-
-			// add the buttons
-			builder.setPositiveButton("OK", null);
-
-			// set dialog title
-			builder.setTitle(obj.getString("error"));
-			builder.setMessage(errorMessage);
-
-			// create the AlertDialog and show it
-			AlertDialog dialog = builder.create();
-			dialog.show();
-		}
 	}
 
 }
