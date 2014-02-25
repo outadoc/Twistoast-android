@@ -156,10 +156,11 @@ public class TimeoResultParser {
 	 * @see Activity
 	 */
 	public static void displayErrorMessageFromTextResult(String source, Activity activity) throws JSONException {
-		JSONObject obj = (JSONObject) new JSONTokener(source).nextValue();
+		JSONObject obj = null;
 		String errorMessage = null;
 
 		try {
+			obj = (JSONObject) new JSONTokener(source).nextValue();
 			errorMessage = obj.getString("message");
 		} catch(Exception ex) {
 		}
