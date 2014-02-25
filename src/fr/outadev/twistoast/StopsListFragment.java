@@ -31,7 +31,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.ListView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 public class StopsListFragment extends Fragment implements MultiChoiceModeListener {
@@ -111,8 +110,7 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 			}
 		} else {
 			// if we don't want ads, remove the view from the layout
-			LinearLayout linLay = (LinearLayout) getView().findViewById(R.id.main_lin_layout);
-			linLay.removeView(adView);
+			adView.setVisibility(View.GONE);
 		}
 
 		refreshListFromDB(true);
