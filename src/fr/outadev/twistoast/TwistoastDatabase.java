@@ -15,7 +15,7 @@ import android.graphics.Color;
 public class TwistoastDatabase {
 
 	public TwistoastDatabase(Context context) {
-		databaseOpenHelper = new TwistoastOpenHelper(context);
+		databaseOpenHelper = new TwistoastDatabaseOpenHelper(context);
 	}
 
 	public DBStatus addStopToDatabase(TimeoIDNameObject line, TimeoIDNameObject direction, TimeoIDNameObject stop) {
@@ -161,7 +161,7 @@ public class TwistoastDatabase {
 		return Color.parseColor(color);
 	}
 
-	private final TwistoastOpenHelper databaseOpenHelper;
+	private final TwistoastDatabaseOpenHelper databaseOpenHelper;
 
 	// possible database return statuses
 	public enum DBStatus {
