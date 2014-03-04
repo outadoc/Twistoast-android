@@ -1,6 +1,7 @@
 package fr.outadev.twistoast.timeo;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -235,9 +236,20 @@ public class TimeoRequestHandler {
 	}
 
 	// Reads an InputStream and converts it to a String.
-	protected String readStream(InputStream stream) throws IOException, UnsupportedEncodingException {
-		java.util.Scanner s = new java.util.Scanner(stream).useDelimiter("\\A");
-		return s.hasNext() ? s.next() : "";
+	private String readStream(InputStream is) {
+		try {
+			ByteArrayOutputStream bo = new ByteArrayOutputStream();
+			int i = is.read();
+			
+			while(i != -1) {
+				bo.write(i);
+				i = is.read();
+			}
+			
+			return bo.toString();
+		} catch(IOException e) {
+			return "";
+		}
 	}
 
 	/**
@@ -251,7 +263,7 @@ public class TimeoRequestHandler {
 
 	private final static String BASE_URL = "http://apps.outadoc.fr/twisto-realtime/twisto-api.php";
 	private final static String CHARSET = "UTF-8";
-	
+
 	private final static int SOCKET_TIMEOUT = 10000;
 	private final static int REQUEST_TIMEOUT = 20000;
 
