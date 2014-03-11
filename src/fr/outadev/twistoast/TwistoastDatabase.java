@@ -109,6 +109,49 @@ public class TwistoastDatabase {
 		return stopsList;
 	}
 
+	public TimeoScheduleObject getStopAtIndex(int index) {
+		SQLiteDatabase db = databaseOpenHelper.getReadableDatabase();
+		String indexStr = String.valueOf(index);
+		TimeoScheduleObject stop = null;
+
+		// that's a nice query you got tthhhere
+		Cursor results = db
+		        .rawQuery(
+		                "SELECT stop.stop_id, stop.stop_name, line.line_id, line.line_name, dir.dir_id, dir.dir_name FROM twi_stop stop JOIN twi_direction dir USING(dir_id, line_id) JOIN twi_line line USING(line_id) ORDER BY CAST(line.line_id AS INTEGER), stop.stop_name, dir.dir_name LIMIT ? OFFSET ?",
+		                new String[] { "1", indexStr });
+
+		// while there's a stop available
+		while(results.moveToNext()) {
+			// add it to the list
+			stop = new TimeoScheduleObject(new TimeoIDNameObject(results.getString(results.getColumnIndex("line_id")),
+			        results.getString(results.getColumnIndex("line_name"))), new TimeoIDNameObject(results.getString(results
+			        .getColumnIndex("dir_id")), results.getString(results.getColumnIndex("dir_name"))),
+			        new TimeoIDNameObject(results.getString(results.getColumnIndex("stop_id")), results.getString(results
+			                .getColumnIndex("stop_name"))), null);
+		}
+
+		// close the cursor and the database
+		results.close();
+		db.close();
+
+		return stop;
+	}
+
+	public int getStopsCount() {
+		SQLiteDatabase db = databaseOpenHelper.getReadableDatabase();
+
+		// that's a nice query you got tthhhere
+		Cursor results = db.rawQuery("SELECT stop_id FROM twi_stop", null);
+
+		int count = results.getCount();
+
+		// close the cursor and the database
+		results.close();
+		db.close();
+
+		return count;
+	}
+
 	public void deleteStop(TimeoScheduleObject stop) {
 		SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
 

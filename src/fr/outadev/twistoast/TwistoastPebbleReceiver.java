@@ -1,6 +1,5 @@
 package fr.outadev.twistoast;
 
-import java.util.ArrayList;
 import java.util.UUID;
 
 import android.content.Context;
@@ -44,17 +43,21 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 	public void receiveData(final Context context, final int transactionId, PebbleDictionary data) {
 		Log.d("TwistoastPebbleReceiver", "received a message from pebble " + PEBBLE_UUID);
 
+		//open the database and count the stops
 		TwistoastDatabase databaseHandler = new TwistoastDatabase(context);
-		final ArrayList<TimeoScheduleObject> stopsList = databaseHandler.getAllStops();
+		int stopsCount = databaseHandler.getStopsCount();
 
-		if(data.getInteger(KEY_TWISTOAST_MESSAGE_TYPE) == BUS_STOP_REQUEST && stopsList.size() > 0) {
+		//if we want a schedule and we have buses in the database
+		if(data.getInteger(KEY_TWISTOAST_MESSAGE_TYPE) == BUS_STOP_REQUEST && stopsCount > 0) {
 			Log.d("TwistoastPebbleReceiver", "pebble request acknowledged");
+			PebbleKit.sendAckToPebble(context, transactionId);
 
-			short index = (data.getInteger(KEY_STOP_INDEX)).shortValue();
+			//get the bus index (modulo the number of stops there is in the db)
+			final short busIndex = (short) (data.getInteger(KEY_STOP_INDEX).shortValue() % stopsCount);
 			final PebbleDictionary response = new PebbleDictionary();
-			final short busIndex = (short) (index % stopsList.size());
 
-			TimeoScheduleObject schedule = stopsList.get(busIndex);
+			//get the stop that interests us
+			TimeoScheduleObject schedule = databaseHandler.getStopAtIndex(busIndex);
 
 			Log.d("TwistoastPebbleReceiver", "loading data for stop #" + busIndex + "...");
 
@@ -81,8 +84,6 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 				@Override
 				protected void onPostExecute(TimeoScheduleObject schedule) {
 					if(schedule != null) {
-						PebbleKit.sendAckToPebble(context, transactionId);
-
 						// parse the schedule and set it for our
 						// TimeoScheduleObject, then refresh
 						String[] scheduleArray = schedule.getSchedule();
