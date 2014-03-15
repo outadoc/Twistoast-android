@@ -18,7 +18,7 @@ public class TwistoastDatabase {
 		databaseOpenHelper = new TwistoastDatabaseOpenHelper(context);
 	}
 
-	public DBStatus addStopToDatabase(TimeoIDNameObject line, TimeoIDNameObject direction, TimeoIDNameObject stop) {
+	public void addStopToDatabase(TimeoIDNameObject line, TimeoIDNameObject direction, TimeoIDNameObject stop) throws IllegalArgumentException, SQLiteConstraintException {
 		if(line != null && direction != null && stop != null) {
 			// when we want to add a stop, we add the line first, then the
 			// direction
@@ -38,19 +38,12 @@ public class TwistoastDatabase {
 			try {
 				// insert the stop with the specified columns
 				db.insertOrThrow("twi_stop", null, values);
-			} catch(SQLiteConstraintException e) {
-				// if we've got an SQLiteConstraintException, that probably
-				// means the stop is ALREADY in the database
-				return DBStatus.ERROR_DUPLICATE;
 			} finally {
 				// we want to close the database afterwards either way
 				db.close();
 			}
-
-			return DBStatus.SUCCESS;
 		} else {
-			// something is null
-			return DBStatus.ERROR_NOT_ENOUGH_PARAMETERS;
+			throw new IllegalArgumentException();
 		}
 	}
 
@@ -205,10 +198,5 @@ public class TwistoastDatabase {
 	}
 
 	private final TwistoastDatabaseOpenHelper databaseOpenHelper;
-
-	// possible database return statuses
-	public enum DBStatus {
-		SUCCESS, ERROR_NOT_ENOUGH_PARAMETERS, ERROR_DUPLICATE
-	}
 
 }

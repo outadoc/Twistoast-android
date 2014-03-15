@@ -15,6 +15,7 @@ import fr.outadev.twistoast.timeo.TimeoScheduleObject;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.database.sqlite.SQLiteConstraintException;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.View;
@@ -209,16 +210,18 @@ public class AddStopActivity extends Activity {
 		TimeoIDNameObject line = getCurrentLine();
 		TimeoIDNameObject direction = getCurrentDirection();
 
-		TwistoastDatabase.DBStatus status = databaseHandler.addStopToDatabase(line, direction, stop);
-
-		if(status != TwistoastDatabase.DBStatus.SUCCESS) {
-			// meh, something went wrong
-			Toast.makeText(this, getResources().getString(R.string.error_toast, status), Toast.LENGTH_LONG).show();
-		} else {
-			Toast.makeText(this,
-			        getResources().getString(R.string.added_toast, line.getName(), direction.getName(), stop.getName()),
+		try {
+			databaseHandler.addStopToDatabase(line, direction, stop);
+			
+			Toast.makeText(this, getResources().getString(R.string.added_toast, line.getName(), direction.getName(), stop.getName()),
 			        Toast.LENGTH_SHORT).show();
 			this.finish();
+		} catch(SQLiteConstraintException e) {
+			//stop already in database
+			Toast.makeText(this, getResources().getString(R.string.error_toast, getResources().getString(R.string.add_error_duplicate)), Toast.LENGTH_LONG).show();
+		} catch(IllegalArgumentException e) {
+			//one of the fields was null
+			Toast.makeText(this, getResources().getString(R.string.error_toast, getResources().getString(R.string.add_error_illegal_argument)), Toast.LENGTH_LONG).show();
 		}
 	}
 
