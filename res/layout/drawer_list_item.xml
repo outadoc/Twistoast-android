@@ -3,9 +3,10 @@
     android:id="@+id/textTitle"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:attr/activatedBackgroundIndicator"
-    android:fontFamily="Helvetica-light"
+    android:background="@drawable/drawer_item_bg"
+    android:fontFamily="sans-serif-light"
     android:minHeight="?android:attr/listPreferredItemHeightSmall"
     android:padding="15dp"
-    android:state_pressed="true"
-    android:textSize="20sp" />
+    android:paddingBottom="23dp"
+    android:paddingTop="23dp"
+    android:textSize="21sp" />

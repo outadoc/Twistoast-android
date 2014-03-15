@@ -1,5 +1,6 @@
 package fr.outadev.twistoast;
 
+import fr.outadev.twistoast.ui.NavDrawerArrayAdapter;
 import fr.outadev.twistoast.ui.PrefsFragment;
 import fr.outadev.twistoast.ui.StopsListFragment;
 import fr.outadev.twistoast.ui.WebViewFragment;
@@ -9,8 +10,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.app.Activity;
 import android.app.Fragment;
@@ -35,13 +34,13 @@ public class MainActivity extends Activity {
 		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer, R.string.action_ok,
 		        R.string.action_delete) {
 
-			/** Called when a drawer has settled in a completely closed state. */
+			// Called when a drawer has settled in a completely closed state.
 			public void onDrawerClosed(View view) {
 				getActionBar().setTitle(mTitle);
 				super.onDrawerClosed(view);
 			}
 
-			/** Called when a drawer has settled in a completely open state. */
+			// Called when a drawer has settled in a completely open state.
 			public void onDrawerOpened(View drawerView) {
 				getActionBar().setTitle(mDrawerTitle);
 				super.onDrawerOpened(drawerView);
@@ -55,8 +54,7 @@ public class MainActivity extends Activity {
 		drawerLayout.setDrawerListener(drawerToggle);
 
 		// Set the adapter for the list view
-		drawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, drawerEntries));
-		drawerList.setOnItemClickListener(new DrawerItemClickListener());
+		drawerList.setAdapter(new NavDrawerArrayAdapter(this, R.layout.drawer_list_item, drawerEntries));
 		drawerList.setItemChecked(0, true);
 
 		getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -67,15 +65,8 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	private class DrawerItemClickListener implements ListView.OnItemClickListener {
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-			selectItem(position);
-		}
-	}
-
-	/** Swaps fragments in the main content view */
-	private void selectItem(int position) {
+	// Swaps fragments in the main content view
+	public void selectItem(int position) {
 		selectItem(position, true);
 	}
 
