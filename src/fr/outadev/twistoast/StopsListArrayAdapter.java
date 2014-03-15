@@ -34,14 +34,6 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 		this.context = context;
 	}
 
-	public ArrayList<TimeoScheduleObject> getObjects() {
-		return objects;
-	}
-
-	public void setObjects(ArrayList<TimeoScheduleObject> objects) {
-		this.objects = objects;
-	}
-
 	@Override
 	public View getView(final int position, View convertView, final ViewGroup parent) {
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

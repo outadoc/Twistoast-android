@@ -192,7 +192,7 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 		pullToRefresh.setRefreshComplete();
 		isRefreshing = false;
 
-		Log.i("Twistoast", "refreshed, " + listAdapter.getObjects().size() + " stops in db");
+		Log.i("Twistoast", "refreshed, " + listAdapter.getCount() + " stops in db");
 
 		if(getActivity() != null) {
 			Toast.makeText(getActivity(), getResources().getString(R.string.refreshed_stops), Toast.LENGTH_SHORT).show();
