@@ -1,4 +1,4 @@
-package fr.outadev.twistoast;
+package fr.outadev.twistoast.ui;
 
 import java.util.ArrayList;
 
@@ -11,7 +11,14 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
-import fr.outadev.twistoast.timeo.TimeoScheduleObject;
+import fr.outadev.android.timeo.TimeoScheduleObject;
+import fr.outadev.twistoast.R;
+import fr.outadev.twistoast.R.bool;
+import fr.outadev.twistoast.R.id;
+import fr.outadev.twistoast.R.layout;
+import fr.outadev.twistoast.R.menu;
+import fr.outadev.twistoast.R.string;
+import fr.outadev.twistoast.database.TwistoastDatabase;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;

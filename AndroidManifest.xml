@@ -31,7 +31,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="fr.outadev.twistoast.AddStopActivity"
+            android:name="fr.outadev.twistoast.ui.AddStopActivity"
             android:label="@string/title_activity_add_stop"
             android:parentActivityName="fr.outadev.twistoast.MainActivity" >
             <meta-data

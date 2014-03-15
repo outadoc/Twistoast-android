@@ -1,5 +1,8 @@
-package fr.outadev.twistoast;
+package fr.outadev.twistoast.ui;
 
+import fr.outadev.twistoast.R;
+import fr.outadev.twistoast.R.id;
+import fr.outadev.twistoast.R.menu;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.os.Bundle;

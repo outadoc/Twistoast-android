@@ -1,4 +1,4 @@
-package fr.outadev.twistoast.timeo;
+package fr.outadev.android.timeo;
 
 /**
  * Contains the data necessary to make a call to the API.

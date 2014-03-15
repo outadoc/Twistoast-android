@@ -1,5 +1,8 @@
 package fr.outadev.twistoast;
 
+import fr.outadev.twistoast.ui.PrefsFragment;
+import fr.outadev.twistoast.ui.StopsListFragment;
+import fr.outadev.twistoast.ui.WebViewFragment;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;

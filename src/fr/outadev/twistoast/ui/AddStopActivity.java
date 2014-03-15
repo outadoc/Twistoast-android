@@ -1,4 +1,4 @@
-package fr.outadev.twistoast;
+package fr.outadev.twistoast.ui;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
@@ -6,12 +6,18 @@ import java.util.ArrayList;
 
 import org.json.*;
 
-import fr.outadev.twistoast.timeo.TimeoIDNameObject;
-import fr.outadev.twistoast.timeo.TimeoRequestHandler;
-import fr.outadev.twistoast.timeo.TimeoRequestObject;
-import fr.outadev.twistoast.timeo.TimeoResultParser;
-import fr.outadev.twistoast.timeo.TimeoRequestHandler.EndPoints;
-import fr.outadev.twistoast.timeo.TimeoScheduleObject;
+import fr.outadev.android.timeo.TimeoIDNameObject;
+import fr.outadev.android.timeo.TimeoRequestHandler;
+import fr.outadev.android.timeo.TimeoRequestObject;
+import fr.outadev.android.timeo.TimeoResultParser;
+import fr.outadev.android.timeo.TimeoScheduleObject;
+import fr.outadev.android.timeo.TimeoRequestHandler.EndPoints;
+import fr.outadev.twistoast.R;
+import fr.outadev.twistoast.R.id;
+import fr.outadev.twistoast.R.layout;
+import fr.outadev.twistoast.R.menu;
+import fr.outadev.twistoast.R.string;
+import fr.outadev.twistoast.database.TwistoastDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;

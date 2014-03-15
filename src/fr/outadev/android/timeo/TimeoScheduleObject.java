@@ -1,4 +1,4 @@
-package fr.outadev.twistoast.timeo;
+package fr.outadev.android.timeo;
 
 import java.util.Arrays;
 

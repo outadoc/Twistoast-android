@@ -1,10 +1,9 @@
-package fr.outadev.twistoast;
+package fr.outadev.twistoast.database;
 
 import java.util.ArrayList;
 
-import fr.outadev.twistoast.timeo.TimeoIDNameObject;
-import fr.outadev.twistoast.timeo.TimeoScheduleObject;
-
+import fr.outadev.android.timeo.TimeoIDNameObject;
+import fr.outadev.android.timeo.TimeoScheduleObject;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;

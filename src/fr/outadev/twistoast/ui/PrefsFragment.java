@@ -1,5 +1,7 @@
-package fr.outadev.twistoast;
+package fr.outadev.twistoast.ui;
 
+import fr.outadev.twistoast.R;
+import fr.outadev.twistoast.R.xml;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;

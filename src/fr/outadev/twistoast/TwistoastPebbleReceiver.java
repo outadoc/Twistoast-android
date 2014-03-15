@@ -10,8 +10,9 @@ import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.PebbleKit.PebbleDataReceiver;
 import com.getpebble.android.kit.util.PebbleDictionary;
 
-import fr.outadev.twistoast.timeo.TimeoRequestHandler;
-import fr.outadev.twistoast.timeo.TimeoScheduleObject;
+import fr.outadev.android.timeo.TimeoRequestHandler;
+import fr.outadev.android.timeo.TimeoScheduleObject;
+import fr.outadev.twistoast.database.TwistoastDatabase;
 
 public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 

@@ -1,4 +1,4 @@
-package fr.outadev.twistoast;
+package fr.outadev.twistoast.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
