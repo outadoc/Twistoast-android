@@ -33,12 +33,11 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 
 		this.fragment = fragment;
 		this.objects = objects;
-		this.context = context;
 	}
 
 	@Override
 	public View getView(final int position, View convertView, final ViewGroup parent) {
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		// that's our row XML
 		View rowView = inflater.inflate(R.layout.schedule_row, parent, false);
@@ -54,8 +53,8 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 		TextView lbl_schedule_2 = (TextView) rowView.findViewById(R.id.lbl_schedule_2);
 
 		// line
-		view_line_id.setBackgroundColor(TwistoastDatabase.getColorFromLineID(objects.get(position).getLine().getId()));
-		lbl_line.setText(objects.get(position).getLine().getId());
+		view_line_id.setBackgroundColor(TwistoastDatabase.getColorFromLineID(getItem(position).getLine().getId()));
+		lbl_line.setText(getItem(position).getLine().getId());
 
 		if(lbl_line.getText().length() > 3) {
 			lbl_line.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
@@ -66,23 +65,23 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 		}
 
 		// stop
-		lbl_stop.setText(context.getResources().getString(R.string.stop_name, objects.get(position).getStop().getName()));
+		lbl_stop.setText(getContext().getResources().getString(R.string.stop_name, getItem(position).getStop().getName()));
 
 		// direction
-		lbl_direction.setText(context.getResources().getString(R.string.direction_name,
-		        objects.get(position).getDirection().getName()));
+		lbl_direction.setText(getContext().getResources().getString(R.string.direction_name,
+		        getItem(position).getDirection().getName()));
 
 		// schedule
-		if(objects.get(position).getSchedule() != null && objects.get(position).getSchedule().length > 0
-		        && objects.get(position).getSchedule()[0] != null) {
-			lbl_schedule_1.setText("- " + objects.get(position).getSchedule()[0]);
+		if(getItem(position).getSchedule() != null && getItem(position).getSchedule().length > 0
+		        && getItem(position).getSchedule()[0] != null) {
+			lbl_schedule_1.setText("- " + getItem(position).getSchedule()[0]);
 		} else {
-			lbl_schedule_1.setText("- " + context.getResources().getString(R.string.loading_data));
+			lbl_schedule_1.setText("- " + getContext().getResources().getString(R.string.loading_data));
 		}
 
-		if(objects.get(position).getSchedule() != null && objects.get(position).getSchedule().length > 1
-		        && objects.get(position).getSchedule()[1] != null) {
-			lbl_schedule_2.setText("- " + objects.get(position).getSchedule()[1]);
+		if(getItem(position).getSchedule() != null && getItem(position).getSchedule().length > 1
+		        && getItem(position).getSchedule()[1] != null) {
+			lbl_schedule_2.setText("- " + getItem(position).getSchedule()[1]);
 		}
 
 		view_line_id.setOnClickListener(new OnClickListener() {
@@ -106,8 +105,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 
 	public void updateScheduleData() {
 		// start refreshing schedules
-		GetTimeoDataFromAPITask task = new GetTimeoDataFromAPITask();
-		task.execute();
+		(new GetTimeoDataFromAPITask()).execute();
 	}
 
 	private class GetTimeoDataFromAPITask extends AsyncTask<Void, Void, ArrayList<TimeoScheduleObject>> {
@@ -122,31 +120,29 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 				try {
 					result = handler.getMultipleSchedules(objects);
 				} catch(ClassCastException e) {
-					((Activity) context).runOnUiThread(new Runnable() {
+					getActivity().runOnUiThread(new Runnable() {
 						public void run() {
 							try {
-								TimeoResultParser.displayErrorMessageFromTextResult(handler.getLastWebResponse(),
-								        ((Activity) context));
+								TimeoResultParser.displayErrorMessageFromTextResult(handler.getLastWebResponse(), getActivity());
 							} catch(JSONException e) {
-								Toast.makeText(((Activity) context), handler.getLastWebResponse(), Toast.LENGTH_LONG).show();
+								Toast.makeText(getActivity(), handler.getLastWebResponse(), Toast.LENGTH_LONG).show();
 								e.printStackTrace();
 							}
 						}
 					});
 				}
 			} catch(JSONException e) {
-				((Activity) context).runOnUiThread(new Runnable() {
+				getActivity().runOnUiThread(new Runnable() {
 					public void run() {
-						Toast.makeText(((Activity) context), handler.getLastWebResponse(), Toast.LENGTH_LONG).show();
+						Toast.makeText(getActivity(), handler.getLastWebResponse(), Toast.LENGTH_LONG).show();
 					}
 				});
 			} catch(final Exception e) {
 				if(e instanceof IOException || e instanceof SocketTimeoutException) {
-					((Activity) context).runOnUiThread(new Runnable() {
+					getActivity().runOnUiThread(new Runnable() {
 						public void run() {
-							Toast.makeText(((Activity) context),
-							        ((Activity) context).getResources().getString(R.string.load_timeout), Toast.LENGTH_LONG)
-							        .show();
+							Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.load_timeout),
+							        Toast.LENGTH_LONG).show();
 						}
 					});
 				}
@@ -169,8 +165,15 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 		}
 	}
 
+	private Activity getActivity() {
+		if(getContext() instanceof Activity) {
+			return (Activity) getContext();
+		} else {
+			return null;
+		}
+	}
+
 	private StopsListFragment fragment;
 	private ArrayList<TimeoScheduleObject> objects;
-	private Context context;
 
 }
