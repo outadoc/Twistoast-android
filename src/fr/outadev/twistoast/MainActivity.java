@@ -28,20 +28,20 @@ public class MainActivity extends Activity {
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		drawerList = (ListView) findViewById(R.id.left_drawer);
 
-		mDrawerTitle = getTitle();
-		mTitle = drawerEntries[0];
-		setTitle(mTitle);
+		drawerTitle = getTitle();
+		actionBarTitle = drawerEntries[0];
+		setTitle(actionBarTitle);
 
 		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer, R.string.action_ok,
 		        R.string.action_delete) {
 
 			public void onDrawerClosed(View view) {
-				getActionBar().setTitle(mTitle);
+				getActionBar().setTitle(actionBarTitle);
 				super.onDrawerClosed(view);
 			}
 
 			public void onDrawerOpened(View drawerView) {
-				getActionBar().setTitle(mDrawerTitle);
+				getActionBar().setTitle(drawerTitle);
 				super.onDrawerOpened(drawerView);
 			}
 		};
@@ -56,12 +56,12 @@ public class MainActivity extends Activity {
 		getActionBar().setHomeButtonEnabled(true);
 
 		if(savedInstanceState == null) {
-			selectItem(0);
+			loadFragmentFromDrawerPosition(0);
 		}
 	}
 
 	// Swaps fragments in the main content view
-	public void selectItem(int position) {
+	public void loadFragmentFromDrawerPosition(int position) {
 		Fragment fragment = null;
 
 		if(position == 0) {
@@ -115,8 +115,8 @@ public class MainActivity extends Activity {
 	}
 
 	public void checkDrawerItem(int position) {
-		mTitle = drawerEntries[position];
-		getActionBar().setTitle(mTitle);
+		actionBarTitle = drawerEntries[position];
+		getActionBar().setTitle(actionBarTitle);
 
 		drawerList.setItemChecked(position, true);
 	}
@@ -158,8 +158,8 @@ public class MainActivity extends Activity {
 
 	private int currentFragmentIndex;
 
-	protected CharSequence mDrawerTitle;
-	private CharSequence mTitle;
+	protected CharSequence drawerTitle;
+	private CharSequence actionBarTitle;
 
 	ActionBarDrawerToggle drawerToggle;
 

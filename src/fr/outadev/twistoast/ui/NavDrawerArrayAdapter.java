@@ -39,7 +39,7 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<String> {
 			public void onClick(View v) {
 				selectedItemIndex = position;
 				notifyDataSetChanged();
-				((MainActivity) getContext()).selectItem(position);
+				((MainActivity) getContext()).loadFragmentFromDrawerPosition(position);
 			}
 
 		});
