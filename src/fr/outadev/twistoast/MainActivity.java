@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
@@ -34,26 +35,20 @@ public class MainActivity extends Activity {
 		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer, R.string.action_ok,
 		        R.string.action_delete) {
 
-			// Called when a drawer has settled in a completely closed state.
 			public void onDrawerClosed(View view) {
 				getActionBar().setTitle(mTitle);
 				super.onDrawerClosed(view);
 			}
 
-			// Called when a drawer has settled in a completely open state.
 			public void onDrawerOpened(View drawerView) {
 				getActionBar().setTitle(mDrawerTitle);
 				super.onDrawerOpened(drawerView);
 			}
 		};
 
-		// set a custom shadow that overlays the main content when the drawer
-		// opens
 		drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-		// Set the drawer toggle as the DrawerListener
 		drawerLayout.setDrawerListener(drawerToggle);
 
-		// Set the adapter for the list view
 		drawerList.setAdapter(new NavDrawerArrayAdapter(this, R.layout.drawer_list_item, drawerEntries));
 		drawerList.setItemChecked(0, true);
 
@@ -61,18 +56,13 @@ public class MainActivity extends Activity {
 		getActionBar().setHomeButtonEnabled(true);
 
 		if(savedInstanceState == null) {
-			selectItem(0, false);
+			selectItem(0);
 		}
 	}
 
 	// Swaps fragments in the main content view
 	public void selectItem(int position) {
-		selectItem(position, true);
-	}
-
-	private void selectItem(int position, boolean addToBackStack) {
 		Fragment fragment = null;
-		String tag = String.valueOf(position);
 
 		if(position == 0) {
 			fragment = new StopsListFragment();
@@ -102,14 +92,11 @@ public class MainActivity extends Activity {
 			fragment.setArguments(args);
 		}
 
+		currentFragmentIndex = position;
+
 		// Insert the fragment by replacing any existing fragment
 		FragmentManager fragmentManager = getFragmentManager();
-
-		if(addToBackStack) {
-			fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(tag).commit();
-		} else {
-			fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-		}
+		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 
 		// Highlight the selected item, update the title, and close the
 		// drawer
@@ -120,21 +107,10 @@ public class MainActivity extends Activity {
 
 	@Override
 	public void onBackPressed() {
-		super.onBackPressed();
-
-		int pos = 0;
-		FragmentManager fm = getFragmentManager();
-
-		if(fm.getBackStackEntryCount() - 1 >= 0) {
-			pos = fm.getBackStackEntryCount() - 1;
-
-			if(fm.getBackStackEntryAt(pos).getName() != null) {
-				checkDrawerItem(Integer.valueOf(fm.getBackStackEntryAt(pos).getName()));
-			} else {
-				checkDrawerItem(0);
-			}
+		if(currentFragmentIndex > 0) {
+			drawerLayout.openDrawer(Gravity.LEFT);
 		} else {
-			checkDrawerItem(0);
+			super.onBackPressed();
 		}
 	}
 
@@ -158,7 +134,6 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
-		// Sync the toggle state after onRestoreInstanceState has occurred.
 		drawerToggle.syncState();
 	}
 
@@ -170,12 +145,9 @@ public class MainActivity extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Pass the event to ActionBarDrawerToggle, if it returns
-		// true, then it has handled the app icon touch event
 		if(drawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
-		// Handle your other action bar items...
 
 		return super.onOptionsItemSelected(item);
 	}
@@ -183,6 +155,8 @@ public class MainActivity extends Activity {
 	private String[] drawerEntries;
 	private DrawerLayout drawerLayout;
 	private ListView drawerList;
+
+	private int currentFragmentIndex;
 
 	protected CharSequence mDrawerTitle;
 	private CharSequence mTitle;
