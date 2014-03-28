@@ -3,6 +3,7 @@ package fr.outadev.twistoast.ui;
 import fr.outadev.twistoast.R;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,22 +16,11 @@ import android.webkit.WebViewClient;
 
 public class WebViewFragment extends Fragment {
 
-	@SuppressLint("SetJavaScriptEnabled")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		webView = new WebView(getActivity());
+		webView = new TwistoastWebView(getActivity());
+		webView.loadUrl(getArguments().getString("url"));
 
-		webView.setWebViewClient(new WebViewClient());
-
-		webView.getSettings().setBuiltInZoomControls(true);
-		webView.getSettings().setDisplayZoomControls(false);
-		webView.getSettings().setJavaScriptEnabled(true);
-
-		String url = getArguments().getString("url");
-
-		if(url == SCHEDULES_URL) webView.setInitialScale(180);
-
-		webView.loadUrl(url);
 		return webView;
 	}
 
@@ -59,10 +49,26 @@ public class WebViewFragment extends Fragment {
 		}
 	}
 
+	private class TwistoastWebView extends WebView {
+
+		@SuppressLint("SetJavaScriptEnabled")
+		public TwistoastWebView(Context context) {
+			super(context);
+
+			setWebViewClient(new WebViewClient());
+
+			getSettings().setBuiltInZoomControls(true);
+			getSettings().setDisplayZoomControls(false);
+			getSettings().setJavaScriptEnabled(true);
+		}
+
+	}
+
 	private WebView webView;
 
 	public static final String SCHEDULES_URL = "http://caen.prod.navitia.com/Navitia/HP_2_Line.asp?NetworkList=1|CAE8|twisto";
-	public static final String ROUTES_URL = "http://twisto.mobi/774-Itin%C3%A9raire.html";
-	public static final String TRAFFIC_INFO_URL = "http://twisto.mobi/777-Info%20trafic.html";
+	public static final String ROUTES_URL = "http://twisto.mobi/module/mobile/App/itineraire-android-4.x-dev/iti_formulaire.php";
+	public static final String TRAFFIC_INFO_URL = "http://twisto.mobi/module/mobile/App/trafic/";
+	public static final String NEWS_INFO_URL = "http://twisto.mobi/module/mobile/App/actus/";
 
 }

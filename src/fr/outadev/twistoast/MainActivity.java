@@ -76,7 +76,7 @@ public class MainActivity extends Activity {
 
 		if(position == 0) {
 			fragment = new StopsListFragment();
-		} else if(position == 4) {
+		} else if(position == 5) {
 			fragment = new PrefsFragment();
 		} else {
 			String url = new String();
@@ -91,6 +91,9 @@ public class MainActivity extends Activity {
 					break;
 				case 3:
 					url = WebViewFragment.TRAFFIC_INFO_URL;
+					break;
+				case 4:
+					url = WebViewFragment.NEWS_INFO_URL;
 					break;
 			}
 
