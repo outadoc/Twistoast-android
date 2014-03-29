@@ -24,14 +24,14 @@ public class TimeoRequestHandler {
 	 * Creates a Timeo request handler.
 	 */
 	public TimeoRequestHandler() {
-		this.lastWebResponse = null;
+		this.lastHTTPResponse = null;
 		this.parser = new TimeoResultParser();
 	}
 
 	protected String requestWebPage(URL url, String params) throws HttpRequestException {
-		lastWebResponse = HttpRequest.post(url.toExternalForm()).readTimeout(REQUEST_TIMEOUT)
+		lastHTTPResponse = HttpRequest.post(url.toExternalForm()).readTimeout(REQUEST_TIMEOUT)
 		        .contentType("application/x-www-form-urlencoded").send(params).body();
-		return lastWebResponse;
+		return lastHTTPResponse;
 	}
 
 	private String requestWebPage(URL url) throws HttpRequestException {
@@ -207,8 +207,8 @@ public class TimeoRequestHandler {
 	 * 
 	 * @return last result of the HTTP request
 	 */
-	public String getLastWebResponse() {
-		return lastWebResponse;
+	public String getLastHTTPResponse() {
+		return lastHTTPResponse;
 	}
 
 	private final static String BASE_URL = "http://apps.outadoc.fr/twisto-realtime/twisto-api.php";
@@ -216,7 +216,7 @@ public class TimeoRequestHandler {
 
 	private final static int REQUEST_TIMEOUT = 20000;
 
-	private String lastWebResponse;
+	private String lastHTTPResponse;
 
 	private TimeoResultParser parser;
 

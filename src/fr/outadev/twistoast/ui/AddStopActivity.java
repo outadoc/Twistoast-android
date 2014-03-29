@@ -245,10 +245,10 @@ public class AddStopActivity extends Activity {
 							AddStopActivity.this.runOnUiThread(new Runnable() {
 								public void run() {
 									try {
-										TimeoResultParser.displayErrorMessageFromTextResult(handler.getLastWebResponse(),
+										TimeoResultParser.displayErrorMessageFromTextResult(handler.getLastHTTPResponse(),
 										        (Activity) AddStopActivity.this);
 									} catch(JSONException e) {
-										Toast.makeText(AddStopActivity.this, handler.getLastWebResponse(), Toast.LENGTH_LONG)
+										Toast.makeText(AddStopActivity.this, handler.getLastHTTPResponse(), Toast.LENGTH_LONG)
 										        .show();
 										e.printStackTrace();
 									}
@@ -258,7 +258,7 @@ public class AddStopActivity extends Activity {
 					} catch(JSONException e) {
 						AddStopActivity.this.runOnUiThread(new Runnable() {
 							public void run() {
-								Toast.makeText(AddStopActivity.this, handler.getLastWebResponse(), Toast.LENGTH_LONG).show();
+								Toast.makeText(AddStopActivity.this, handler.getLastHTTPResponse(), Toast.LENGTH_LONG).show();
 							}
 						});
 					} catch(final Exception e) {
@@ -322,10 +322,10 @@ public class AddStopActivity extends Activity {
 								AddStopActivity.this.runOnUiThread(new Runnable() {
 									public void run() {
 										try {
-											TimeoResultParser.displayErrorMessageFromTextResult(handler.getLastWebResponse(),
+											TimeoResultParser.displayErrorMessageFromTextResult(handler.getLastHTTPResponse(),
 											        (Activity) AddStopActivity.this);
 										} catch(JSONException e) {
-											Toast.makeText(AddStopActivity.this, handler.getLastWebResponse(), Toast.LENGTH_LONG)
+											Toast.makeText(AddStopActivity.this, handler.getLastHTTPResponse(), Toast.LENGTH_LONG)
 											        .show();
 											e.printStackTrace();
 										}
@@ -335,7 +335,7 @@ public class AddStopActivity extends Activity {
 						} catch(JSONException e) {
 							AddStopActivity.this.runOnUiThread(new Runnable() {
 								public void run() {
-									Toast.makeText(AddStopActivity.this, handler.getLastWebResponse(), Toast.LENGTH_LONG).show();
+									Toast.makeText(AddStopActivity.this, handler.getLastHTTPResponse(), Toast.LENGTH_LONG).show();
 								}
 							});
 						} catch(final Exception e) {
@@ -373,7 +373,7 @@ public class AddStopActivity extends Activity {
 							spinner.setAdapter(adapter);
 							spinner.setEnabled(true);
 						} else {
-							Toast.makeText(AddStopActivity.this, handler.getLastWebResponse(), Toast.LENGTH_LONG).show();
+							Toast.makeText(AddStopActivity.this, handler.getLastHTTPResponse(), Toast.LENGTH_LONG).show();
 						}
 					}
 				}

@@ -123,9 +123,9 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 					getActivity().runOnUiThread(new Runnable() {
 						public void run() {
 							try {
-								TimeoResultParser.displayErrorMessageFromTextResult(handler.getLastWebResponse(), getActivity());
+								TimeoResultParser.displayErrorMessageFromTextResult(handler.getLastHTTPResponse(), getActivity());
 							} catch(JSONException e) {
-								Toast.makeText(getActivity(), handler.getLastWebResponse(), Toast.LENGTH_LONG).show();
+								Toast.makeText(getActivity(), handler.getLastHTTPResponse(), Toast.LENGTH_LONG).show();
 								e.printStackTrace();
 							}
 						}
@@ -134,7 +134,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 			} catch(JSONException e) {
 				getActivity().runOnUiThread(new Runnable() {
 					public void run() {
-						Toast.makeText(getActivity(), handler.getLastWebResponse(), Toast.LENGTH_LONG).show();
+						Toast.makeText(getActivity(), handler.getLastHTTPResponse(), Toast.LENGTH_LONG).show();
 					}
 				});
 			} catch(final Exception e) {
