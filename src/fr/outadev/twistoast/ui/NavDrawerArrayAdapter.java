@@ -21,14 +21,19 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<String> {
 	@Override
 	public View getView(final int position, View convertView, final ViewGroup parent) {
 		LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-		// that's our row XML
-		View rowView = inflater.inflate(R.layout.drawer_list_item, parent, false);
-
+		View rowView;
+		
+		if(position < getCount() - 1) {
+			// if it's a normal row
+			rowView = inflater.inflate(R.layout.drawer_list_item, parent, false);
+		} else {
+			// if it's a secondary row (ex: preferences)
+			rowView = inflater.inflate(R.layout.drawer_list_item_pref, parent, false);
+		}
+		
 		TextView rowTitle = (TextView) rowView.findViewById(R.id.textTitle);
-
 		rowTitle.setText(getItem(position));
-
+		
 		if(position == selectedItemIndex) {
 			rowTitle.setTypeface(null, Typeface.BOLD);
 		}
@@ -43,7 +48,7 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<String> {
 			}
 
 		});
-
+		
 		return rowView;
 	}
 
