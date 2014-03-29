@@ -15,8 +15,8 @@
             android:id="@+id/stops_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp" >
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp" >
         </ListView>
     </android.support.v4.widget.SwipeRefreshLayout>
 
