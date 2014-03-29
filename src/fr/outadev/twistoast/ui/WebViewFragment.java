@@ -48,6 +48,14 @@ public class WebViewFragment extends Fragment {
 				return super.onOptionsItemSelected(item);
 		}
 	}
+	
+	public boolean canGoBack() {
+		return webView.canGoBack();
+	}
+	
+	public void goBack() {
+		webView.goBack();
+	}
 
 	private class TwistoastWebView extends WebView {
 

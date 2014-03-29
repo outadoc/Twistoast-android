@@ -62,15 +62,14 @@ public class MainActivity extends Activity {
 
 	// Swaps fragments in the main content view
 	public void loadFragmentFromDrawerPosition(int position) {
-		Fragment fragment = null;
-
+		
 		if(position == 0) {
-			fragment = new StopsListFragment();
+			currentFragment = new StopsListFragment();
 		} else if(position == 5) {
-			fragment = new PrefsFragment();
+			currentFragment = new PrefsFragment();
 		} else {
 			String url = new String();
-			fragment = new WebViewFragment();
+			currentFragment = new WebViewFragment();
 
 			switch(position) {
 				case 1:
@@ -89,14 +88,14 @@ public class MainActivity extends Activity {
 
 			Bundle args = new Bundle();
 			args.putString("url", url);
-			fragment.setArguments(args);
+			currentFragment.setArguments(args);
 		}
 
 		currentFragmentIndex = position;
 
 		// Insert the fragment by replacing any existing fragment
 		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+		fragmentManager.beginTransaction().replace(R.id.content_frame, currentFragment, MAIN_FRAGMENT_TAG).commit();
 
 		// Highlight the selected item, update the title, and close the
 		// drawer
@@ -107,7 +106,9 @@ public class MainActivity extends Activity {
 
 	@Override
 	public void onBackPressed() {
-		if(currentFragmentIndex > 0) {
+		if(currentFragment instanceof WebViewFragment && ((WebViewFragment) currentFragment).canGoBack()) {
+			((WebViewFragment) currentFragment).goBack();
+		} else if(currentFragmentIndex > 0) {
 			drawerLayout.openDrawer(Gravity.LEFT);
 		} else {
 			super.onBackPressed();
@@ -152,15 +153,17 @@ public class MainActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	private static final String MAIN_FRAGMENT_TAG = "MAINFRAG";
+
 	private String[] drawerEntries;
 	private DrawerLayout drawerLayout;
+	private ActionBarDrawerToggle drawerToggle;
 	private ListView drawerList;
 
 	private int currentFragmentIndex;
 
-	protected CharSequence drawerTitle;
+	private CharSequence drawerTitle;
 	private CharSequence actionBarTitle;
 
-	ActionBarDrawerToggle drawerToggle;
-
+	private Fragment currentFragment;
 }
