@@ -14,6 +14,9 @@ import java.util.ArrayList;
 
 import org.json.JSONException;
 
+import com.github.kevinsawicki.http.HttpRequest;
+import com.github.kevinsawicki.http.HttpRequest.*;
+
 /**
  * Handles all connections to the Twisto Realtime API.
  * 
@@ -30,22 +33,9 @@ public class TimeoRequestHandler {
 		this.parser = new TimeoResultParser();
 	}
 
-	protected String requestWebPage(URL url) throws IOException, SocketTimeoutException {
-		HttpURLConnection urlConnection = null;
-
-		try {
-			urlConnection = (HttpURLConnection) url.openConnection();
-
-			urlConnection.setConnectTimeout(SOCKET_TIMEOUT);
-			urlConnection.setReadTimeout(REQUEST_TIMEOUT);
-
-			InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-			lastWebResponse = readStream(in);
-
-			return lastWebResponse;
-		} finally {
-			urlConnection.disconnect();
-		}
+	protected String requestWebPage(URL url) throws HttpRequestException {
+		lastWebResponse = HttpRequest.get(url.toExternalForm()).body();
+		return lastWebResponse;
 	}
 
 	/**
