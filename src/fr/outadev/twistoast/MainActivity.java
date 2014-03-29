@@ -74,16 +74,16 @@ public class MainActivity extends Activity {
 
 			switch(position) {
 				case 1:
-					url = WebViewFragment.SCHEDULES_URL;
+					url = getResources().getString(R.string.timetables_url);
 					break;
 				case 2:
-					url = WebViewFragment.ROUTES_URL;
+					url = getResources().getString(R.string.routes_url);
 					break;
 				case 3:
-					url = WebViewFragment.TRAFFIC_INFO_URL;
+					url = getResources().getString(R.string.traffic_url);
 					break;
 				case 4:
-					url = WebViewFragment.NEWS_INFO_URL;
+					url = getResources().getString(R.string.news_url);
 					break;
 			}
 

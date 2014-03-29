@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="timetables_url">http://m.commentjyvais.fr/route/vueHoraire</string>
+    <string name="routes_url">http://twisto.mobi/module/mobile/App/itineraire-android-4.x-dev/iti_formulaire.php</string>
+    <string name="traffic_url">http://twisto.mobi/module/mobile/App/trafic/</string>
+    <string name="news_url">http://twisto.mobi/module/mobile/App/actus/</string>
+</resources>

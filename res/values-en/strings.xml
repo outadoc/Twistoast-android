@@ -35,9 +35,9 @@
 
     <string-array name="drawer_entries">
         <item>Real-time</item>
-        <item>Schedules</item>
+        <item>Timetables</item>
         <item>Routes</item>
-        <item>Trafic Info</item>
+        <item>Traffic Info</item>
         <item>News</item>
         <item>Preferences</item>
     </string-array>

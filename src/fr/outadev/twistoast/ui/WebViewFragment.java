@@ -66,9 +66,4 @@ public class WebViewFragment extends Fragment {
 
 	private WebView webView;
 
-	public static final String SCHEDULES_URL = "http://caen.prod.navitia.com/Navitia/HP_2_Line.asp?NetworkList=1|CAE8|twisto";
-	public static final String ROUTES_URL = "http://twisto.mobi/module/mobile/App/itineraire-android-4.x-dev/iti_formulaire.php";
-	public static final String TRAFFIC_INFO_URL = "http://twisto.mobi/module/mobile/App/trafic/";
-	public static final String NEWS_INFO_URL = "http://twisto.mobi/module/mobile/App/actus/";
-
 }
