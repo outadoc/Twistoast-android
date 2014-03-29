@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Twistoast</string>
+    <string name="action_settings">Preferences</string>
+    <string name="lbl_line">Line</string>
+    <string name="lbl_direction">Direction</string>
+    <string name="lbl_stop">Stop</string>
+    <string name="lbl_preview">Stop Preview</string>
+    <string name="title_activity_add_stop">Add a stop</string>
+    <string name="action_add">Add a stop</string>
+    <string name="action_ok">Add</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="loading_data">Loading&#8230;</string>
+    <string name="loading_error">Loading error</string>
+    <string name="select_items">Select items</string>
+    <string name="one_stop_selected">One stop selected</string>
+    <string name="multi_stops_selected">%1$d stops selected</string>
+    <string name="confirm_delete_title">Delete Stops</string>
+    <string name="confirm_delete_msg_multi">Do you really want to delete %1$d stops?</string>
+    <string name="confirm_delete_msg_single">Do you really want to delete this stop?</string>
+    <string name="confirm_yes">Yes</string>
+    <string name="confirm_no">No</string>
+    <string name="confirm_delete_success">Deleted successfully</string>
+    <string name="refreshed_stops">Schedules refreshed</string>
+    <string name="unknown_line_id">\?</string>
+    <string name="direction_name">→ Dir. %1$s</string>
+    <string name="stop_name">%1$s</string>
+    <string name="error_toast">Error : %1$s</string>
+    <string name="added_toast">Added : %1$s - %2$s - %3$s</string>
+    <string name="load_timeout">Loading interrupted (timeout)</string>
+    <string name="add_error_duplicate">This stop was already added to the app</string>
+    <string name="add_error_illegal_argument">Something\'s wrong, check the values of the line, direction and stop.</string>
+
+    <string-array name="drawer_entries">
+        <item>Real-time</item>
+        <item>Schedules</item>
+        <item>Routes</item>
+        <item>Trafic Info</item>
+        <item>News</item>
+        <item>Preferences</item>
+    </string-array>
+
+</resources>
