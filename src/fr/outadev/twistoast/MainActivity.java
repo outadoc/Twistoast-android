@@ -62,7 +62,7 @@ public class MainActivity extends Activity {
 
 	// Swaps fragments in the main content view
 	public void loadFragmentFromDrawerPosition(int position) {
-		
+
 		if(position == 0) {
 			currentFragment = new StopsListFragment();
 		} else if(position == 5) {
@@ -91,8 +91,6 @@ public class MainActivity extends Activity {
 			currentFragment.setArguments(args);
 		}
 
-		currentFragmentIndex = position;
-
 		// Insert the fragment by replacing any existing fragment
 		FragmentManager fragmentManager = getFragmentManager();
 		fragmentManager.beginTransaction().replace(R.id.content_frame, currentFragment, MAIN_FRAGMENT_TAG).commit();
@@ -108,10 +106,10 @@ public class MainActivity extends Activity {
 	public void onBackPressed() {
 		if(currentFragment instanceof WebViewFragment && ((WebViewFragment) currentFragment).canGoBack()) {
 			((WebViewFragment) currentFragment).goBack();
-		} else if(currentFragmentIndex > 0) {
-			drawerLayout.openDrawer(Gravity.LEFT);
-		} else {
+		} else if(currentFragment instanceof StopsListFragment) {
 			super.onBackPressed();
+		} else {
+			drawerLayout.openDrawer(Gravity.LEFT);
 		}
 	}
 
@@ -159,8 +157,6 @@ public class MainActivity extends Activity {
 	private DrawerLayout drawerLayout;
 	private ActionBarDrawerToggle drawerToggle;
 	private ListView drawerList;
-
-	private int currentFragmentIndex;
 
 	private CharSequence drawerTitle;
 	private CharSequence actionBarTitle;
