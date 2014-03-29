@@ -6,11 +6,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
+    <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/ptr_layout"
         android:layout_width="match_parent"
-        android:layout_height="0dip"
-        android:layout_weight="1" >
+        android:layout_height="match_parent" >
 
         <ListView
             android:id="@+id/stops_list"
@@ -19,14 +18,13 @@
             android:paddingLeft="5dp"
             android:paddingRight="5dp" >
         </ListView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
-    </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
-    
     <com.google.android.gms.ads.AdView
-            android:id="@+id/adView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            ads:adSize="SMART_BANNER"
-            ads:adUnitId="@string/admob_adunitid" />
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        ads:adSize="SMART_BANNER"
+        ads:adUnitId="@string/admob_adunitid" />
 
 </LinearLayout>

@@ -8,9 +8,6 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import fr.outadev.android.timeo.TimeoScheduleObject;
 import fr.outadev.twistoast.R;
 import fr.outadev.twistoast.database.TwistoastDatabase;
@@ -34,6 +31,8 @@ import android.view.ViewGroup;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.ListView;
 import android.widget.Toast;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 
 public class StopsListFragment extends Fragment implements MultiChoiceModeListener {
 
@@ -43,17 +42,20 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 		View view = inflater.inflate(R.layout.fragment_stops_list, container, false);
 
 		// get pull to refresh view
-		pullToRefresh = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
-
-		// set it up
-		ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable().listener(new OnRefreshListener() {
+		swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.ptr_layout);
+		swipeLayout.setOnRefreshListener(new OnRefreshListener() {
 
 			@Override
-			public void onRefreshStarted(View view) {
+            public void onRefresh() {
 				refreshListFromDB(false);
-			}
+            }
 
-		}).setup(pullToRefresh);
+		});
+		
+		swipeLayout.setColorScheme(android.R.color.holo_blue_bright, 
+	            android.R.color.background_light, 
+	            android.R.color.holo_blue_bright, 
+	            android.R.color.background_light);
 
 		listView = (ListView) view.findViewById(R.id.stops_list);
 
@@ -174,7 +176,7 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 		else isRefreshing = true;
 
 		// show the refresh animation
-		pullToRefresh.setRefreshing(true);
+		swipeLayout.setRefreshing(true);
 
 		// we have to reset the adapter so it correctly loads the stops
 		// if we don't do that, bugs will appear when the database has been
@@ -191,7 +193,7 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 
 	public void endRefresh() {
 		// notify the pull to refresh view that the refresh has finished
-		pullToRefresh.setRefreshComplete();
+		swipeLayout.setRefreshing(false);
 		isRefreshing = false;
 
 		Log.i("Twistoast", "refreshed, " + listAdapter.getCount() + " stops in db");
@@ -316,7 +318,7 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 	}
 
 	public ListView listView;
-	private PullToRefreshLayout pullToRefresh;
+	private SwipeRefreshLayout swipeLayout;
 
 	private boolean isRefreshing;
 	private final long REFRESH_INTERVAL = 60000L;
