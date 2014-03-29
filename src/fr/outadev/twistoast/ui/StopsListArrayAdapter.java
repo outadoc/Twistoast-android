@@ -1,10 +1,10 @@
 package fr.outadev.twistoast.ui;
 
-import java.io.IOException;
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 
 import org.json.JSONException;
+
+import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
 
 import fr.outadev.android.timeo.TimeoRequestHandler;
 import fr.outadev.android.timeo.TimeoResultParser;
@@ -137,15 +137,13 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 						Toast.makeText(getActivity(), handler.getLastHTTPResponse(), Toast.LENGTH_LONG).show();
 					}
 				});
-			} catch(final Exception e) {
-				if(e instanceof IOException || e instanceof SocketTimeoutException) {
-					getActivity().runOnUiThread(new Runnable() {
-						public void run() {
-							Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.load_timeout),
-							        Toast.LENGTH_LONG).show();
-						}
-					});
-				}
+			} catch(final HttpRequestException e) {
+				getActivity().runOnUiThread(new Runnable() {
+					public void run() {
+						Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.load_timeout),
+						        Toast.LENGTH_LONG).show();
+					}
+				});
 
 				e.printStackTrace();
 			}

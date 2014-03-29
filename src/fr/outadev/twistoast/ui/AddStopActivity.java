@@ -1,10 +1,10 @@
 package fr.outadev.twistoast.ui;
 
-import java.io.IOException;
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 
 import org.json.*;
+
+import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
 
 import fr.outadev.android.timeo.TimeoIDNameObject;
 import fr.outadev.android.timeo.TimeoRequestHandler;
@@ -214,16 +214,22 @@ public class AddStopActivity extends Activity {
 
 		try {
 			databaseHandler.addStopToDatabase(line, direction, stop);
-			
-			Toast.makeText(this, getResources().getString(R.string.added_toast, line.getName(), direction.getName(), stop.getName()),
+
+			Toast.makeText(this,
+			        getResources().getString(R.string.added_toast, line.getName(), direction.getName(), stop.getName()),
 			        Toast.LENGTH_SHORT).show();
 			this.finish();
 		} catch(SQLiteConstraintException e) {
-			//stop already in database
-			Toast.makeText(this, getResources().getString(R.string.error_toast, getResources().getString(R.string.add_error_duplicate)), Toast.LENGTH_LONG).show();
+			// stop already in database
+			Toast.makeText(this,
+			        getResources().getString(R.string.error_toast, getResources().getString(R.string.add_error_duplicate)),
+			        Toast.LENGTH_LONG).show();
 		} catch(IllegalArgumentException e) {
-			//one of the fields was null
-			Toast.makeText(this, getResources().getString(R.string.error_toast, getResources().getString(R.string.add_error_illegal_argument)), Toast.LENGTH_LONG).show();
+			// one of the fields was null
+			Toast.makeText(
+			        this,
+			        getResources().getString(R.string.error_toast, getResources().getString(R.string.add_error_illegal_argument)),
+			        Toast.LENGTH_LONG).show();
 		}
 	}
 
@@ -261,16 +267,14 @@ public class AddStopActivity extends Activity {
 								Toast.makeText(AddStopActivity.this, handler.getLastHTTPResponse(), Toast.LENGTH_LONG).show();
 							}
 						});
-					} catch(final Exception e) {
-						if(e instanceof IOException || e instanceof SocketTimeoutException) {
-							AddStopActivity.this.runOnUiThread(new Runnable() {
-								public void run() {
-									Toast.makeText(AddStopActivity.this,
-									        AddStopActivity.this.getResources().getString(R.string.load_timeout),
-									        Toast.LENGTH_LONG).show();
-								}
-							});
-						}
+					} catch(final HttpRequestException e) {
+						AddStopActivity.this.runOnUiThread(new Runnable() {
+							public void run() {
+								Toast.makeText(AddStopActivity.this,
+								        AddStopActivity.this.getResources().getString(R.string.load_timeout), Toast.LENGTH_LONG)
+								        .show();
+							}
+						});
 
 						e.printStackTrace();
 					}
@@ -338,17 +342,15 @@ public class AddStopActivity extends Activity {
 									Toast.makeText(AddStopActivity.this, handler.getLastHTTPResponse(), Toast.LENGTH_LONG).show();
 								}
 							});
-						} catch(final Exception e) {
-							if(e instanceof IOException || e instanceof SocketTimeoutException) {
-								AddStopActivity.this.runOnUiThread(new Runnable() {
-									public void run() {
-										Toast.makeText(AddStopActivity.this,
-										        AddStopActivity.this.getResources().getString(R.string.load_timeout),
-										        Toast.LENGTH_LONG).show();
-									}
-								});
-							}
-
+						} catch(final HttpRequestException e) {
+							AddStopActivity.this.runOnUiThread(new Runnable() {
+								public void run() {
+									Toast.makeText(AddStopActivity.this,
+									        AddStopActivity.this.getResources().getString(R.string.load_timeout),
+									        Toast.LENGTH_LONG).show();
+								}
+							});
+							
 							e.printStackTrace();
 						}
 					}

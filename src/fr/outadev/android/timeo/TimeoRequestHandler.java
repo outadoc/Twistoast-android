@@ -1,8 +1,7 @@
 package fr.outadev.android.timeo;
 
-import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
-import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -62,15 +61,14 @@ public class TimeoRequestHandler {
 	 * 
 	 * @throws ClassCastException
 	 * @throws JSONException
-	 * @throws SocketTimeoutException
-	 * @throws IOException
+	 * @throws HttpRequestException
 	 * 
 	 * @see TimeoScheduleObject
 	 * @see TimeoRequestObject
 	 * @see ArrayList
 	 */
 	public ArrayList<TimeoScheduleObject> getMultipleSchedules(ArrayList<TimeoScheduleObject> stopsList)
-	        throws ClassCastException, JSONException, SocketTimeoutException, IOException {
+	        throws ClassCastException, JSONException, HttpRequestException {
 		@SuppressWarnings("unchecked")
 		ArrayList<TimeoScheduleObject> newStopsList = (ArrayList<TimeoScheduleObject>) stopsList.clone();
 
@@ -85,7 +83,11 @@ public class TimeoRequestHandler {
 			        + newStopsList.get(i).getDirection().getId();
 		}
 
-		result = requestWebPage("func=getSchedule&data=" + URLEncoder.encode(cookie, CHARSET));
+		try {
+			result = requestWebPage("func=getSchedule&data=" + URLEncoder.encode(cookie, CHARSET));
+		} catch(UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		parser.parseMultipleSchedules(result, newStopsList);
 
 		return newStopsList;
@@ -102,20 +104,23 @@ public class TimeoRequestHandler {
 	 * 
 	 * @throws ClassCastException
 	 * @throws JSONException
-	 * @throws SocketTimeoutException
-	 * @throws IOException
+	 * @throws HttpRequestException
 	 * 
 	 * @see TimeoScheduleObject
 	 * @see TimeoRequestObject
 	 */
 	public TimeoScheduleObject getSingleSchedule(TimeoScheduleObject stopSchedule) throws ClassCastException, JSONException,
-	        SocketTimeoutException, IOException {
+	        HttpRequestException {
 		String result = null;
 		TimeoScheduleObject newSchedule = stopSchedule.clone();
 
-		result = requestWebPage("func=getSchedule&line=" + URLEncoder.encode(newSchedule.getLine().getId(), CHARSET)
-		        + "&direction=" + URLEncoder.encode(newSchedule.getDirection().getId(), CHARSET) + "&stop="
-		        + URLEncoder.encode(newSchedule.getStop().getId(), CHARSET));
+		try {
+			result = requestWebPage("func=getSchedule&line=" + URLEncoder.encode(newSchedule.getLine().getId(), CHARSET)
+			        + "&direction=" + URLEncoder.encode(newSchedule.getDirection().getId(), CHARSET) + "&stop="
+			        + URLEncoder.encode(newSchedule.getStop().getId(), CHARSET));
+		} catch(UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		newSchedule.setSchedule(parser.parseSchedule(result));
 
 		return newSchedule;
@@ -131,15 +136,14 @@ public class TimeoRequestHandler {
 	 * 
 	 * @throws ClassCastException
 	 * @throws JSONException
-	 * @throws SocketTimeoutException
-	 * @throws IOException
+	 * @throws HttpRequestException
 	 * 
 	 * @see TimeoRequestObject
 	 * @see TimeoIDNameObject
 	 * @see ArrayList
 	 */
 	public ArrayList<TimeoIDNameObject> getLines(TimeoRequestObject request) throws ClassCastException, JSONException,
-	        SocketTimeoutException, IOException {
+	        HttpRequestException {
 		return getGenericList("func=getLines");
 	}
 
@@ -154,16 +158,21 @@ public class TimeoRequestHandler {
 	 * 
 	 * @throws ClassCastException
 	 * @throws JSONException
-	 * @throws SocketTimeoutException
-	 * @throws IOException
+	 * @throws HttpRequestException
 	 * 
 	 * @see TimeoRequestObject
 	 * @see TimeoIDNameObject
 	 * @see ArrayList
 	 */
 	public ArrayList<TimeoIDNameObject> getDirections(TimeoRequestObject request) throws ClassCastException, JSONException,
-	        SocketTimeoutException, IOException {
-		return getGenericList("func=getDirections&line=" + URLEncoder.encode(request.getLine(), CHARSET));
+	        HttpRequestException {
+		try {
+			return getGenericList("func=getDirections&line=" + URLEncoder.encode(request.getLine(), CHARSET));
+		} catch(UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 
 	/**
@@ -177,27 +186,32 @@ public class TimeoRequestHandler {
 	 * 
 	 * @throws ClassCastException
 	 * @throws JSONException
-	 * @throws SocketTimeoutException
-	 * @throws IOException
+	 * @throws HttpRequestException
 	 * 
 	 * @see TimeoRequestObject
 	 * @see TimeoIDNameObject
 	 * @see ArrayList
 	 */
 	public ArrayList<TimeoIDNameObject> getStops(TimeoRequestObject request) throws ClassCastException, JSONException,
-	        SocketTimeoutException, IOException {
-		return getGenericList("func=getStops&line=" + URLEncoder.encode(request.getLine(), CHARSET) + "&direction="
-		        + URLEncoder.encode(request.getDirection(), CHARSET));
+	        HttpRequestException {
+		try {
+			return getGenericList("func=getStops&line=" + URLEncoder.encode(request.getLine(), CHARSET) + "&direction="
+			        + URLEncoder.encode(request.getDirection(), CHARSET));
+		} catch(UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 
 	protected ArrayList<TimeoIDNameObject> getGenericList(URL url, String params) throws ClassCastException, JSONException,
-	        SocketTimeoutException, IOException {
+	        HttpRequestException {
 		String result = requestWebPage(url);
 		return parser.parseList(result);
 	}
 
 	private ArrayList<TimeoIDNameObject> getGenericList(String params) throws ClassCastException, JSONException,
-	        SocketTimeoutException, IOException {
+	        HttpRequestException {
 		String result = requestWebPage(params);
 		return parser.parseList(result);
 	}
