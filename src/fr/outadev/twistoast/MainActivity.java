@@ -23,14 +23,19 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+		
 		drawerEntries = getResources().getStringArray(R.array.drawer_entries);
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		drawerList = (ListView) findViewById(R.id.left_drawer);
-
 		drawerTitle = getTitle();
-		actionBarTitle = drawerEntries[0];
-		setTitle(actionBarTitle);
+		
+		frags = new Fragment[drawerEntries.length];
+		
+		if(savedInstanceState != null) {
+			currentFragmentIndex = savedInstanceState.getInt("key_current_frag");
+		} else {
+			currentFragmentIndex = 0;
+		}
 
 		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer, R.string.action_ok,
 		        R.string.action_delete) {
@@ -48,19 +53,20 @@ public class MainActivity extends Activity {
 			}
 		};
 
-		frags = new Fragment[drawerEntries.length];
-
 		drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 		drawerLayout.setDrawerListener(drawerToggle);
 
-		drawerList.setAdapter(new NavDrawerArrayAdapter(this, R.layout.drawer_list_item, drawerEntries));
-		drawerList.setItemChecked(0, true);
-
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
-
+		
+		actionBarTitle = drawerEntries[currentFragmentIndex];
+		setTitle(actionBarTitle);
+		
+		drawerList.setAdapter(new NavDrawerArrayAdapter(this, R.layout.drawer_list_item, drawerEntries, currentFragmentIndex));
+		drawerList.setItemChecked(currentFragmentIndex, true);
+		
 		if(savedInstanceState == null) {
-			loadFragmentFromDrawerPosition(0);
+			loadFragmentFromDrawerPosition(currentFragmentIndex);
 		}
 	}
 
@@ -118,7 +124,7 @@ public class MainActivity extends Activity {
 	public void onBackPressed() {
 		if(frags[currentFragmentIndex] instanceof WebViewFragment && ((WebViewFragment) frags[currentFragmentIndex]).canGoBack()) {
 			((WebViewFragment) frags[currentFragmentIndex]).goBack();
-		} else if(frags[currentFragmentIndex] instanceof StopsListFragment) {
+		} else if(currentFragmentIndex == 0) {
 			super.onBackPressed();
 		} else {
 			drawerLayout.openDrawer(Gravity.LEFT);
@@ -130,16 +136,6 @@ public class MainActivity extends Activity {
 		getActionBar().setTitle(actionBarTitle);
 
 		drawerList.setItemChecked(position, true);
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
 	}
 
 	@Override
@@ -162,6 +158,12 @@ public class MainActivity extends Activity {
 
 		return super.onOptionsItemSelected(item);
 	}
+
+	@Override
+    protected void onSaveInstanceState(Bundle outState) {
+	    super.onSaveInstanceState(outState);
+	    outState.putInt("key_current_frag", currentFragmentIndex);
+    }
 
 	private String[] drawerEntries;
 	private DrawerLayout drawerLayout;
