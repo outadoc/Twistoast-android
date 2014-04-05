@@ -4,13 +4,6 @@ import java.util.ArrayList;
 
 import org.json.JSONException;
 
-import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
-
-import fr.outadev.android.timeo.TimeoRequestHandler;
-import fr.outadev.android.timeo.TimeoResultParser;
-import fr.outadev.android.timeo.TimeoScheduleObject;
-import fr.outadev.twistoast.R;
-import fr.outadev.twistoast.database.TwistoastDatabase;
 import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -25,6 +18,14 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
+
+import fr.outadev.android.timeo.TimeoRequestHandler;
+import fr.outadev.android.timeo.TimeoResultParser;
+import fr.outadev.android.timeo.TimeoScheduleObject;
+import fr.outadev.twistoast.R;
+import fr.outadev.twistoast.database.TwistoastDatabase;
 
 public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 
@@ -121,7 +122,8 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 					result = handler.getMultipleSchedules(objects);
 				} catch(ClassCastException e) {
 					getActivity().runOnUiThread(new Runnable() {
-						public void run() {
+						@Override
+                        public void run() {
 							try {
 								TimeoResultParser.displayErrorMessageFromTextResult(handler.getLastHTTPResponse(), getActivity());
 							} catch(JSONException e) {
@@ -136,7 +138,8 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 				}
 			} catch(final JSONException e) {
 				getActivity().runOnUiThread(new Runnable() {
-					public void run() {
+					@Override
+                    public void run() {
 						if(!handler.getLastHTTPResponse().isEmpty()) {
 							Toast.makeText(getActivity(), handler.getLastHTTPResponse(), Toast.LENGTH_LONG).show();
 						}
@@ -146,7 +149,8 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 				});
 			} catch(final HttpRequestException e) {
 				getActivity().runOnUiThread(new Runnable() {
-					public void run() {
+					@Override
+                    public void run() {
 						Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.load_timeout),
 						        Toast.LENGTH_LONG).show();
 					}
@@ -178,7 +182,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 		}
 	}
 
-	private StopsListFragment fragment;
+	private final StopsListFragment fragment;
 	private ArrayList<TimeoScheduleObject> objects;
 
 }

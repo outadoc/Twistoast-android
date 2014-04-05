@@ -1,6 +1,5 @@
 package fr.outadev.twistoast.ui;
 
-import fr.outadev.twistoast.R;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
@@ -13,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import fr.outadev.twistoast.R;
 
 public class WebViewFragment extends Fragment {
 

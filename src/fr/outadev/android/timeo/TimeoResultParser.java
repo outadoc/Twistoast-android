@@ -7,11 +7,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import fr.outadev.twistoast.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.util.Log;
 import android.widget.Toast;
+import fr.outadev.twistoast.R;
 
 /**
  * Contains methods used to parse the data retreived from the Twisto Realtime

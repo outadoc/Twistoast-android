@@ -226,7 +226,7 @@ public class TimeoRequestHandler {
 	private final static int REQUEST_TIMEOUT = 20000;
 
 	private String lastHTTPResponse;
-	private TimeoResultParser parser;
+	private final TimeoResultParser parser;
 
 	public enum EndPoints {
 		LINES, DIRECTIONS, STOPS, SCHEDULE

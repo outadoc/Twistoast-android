@@ -1,9 +1,9 @@
 package fr.outadev.twistoast;
 
-import fr.outadev.twistoast.ui.NavDrawerArrayAdapter;
-import fr.outadev.twistoast.ui.PrefsFragment;
-import fr.outadev.twistoast.ui.StopsListFragment;
-import fr.outadev.twistoast.ui.WebViewFragment;
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
@@ -12,10 +12,10 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.content.res.Configuration;
+import fr.outadev.twistoast.ui.NavDrawerArrayAdapter;
+import fr.outadev.twistoast.ui.PrefsFragment;
+import fr.outadev.twistoast.ui.StopsListFragment;
+import fr.outadev.twistoast.ui.WebViewFragment;
 
 public class MainActivity extends Activity {
 
@@ -35,12 +35,14 @@ public class MainActivity extends Activity {
 		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer, R.string.action_ok,
 		        R.string.action_delete) {
 
-			public void onDrawerClosed(View view) {
+			@Override
+            public void onDrawerClosed(View view) {
 				getActionBar().setTitle(actionBarTitle);
 				super.onDrawerClosed(view);
 			}
 
-			public void onDrawerOpened(View drawerView) {
+			@Override
+            public void onDrawerOpened(View drawerView) {
 				getActionBar().setTitle(drawerTitle);
 				super.onDrawerOpened(drawerView);
 			}

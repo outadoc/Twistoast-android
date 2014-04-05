@@ -1,10 +1,10 @@
 package fr.outadev.twistoast.ui;
 
-import fr.outadev.twistoast.R;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
+import fr.outadev.twistoast.R;
 
 public class PrefsFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
 

@@ -2,15 +2,6 @@ package fr.outadev.twistoast.ui;
 
 import java.util.ArrayList;
 
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-
-import fr.outadev.android.timeo.TimeoScheduleObject;
-import fr.outadev.twistoast.R;
-import fr.outadev.twistoast.database.TwistoastDatabase;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
@@ -19,6 +10,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
@@ -30,10 +23,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
+
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+
+import fr.outadev.android.timeo.TimeoScheduleObject;
+import fr.outadev.twistoast.R;
+import fr.outadev.twistoast.database.TwistoastDatabase;
 
 public class StopsListFragment extends Fragment implements MultiChoiceModeListener {
 
@@ -162,7 +162,8 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 		}
 	}
 
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	@Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if(requestCode == 0) {
 			refreshListFromDB(true);
 		}
@@ -219,7 +220,8 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 
 				// add the buttons
 				builder.setPositiveButton(R.string.confirm_yes, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
+					@Override
+                    public void onClick(DialogInterface dialog, int id) {
 						// get the positions of the selected elements
 						SparseBooleanArray checked = listView.getCheckedItemPositions();
 						ArrayList<TimeoScheduleObject> objectsToDelete = new ArrayList<TimeoScheduleObject>();
@@ -320,14 +322,14 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 
 	private ListView listView;
 	private SwipeRefreshLayout swipeLayout;
-	private TextView noContentText;
 
 	private boolean isRefreshing;
 	private final long REFRESH_INTERVAL = 60000L;
 
-	private Handler handler = new Handler();
-	private Runnable runnable = new Runnable() {
-		public void run() {
+	private final Handler handler = new Handler();
+	private final Runnable runnable = new Runnable() {
+		@Override
+        public void run() {
 			if(autoRefresh) {
 				refreshListFromDB(false);
 			}
