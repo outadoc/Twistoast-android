@@ -32,7 +32,8 @@
     <string name="load_timeout">Loading interrupted (timeout)</string>
     <string name="add_error_duplicate">This stop was already added to the app</string>
     <string name="add_error_illegal_argument">Something\'s wrong, check the values of the line, direction and stop.</string>
-
+	<string name="no_content">No content for the moment.</string>
+    
     <string-array name="drawer_entries">
         <item>Real-time</item>
         <item>Timetables</item>

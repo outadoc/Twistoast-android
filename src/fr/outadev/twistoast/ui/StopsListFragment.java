@@ -30,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
@@ -46,16 +47,14 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 		swipeLayout.setOnRefreshListener(new OnRefreshListener() {
 
 			@Override
-            public void onRefresh() {
+			public void onRefresh() {
 				refreshListFromDB(false);
-            }
+			}
 
 		});
-		
-		swipeLayout.setColorScheme(android.R.color.holo_blue_bright, 
-	            android.R.color.background_light, 
-	            android.R.color.holo_blue_bright, 
-	            android.R.color.background_light);
+
+		swipeLayout.setColorScheme(android.R.color.holo_blue_bright, android.R.color.background_light,
+		        android.R.color.holo_blue_bright, android.R.color.background_light);
 
 		listView = (ListView) view.findViewById(R.id.stops_list);
 
@@ -198,8 +197,10 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 
 		Log.i("Twistoast", "refreshed, " + listAdapter.getCount() + " stops in db");
 
-		if(getActivity() != null) {
+		if(getActivity() != null && listAdapter.getCount() > 0) {
 			Toast.makeText(getActivity(), getResources().getString(R.string.refreshed_stops), Toast.LENGTH_SHORT).show();
+		} else if(listAdapter.getCount() < 1) {
+			Toast.makeText(getActivity(), getResources().getString(R.string.no_content), Toast.LENGTH_SHORT).show();
 		}
 
 		// reset the timer loop, and start it again
@@ -317,8 +318,9 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 		}
 	}
 
-	public ListView listView;
+	private ListView listView;
 	private SwipeRefreshLayout swipeLayout;
+	private TextView noContentText;
 
 	private boolean isRefreshing;
 	private final long REFRESH_INTERVAL = 60000L;
