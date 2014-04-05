@@ -3,11 +3,12 @@
     android:id="@+id/textTitle"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/border"
     android:fontFamily="sans-serif"
-    android:textColor="#676767"
     android:minHeight="?android:attr/listPreferredItemHeightSmall"
     android:paddingBottom="15dp"
     android:paddingLeft="25dp"
     android:paddingTop="15dp"
     android:textAllCaps="true"
+    android:textColor="#676767"
     android:textSize="13sp" />

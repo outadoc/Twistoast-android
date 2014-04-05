@@ -14,9 +14,9 @@
         android:layout_width="260dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="#EEEEEE"
+        android:background="#F7F7F7"
         android:choiceMode="singleChoice"
-        android:divider="#eeeeee"
-        android:dividerHeight="1dp" />
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp" />
 
 </android.support.v4.widget.DrawerLayout>
