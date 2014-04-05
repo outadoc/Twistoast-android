@@ -45,7 +45,7 @@
 
         <receiver
             android:name="fr.outadev.twistoast.TwistoastPebbleReceiver"
-            android:exported="false" >
+            android:exported="true" >
             <intent-filter>
                 <action android:name="com.getpebble.action.app.RECEIVE" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
