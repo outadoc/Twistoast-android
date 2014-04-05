@@ -46,6 +46,8 @@ public class MainActivity extends Activity {
 			}
 		};
 
+		frags = new Fragment[drawerEntries.length];
+
 		drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 		drawerLayout.setDrawerListener(drawerToggle);
 
@@ -62,51 +64,59 @@ public class MainActivity extends Activity {
 
 	// Swaps fragments in the main content view
 	public void loadFragmentFromDrawerPosition(int position) {
+		currentFragmentIndex = position;
 
-		if(position == 0) {
-			currentFragment = new StopsListFragment();
-		} else if(position == 5) {
-			currentFragment = new PrefsFragment();
-		} else {
-			String url = new String();
-			currentFragment = new WebViewFragment();
-
+		if(frags[currentFragmentIndex] == null) {
 			switch(position) {
-				case 1:
-					url = getResources().getString(R.string.timetables_url);
+				case 0:
+					frags[currentFragmentIndex] = new StopsListFragment();
 					break;
-				case 2:
-					url = getResources().getString(R.string.routes_url);
+				case 5:
+					frags[currentFragmentIndex] = new PrefsFragment();
 					break;
-				case 3:
-					url = getResources().getString(R.string.traffic_url);
-					break;
-				case 4:
-					url = getResources().getString(R.string.news_url);
-					break;
-			}
+				default: {
+					String url = new String();
+					frags[currentFragmentIndex] = new WebViewFragment();
 
-			Bundle args = new Bundle();
-			args.putString("url", url);
-			currentFragment.setArguments(args);
+					switch(position) {
+						case 1:
+							url = getResources().getString(R.string.timetables_url);
+							break;
+						case 2:
+							url = getResources().getString(R.string.routes_url);
+							break;
+						case 3:
+							url = getResources().getString(R.string.traffic_url);
+							break;
+						case 4:
+							url = getResources().getString(R.string.news_url);
+							break;
+					}
+
+					Bundle args = new Bundle();
+					args.putString("url", url);
+					frags[currentFragmentIndex].setArguments(args);
+
+					break;
+				}
+			}
 		}
 
 		// Insert the fragment by replacing any existing fragment
 		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.content_frame, currentFragment, MAIN_FRAGMENT_TAG).commit();
+		fragmentManager.beginTransaction().replace(R.id.content_frame, frags[currentFragmentIndex]).commit();
 
-		// Highlight the selected item, update the title, and close the
-		// drawer
-		checkDrawerItem(position);
+		// Highlight the selected item, update the title, and close the drawer
+		checkDrawerItem(currentFragmentIndex);
 		drawerLayout.closeDrawer(drawerList);
 
 	}
 
 	@Override
 	public void onBackPressed() {
-		if(currentFragment instanceof WebViewFragment && ((WebViewFragment) currentFragment).canGoBack()) {
-			((WebViewFragment) currentFragment).goBack();
-		} else if(currentFragment instanceof StopsListFragment) {
+		if(frags[currentFragmentIndex] instanceof WebViewFragment && ((WebViewFragment) frags[currentFragmentIndex]).canGoBack()) {
+			((WebViewFragment) frags[currentFragmentIndex]).goBack();
+		} else if(frags[currentFragmentIndex] instanceof StopsListFragment) {
 			super.onBackPressed();
 		} else {
 			drawerLayout.openDrawer(Gravity.LEFT);
@@ -151,8 +161,6 @@ public class MainActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	private static final String MAIN_FRAGMENT_TAG = "MAINFRAG";
-
 	private String[] drawerEntries;
 	private DrawerLayout drawerLayout;
 	private ActionBarDrawerToggle drawerToggle;
@@ -161,5 +169,6 @@ public class MainActivity extends Activity {
 	private CharSequence drawerTitle;
 	private CharSequence actionBarTitle;
 
-	private Fragment currentFragment;
+	private int currentFragmentIndex;
+	private Fragment frags[];
 }
