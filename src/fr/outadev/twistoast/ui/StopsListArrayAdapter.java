@@ -125,16 +125,23 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 							try {
 								TimeoResultParser.displayErrorMessageFromTextResult(handler.getLastHTTPResponse(), getActivity());
 							} catch(JSONException e) {
-								Toast.makeText(getActivity(), handler.getLastHTTPResponse(), Toast.LENGTH_LONG).show();
+								if(!handler.getLastHTTPResponse().isEmpty()) {
+									Toast.makeText(getActivity(), handler.getLastHTTPResponse(), Toast.LENGTH_LONG).show();
+								}
+
 								e.printStackTrace();
 							}
 						}
 					});
 				}
-			} catch(JSONException e) {
+			} catch(final JSONException e) {
 				getActivity().runOnUiThread(new Runnable() {
 					public void run() {
-						Toast.makeText(getActivity(), handler.getLastHTTPResponse(), Toast.LENGTH_LONG).show();
+						if(!handler.getLastHTTPResponse().isEmpty()) {
+							Toast.makeText(getActivity(), handler.getLastHTTPResponse(), Toast.LENGTH_LONG).show();
+						}
+						
+						e.printStackTrace();
 					}
 				});
 			} catch(final HttpRequestException e) {
