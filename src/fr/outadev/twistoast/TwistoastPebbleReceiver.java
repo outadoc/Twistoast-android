@@ -3,6 +3,7 @@ package fr.outadev.twistoast;
 import java.util.UUID;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -44,20 +45,23 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 	public void receiveData(final Context context, final int transactionId, PebbleDictionary data) {
 		Log.d("TwistoastPebbleReceiver", "received a message from pebble " + PEBBLE_UUID);
 
-		//open the database and count the stops
+		// open the database and count the stops
 		TwistoastDatabase databaseHandler = new TwistoastDatabase(context);
 		int stopsCount = databaseHandler.getStopsCount();
 
-		//if we want a schedule and we have buses in the database
-		if(data.getInteger(KEY_TWISTOAST_MESSAGE_TYPE) == BUS_STOP_REQUEST && stopsCount > 0) {
+		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+		// if we want a schedule and we have buses in the database
+		if(data.getInteger(KEY_TWISTOAST_MESSAGE_TYPE) == BUS_STOP_REQUEST && stopsCount > 0
+		        && cm.getActiveNetworkInfo().isConnected()) {
 			Log.d("TwistoastPebbleReceiver", "pebble request acknowledged");
 			PebbleKit.sendAckToPebble(context, transactionId);
 
-			//get the bus index (modulo the number of stops there is in the db)
+			// get the bus index (modulo the number of stops there is in the db)
 			final short busIndex = (short) (data.getInteger(KEY_STOP_INDEX).shortValue() % stopsCount);
 			final PebbleDictionary response = new PebbleDictionary();
 
-			//get the stop that interests us
+			// get the stop that interests us
 			TimeoScheduleObject schedule = databaseHandler.getStopAtIndex(busIndex);
 
 			Log.d("TwistoastPebbleReceiver", "loading data for stop #" + busIndex + "...");
