@@ -53,7 +53,7 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 
 		// if we want a schedule and we have buses in the database
 		if(data.getInteger(KEY_TWISTOAST_MESSAGE_TYPE) == BUS_STOP_REQUEST && stopsCount > 0
-		        && cm.getActiveNetworkInfo().isConnected()) {
+		        && cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected()) {
 			Log.d("TwistoastPebbleReceiver", "pebble request acknowledged");
 			PebbleKit.sendAckToPebble(context, transactionId);
 
