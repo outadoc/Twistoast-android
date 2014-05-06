@@ -53,8 +53,8 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 
 		});
 
-		swipeLayout.setColorScheme(android.R.color.holo_blue_bright, android.R.color.background_light,
-		        android.R.color.holo_blue_bright, android.R.color.background_light);
+		swipeLayout.setColorScheme(android.R.color.holo_blue_bright, R.color.holo_blue_less_bright,
+		        android.R.color.holo_blue_bright, R.color.holo_blue_less_bright);
 
 		listView = (ListView) view.findViewById(R.id.stops_list);
 
