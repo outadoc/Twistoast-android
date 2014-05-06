@@ -53,8 +53,8 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 
 		});
 
-		swipeLayout.setColorScheme(android.R.color.holo_blue_bright, R.color.holo_blue_less_bright,
-		        android.R.color.holo_blue_bright, R.color.holo_blue_less_bright);
+		swipeLayout.setColorScheme(R.color.holo_blue_less_bright, android.R.color.holo_blue_bright,
+		        R.color.holo_blue_less_bright, android.R.color.holo_blue_bright);
 
 		listView = (ListView) view.findViewById(R.id.stops_list);
 
@@ -163,7 +163,7 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 	}
 
 	@Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if(requestCode == 0) {
 			refreshListFromDB(true);
 		}
@@ -221,7 +221,7 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 				// add the buttons
 				builder.setPositiveButton(R.string.confirm_yes, new DialogInterface.OnClickListener() {
 					@Override
-                    public void onClick(DialogInterface dialog, int id) {
+					public void onClick(DialogInterface dialog, int id) {
 						// get the positions of the selected elements
 						SparseBooleanArray checked = listView.getCheckedItemPositions();
 						ArrayList<TimeoScheduleObject> objectsToDelete = new ArrayList<TimeoScheduleObject>();
@@ -329,7 +329,7 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 	private final Handler handler = new Handler();
 	private final Runnable runnable = new Runnable() {
 		@Override
-        public void run() {
+		public void run() {
 			if(autoRefresh) {
 				refreshListFromDB(false);
 			}

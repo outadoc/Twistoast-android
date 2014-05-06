@@ -2,6 +2,6 @@
 <resources>
 
     <color name="item_pressed_color">#e3e3e3</color>
-    <color name="holo_blue_less_bright">#33b5e5</color>
+    <color name="holo_blue_less_bright">#33B5E5</color>
 
 </resources>
