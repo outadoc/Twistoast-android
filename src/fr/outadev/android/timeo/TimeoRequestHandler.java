@@ -27,16 +27,16 @@ public class TimeoRequestHandler {
 		this.parser = new TimeoResultParser();
 	}
 
-	protected String requestWebPage(URL url, Map<String, String> params) throws HttpRequestException {
-		lastHTTPResponse = HttpRequest.post(url.toExternalForm()).readTimeout(REQUEST_TIMEOUT).form(params).body();
+	private String requestWebPage(URL url, Map<String, String> params, boolean useCaches) throws HttpRequestException {
+		lastHTTPResponse = HttpRequest.post(url.toExternalForm()).useCaches(true).readTimeout(REQUEST_TIMEOUT).form(params).body();
 		return lastHTTPResponse;
 	}
-
-	private String requestWebPage(URL url) throws HttpRequestException {
-		return requestWebPage(url, null);
+	
+	private String requestWebPage(URL url, Map<String, String> params) throws HttpRequestException {
+		return requestWebPage(url, params, true);
 	}
 
-	private String requestWebPage(Map<String, String> params) throws HttpRequestException {
+	private String requestWebPage(Map<String, String> params, boolean useCaches) throws HttpRequestException {
 		try {
 			return requestWebPage(new URL(BASE_URL), params);
 		} catch(MalformedURLException e) {
@@ -84,7 +84,7 @@ public class TimeoRequestHandler {
 		data.put("func", "getSchedule");
 		data.put("data", cookie);
 
-		result = requestWebPage(data);
+		result = requestWebPage(data, false);
 		parser.parseMultipleSchedules(result, newStopsList);
 
 		return newStopsList;
@@ -117,7 +117,7 @@ public class TimeoRequestHandler {
 		data.put("direction", newSchedule.getDirection().getId());
 		data.put("stop", newSchedule.getStop().getId());
 
-		result = requestWebPage(data);
+		result = requestWebPage(data, false);
 		newSchedule.setSchedule(parser.parseSchedule(result));
 
 		return newSchedule;
@@ -201,15 +201,9 @@ public class TimeoRequestHandler {
 		return getGenericList(data);
 	}
 
-	protected ArrayList<TimeoIDNameObject> getGenericList(URL url, String params) throws ClassCastException, JSONException,
-	        HttpRequestException {
-		String result = requestWebPage(url);
-		return parser.parseList(result);
-	}
-
 	private ArrayList<TimeoIDNameObject> getGenericList(Map<String, String> params) throws ClassCastException, JSONException,
 	        HttpRequestException {
-		String result = requestWebPage(params);
+		String result = requestWebPage(params, true);
 		return parser.parseList(result);
 	}
 
