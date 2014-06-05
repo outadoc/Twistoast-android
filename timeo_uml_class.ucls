@@ -3,7 +3,7 @@
   associations="true" dependencies="false" nesting-relationships="true">  
   <class id="1" language="java" name="fr.outadev.android.timeo.TimeoScheduleObject" project="Twistoast" 
     file="/Twistoast/src/fr/outadev/android/timeo/TimeoScheduleObject.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="278" width="544" x="23" y="24"/>    
+    <position height="278" width="544" x="893" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -12,7 +12,7 @@
   </class>  
   <class id="2" language="java" name="fr.outadev.android.timeo.TimeoResultParser" project="Twistoast" 
     file="/Twistoast/src/fr/outadev/android/timeo/TimeoResultParser.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="152" width="410" x="673" y="378"/>    
+    <position height="152" width="410" x="433" y="391"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -21,7 +21,7 @@
   </class>  
   <class id="3" language="java" name="fr.outadev.android.timeo.TimeoIDNameObject" project="Twistoast" 
     file="/Twistoast/src/fr/outadev/android/timeo/TimeoIDNameObject.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="224" width="215" x="23" y="378"/>    
+    <position height="224" width="215" x="893" y="391"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -30,7 +30,7 @@
   </class>  
   <enumeration id="4" language="java" name="fr.outadev.android.timeo.TimeoRequestHandler.EndPoints" project="Twistoast" 
     file="/Twistoast/src/fr/outadev/android/timeo/TimeoRequestHandler.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="152" width="162" x="1123" y="378"/>    
+    <position height="152" width="162" x="231" y="391"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -39,7 +39,7 @@
   </enumeration>  
   <class id="5" language="java" name="fr.outadev.android.timeo.TimeoRequestObject" project="Twistoast" 
     file="/Twistoast/src/fr/outadev/android/timeo/TimeoRequestObject.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="296" width="251" x="607" y="24"/>    
+    <position height="296" width="251" x="41" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -48,7 +48,7 @@
   </class>  
   <class id="6" language="java" name="fr.outadev.android.timeo.TimeoRequestHandler" project="Twistoast" 
     file="/Twistoast/src/fr/outadev/android/timeo/TimeoRequestHandler.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="314" width="521" x="898" y="24"/>    
+    <position height="314" width="521" x="332" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -56,41 +56,41 @@
     </display>  
   </class>  
   <association id="7">    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="8" name="parser"/>      
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="8" name="line"/>      
       <multiplicity id="9" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="10">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="11" name="stop"/>      
+      <multiplicity id="12" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="13">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="14" name="parser"/>      
+      <multiplicity id="15" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="2" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <nesting id="10">    
+  <association id="16">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="17" name="direction"/>      
+      <multiplicity id="18" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="19">    
     <end type="SOURCE" refId="6"/>    
     <end type="TARGET" refId="4"/>  
   </nesting>  
-  <association id="11">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="12" name="stop"/>      
-      <multiplicity id="13" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="3" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="14">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="15" name="direction"/>      
-      <multiplicity id="16" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="3" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="17">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="18" name="line"/>      
-      <multiplicity id="19" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="3" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true" static="true"/>    
