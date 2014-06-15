@@ -136,6 +136,7 @@ public class MainActivity extends Activity {
 		getActionBar().setTitle(actionBarTitle);
 
 		drawerList.setItemChecked(position, true);
+		((NavDrawerArrayAdapter) drawerList.getAdapter()).setSelectedItemIndex(position);
 	}
 
 	@Override

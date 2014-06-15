@@ -56,6 +56,15 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<String> {
 		return rowView;
 	}
 
+	public int getSelectedItemIndex() {
+		return selectedItemIndex;
+	}
+
+	public void setSelectedItemIndex(int selectedItemIndex) {
+		this.selectedItemIndex = selectedItemIndex;
+		notifyDataSetChanged();
+	}
+
 	private int selectedItemIndex;
 
 }
