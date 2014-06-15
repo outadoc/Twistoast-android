@@ -25,6 +25,7 @@ import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
 import fr.outadev.android.timeo.TimeoRequestHandler;
 import fr.outadev.android.timeo.TimeoResultParser;
 import fr.outadev.android.timeo.TimeoScheduleObject;
+import fr.outadev.twistoast.MainActivity;
 import fr.outadev.twistoast.R;
 import fr.outadev.twistoast.database.TwistoastDatabase;
 
@@ -113,6 +114,15 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 				} else {
 					((ListView) parent).setItemChecked(position, true);
 				}
+			}
+
+		});
+		
+		view_traffic_message.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				((MainActivity) fragment.getActivity()).loadFragmentFromDrawerPosition(3);
 			}
 
 		});
