@@ -125,7 +125,7 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 		}
 
 		Log.d("TwistoastPebbleReceiver", "sending back: " + response);
-		PebbleKit.sendDataToPebbleWithTransactionId(context, PEBBLE_UUID, response, transactionId);
+		PebbleKit.sendDataToPebble(context, PEBBLE_UUID, response);
 	}
 
 	private String processStringForPebble(String str, int length) {
