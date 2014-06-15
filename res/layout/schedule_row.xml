@@ -2,76 +2,104 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:attr/activatedBackgroundIndicator"
-    android:orientation="horizontal"
-    android:padding="3dp" >
+    android:orientation="vertical" >
 
-    <FrameLayout
-        android:id="@+id/view_line_id"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_gravity="center"
-        android:layout_margin="5dp"
-        android:background="#446678" >
+    <LinearLayout
+        android:id="@+id/view_traffic_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="3dp"
+        android:background="#EEEEEE" >
 
         <TextView
-            android:id="@+id/lbl_line_id"
+            android:id="@+id/lbl_message_title"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="#ffffff"
-            android:textStyle="bold" />
-    </FrameLayout>
+            android:layout_height="wrap_content"
+            android:text="Test titre message hihi" />
+        
+        <TextView
+            android:id="@+id/lbl_message_body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Test corps message hihi" />
+        
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:orientation="vertical"
-        android:paddingLeft="5dp" >
+        android:background="?android:attr/activatedBackgroundIndicator"
+        android:orientation="horizontal"
+        android:padding="3dp" >
 
-        <TextView
-            android:id="@+id/lbl_stop_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="19sp" />
+        <FrameLayout
+            android:id="@+id/view_line_id"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:background="#446678" >
 
-        <TextView
-            android:id="@+id/lbl_direction_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textSize="15sp"
-            android:textStyle="italic" />
+            <TextView
+                android:id="@+id/lbl_line_id"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="#ffffff"
+                android:textStyle="bold" />
+        </FrameLayout>
 
-        <TextView
-            android:id="@+id/lbl_schedule_1"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="3dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:scrollHorizontally="true"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="#333333"
-            android:textSize="15sp" />
+            android:layout_margin="5dp"
+            android:orientation="vertical"
+            android:paddingLeft="5dp" >
 
-        <TextView
-            android:id="@+id/lbl_schedule_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:scrollHorizontally="true"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="#333333"
-            android:textSize="15sp" />
+            <TextView
+                android:id="@+id/lbl_stop_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="19sp" />
+
+            <TextView
+                android:id="@+id/lbl_direction_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textSize="15sp"
+                android:textStyle="italic" />
+
+            <TextView
+                android:id="@+id/lbl_schedule_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="3dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#333333"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/lbl_schedule_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#333333"
+                android:textSize="15sp" />
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

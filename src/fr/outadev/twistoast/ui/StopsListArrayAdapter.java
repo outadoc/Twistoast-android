@@ -15,6 +15,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +40,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 	@Override
 	public View getView(final int position, View convertView, final ViewGroup parent) {
 		LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		TimeoScheduleObject currentItem = getItem(position);
 
 		// that's our row XML
 		View rowView = inflater.inflate(R.layout.schedule_row, parent, false);
@@ -53,9 +55,25 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 		TextView lbl_schedule_1 = (TextView) rowView.findViewById(R.id.lbl_schedule_1);
 		TextView lbl_schedule_2 = (TextView) rowView.findViewById(R.id.lbl_schedule_2);
 
+		LinearLayout view_traffic_message = (LinearLayout) rowView.findViewById(R.id.view_traffic_message);
+
+		TextView lbl_message_title = (TextView) rowView.findViewById(R.id.lbl_message_title);
+		TextView lbl_message_body = (TextView) rowView.findViewById(R.id.lbl_message_body);
+
+		// set and make the message labels visible if necessary
+		if(currentItem.getMessageTitle() != null && currentItem.getMessageBody() != null
+		        && !currentItem.getMessageBody().isEmpty() && !currentItem.getMessageTitle().isEmpty()) {
+			lbl_message_title.setText(currentItem.getMessageTitle());
+			lbl_message_body.setText(currentItem.getMessageBody());
+			
+			view_traffic_message.setVisibility(View.VISIBLE);
+		} else {
+			view_traffic_message.setVisibility(View.GONE);
+		}
+
 		// line
-		view_line_id.setBackgroundColor(TwistoastDatabase.getColorFromLineID(getItem(position).getLine().getId()));
-		lbl_line.setText(getItem(position).getLine().getId());
+		view_line_id.setBackgroundColor(TwistoastDatabase.getColorFromLineID(currentItem.getLine().getId()));
+		lbl_line.setText(currentItem.getLine().getId());
 
 		if(lbl_line.getText().length() > 3) {
 			lbl_line.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
@@ -66,23 +84,21 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 		}
 
 		// stop
-		lbl_stop.setText(getContext().getResources().getString(R.string.stop_name, getItem(position).getStop().getName()));
+		lbl_stop.setText(getContext().getResources().getString(R.string.stop_name, currentItem.getStop().getName()));
 
 		// direction
-		lbl_direction.setText(getContext().getResources().getString(R.string.direction_name,
-		        getItem(position).getDirection().getName()));
+		lbl_direction.setText(getContext().getResources()
+		        .getString(R.string.direction_name, currentItem.getDirection().getName()));
 
 		// schedule
-		if(getItem(position).getSchedule() != null && getItem(position).getSchedule().length > 0
-		        && getItem(position).getSchedule()[0] != null) {
-			lbl_schedule_1.setText("- " + getItem(position).getSchedule()[0]);
+		if(currentItem.getSchedule() != null && currentItem.getSchedule().length > 0 && currentItem.getSchedule()[0] != null) {
+			lbl_schedule_1.setText("- " + currentItem.getSchedule()[0]);
 		} else {
 			lbl_schedule_1.setText("- " + getContext().getResources().getString(R.string.loading_data));
 		}
 
-		if(getItem(position).getSchedule() != null && getItem(position).getSchedule().length > 1
-		        && getItem(position).getSchedule()[1] != null) {
-			lbl_schedule_2.setText("- " + getItem(position).getSchedule()[1]);
+		if(currentItem.getSchedule() != null && currentItem.getSchedule().length > 1 && currentItem.getSchedule()[1] != null) {
+			lbl_schedule_2.setText("- " + currentItem.getSchedule()[1]);
 		}
 
 		view_line_id.setOnClickListener(new OnClickListener() {
@@ -123,7 +139,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 				} catch(ClassCastException e) {
 					getActivity().runOnUiThread(new Runnable() {
 						@Override
-                        public void run() {
+						public void run() {
 							try {
 								TimeoResultParser.displayErrorMessageFromTextResult(handler.getLastHTTPResponse(), getActivity());
 							} catch(JSONException e) {
@@ -139,18 +155,18 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 			} catch(final JSONException e) {
 				getActivity().runOnUiThread(new Runnable() {
 					@Override
-                    public void run() {
+					public void run() {
 						if(!handler.getLastHTTPResponse().isEmpty()) {
 							Toast.makeText(getActivity(), handler.getLastHTTPResponse(), Toast.LENGTH_LONG).show();
 						}
-						
+
 						e.printStackTrace();
 					}
 				});
 			} catch(final HttpRequestException e) {
 				getActivity().runOnUiThread(new Runnable() {
 					@Override
-                    public void run() {
+					public void run() {
 						Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.load_timeout),
 						        Toast.LENGTH_LONG).show();
 					}

@@ -74,8 +74,8 @@ public class TimeoResultParser {
 				        && resultArray.getJSONObject(0).getJSONObject("message") != null) {
 					JSONObject messageObject = resultArray.getJSONObject(0).getJSONObject("message");
 
-					schedule.setMessageTitle(messageObject.getString("title"));
-					schedule.setMessageBody(messageObject.getString("body"));
+					schedule.setMessageTitle(messageObject.getString("title").trim());
+					schedule.setMessageBody(messageObject.getString("body").trim());
 				}
 			} catch(JSONException e) {
 
@@ -122,8 +122,8 @@ public class TimeoResultParser {
 						if(resultArray.getJSONObject(i).getJSONObject("message") != null) {
 							JSONObject messageObject = resultArray.getJSONObject(i).getJSONObject("message");
 
-							messageTitle = messageObject.getString("title");
-							messageBody = messageObject.getString("body");
+							messageTitle = messageObject.getString("title").trim();
+							messageBody = messageObject.getString("body").trim();
 						}
 					} catch(JSONException e) {
 
