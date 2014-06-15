@@ -50,10 +50,32 @@ public class TimeoScheduleObject {
 		this.schedule = schedule;
 	}
 
+	public String getMessageTitle() {
+		return messageTitle;
+	}
+
+	public void setMessageTitle(String messageTitle) {
+		this.messageTitle = messageTitle;
+	}
+
+	public String getMessageBody() {
+		return messageBody;
+	}
+
+	public void setMessageBody(String messageBody) {
+		this.messageBody = messageBody;
+	}
+
 	@Override
 	public String toString() {
-		return "TimeoScheduleObject [line=" + line + ", direction=" + direction + ", stop=" + stop + ", schedule="
-		        + Arrays.toString(schedule) + "]";
+		if(messageTitle != null && messageBody != null) {
+			return "TimeoScheduleObject [line=" + line + ", direction=" + direction + ", stop=" + stop + ", schedule="
+			        + Arrays.toString(schedule) + ", messageTitle=" + messageTitle + ", messageBody=" + messageBody + "]";
+		} else {
+			return "TimeoScheduleObject [line=" + line + ", direction=" + direction + ", stop=" + stop + ", schedule="
+			        + Arrays.toString(schedule) + "]";
+		}
+
 	}
 
 	@Override
@@ -67,5 +89,8 @@ public class TimeoScheduleObject {
 	private TimeoIDNameObject stop;
 
 	private String[] schedule;
+
+	private String messageTitle;
+	private String messageBody;
 
 }

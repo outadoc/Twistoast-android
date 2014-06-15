@@ -55,6 +55,35 @@ public class TimeoResultParser {
 	}
 
 	/**
+	 * Parses a traffic message from a JSON response from the API.
+	 * 
+	 * @param source
+	 *            the JSON array returned by the API
+	 * @return a String array containing the two schedules
+	 * 
+	 * @throws JSONException
+	 * @throws ClassCastException
+	 */
+	public void parseTrafficMessage(String source, TimeoScheduleObject schedule) throws JSONException, ClassCastException {
+		if(source != null) {
+			// parse the whole JSON array
+			JSONArray resultArray = (JSONArray) new JSONTokener(source).nextValue();
+
+			try {
+				if(resultArray != null && resultArray.getJSONObject(0) != null
+				        && resultArray.getJSONObject(0).getJSONObject("message") != null) {
+					JSONObject messageObject = resultArray.getJSONObject(0).getJSONObject("message");
+
+					schedule.setMessageTitle(messageObject.getString("title"));
+					schedule.setMessageBody(messageObject.getString("body"));
+				}
+			} catch(JSONException e) {
+
+			}
+		}
+	}
+
+	/**
 	 * Parses multiple schedules from a JSON response from the API.
 	 * 
 	 * @param source
@@ -75,14 +104,29 @@ public class TimeoResultParser {
 			JSONArray resultArray = (JSONArray) new JSONTokener(source).nextValue();
 
 			for(int i = 0; i < resultArray.length(); i++) {
-				if(resultArray != null && resultArray.getJSONObject(i) != null
-				        && resultArray.getJSONObject(i).getJSONArray("next") != null) {
+				if(resultArray != null && resultArray.getJSONObject(i) != null) {
 
-					JSONArray scheduleJSONArray = resultArray.getJSONObject(i).getJSONArray("next");
 					String sched[] = new String[2];
+					String messageTitle = null;
+					String messageBody = null;
 
-					for(int j = 0; j < scheduleJSONArray.length() && j < 2; j++) {
-						sched[j] = scheduleJSONArray.getString(j);
+					if(resultArray.getJSONObject(i).getJSONArray("next") != null) {
+						JSONArray scheduleJSONArray = resultArray.getJSONObject(i).getJSONArray("next");
+
+						for(int j = 0; j < scheduleJSONArray.length() && j < 2; j++) {
+							sched[j] = scheduleJSONArray.getString(j);
+						}
+					}
+
+					try {
+						if(resultArray.getJSONObject(i).getJSONObject("message") != null) {
+							JSONObject messageObject = resultArray.getJSONObject(i).getJSONObject("message");
+
+							messageTitle = messageObject.getString("title");
+							messageBody = messageObject.getString("body");
+						}
+					} catch(JSONException e) {
+
 					}
 
 					if(stopsList.size() != resultArray.length()) {
@@ -101,7 +145,11 @@ public class TimeoResultParser {
 						}
 					}
 
-					stopsList.get(i + indexShift).setSchedule(sched);
+					TimeoScheduleObject current = stopsList.get(i + indexShift);
+
+					current.setSchedule(sched);
+					current.setMessageTitle(messageTitle);
+					current.setMessageBody(messageBody);
 				}
 			}
 		}
@@ -175,7 +223,7 @@ public class TimeoResultParser {
 				// create the AlertDialog and show it
 				AlertDialog dialog = builder.create();
 				dialog.show();
-				
+
 			} catch(ClassCastException ex) {
 				Toast.makeText(activity, obj.getString("error"), Toast.LENGTH_LONG).show();
 			}

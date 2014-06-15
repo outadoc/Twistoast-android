@@ -119,6 +119,7 @@ public class TimeoRequestHandler {
 
 		result = requestWebPage(data, false);
 		newSchedule.setSchedule(parser.parseSchedule(result));
+		parser.parseTrafficMessage(result, newSchedule);
 
 		return newSchedule;
 	}
