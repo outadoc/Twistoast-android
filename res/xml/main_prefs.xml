@@ -8,7 +8,7 @@
             android:summary="@string/pref_auto_refresh_sum"
             android:title="@string/pref_auto_refresh_title" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/pref_cat_other" >
+    <PreferenceCategory android:title="@string/pref_cat_pebble" >
         <Preference
             android:summary="@string/pref_pebble_dl_sum"
             android:title="@string/pref_pebble_dl_title" >
@@ -16,9 +16,25 @@
                 android:action="android.intent.action.VIEW"
                 android:data="pebble://appstore/53088e81ab1ae2f12900034e" />
         </Preference>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_cat_other" >
         <Preference
             android:summary="@string/pref_legal_sum"
             android:title="@string/pref_legal_title" />
+        <Preference
+            android:summary="@string/pref_twisto_website_sum"
+            android:title="@string/pref_twisto_website_title" >
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="http://twisto.mobi" />
+        </Preference>
+        <Preference
+            android:summary="@string/pref_outadev_website_sum"
+            android:title="@string/pref_outadev_website_title" >
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="http://dev.outadoc.fr" />
+        </Preference>
     </PreferenceCategory>
 
 </PreferenceScreen>

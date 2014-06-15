@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="pref_cat_pebble">Pebble</string>
     <string name="pref_pebble_dl_title">Télécharger la watchapp Pebble</string>
     <string name="pref_pebble_dl_sum">Vous pouvez télécharger l\'app Twistoast pour Pebble depuis le Pebble appstore.</string>
     <string name="pref_auto_refresh_title">Rafraîchissement automatique</string>
@@ -9,5 +10,8 @@
     <string name="pref_cat_other">Autres</string>
     <string name="pref_legal_title">Mentions légales</string>
     <string name="pref_legal_sum">Twistoast est une application développée par Baptiste Candellier. &#169; outa[dev] - 2014.\nTwisto est une marque de Keolis Caen.\nouta[dev] décline toute responsabilité en cas de données erronées.</string>
-
+	<string name="pref_outadev_website_sum">Rendez-vous sur dev.outadoc.fr pour plus d\'applications pratiques !</string>
+	<string name="pref_outadev_website_title">Plus d\'applications</string>
+	<string name="pref_twisto_website_sum">Visitez twisto.mobi, le site mobile du réseau Twisto.</string>
+	<string name="pref_twisto_website_title">Site web Twisto</string>
 </resources>
