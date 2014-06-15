@@ -35,6 +35,9 @@
                 android:action="android.intent.action.VIEW"
                 android:data="http://dev.outadoc.fr" />
         </Preference>
+        <Preference 
+            android:key="version"
+            android:title="@string/pref_about_title" />
     </PreferenceCategory>
 
 </PreferenceScreen>

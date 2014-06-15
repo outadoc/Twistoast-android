@@ -14,4 +14,5 @@
 	<string name="pref_outadev_website_title">Plus d\'applications</string>
 	<string name="pref_twisto_website_sum">Visitez twisto.mobi, le site mobile du réseau Twisto.</string>
 	<string name="pref_twisto_website_title">Site web Twisto</string>
+	<string name="pref_about_title">À propos</string>
 </resources>
