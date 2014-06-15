@@ -10,19 +10,21 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="3dp"
-        android:background="#EEEEEE" >
+        android:background="#E9E9E9"
+        android:visibility="gone" >
 
         <TextView
             android:id="@+id/lbl_message_title"
+            android:textSize="17sp"
+            android:textStyle="italic"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Test titre message hihi" />
+            android:layout_height="wrap_content" />
         
         <TextView
             android:id="@+id/lbl_message_body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Test corps message hihi" />
+            android:layout_margin="2dp" />
         
     </LinearLayout>
 
