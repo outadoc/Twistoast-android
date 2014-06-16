@@ -208,8 +208,8 @@ public class TimeoResultParser {
 
 		try {
 			JSONObject obj = (JSONObject) new JSONTokener(source).nextValue();
-
-			try {
+			
+			if(obj != null && obj.has("message")) {
 				String errorMessage = obj.getString("message");
 				AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
@@ -223,11 +223,9 @@ public class TimeoResultParser {
 				// create the AlertDialog and show it
 				AlertDialog dialog = builder.create();
 				dialog.show();
-
-			} catch(ClassCastException ex) {
+			} else if(obj != null && obj.has("error")) {
 				Toast.makeText(activity, obj.getString("error"), Toast.LENGTH_LONG).show();
 			}
-
 		} catch(ClassCastException e) {
 			Toast.makeText(activity, activity.getResources().getString(R.string.loading_error), Toast.LENGTH_LONG).show();
 		}
