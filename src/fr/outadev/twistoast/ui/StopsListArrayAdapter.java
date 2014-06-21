@@ -145,7 +145,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 
 			try {
 				try {
-					result = handler.getMultipleSchedules(objects);
+					result = handler.getMultipleSchedules(getContext(), objects);
 				} catch(ClassCastException e) {
 					getActivity().runOnUiThread(new Runnable() {
 						@Override

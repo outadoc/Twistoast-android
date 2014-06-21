@@ -9,6 +9,7 @@ import org.json.JSONTokener;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 import fr.outadev.twistoast.R;
@@ -97,7 +98,7 @@ public class TimeoResultParser {
 	 * 
 	 * @see TimeoScheduleObject
 	 */
-	public void parseMultipleSchedules(String source, ArrayList<TimeoScheduleObject> stopsList) throws JSONException,
+	public void parseMultipleSchedules(Context context, String source, ArrayList<TimeoScheduleObject> stopsList) throws JSONException,
 	        ClassCastException {
 		if(source != null) {
 			int indexShift = 0;
@@ -141,6 +142,7 @@ public class TimeoResultParser {
 						        && !stopsList.get(i + indexShift).getStop().getName()
 						                .equalsIgnoreCase(resultArray.getJSONObject(i).getString("stop"))) {
 							Log.d("Twistoast", "missing schedule for " + stopsList.get(i + indexShift) + ", shifting");
+							stopsList.get(i + indexShift).setSchedule(new String[] {context.getResources().getString(R.string.loading_error)});
 							indexShift++;
 						}
 					}
