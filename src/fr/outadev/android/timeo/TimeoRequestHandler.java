@@ -8,6 +8,8 @@ import java.util.Map;
 
 import org.json.JSONException;
 
+import android.content.Context;
+
 import com.github.kevinsawicki.http.HttpRequest;
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
 
@@ -64,7 +66,7 @@ public class TimeoRequestHandler {
 	 * @see TimeoRequestObject
 	 * @see ArrayList
 	 */
-	public ArrayList<TimeoScheduleObject> getMultipleSchedules(ArrayList<TimeoScheduleObject> stopsList)
+	public ArrayList<TimeoScheduleObject> getMultipleSchedules(Context context, ArrayList<TimeoScheduleObject> stopsList)
 	        throws ClassCastException, JSONException, HttpRequestException {
 		@SuppressWarnings("unchecked")
 		ArrayList<TimeoScheduleObject> newStopsList = (ArrayList<TimeoScheduleObject>) stopsList.clone();
@@ -85,7 +87,7 @@ public class TimeoRequestHandler {
 		data.put("data", cookie);
 
 		result = requestWebPage(data, false);
-		parser.parseMultipleSchedules(result, newStopsList);
+		parser.parseMultipleSchedules(context, result, newStopsList);
 
 		return newStopsList;
 	}
