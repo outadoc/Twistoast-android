@@ -40,26 +40,27 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 
 	@Override
 	public View getView(final int position, View convertView, final ViewGroup parent) {
-		LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		TimeoScheduleObject currentItem = getItem(position);
 
-		// that's our row XML
-		View rowView = inflater.inflate(R.layout.schedule_row, parent, false);
+		if(convertView == null) {
+			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			convertView = inflater.inflate(R.layout.schedule_row, parent, false);
+		}
 
 		// get all the stuff in it that we'll have to modify
-		FrameLayout view_line_id = (FrameLayout) rowView.findViewById(R.id.view_line_id);
+		FrameLayout view_line_id = (FrameLayout) convertView.findViewById(R.id.view_line_id);
 
-		TextView lbl_line = (TextView) rowView.findViewById(R.id.lbl_line_id);
-		TextView lbl_stop = (TextView) rowView.findViewById(R.id.lbl_stop_name);
-		TextView lbl_direction = (TextView) rowView.findViewById(R.id.lbl_direction_name);
+		TextView lbl_line = (TextView) convertView.findViewById(R.id.lbl_line_id);
+		TextView lbl_stop = (TextView) convertView.findViewById(R.id.lbl_stop_name);
+		TextView lbl_direction = (TextView) convertView.findViewById(R.id.lbl_direction_name);
 
-		TextView lbl_schedule_1 = (TextView) rowView.findViewById(R.id.lbl_schedule_1);
-		TextView lbl_schedule_2 = (TextView) rowView.findViewById(R.id.lbl_schedule_2);
+		TextView lbl_schedule_1 = (TextView) convertView.findViewById(R.id.lbl_schedule_1);
+		TextView lbl_schedule_2 = (TextView) convertView.findViewById(R.id.lbl_schedule_2);
 
-		LinearLayout view_traffic_message = (LinearLayout) rowView.findViewById(R.id.view_traffic_message);
+		LinearLayout view_traffic_message = (LinearLayout) convertView.findViewById(R.id.view_traffic_message);
 
-		TextView lbl_message_title = (TextView) rowView.findViewById(R.id.lbl_message_title);
-		TextView lbl_message_body = (TextView) rowView.findViewById(R.id.lbl_message_body);
+		TextView lbl_message_title = (TextView) convertView.findViewById(R.id.lbl_message_title);
+		TextView lbl_message_body = (TextView) convertView.findViewById(R.id.lbl_message_body);
 
 		// set and make the message labels visible if necessary
 		if(currentItem.getMessageTitle() != null && currentItem.getMessageBody() != null
@@ -127,7 +128,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 
 		});
 
-		return rowView;
+		return convertView;
 	}
 
 	public void updateScheduleData() {
