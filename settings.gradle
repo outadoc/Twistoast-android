@@ -1,2 +1,2 @@
-include ':pEBBLE_KIT'
+include ':pebble_kit'
 include ':twistoast'

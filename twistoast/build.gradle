@@ -19,7 +19,7 @@ android {
 }
 
 dependencies {
-    compile project(':pEBBLE_KIT')
+    compile project(':pebble_kit')
     compile 'com.android.support:support-v4:20.+'
     compile 'com.google.android.gms:play-services:+'
 }
