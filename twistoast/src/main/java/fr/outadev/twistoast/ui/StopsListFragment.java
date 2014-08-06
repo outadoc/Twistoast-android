@@ -1,7 +1,5 @@
 package fr.outadev.twistoast.ui;
 
-import java.util.ArrayList;
-
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
@@ -31,6 +29,8 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
+import java.util.ArrayList;
+
 import fr.outadev.android.timeo.TimeoScheduleObject;
 import fr.outadev.twistoast.R;
 import fr.outadev.twistoast.database.TwistoastDatabase;
@@ -54,7 +54,7 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 		});
 
 		swipeLayout.setColorScheme(R.color.holo_blue_less_bright, android.R.color.holo_blue_bright,
-		        R.color.holo_blue_less_bright, android.R.color.holo_blue_bright);
+				R.color.holo_blue_less_bright, android.R.color.holo_blue_bright);
 
 		listView = (ListView) view.findViewById(R.id.stops_list);
 
@@ -108,7 +108,9 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 			if(hasGPS != ConnectionResult.SUCCESS) {
 				GooglePlayServicesUtil.getErrorDialog(hasGPS, getActivity(), 1).show();
 			} else {
-				AdRequest adRequest = new AdRequest.Builder().addTestDevice("4A75A651AD45105DB97E1E0ECE162D0B").build();
+				AdRequest adRequest = new AdRequest.Builder()
+						.addTestDevice("4A75A651AD45105DB97E1E0ECE162D0B")
+						.addTestDevice("29EBDB460C20FD273BADF028945C56E2").build();
 				adView.loadAd(adRequest);
 			}
 		} else {
@@ -172,8 +174,11 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 	public void refreshListFromDB(boolean resetList) {
 		// we don't want to try to refresh if we're already refreshing (causes
 		// bugs)
-		if(isRefreshing) return;
-		else isRefreshing = true;
+		if(isRefreshing) {
+			return;
+		} else {
+			isRefreshing = true;
+		}
 
 		// show the refresh animation
 		swipeLayout.setRefreshing(true);
@@ -183,7 +188,7 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 		// modified
 		if(resetList) {
 			listAdapter = new StopsListArrayAdapter(getActivity(), this, android.R.layout.simple_list_item_1,
-			        databaseHandler.getAllStops());
+					databaseHandler.getAllStops());
 			listView.setAdapter(listAdapter);
 		}
 
@@ -207,7 +212,9 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 		// reset the timer loop, and start it again
 		// this ensures the list is refreshed automatically every 60 seconds
 		handler.removeCallbacks(runnable);
-		if(!isInBackground) handler.postDelayed(runnable, REFRESH_INTERVAL);
+		if(!isInBackground) {
+			handler.postDelayed(runnable, REFRESH_INTERVAL);
+		}
 	}
 
 	@Override
@@ -242,7 +249,7 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 						// this was a triumph, say we've deleted teh
 						// stuff
 						Toast.makeText(getActivity(), getResources().getString(R.string.confirm_delete_success),
-						        Toast.LENGTH_SHORT).show();
+								Toast.LENGTH_SHORT).show();
 
 						mode.finish();
 						refreshListFromDB(true);
@@ -260,7 +267,7 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 				// correctly set the message of the dialog
 				if(listView.getCheckedItemCount() > 1) {
 					builder.setMessage(String.format(getResources().getString(R.string.confirm_delete_msg_multi),
-					        listView.getCheckedItemCount()));
+							listView.getCheckedItemCount()));
 				} else {
 					builder.setMessage(getResources().getString(R.string.confirm_delete_msg_single));
 				}
@@ -315,7 +322,7 @@ public class StopsListFragment extends Fragment implements MultiChoiceModeListen
 				break;
 			default:
 				mode.setSubtitle(String.format(getActivity().getResources().getString(R.string.multi_stops_selected),
-				        checkedCount));
+						checkedCount));
 				break;
 		}
 	}

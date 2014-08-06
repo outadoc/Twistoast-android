@@ -1,32 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:ads="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main_lin_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:fitsSystemWindows="true" >
+              xmlns:ads="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/main_lin_layout"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:fitsSystemWindows="true">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/ptr_layout"
-        android:layout_width="match_parent"
-        android:layout_height="0dip"
-        android:layout_weight="1" >
+	<android.support.v4.widget.SwipeRefreshLayout
+		android:id="@+id/ptr_layout"
+		android:layout_width="match_parent"
+		android:layout_height="0dip"
+		android:layout_weight="1">
 
-        <ListView
-            android:id="@+id/stops_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp" >
-        </ListView>
-    </android.support.v4.widget.SwipeRefreshLayout>
+		<ListView
+			android:id="@+id/stops_list"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:paddingLeft="4dp"
+			android:paddingRight="4dp">
+		</ListView>
+	</android.support.v4.widget.SwipeRefreshLayout>
 
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/adView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        ads:adSize="SMART_BANNER"
-        ads:adUnitId="@string/admob_adunitid" />
+	<com.google.android.gms.ads.AdView
+		android:id="@+id/adView"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		ads:adSize="SMART_BANNER"
+		android:visibility="gone"
+		ads:adUnitId="@string/admob_adunitid" />
 
 </LinearLayout>

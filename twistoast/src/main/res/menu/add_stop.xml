@@ -1,9 +1,10 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:id="@+id/action_ok"
-        android:enabled="false"
-        android:showAsAction="ifRoom"
-        android:title="@string/action_ok"/>
+	<item
+		android:id="@+id/action_ok"
+		android:enabled="false"
+		android:showAsAction="ifRoom"
+		android:icon="@drawable/ic_action_accept"
+		android:title="@string/action_ok" />
 
 </menu>

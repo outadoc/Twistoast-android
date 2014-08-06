@@ -1,25 +1,12 @@
 package fr.outadev.twistoast.ui;
 
-import java.util.ArrayList;
-
-import org.json.*;
-
-import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
-
-import fr.outadev.android.timeo.TimeoIDNameObject;
-import fr.outadev.android.timeo.TimeoRequestHandler;
-import fr.outadev.android.timeo.TimeoRequestObject;
-import fr.outadev.android.timeo.TimeoResultParser;
-import fr.outadev.android.timeo.TimeoScheduleObject;
-import fr.outadev.android.timeo.TimeoRequestHandler.EndPoints;
-import fr.outadev.twistoast.R;
-import fr.outadev.twistoast.database.TwistoastDatabase;
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.app.Activity;
 import android.database.sqlite.SQLiteConstraintException;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -29,8 +16,21 @@ import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.view.MenuItem;
-import android.support.v4.app.NavUtils;
+
+import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
+
+import org.json.JSONException;
+
+import java.util.ArrayList;
+
+import fr.outadev.android.timeo.TimeoIDNameObject;
+import fr.outadev.android.timeo.TimeoRequestHandler;
+import fr.outadev.android.timeo.TimeoRequestHandler.EndPoints;
+import fr.outadev.android.timeo.TimeoRequestObject;
+import fr.outadev.android.timeo.TimeoResultParser;
+import fr.outadev.android.timeo.TimeoScheduleObject;
+import fr.outadev.twistoast.R;
+import fr.outadev.twistoast.database.TwistoastDatabase;
 
 public class AddStopActivity extends Activity {
 
@@ -45,6 +45,10 @@ public class AddStopActivity extends Activity {
 		// setup everything
 		setContentView(R.layout.activity_add_stop);
 		setProgressBarIndeterminateVisibility(false);
+
+		if(getActionBar() != null) {
+			getActionBar().setDisplayHomeAsUpEnabled(true);
+		}
 
 		databaseHandler = new TwistoastDatabase(this);
 
@@ -187,7 +191,7 @@ public class AddStopActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.add_stop, menu);
-		item_next = (MenuItem) menu.findItem(R.id.action_ok);
+		item_next = menu.findItem(R.id.action_ok);
 		return true;
 	}
 
@@ -200,7 +204,7 @@ public class AddStopActivity extends Activity {
 				return true;
 			case android.R.id.home:
 				// go back
-				NavUtils.navigateUpFromSameTask(this);
+				this.finish();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
