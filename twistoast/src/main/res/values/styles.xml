@@ -20,6 +20,6 @@
     </style>
 
     <!-- ActionBar styles -->
-    <style name="ActionBarStyle" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse"></style>
+	<style name="ActionBarStyle" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse" />
 
 </resources>
