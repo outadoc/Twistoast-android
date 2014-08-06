@@ -238,9 +238,7 @@ public class StopsListFragment extends Fragment {
 			// if we want ads, check for availability and load them
 			int hasGPS = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity());
 
-			if(hasGPS != ConnectionResult.SUCCESS) {
-				GooglePlayServicesUtil.getErrorDialog(hasGPS, getActivity(), 1).show();
-			} else {
+			if(hasGPS == ConnectionResult.SUCCESS) {
 				AdRequest adRequest = new AdRequest.Builder()
 						.addTestDevice("4A75A651AD45105DB97E1E0ECE162D0B")
 						.addTestDevice("29EBDB460C20FD273BADF028945C56E2").build();
