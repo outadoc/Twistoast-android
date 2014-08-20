@@ -12,6 +12,7 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+
 import fr.outadev.twistoast.ui.NavDrawerArrayAdapter;
 import fr.outadev.twistoast.ui.PrefsFragment;
 import fr.outadev.twistoast.ui.StopsListFragment;
@@ -79,7 +80,7 @@ public class MainActivity extends Activity {
 				case 0:
 					frags[currentFragmentIndex] = new StopsListFragment();
 					break;
-				case 5:
+				case 7:
 					frags[currentFragmentIndex] = new PrefsFragment();
 					break;
 				default: {
@@ -98,6 +99,12 @@ public class MainActivity extends Activity {
 							break;
 						case 4:
 							url = getResources().getString(R.string.news_url);
+							break;
+						case 5:
+							url = getResources().getString(R.string.map_url);
+							break;
+						case 6:
+							url = getResources().getString(R.string.prices_url);
 							break;
 					}
 

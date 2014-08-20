@@ -71,7 +71,17 @@ public class WebViewFragment extends Fragment {
 		public TwistoastWebView(Context context) {
 			super(context);
 
-			setWebViewClient(new WebViewClient());
+			setWebViewClient(new WebViewClient() {
+
+				@Override
+				public void onPageFinished(WebView view, String url) {
+					super.onPageFinished(view, url);
+					String injectJS = "javascript: var a=document.getElementsByClassName(\"title-div\"); for(var i=0;i<a" +
+							".length;i++) a[i].style.display=none;";
+					view.loadUrl(injectJS);
+				}
+
+			});
 
 			getSettings().setBuiltInZoomControls(true);
 			getSettings().setDisplayZoomControls(false);

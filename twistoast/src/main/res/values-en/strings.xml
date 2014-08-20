@@ -41,7 +41,9 @@
         <item>Routes</item>
         <item>Traffic Info</item>
         <item>News</item>
-        <item>Preferences</item>
+		<item>Network Map</item>
+		<item>Pricing</item>
+		<item>Preferences</item>
     </string-array>
 
 </resources>
