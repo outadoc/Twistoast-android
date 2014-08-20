@@ -1,14 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-
-    compileSdkVersion "android-L"
+    compileSdkVersion 21
     buildToolsVersion "20.0.0"
 
     defaultConfig {
         applicationId "fr.outadev.twistoast"
-        minSdkVersion "android-L"
-        targetSdkVersion "android-L"
+        minSdkVersion 14
+        targetSdkVersion 21
         versionCode 9
         versionName "1.7"
 
