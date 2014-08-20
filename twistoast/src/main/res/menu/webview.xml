@@ -7,4 +7,10 @@
         android:showAsAction="ifRoom"
         android:title="@string/action_refresh"/>
 
+	<item
+		android:id="@+id/action_open_website"
+		android:icon="@drawable/ic_action_web_site"
+		android:showAsAction="ifRoom"
+		android:title="@string/action_open_website" />
+
 </menu>

@@ -3,6 +3,8 @@ package fr.outadev.twistoast.ui;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
 import fr.outadev.twistoast.R;
 
 public class WebViewFragment extends Fragment {
@@ -43,6 +46,11 @@ public class WebViewFragment extends Fragment {
 		switch(item.getItemId()) {
 			case R.id.action_refresh_page:
 				webView.reload();
+				return true;
+			case R.id.action_open_website:
+				Intent i = new Intent(Intent.ACTION_VIEW);
+				i.setData(Uri.parse(webView.getUrl()));
+				startActivity(i);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
