@@ -240,4 +240,21 @@ public class TimeoResultParser {
 
 	}
 
+	public TimeoTrafficAlert parseGlobalTrafficAlert(String source) {
+		if(source != null && !source.isEmpty()) {
+			try {
+				JSONObject obj = (JSONObject) new JSONTokener(source).nextValue();
+
+				if(obj.has("alerte")) {
+					JSONObject alert = obj.getJSONObject("alerte");
+					return new TimeoTrafficAlert(alert.getInt("id_alerte"), alert.getString("libelle_alerte"),
+							alert.getString("url_alerte"));
+				}
+			} catch(JSONException e) {
+				return null;
+			}
+		}
+
+		return null;
+	}
 }

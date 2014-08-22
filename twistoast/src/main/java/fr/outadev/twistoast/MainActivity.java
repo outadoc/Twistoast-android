@@ -21,17 +21,23 @@ package fr.outadev.twistoast;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
+import fr.outadev.android.timeo.TimeoRequestHandler;
+import fr.outadev.android.timeo.TimeoTrafficAlert;
 import fr.outadev.twistoast.ui.NavDrawerArrayAdapter;
 import fr.outadev.twistoast.ui.PrefsFragment;
 import fr.outadev.twistoast.ui.StopsListFragment;
@@ -105,6 +111,27 @@ public class MainActivity extends Activity {
 		if(savedInstanceState == null) {
 			loadFragmentFromDrawerPosition(currentFragmentIndex);
 		}
+
+		(new AsyncTask<Void, Void, TimeoTrafficAlert>() {
+
+			@Override
+			protected TimeoTrafficAlert doInBackground(Void... voids) {
+				return (new TimeoRequestHandler()).getGlobalTrafficAlert();
+			}
+
+			@Override
+			protected void onPostExecute(TimeoTrafficAlert alert) {
+				if(alert != null) {
+					Log.i("SkinSwitch", alert.toString());
+
+					Intent intent = new Intent(Intent.ACTION_VIEW);
+					intent.setData(Uri.parse(alert.getUrl()));
+
+
+				}
+			}
+
+		}).execute();
 	}
 
 	// Swaps fragments in the main content view

@@ -38,6 +38,18 @@ import java.util.Map;
  */
 public class TimeoRequestHandler {
 
+	private final static String BASE_URL = "http://apps.outadoc.fr/twisto-realtime/twisto-api.php";
+	private final static String BASE_PRE_HOME_URL = "http://twisto.fr/module/mobile/App2014/utils/getPreHome.php";
+
+	private final static int REQUEST_TIMEOUT = 20000;
+
+	private String lastHTTPResponse;
+	private final TimeoResultParser parser;
+
+	public enum EndPoints {
+		LINES, DIRECTIONS, STOPS, SCHEDULE
+	}
+
 	/**
 	 * Creates a Timeo request handler.
 	 */
@@ -215,6 +227,17 @@ public class TimeoRequestHandler {
 		return parser.parseList(result);
 	}
 
+	public TimeoTrafficAlert getGlobalTrafficAlert() {
+		try {
+			String response = requestWebPage(new URL(BASE_PRE_HOME_URL), new HashMap<String, String>(), true);
+			return parser.parseGlobalTrafficAlert(response);
+		} catch(MalformedURLException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
 	/**
 	 * Gets the last plain text web response that was returned by the API.
 	 *
@@ -222,16 +245,6 @@ public class TimeoRequestHandler {
 	 */
 	public String getLastHTTPResponse() {
 		return lastHTTPResponse;
-	}
-
-	private final static String BASE_URL = "http://apps.outadoc.fr/twisto-realtime/twisto-api.php";
-	private final static int REQUEST_TIMEOUT = 20000;
-
-	private String lastHTTPResponse;
-	private final TimeoResultParser parser;
-
-	public enum EndPoints {
-		LINES, DIRECTIONS, STOPS, SCHEDULE
 	}
 
 }
