@@ -1,8 +1,22 @@
+/*
+ * Twistoast - StopsListArrayAdapter
+ * Copyright (C) 2013-2014  Baptiste Candellier
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package fr.outadev.twistoast.ui;
-
-import java.util.ArrayList;
-
-import org.json.JSONException;
 
 import android.app.Activity;
 import android.content.Context;
@@ -22,6 +36,10 @@ import android.widget.Toast;
 
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
 
+import org.json.JSONException;
+
+import java.util.ArrayList;
+
 import fr.outadev.android.timeo.TimeoRequestHandler;
 import fr.outadev.android.timeo.TimeoResultParser;
 import fr.outadev.android.timeo.TimeoScheduleObject;
@@ -31,7 +49,8 @@ import fr.outadev.twistoast.database.TwistoastDatabase;
 
 public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 
-	public StopsListArrayAdapter(Context context, StopsListFragment fragment, int resource, ArrayList<TimeoScheduleObject> objects) {
+	public StopsListArrayAdapter(Context context, StopsListFragment fragment, int resource,
+	                             ArrayList<TimeoScheduleObject> objects) {
 		super(context, resource, objects);
 
 		this.fragment = fragment;
@@ -64,10 +83,10 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 
 		// set and make the message labels visible if necessary
 		if(currentItem.getMessageTitle() != null && currentItem.getMessageBody() != null
-		        && !currentItem.getMessageBody().isEmpty() && !currentItem.getMessageTitle().isEmpty()) {
+				&& !currentItem.getMessageBody().isEmpty() && !currentItem.getMessageTitle().isEmpty()) {
 			lbl_message_title.setText(currentItem.getMessageTitle());
 			lbl_message_body.setText(currentItem.getMessageBody());
-			
+
 			view_traffic_message.setVisibility(View.VISIBLE);
 		} else {
 			view_traffic_message.setVisibility(View.GONE);
@@ -90,7 +109,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 
 		// direction
 		lbl_direction.setText(getContext().getResources()
-		        .getString(R.string.direction_name, currentItem.getDirection().getName()));
+				.getString(R.string.direction_name, currentItem.getDirection().getName()));
 
 		// schedule
 		if(currentItem.getSchedule() != null && currentItem.getSchedule().length > 0 && currentItem.getSchedule()[0] != null) {
@@ -118,7 +137,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 			}
 
 		});
-		
+
 		view_traffic_message.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -152,7 +171,8 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 						@Override
 						public void run() {
 							try {
-								TimeoResultParser.displayErrorMessageFromTextResult(handler.getLastHTTPResponse(), getActivity());
+								TimeoResultParser.displayErrorMessageFromTextResult(handler.getLastHTTPResponse(),
+										getActivity());
 							} catch(JSONException e) {
 								if(!handler.getLastHTTPResponse().isEmpty()) {
 									Toast.makeText(getActivity(), handler.getLastHTTPResponse(), Toast.LENGTH_LONG).show();
@@ -179,7 +199,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 					@Override
 					public void run() {
 						Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.load_timeout),
-						        Toast.LENGTH_LONG).show();
+								Toast.LENGTH_LONG).show();
 					}
 				});
 

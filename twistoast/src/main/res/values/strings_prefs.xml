@@ -1,15 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Twistoast - strings_prefs.xml
+  ~ Copyright (C) 2013-2014  Baptiste Candellier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
 <resources>
 
-    <string name="pref_cat_pebble">Pebble</string>
-    <string name="pref_pebble_dl_title">Télécharger la watchapp Pebble</string>
-    <string name="pref_pebble_dl_sum">Vous pouvez télécharger l\'app Twistoast pour Pebble depuis le Pebble appstore.</string>
-    <string name="pref_auto_refresh_title">Rafraîchissement automatique</string>
-    <string name="pref_auto_refresh_sum">Permet de rafraîchir automatiquement les horaires toutes les minutes quand l\'app est au premier plan.</string>
-    <string name="pref_cat_stops">Liste des arrêts</string>
-    <string name="pref_cat_other">Autres</string>
-    <string name="pref_legal_title">Mentions légales</string>
-    <string name="pref_legal_sum">Twistoast est une application développée par Baptiste Candellier. &#169; outa[dev] - 2014.\nTwisto est une marque de Keolis Caen.\nouta[dev] décline toute responsabilité en cas de données erronées.</string>
+	<string name="pref_cat_pebble">Pebble</string>
+	<string name="pref_pebble_dl_title">Télécharger la watchapp Pebble</string>
+	<string name="pref_pebble_dl_sum">Vous pouvez télécharger l\'app Twistoast pour Pebble depuis le Pebble appstore.</string>
+	<string name="pref_auto_refresh_title">Rafraîchissement automatique</string>
+	<string name="pref_auto_refresh_sum">Permet de rafraîchir automatiquement les horaires toutes les minutes quand l\'app est au premier plan.</string>
+	<string name="pref_cat_stops">Liste des arrêts</string>
+	<string name="pref_cat_other">Autres</string>
+	<string name="pref_legal_title">Mentions légales</string>
+	<string name="pref_legal_sum">Twistoast est une application développée par Baptiste Candellier. &#169; outa[dev] - 2014.\nTwisto est une marque de Keolis Caen.\nouta[dev] décline toute responsabilité en cas de données erronées.</string>
 	<string name="pref_outadev_website_sum">Rendez-vous sur dev.outadoc.fr pour plus d\'applications pratiques !</string>
 	<string name="pref_outadev_website_title">Plus d\'applications</string>
 	<string name="pref_twisto_website_sum">Visitez twisto.mobi, le site mobile du réseau Twisto.</string>

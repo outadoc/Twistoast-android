@@ -1,6 +1,22 @@
-package fr.outadev.twistoast;
+/*
+ * Twistoast - TwistoastPebbleReceiver
+ * Copyright (C) 2013-2014  Baptiste Candellier
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-import java.util.UUID;
+package fr.outadev.twistoast;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -10,6 +26,8 @@ import android.util.Log;
 import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.PebbleKit.PebbleDataReceiver;
 import com.getpebble.android.kit.util.PebbleDictionary;
+
+import java.util.UUID;
 
 import fr.outadev.android.timeo.TimeoRequestHandler;
 import fr.outadev.android.timeo.TimeoScheduleObject;
@@ -53,7 +71,7 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 
 		// if we want a schedule and we have buses in the database
 		if(data.getInteger(KEY_TWISTOAST_MESSAGE_TYPE) == BUS_STOP_REQUEST && stopsCount > 0 && cm.getActiveNetworkInfo() != null
-		        && cm.getActiveNetworkInfo().isConnected()) {
+				&& cm.getActiveNetworkInfo().isConnected()) {
 			Log.d("TwistoastPebbleReceiver", "pebble request acknowledged");
 			PebbleKit.sendAckToPebble(context, transactionId);
 
@@ -91,7 +109,7 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 						String[] scheduleArray = schedule.getSchedule();
 
 						if(scheduleArray == null) {
-							schedule.setSchedule(new String[] { context.getResources().getString(R.string.loading_error) });
+							schedule.setSchedule(new String[]{context.getResources().getString(R.string.loading_error)});
 						}
 
 						Log.d("TwistoastPebbleReceiver", "got data for stop: " + schedule);
@@ -118,7 +136,7 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 		response.addString(KEY_BUS_STOP_NAME, processStringForPebble(schedule.getStop().getName(), 15));
 		response.addString(KEY_BUS_NEXT_SCHEDULE, processStringForPebble(schedule.getSchedule()[0], 15, true));
 		response.addString(KEY_BUS_SECOND_SCHEDULE,
-		        (schedule.getSchedule().length > 1) ? processStringForPebble(schedule.getSchedule()[1], 15, true) : "");
+				(schedule.getSchedule().length > 1) ? processStringForPebble(schedule.getSchedule()[1], 15, true) : "");
 
 		if(schedule.getSchedule()[0].contains("imminent") || schedule.getSchedule()[0].contains("en cours")) {
 			response.addInt8(KEY_SHOULD_VIBRATE, (byte) 1);
@@ -133,7 +151,9 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 	}
 
 	private String processStringForPebble(String str, int length, boolean stripLine) {
-		if(str == null) return "";
+		if(str == null) {
+			return "";
+		}
 
 		if(stripLine) {
 			// don't keep the part that's before the ":", it's making it less

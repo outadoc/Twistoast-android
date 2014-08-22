@@ -1,3 +1,21 @@
+/*
+ * Twistoast - AddStopActivity
+ * Copyright (C) 2013-2014  Baptiste Candellier
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package fr.outadev.twistoast.ui;
 
 import android.app.Activity;
@@ -144,10 +162,10 @@ public class AddStopActivity extends Activity {
 				item_next.setEnabled(false);
 
 				if(getCurrentLine() != null && getCurrentDirection() != null && getCurrentLine().getId() != null
-				        && getCurrentDirection().getId() != null) {
+						&& getCurrentDirection().getId() != null) {
 					lbl_direction.setText(getResources().getString(R.string.direction_name, getCurrentDirection().getName()));
 					fetchDataFromAPI(EndPoints.STOPS, (new TimeoRequestObject(getCurrentLine().getId(), getCurrentDirection()
-					        .getId())));
+							.getId())));
 				}
 			}
 
@@ -172,10 +190,11 @@ public class AddStopActivity extends Activity {
 				item_next.setEnabled(true);
 
 				if(line != null && direction != null && stop != null && line.getId() != null && direction.getId() != null
-				        && stop.getId() != null) {
+						&& stop.getId() != null) {
 					lbl_stop.setText(getResources().getString(R.string.stop_name, stop.getName()));
 
-					fetchDataFromAPI(EndPoints.SCHEDULE, (new TimeoRequestObject(line.getId(), direction.getId(), stop.getId())));
+					fetchDataFromAPI(EndPoints.SCHEDULE, (new TimeoRequestObject(line.getId(), direction.getId(),
+							stop.getId())));
 				}
 			}
 
@@ -220,20 +239,21 @@ public class AddStopActivity extends Activity {
 			databaseHandler.addStopToDatabase(line, direction, stop);
 
 			Toast.makeText(this,
-			        getResources().getString(R.string.added_toast, line.getName(), direction.getName(), stop.getName()),
-			        Toast.LENGTH_SHORT).show();
+					getResources().getString(R.string.added_toast, line.getName(), direction.getName(), stop.getName()),
+					Toast.LENGTH_SHORT).show();
 			this.finish();
 		} catch(SQLiteConstraintException e) {
 			// stop already in database
 			Toast.makeText(this,
-			        getResources().getString(R.string.error_toast, getResources().getString(R.string.add_error_duplicate)),
-			        Toast.LENGTH_LONG).show();
+					getResources().getString(R.string.error_toast, getResources().getString(R.string.add_error_duplicate)),
+					Toast.LENGTH_LONG).show();
 		} catch(IllegalArgumentException e) {
 			// one of the fields was null
 			Toast.makeText(
-			        this,
-			        getResources().getString(R.string.error_toast, getResources().getString(R.string.add_error_illegal_argument)),
-			        Toast.LENGTH_LONG).show();
+					this,
+					getResources().getString(R.string.error_toast, getResources().getString(R.string
+							.add_error_illegal_argument)),
+					Toast.LENGTH_LONG).show();
 		}
 	}
 
@@ -250,16 +270,16 @@ public class AddStopActivity extends Activity {
 					try {
 						try {
 							return handler.getSingleSchedule(new TimeoScheduleObject(getCurrentLine(), getCurrentDirection(),
-							        getCurrentStop(), null));
+									getCurrentStop(), null));
 						} catch(ClassCastException e) {
 							AddStopActivity.this.runOnUiThread(new Runnable() {
 								public void run() {
 									try {
 										TimeoResultParser.displayErrorMessageFromTextResult(handler.getLastHTTPResponse(),
-										        (Activity) AddStopActivity.this);
+												(Activity) AddStopActivity.this);
 									} catch(JSONException e) {
 										Toast.makeText(AddStopActivity.this, handler.getLastHTTPResponse(), Toast.LENGTH_LONG)
-										        .show();
+												.show();
 										e.printStackTrace();
 									}
 								}
@@ -275,8 +295,8 @@ public class AddStopActivity extends Activity {
 						AddStopActivity.this.runOnUiThread(new Runnable() {
 							public void run() {
 								Toast.makeText(AddStopActivity.this,
-								        AddStopActivity.this.getResources().getString(R.string.load_timeout), Toast.LENGTH_LONG)
-								        .show();
+										AddStopActivity.this.getResources().getString(R.string.load_timeout), Toast.LENGTH_LONG)
+										.show();
 							}
 						});
 
@@ -295,9 +315,14 @@ public class AddStopActivity extends Activity {
 
 						// set the schedule labels, if we need to
 						if(scheduleArray != null) {
-							if(scheduleArray[0] != null) lbl_schedule_1.setText("- " + scheduleArray[0]);
-							if(scheduleArray[1] != null) lbl_schedule_2.setText("- " + scheduleArray[1]);
-							else lbl_schedule_2.setText("");
+							if(scheduleArray[0] != null) {
+								lbl_schedule_1.setText("- " + scheduleArray[0]);
+							}
+							if(scheduleArray[1] != null) {
+								lbl_schedule_2.setText("- " + scheduleArray[1]);
+							} else {
+								lbl_schedule_2.setText("");
+							}
 						}
 
 						result.setSchedule(scheduleArray);
@@ -312,7 +337,7 @@ public class AddStopActivity extends Activity {
 				protected ArrayList<TimeoIDNameObject> doInBackground(Void... params) {
 
 					if(endPoint == EndPoints.LINES || endPoint == EndPoints.DIRECTIONS || endPoint == EndPoints.STOPS
-					        || endPoint == EndPoints.SCHEDULE) {
+							|| endPoint == EndPoints.SCHEDULE) {
 						try {
 							try {
 								if(endPoint == EndPoints.LINES) {
@@ -331,10 +356,11 @@ public class AddStopActivity extends Activity {
 									public void run() {
 										try {
 											TimeoResultParser.displayErrorMessageFromTextResult(handler.getLastHTTPResponse(),
-											        (Activity) AddStopActivity.this);
+													(Activity) AddStopActivity.this);
 										} catch(JSONException e) {
-											Toast.makeText(AddStopActivity.this, handler.getLastHTTPResponse(), Toast.LENGTH_LONG)
-											        .show();
+											Toast.makeText(AddStopActivity.this, handler.getLastHTTPResponse(),
+													Toast.LENGTH_LONG)
+													.show();
 											e.printStackTrace();
 										}
 									}
@@ -343,18 +369,19 @@ public class AddStopActivity extends Activity {
 						} catch(JSONException e) {
 							AddStopActivity.this.runOnUiThread(new Runnable() {
 								public void run() {
-									Toast.makeText(AddStopActivity.this, handler.getLastHTTPResponse(), Toast.LENGTH_LONG).show();
+									Toast.makeText(AddStopActivity.this, handler.getLastHTTPResponse(),
+											Toast.LENGTH_LONG).show();
 								}
 							});
 						} catch(final HttpRequestException e) {
 							AddStopActivity.this.runOnUiThread(new Runnable() {
 								public void run() {
 									Toast.makeText(AddStopActivity.this,
-									        AddStopActivity.this.getResources().getString(R.string.load_timeout),
-									        Toast.LENGTH_LONG).show();
+											AddStopActivity.this.getResources().getString(R.string.load_timeout),
+											Toast.LENGTH_LONG).show();
 								}
 							});
-							
+
 							e.printStackTrace();
 						}
 					}
@@ -368,12 +395,12 @@ public class AddStopActivity extends Activity {
 
 					// when we're done loading
 					if((endPoint == EndPoints.LINES || endPoint == EndPoints.DIRECTIONS || endPoint == EndPoints.STOPS)
-					        && spinner != null) {
+							&& spinner != null) {
 						if(result != null) {
 							// load the data into our ArrayAdapter to
 							// populate the list
 							ArrayAdapter<TimeoIDNameObject> adapter = new ArrayAdapter<TimeoIDNameObject>(AddStopActivity.this,
-							        android.R.layout.simple_spinner_item, result.toArray(new TimeoIDNameObject[result.size()]));
+									android.R.layout.simple_spinner_item, result.toArray(new TimeoIDNameObject[result.size()]));
 
 							adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 							spinner.setAdapter(adapter);
