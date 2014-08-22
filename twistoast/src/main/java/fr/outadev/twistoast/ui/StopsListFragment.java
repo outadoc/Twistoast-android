@@ -235,36 +235,38 @@ public class StopsListFragment extends Fragment {
 	public void onStart() {
 		super.onStart();
 
-		final AdView adView = (AdView) getView().findViewById(R.id.adView);
-		adView.setAdListener(new AdListener() {
+		if(getView() != null) {
+			final AdView adView = (AdView) getView().findViewById(R.id.adView);
+			adView.setAdListener(new AdListener() {
 
-			@Override
-			public void onAdFailedToLoad(int errorCode) {
+				@Override
+				public void onAdFailedToLoad(int errorCode) {
+					adView.setVisibility(View.GONE);
+					super.onAdFailedToLoad(errorCode);
+				}
+
+				@Override
+				public void onAdLoaded() {
+					adView.setVisibility(View.VISIBLE);
+					super.onAdLoaded();
+				}
+
+			});
+
+			if(getActivity().getResources().getBoolean(R.bool.enableAds)) {
+				// if we want ads, check for availability and load them
+				int hasGPS = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity());
+
+				if(hasGPS == ConnectionResult.SUCCESS) {
+					AdRequest adRequest = new AdRequest.Builder()
+							.addTestDevice("4A75A651AD45105DB97E1E0ECE162D0B")
+							.addTestDevice("29EBDB460C20FD273BADF028945C56E2").build();
+					adView.loadAd(adRequest);
+				}
+			} else {
+				// if we don't want ads, remove the view from the layout
 				adView.setVisibility(View.GONE);
-				super.onAdFailedToLoad(errorCode);
 			}
-
-			@Override
-			public void onAdLoaded() {
-				adView.setVisibility(View.VISIBLE);
-				super.onAdLoaded();
-			}
-
-		});
-
-		if(getActivity().getResources().getBoolean(R.bool.enableAds)) {
-			// if we want ads, check for availability and load them
-			int hasGPS = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity());
-
-			if(hasGPS == ConnectionResult.SUCCESS) {
-				AdRequest adRequest = new AdRequest.Builder()
-						.addTestDevice("4A75A651AD45105DB97E1E0ECE162D0B")
-						.addTestDevice("29EBDB460C20FD273BADF028945C56E2").build();
-				adView.loadAd(adRequest);
-			}
-		} else {
-			// if we don't want ads, remove the view from the layout
-			adView.setVisibility(View.GONE);
 		}
 
 		refreshListFromDB(true);

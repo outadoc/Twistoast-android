@@ -336,8 +336,7 @@ public class AddStopActivity extends Activity {
 				@Override
 				protected ArrayList<TimeoIDNameObject> doInBackground(Void... params) {
 
-					if(endPoint == EndPoints.LINES || endPoint == EndPoints.DIRECTIONS || endPoint == EndPoints.STOPS
-							|| endPoint == EndPoints.SCHEDULE) {
+					if(endPoint == EndPoints.LINES || endPoint == EndPoints.DIRECTIONS || endPoint == EndPoints.STOPS) {
 						try {
 							try {
 								if(endPoint == EndPoints.LINES) {
@@ -346,7 +345,7 @@ public class AddStopActivity extends Activity {
 								} else if(endPoint == EndPoints.DIRECTIONS) {
 									spinner = spinDirection;
 									return handler.getDirections(data);
-								} else if(endPoint == EndPoints.STOPS) {
+								} else {
 									spinner = spinStop;
 									return handler.getStops(data);
 								}

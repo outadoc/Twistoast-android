@@ -92,7 +92,7 @@ public class TimeoResultParser {
 					schedule.setMessageTitle(messageObject.getString("title").trim());
 					schedule.setMessageBody(messageObject.getString("body").trim());
 				}
-			} catch(JSONException e) {
+			} catch(JSONException ignored) {
 
 			}
 		}

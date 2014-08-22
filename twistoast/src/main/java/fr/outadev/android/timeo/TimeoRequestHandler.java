@@ -86,8 +86,8 @@ public class TimeoRequestHandler {
 		@SuppressWarnings("unchecked")
 		ArrayList<TimeoScheduleObject> newStopsList = (ArrayList<TimeoScheduleObject>) stopsList.clone();
 
-		String cookie = new String();
-		String result = new String();
+		String cookie = "";
+		String result;
 
 		// craft a cookie in the form
 		// STOP_ID|LINE_ID|DIRECTION_ID;STOP_ID|LINE_ID|DIRECTION_ID;...

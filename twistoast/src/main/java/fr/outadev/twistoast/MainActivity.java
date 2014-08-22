@@ -23,6 +23,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -38,18 +39,29 @@ import fr.outadev.twistoast.ui.WebViewFragment;
 
 public class MainActivity extends Activity {
 
+	private String[] drawerEntries;
+	private DrawerLayout drawerLayout;
+	private ActionBarDrawerToggle drawerToggle;
+	private ListView drawerList;
+
+	private CharSequence drawerTitle;
+	private CharSequence actionBarTitle;
+
+	private int currentFragmentIndex;
+	private Fragment frags[];
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+
 		drawerEntries = getResources().getStringArray(R.array.drawer_entries);
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		drawerList = (ListView) findViewById(R.id.left_drawer);
 		drawerTitle = getTitle();
-		
+
 		frags = new Fragment[drawerEntries.length];
-		
+
 		if(savedInstanceState != null) {
 			currentFragmentIndex = savedInstanceState.getInt("key_current_frag");
 		} else {
@@ -57,17 +69,21 @@ public class MainActivity extends Activity {
 		}
 
 		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer, R.string.action_ok,
-		        R.string.action_delete) {
+				R.string.action_delete) {
 
 			@Override
-            public void onDrawerClosed(View view) {
-				getActionBar().setTitle(actionBarTitle);
+			public void onDrawerClosed(View view) {
+				if(getActionBar() != null) {
+					getActionBar().setTitle(actionBarTitle);
+				}
 				super.onDrawerClosed(view);
 			}
 
 			@Override
-            public void onDrawerOpened(View drawerView) {
-				getActionBar().setTitle(drawerTitle);
+			public void onDrawerOpened(View drawerView) {
+				if(getActionBar() != null) {
+					getActionBar().setTitle(drawerTitle);
+				}
 				super.onDrawerOpened(drawerView);
 			}
 		};
@@ -75,15 +91,17 @@ public class MainActivity extends Activity {
 		drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 		drawerLayout.setDrawerListener(drawerToggle);
 
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActionBar().setHomeButtonEnabled(true);
-		
+		if(getActionBar() != null) {
+			getActionBar().setDisplayHomeAsUpEnabled(true);
+			getActionBar().setHomeButtonEnabled(true);
+		}
+
 		actionBarTitle = drawerEntries[currentFragmentIndex];
 		setTitle(actionBarTitle);
-		
+
 		drawerList.setAdapter(new NavDrawerArrayAdapter(this, R.layout.drawer_list_item, drawerEntries, currentFragmentIndex));
 		drawerList.setItemChecked(currentFragmentIndex, true);
-		
+
 		if(savedInstanceState == null) {
 			loadFragmentFromDrawerPosition(currentFragmentIndex);
 		}
@@ -102,7 +120,7 @@ public class MainActivity extends Activity {
 					frags[currentFragmentIndex] = new PrefsFragment();
 					break;
 				default: {
-					String url = new String();
+					String url = "";
 					frags[currentFragmentIndex] = new WebViewFragment();
 
 					switch(position) {
@@ -147,18 +165,21 @@ public class MainActivity extends Activity {
 
 	@Override
 	public void onBackPressed() {
-		if(frags[currentFragmentIndex] instanceof WebViewFragment && ((WebViewFragment) frags[currentFragmentIndex]).canGoBack()) {
+		if(frags[currentFragmentIndex] instanceof WebViewFragment && ((WebViewFragment) frags[currentFragmentIndex]).canGoBack
+				()) {
 			((WebViewFragment) frags[currentFragmentIndex]).goBack();
 		} else if(currentFragmentIndex == 0) {
 			super.onBackPressed();
 		} else {
-			drawerLayout.openDrawer(Gravity.LEFT);
+			drawerLayout.openDrawer(Gravity.START);
 		}
 	}
 
 	public void checkDrawerItem(int position) {
 		actionBarTitle = drawerEntries[position];
-		getActionBar().setTitle(actionBarTitle);
+		if(getActionBar() != null) {
+			getActionBar().setTitle(actionBarTitle);
+		}
 
 		drawerList.setItemChecked(position, true);
 		((NavDrawerArrayAdapter) drawerList.getAdapter()).setSelectedItemIndex(position);
@@ -186,19 +207,8 @@ public class MainActivity extends Activity {
 	}
 
 	@Override
-    protected void onSaveInstanceState(Bundle outState) {
-	    super.onSaveInstanceState(outState);
-	    outState.putInt("key_current_frag", currentFragmentIndex);
-    }
-
-	private String[] drawerEntries;
-	private DrawerLayout drawerLayout;
-	private ActionBarDrawerToggle drawerToggle;
-	private ListView drawerList;
-
-	private CharSequence drawerTitle;
-	private CharSequence actionBarTitle;
-
-	private int currentFragmentIndex;
-	private Fragment frags[];
+	protected void onSaveInstanceState(@NonNull Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putInt("key_current_frag", currentFragmentIndex);
+	}
 }
