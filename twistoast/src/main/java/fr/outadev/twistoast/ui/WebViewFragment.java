@@ -76,12 +76,16 @@ public class WebViewFragment extends Fragment {
 				@Override
 				public void onPageFinished(WebView view, String url) {
 					super.onPageFinished(view, url);
-					String injectJS = "javascript: var a=document.getElementsByClassName(\"title-div\"); for(var i=0;i<a" +
-							".length;i++) a[i].style.display=none;";
-					view.loadUrl(injectJS);
+					view.loadUrl("javascript: var a = document.getElementsByClassName(\"title-div\");");
+					view.loadUrl("javascript: var b = document.getElementsByClassName(\"contenu\");");
+					view.loadUrl("javascript:" + Uri.encode("for(var i = a.length-1; i >= 0; i--) { (b[0] != null) ? b[0]" +
+							".removeChild(a[i]) : " +
+							"document.body.removeChild(a[i]); }"));
 				}
 
 			});
+
+			setWebContentsDebuggingEnabled(true);
 
 			getSettings().setBuiltInZoomControls(true);
 			getSettings().setDisplayZoomControls(false);

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="timetables_url">http://dev.actigraph.fr/actipages/twisto/module/mobile/App/horairesalarret/?app=pivk-1.3-2014</string>
-	<string name="routes_url">http://twisto.mobi/module/mobile/App2014/itineraire-android-4.x-dev/iti_formulaire.php</string>
-	<string name="traffic_url">http://twisto.mobi/module/mobile/App2014/trafic/</string>
-	<string name="news_url">http://twisto.mobi/module/mobile/App2014/actus/</string>
-	<string name="prices_url">http://twisto.fr/module/mobile/App2014/tarifs/index.php?ios=true</string>
+	<string name="routes_url">http://twisto.mobi/module/mobile/App/itineraire-android-4.x-dev/iti_formulaire.php</string>
+	<string name="traffic_url">http://twisto.mobi/module/mobile/App/trafic/</string>
+	<string name="news_url">http://twisto.mobi/module/mobile/App/actus/</string>
+	<string name="prices_url">http://twisto.fr/module/mobile/App2014/tarifs/</string>
 	<string name="map_url">http://twisto.fr/module/mobile/App2014/leaflet/?ios=true</string>
 </resources>
