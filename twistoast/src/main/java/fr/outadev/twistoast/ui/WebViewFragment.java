@@ -56,11 +56,11 @@ public class WebViewFragment extends Fragment {
 				return super.onOptionsItemSelected(item);
 		}
 	}
-	
+
 	public boolean canGoBack() {
 		return webView.canGoBack();
 	}
-	
+
 	public void goBack() {
 		webView.goBack();
 	}
@@ -84,8 +84,6 @@ public class WebViewFragment extends Fragment {
 				}
 
 			});
-
-			setWebContentsDebuggingEnabled(true);
 
 			getSettings().setBuiltInZoomControls(true);
 			getSettings().setDisplayZoomControls(false);
