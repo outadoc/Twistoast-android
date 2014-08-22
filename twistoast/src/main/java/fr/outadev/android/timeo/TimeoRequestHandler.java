@@ -41,7 +41,7 @@ public class TimeoRequestHandler {
 	private final static String BASE_URL = "http://apps.outadoc.fr/twisto-realtime/twisto-api.php";
 	private final static String BASE_PRE_HOME_URL = "http://twisto.fr/module/mobile/App2014/utils/getPreHome.php";
 
-	private final static int REQUEST_TIMEOUT = 20000;
+	private final static int REQUEST_TIMEOUT = 10000;
 
 	private String lastHTTPResponse;
 	private final TimeoResultParser parser;
