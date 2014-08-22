@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Twistoast - traffic_alert.xml
+  ~ Copyright (C) 2013-2014  Baptiste Candellier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/view_global_traffic_alert"
+	android:orientation="horizontal"
+	android:layout_width="match_parent"
+	android:layout_height="40dp"
+	android:padding="5dp"
+	android:visibility="gone"
+	android:background="@android:color/holo_orange_dark">
+
+	<ImageView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:src="@drawable/traffic_cone"
+		android:padding="2dp" />
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:layout_marginLeft="7dp"
+		android:layout_marginStart="7dp"
+		android:gravity="center"
+		android:text="@string/traffic_info"
+		android:textSize="20sp" />
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:gravity="center"
+		android:layout_marginLeft="10dp"
+		android:layout_marginStart="10dp"
+		android:id="@+id/lbl_traffic_info_string"
+		android:textColor="#ffba6414"
+		android:textSize="19sp"
+		android:singleLine="true" />
+
+</LinearLayout>

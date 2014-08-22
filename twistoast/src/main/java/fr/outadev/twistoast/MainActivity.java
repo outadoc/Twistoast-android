@@ -35,6 +35,7 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import fr.outadev.android.timeo.TimeoRequestHandler;
 import fr.outadev.android.timeo.TimeoTrafficAlert;
@@ -121,13 +122,28 @@ public class MainActivity extends Activity {
 
 			@Override
 			protected void onPostExecute(TimeoTrafficAlert alert) {
+				View trafficView = findViewById(R.id.view_global_traffic_alert);
+				TextView trafficLabel = (TextView) findViewById(R.id.lbl_traffic_info_string);
+
 				if(alert != null) {
 					Log.i("SkinSwitch", alert.toString());
+					final String url = alert.getUrl();
 
-					Intent intent = new Intent(Intent.ACTION_VIEW);
-					intent.setData(Uri.parse(alert.getUrl()));
+					trafficView.setOnClickListener(new View.OnClickListener() {
 
+						@Override
+						public void onClick(View view) {
+							Intent intent = new Intent(Intent.ACTION_VIEW);
+							intent.setData(Uri.parse(url));
+							startActivity(intent);
+						}
 
+					});
+
+					trafficLabel.setText(alert.getLabel().replace("Info Trafic", "").trim());
+					trafficView.setVisibility(View.VISIBLE);
+				} else {
+					trafficView.setVisibility(View.GONE);
 				}
 			}
 

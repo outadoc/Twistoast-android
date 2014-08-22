@@ -26,6 +26,8 @@
 	android:orientation="vertical"
 	android:fitsSystemWindows="true">
 
+	<include layout="@layout/traffic_alert" />
+
 	<android.support.v4.widget.SwipeRefreshLayout
 		android:id="@+id/ptr_layout"
 		android:layout_width="match_parent"

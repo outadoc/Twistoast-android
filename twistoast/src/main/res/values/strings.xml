@@ -52,6 +52,7 @@
 	<string name="add_error_illegal_argument">Quelque-chose ne va pas, vérifiez les valeurs de la ligne, direction et arrêt.</string>
 	<string name="no_content">Pas d\'arrêts pour l\'instant.</string>
 	<string name="action_open_website">Ouvrir dans le navigateur</string>
+	<string name="traffic_info">Info trafic</string>
 
 	<string-array name="drawer_entries">
 		<item>Temps réel</item>
