@@ -95,13 +95,13 @@ public class MainActivity extends Activity {
 							url = getResources().getString(R.string.routes_url);
 							break;
 						case 3:
-							url = getResources().getString(R.string.traffic_url);
+							url = getResources().getString(R.string.map_url);
 							break;
 						case 4:
-							url = getResources().getString(R.string.news_url);
+							url = getResources().getString(R.string.traffic_url);
 							break;
 						case 5:
-							url = getResources().getString(R.string.map_url);
+							url = getResources().getString(R.string.news_url);
 							break;
 						case 6:
 							url = getResources().getString(R.string.prices_url);

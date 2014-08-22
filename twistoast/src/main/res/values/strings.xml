@@ -37,11 +37,11 @@
 
 	<string-array name="drawer_entries">
 		<item>Temps réel</item>
-		<item>Horaires</item>
+		<item>Horaires à l\'arrêt</item>
 		<item>Itinéraires</item>
+		<item>Plan du réseau</item>
 		<item>Info trafic</item>
 		<item>Actualités</item>
-		<item>Plan du réseau</item>
 		<item>Tarifs</item>
 		<item>Paramètres</item>
 	</string-array>
