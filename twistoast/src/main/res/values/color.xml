@@ -21,5 +21,8 @@
 
 	<color name="item_pressed_color">#e3e3e3</color>
 	<color name="holo_blue_less_bright">#33B5E5</color>
+	<color name="twisto_primary">#00A885</color>
+	<color name="twisto_secondary">#FCB840</color>
+	<color name="colorPrimary">#0171BB</color>
 
 </resources>

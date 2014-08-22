@@ -93,8 +93,8 @@ public class StopsListFragment extends Fragment {
 
 		});
 
-		swipeLayout.setColorSchemeResources(R.color.holo_blue_less_bright, android.R.color.holo_blue_bright,
-				R.color.holo_blue_less_bright, android.R.color.holo_blue_bright);
+		swipeLayout.setColorSchemeResources(R.color.twisto_primary, R.color.twisto_secondary,
+				R.color.twisto_primary, R.color.twisto_secondary);
 
 		listView = (ListView) view.findViewById(R.id.stops_list);
 
