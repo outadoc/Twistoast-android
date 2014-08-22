@@ -52,6 +52,21 @@ import fr.outadev.twistoast.database.TwistoastDatabase;
 
 public class AddStopActivity extends Activity {
 
+	private Spinner spinLine;
+	private Spinner spinDirection;
+	private Spinner spinStop;
+
+	private TextView lbl_line;
+	private FrameLayout view_line_id;
+	private TextView lbl_stop;
+	private TextView lbl_direction;
+	private TextView lbl_schedule_1;
+	private TextView lbl_schedule_2;
+
+	private MenuItem item_next;
+
+	TwistoastDatabase databaseHandler;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -117,7 +132,9 @@ public class AddStopActivity extends Activity {
 				spinDirection.setEnabled(false);
 				spinStop.setEnabled(false);
 
-				item_next.setEnabled(false);
+				if(item_next != null) {
+					item_next.setEnabled(false);
+				}
 
 				// get the selected line
 				TimeoIDNameObject item = getCurrentLine();
@@ -355,7 +372,7 @@ public class AddStopActivity extends Activity {
 									public void run() {
 										try {
 											TimeoResultParser.displayErrorMessageFromTextResult(handler.getLastHTTPResponse(),
-													(Activity) AddStopActivity.this);
+													AddStopActivity.this);
 										} catch(JSONException e) {
 											Toast.makeText(AddStopActivity.this, handler.getLastHTTPResponse(),
 													Toast.LENGTH_LONG)
@@ -404,8 +421,6 @@ public class AddStopActivity extends Activity {
 							adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 							spinner.setAdapter(adapter);
 							spinner.setEnabled(true);
-						} else {
-							Toast.makeText(AddStopActivity.this, handler.getLastHTTPResponse(), Toast.LENGTH_LONG).show();
 						}
 					}
 				}
@@ -427,20 +442,5 @@ public class AddStopActivity extends Activity {
 	public TimeoIDNameObject getCurrentLine() {
 		return (TimeoIDNameObject) spinLine.getItemAtPosition(spinLine.getSelectedItemPosition());
 	}
-
-	private Spinner spinLine;
-	private Spinner spinDirection;
-	private Spinner spinStop;
-
-	private TextView lbl_line;
-	private FrameLayout view_line_id;
-	private TextView lbl_stop;
-	private TextView lbl_direction;
-	private TextView lbl_schedule_1;
-	private TextView lbl_schedule_2;
-
-	private MenuItem item_next;
-
-	TwistoastDatabase databaseHandler;
 
 }

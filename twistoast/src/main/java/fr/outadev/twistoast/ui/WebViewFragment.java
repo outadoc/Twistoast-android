@@ -37,6 +37,8 @@ import fr.outadev.twistoast.R;
 
 public class WebViewFragment extends Fragment {
 
+	private WebView webView;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		webView = new TwistoastWebView(getActivity());
@@ -109,7 +111,5 @@ public class WebViewFragment extends Fragment {
 		}
 
 	}
-
-	private WebView webView;
 
 }

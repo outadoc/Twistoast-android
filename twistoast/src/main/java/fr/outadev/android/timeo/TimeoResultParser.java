@@ -116,7 +116,7 @@ public class TimeoResultParser {
 			JSONArray resultArray = (JSONArray) new JSONTokener(source).nextValue();
 
 			for(int i = 0; i < resultArray.length(); i++) {
-				if(resultArray != null && resultArray.getJSONObject(i) != null) {
+				if(resultArray.getJSONObject(i) != null) {
 
 					String sched[] = new String[2];
 					String messageTitle = null;
@@ -137,7 +137,7 @@ public class TimeoResultParser {
 							messageTitle = messageObject.getString("title").trim();
 							messageBody = messageObject.getString("body").trim();
 						}
-					} catch(JSONException e) {
+					} catch(JSONException ignored) {
 
 					}
 

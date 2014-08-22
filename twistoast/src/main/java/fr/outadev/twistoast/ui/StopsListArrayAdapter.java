@@ -49,6 +49,9 @@ import fr.outadev.twistoast.database.TwistoastDatabase;
 
 public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 
+	private final StopsListFragment fragment;
+	private ArrayList<TimeoScheduleObject> objects;
+
 	public StopsListArrayAdapter(Context context, StopsListFragment fragment, int resource,
 	                             ArrayList<TimeoScheduleObject> objects) {
 		super(context, resource, objects);
@@ -228,8 +231,5 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 			return null;
 		}
 	}
-
-	private final StopsListFragment fragment;
-	private ArrayList<TimeoScheduleObject> objects;
 
 }

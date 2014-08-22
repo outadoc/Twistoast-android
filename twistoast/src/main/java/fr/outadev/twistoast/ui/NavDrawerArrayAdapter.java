@@ -32,6 +32,8 @@ import fr.outadev.twistoast.R;
 
 public class NavDrawerArrayAdapter extends ArrayAdapter<String> {
 
+	private int selectedItemIndex;
+
 	public NavDrawerArrayAdapter(Context context, int resource, String[] objects, int selectedItemIndex) {
 		super(context, resource, objects);
 		this.selectedItemIndex = selectedItemIndex;
@@ -83,7 +85,5 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<String> {
 		this.selectedItemIndex = selectedItemIndex;
 		notifyDataSetChanged();
 	}
-
-	private int selectedItemIndex;
 
 }
