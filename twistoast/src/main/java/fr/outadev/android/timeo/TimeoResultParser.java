@@ -190,7 +190,7 @@ public class TimeoResultParser {
 					String id = resultArray.optJSONObject(i).getString("id");
 					String name = resultArray.optJSONObject(i).getString("name");
 
-					if(!id.equals("0")) {
+					if(!id.equals("0") && !id.equals("GP") && !id.equals("GPR")) {
 						TimeoIDNameObject item = new TimeoIDNameObject(id, name);
 						dataList.add(item);
 					}
