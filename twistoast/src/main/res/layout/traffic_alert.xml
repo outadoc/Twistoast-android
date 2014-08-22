@@ -26,13 +26,14 @@
 	android:layout_height="40dp"
 	android:padding="5dp"
 	android:visibility="gone"
-	android:background="@android:color/holo_orange_dark">
+	android:background="#F5A400">
 
 	<ImageView
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:src="@drawable/traffic_cone"
-		android:padding="2dp" />
+		android:padding="2dp"
+		android:tint="@android:color/white" />
 
 	<TextView
 		android:layout_width="wrap_content"
@@ -41,7 +42,8 @@
 		android:layout_marginStart="7dp"
 		android:gravity="center"
 		android:text="@string/traffic_info"
-		android:textSize="20sp" />
+		android:textSize="20sp"
+		android:textColor="#FBDB9B" />
 
 	<TextView
 		android:layout_width="wrap_content"
@@ -51,7 +53,7 @@
 		android:layout_marginStart="10dp"
 		android:id="@+id/lbl_traffic_info_string"
 		android:textColor="#ffba6414"
-		android:textSize="19sp"
+		android:textSize="17sp"
 		android:singleLine="true" />
 
 </LinearLayout>

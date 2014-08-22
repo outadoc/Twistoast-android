@@ -57,6 +57,8 @@ public class MainActivity extends Activity {
 	private int currentFragmentIndex;
 	private Fragment frags[];
 
+	private TimeoTrafficAlert trafficAlert;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -113,41 +115,13 @@ public class MainActivity extends Activity {
 			loadFragmentFromDrawerPosition(currentFragmentIndex);
 		}
 
-		(new AsyncTask<Void, Void, TimeoTrafficAlert>() {
+		checkForGlobalTrafficInfo();
+	}
 
-			@Override
-			protected TimeoTrafficAlert doInBackground(Void... voids) {
-				return (new TimeoRequestHandler()).getGlobalTrafficAlert();
-			}
-
-			@Override
-			protected void onPostExecute(TimeoTrafficAlert alert) {
-				View trafficView = findViewById(R.id.view_global_traffic_alert);
-				TextView trafficLabel = (TextView) findViewById(R.id.lbl_traffic_info_string);
-
-				if(alert != null) {
-					Log.i("SkinSwitch", alert.toString());
-					final String url = alert.getUrl();
-
-					trafficView.setOnClickListener(new View.OnClickListener() {
-
-						@Override
-						public void onClick(View view) {
-							Intent intent = new Intent(Intent.ACTION_VIEW);
-							intent.setData(Uri.parse(url));
-							startActivity(intent);
-						}
-
-					});
-
-					trafficLabel.setText(alert.getLabel().replace("Info Trafic", "").trim());
-					trafficView.setVisibility(View.VISIBLE);
-				} else {
-					trafficView.setVisibility(View.GONE);
-				}
-			}
-
-		}).execute();
+	@Override
+	protected void onStart() {
+		super.onStart();
+		displayGlobalTrafficInfo();
 	}
 
 	// Swaps fragments in the main content view
@@ -203,7 +177,6 @@ public class MainActivity extends Activity {
 		// Highlight the selected item, update the title, and close the drawer
 		checkDrawerItem(currentFragmentIndex);
 		drawerLayout.closeDrawer(drawerList);
-
 	}
 
 	@Override
@@ -254,4 +227,48 @@ public class MainActivity extends Activity {
 		super.onSaveInstanceState(outState);
 		outState.putInt("key_current_frag", currentFragmentIndex);
 	}
+
+	private void checkForGlobalTrafficInfo() {
+		(new AsyncTask<Void, Void, TimeoTrafficAlert>() {
+
+			@Override
+			protected TimeoTrafficAlert doInBackground(Void... voids) {
+				return (new TimeoRequestHandler()).getGlobalTrafficAlert();
+			}
+
+			@Override
+			protected void onPostExecute(TimeoTrafficAlert alert) {
+				trafficAlert = alert;
+				displayGlobalTrafficInfo();
+			}
+
+		}).execute();
+	}
+
+	private void displayGlobalTrafficInfo() {
+		View trafficView = findViewById(R.id.view_global_traffic_alert);
+		TextView trafficLabel = (TextView) findViewById(R.id.lbl_traffic_info_string);
+
+		if(trafficAlert != null && trafficView != null && trafficLabel != null) {
+			Log.i("SkinSwitch", trafficAlert.toString());
+			final String url = trafficAlert.getUrl();
+
+			trafficView.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View view) {
+					Intent intent = new Intent(Intent.ACTION_VIEW);
+					intent.setData(Uri.parse(url));
+					startActivity(intent);
+				}
+
+			});
+
+			trafficLabel.setText(trafficAlert.getLabel().replace("Info Trafic", "").trim());
+			trafficView.setVisibility(View.VISIBLE);
+		} else if(trafficView != null) {
+			trafficView.setVisibility(View.GONE);
+		}
+	}
+
 }
