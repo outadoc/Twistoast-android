@@ -77,7 +77,7 @@ public class MainActivity extends Activity {
 			currentFragmentIndex = 0;
 		}
 
-		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer, R.string.action_ok,
+		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_navigation_drawer, R.string.action_ok,
 				R.string.action_delete) {
 
 			@Override
