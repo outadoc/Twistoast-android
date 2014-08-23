@@ -39,6 +39,10 @@ public class TimeoIDNameObject {
 		this.name = name;
 	}
 
+	public TimeoIDNameObject() {
+
+	}
+
 	public String getId() {
 		return id;
 	}

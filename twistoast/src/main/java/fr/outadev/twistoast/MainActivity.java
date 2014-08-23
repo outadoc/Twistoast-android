@@ -66,7 +66,6 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 
 		new TimeoTest();
-		System.exit(0);
 
 		drawerEntries = getResources().getStringArray(R.array.drawer_entries);
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);

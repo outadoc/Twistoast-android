@@ -18,6 +18,8 @@
 
 package fr.outadev.android.timeo;
 
+import android.util.Xml;
+
 import com.github.kevinsawicki.http.HttpRequest;
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
 
@@ -25,7 +27,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -76,16 +82,73 @@ public class KeolisRequestHandler {
 	}
 
 
-	public ArrayList<TimeoLine> getLines() throws HttpRequestException {
+	public List<TimeoLine> getLines() throws HttpRequestException, XmlPullParserException, IOException {
 		String params = "xml=1";
 		String result = requestWebPage(BASE_URL, params, true);
 
-		//TODO: parsing
+		XmlPullParser parser = getParserForXMLString(result);
 
-		return null;
+		if(parser == null) {
+			return null;
+		}
+
+		int eventType = parser.getEventType();
+
+		TimeoLine tmpLine = null;
+		TimeoIDNameObject tmpDirection;
+
+		ArrayList<TimeoLine> lines = new ArrayList<TimeoLine>();
+
+		String text = null;
+		boolean isInLineTag = false;
+
+		while(eventType != XmlPullParser.END_DOCUMENT) {
+			String tagname = parser.getName();
+
+			switch(eventType) {
+				case XmlPullParser.START_TAG:
+
+					if(tagname.equalsIgnoreCase("ligne")) {
+						isInLineTag = true;
+						tmpDirection = new TimeoIDNameObject();
+						tmpLine = new TimeoLine(new TimeoIDNameObject(), tmpDirection);
+					} else if(tagname.equalsIgnoreCase("arret")) {
+						isInLineTag = false;
+					}
+
+					break;
+
+				case XmlPullParser.TEXT:
+					text = parser.getText();
+					break;
+
+				case XmlPullParser.END_TAG:
+					if(tagname.equalsIgnoreCase("ligne")) {
+						// add employee object to list
+						lines.add(tmpLine);
+					} else if(tmpLine != null && tagname.equalsIgnoreCase("code") && isInLineTag) {
+						tmpLine.getDetails().setId(text);
+					} else if(tmpLine != null && tagname.equalsIgnoreCase("nom") && isInLineTag) {
+						tmpLine.getDetails().setName(smartCapitalize(text));
+					} else if(tmpLine != null && tagname.equalsIgnoreCase("sens") && isInLineTag) {
+						tmpLine.getDirection().setId(text);
+					} else if(tmpLine != null && tagname.equalsIgnoreCase("vers") && isInLineTag) {
+						tmpLine.getDirection().setName(smartCapitalize(text));
+					}
+
+					break;
+
+				default:
+					break;
+			}
+
+			eventType = parser.next();
+		}
+
+		return lines;
 	}
 
-	public ArrayList<TimeoIDNameObject> getStops(TimeoLine line) throws HttpRequestException {
+	public List<TimeoIDNameObject> getStops(TimeoLine line) throws HttpRequestException {
 		String params = "xml=1&ligne=" + line.getDetails().getId() + "&sens=" + line.getDirection().getId();
 		String result = requestWebPage(BASE_URL, params, true);
 
@@ -186,6 +249,24 @@ public class KeolisRequestHandler {
 		}
 
 		return newStr;
+	}
+
+	public XmlPullParser getParserForXMLString(String xml) {
+		try {
+			XmlPullParser parser = Xml.newPullParser();
+
+			parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+			parser.setInput(new StringReader(xml));
+			parser.nextTag();
+
+			return parser;
+		} catch(XmlPullParserException e) {
+			e.printStackTrace();
+			return null;
+		} catch(IOException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	/**

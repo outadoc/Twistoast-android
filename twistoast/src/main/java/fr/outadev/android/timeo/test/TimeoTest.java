@@ -20,7 +20,13 @@ package fr.outadev.android.timeo.test;
 
 import android.os.AsyncTask;
 
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
+import java.util.List;
+
 import fr.outadev.android.timeo.KeolisRequestHandler;
+import fr.outadev.android.timeo.model.TimeoLine;
 
 public class TimeoTest {
 
@@ -36,7 +42,18 @@ public class TimeoTest {
 
 			@Override
 			protected Void doInBackground(Void... voids) {
-				handler.getLines();
+				try {
+					List<TimeoLine> lines = handler.getLines();
+
+					for(TimeoLine line : lines) {
+						System.out.println(line.getDetails());
+					}
+
+				} catch(XmlPullParserException e) {
+					e.printStackTrace();
+				} catch(IOException e) {
+					e.printStackTrace();
+				}
 				return null;
 			}
 

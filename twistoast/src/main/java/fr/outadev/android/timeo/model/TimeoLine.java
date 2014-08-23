@@ -31,6 +31,10 @@ public class TimeoLine {
 		this.direction = direction;
 	}
 
+	public TimeoLine() {
+
+	}
+
 	public TimeoIDNameObject getDetails() {
 		return line;
 	}
