@@ -277,7 +277,7 @@ public class KeolisRequestHandler {
 				"mjc"};
 
 		//explode the string with both spaces and apostrophes
-		String[] words = str.split("( |')");
+		String[] words = str.split("( |\\-|')");
 
 		for(String word : words) {
 			if(Arrays.asList(determinants).contains(word)) {
