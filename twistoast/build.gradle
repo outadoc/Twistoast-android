@@ -43,5 +43,6 @@ dependencies {
     compile project(':pebble_kit')
     compile 'com.android.support:support-v4:20.+'
     compile 'com.google.android.gms:play-services:+'
+    compile 'org.apache.commons:commons-lang3:3.3.2'
     compile 'com.github.kevinsawicki:http-request:5.6'
 }

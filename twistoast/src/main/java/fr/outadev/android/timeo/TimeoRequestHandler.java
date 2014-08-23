@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,7 +36,9 @@ import org.json.JSONTokener;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import fr.outadev.twistoast.R;
@@ -100,32 +103,36 @@ public class TimeoRequestHandler {
 	 * @see TimeoRequestObject
 	 * @see ArrayList
 	 */
+	@SuppressWarnings("unchecked")
 	public ArrayList<TimeoScheduleObject> getMultipleSchedules(Context context, ArrayList<TimeoScheduleObject> stopsList)
 			throws ClassCastException, JSONException, HttpRequestException {
-		@SuppressWarnings("unchecked")
-		ArrayList<TimeoScheduleObject> newStopsList = (ArrayList<TimeoScheduleObject>) stopsList.clone();
+		if(stopsList.size() > 0) {
+			ArrayList<TimeoScheduleObject> newStopsList = (ArrayList<TimeoScheduleObject>) stopsList.clone();
 
-		String cookie = "";
-		String result;
+			String cookie = "";
+			String result;
 
-		// craft a cookie in the form
-		// STOP_ID|LINE_ID|DIRECTION_ID;STOP_ID|LINE_ID|DIRECTION_ID;...
-		for(int i = 0; i < stopsList.size(); i++) {
-			if(i != 0) {
-				cookie += ';';
+			// craft a cookie in the form
+			// STOP_ID|LINE_ID|DIRECTION_ID;STOP_ID|LINE_ID|DIRECTION_ID;...
+			for(int i = 0; i < stopsList.size(); i++) {
+				if(i != 0) {
+					cookie += ';';
+				}
+				cookie += newStopsList.get(i).getStop().getId() + '|' + newStopsList.get(i).getLine().getId() + '|'
+						+ newStopsList.get(i).getDirection().getId();
 			}
-			cookie += newStopsList.get(i).getStop().getId() + '|' + newStopsList.get(i).getLine().getId() + '|'
-					+ newStopsList.get(i).getDirection().getId();
+
+			Map<String, String> data = new HashMap<String, String>();
+			data.put("func", "getSchedule");
+			data.put("data", cookie);
+
+			result = requestWebPage(data, false);
+			parseMultipleSchedules(context, result, newStopsList);
+
+			return newStopsList;
+		} else {
+			return stopsList;
 		}
-
-		Map<String, String> data = new HashMap<String, String>();
-		data.put("func", "getSchedule");
-		data.put("data", cookie);
-
-		result = requestWebPage(data, false);
-		parseMultipleSchedules(context, result, newStopsList);
-
-		return newStopsList;
 	}
 
 	/**
@@ -460,6 +467,50 @@ public class TimeoRequestHandler {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Capitalizes the first letter of every word, like WordUtils.capitalize(); except it does it WELL.
+	 * The determinants will not be capitalized, whereas some acronyms will.
+	 *
+	 * @param str The text to capitalize.
+	 * @return The capitalized text.
+	 */
+	public String smartCapitalize(String str) {
+		String newStr = "";
+		str = str.toLowerCase();
+
+		//these words will never be capitalized
+		String[] determinants = new String[]{"de", "du", "des", "au", "aux", "à", "la", "le", "les", "d", "et", "l"};
+		//these words will always be capitalized
+		String[] specialWords = new String[]{"sncf", "chu", "chr", "crous", "suaps", "fpa", "za", "zi", "zac", "cpam", "efs",
+				"mjc"};
+
+		//explode the string with both spaces and apostrophes
+		String[] words = str.split("( |')");
+
+		for(String word : words) {
+			if(Arrays.asList(determinants).contains(word)) {
+				//if the word should not be capitalized, just append it to the new string
+				newStr += word;
+			} else if(Arrays.asList(specialWords).contains(word)) {
+				//if the word should be in upper case, do eet
+				newStr += word.toUpperCase(Locale.FRENCH);
+			} else {
+				//if it's a normal word, just capitalize it
+				newStr += StringUtils.capitalize(word);
+			}
+
+			try {
+				//we don't know if the next character is a blank space or an apostrophe, so we check that
+				char delimiter = str.charAt(newStr.length());
+				newStr += delimiter;
+			} catch(StringIndexOutOfBoundsException ignored) {
+				//will be thrown for the last word of the string
+			}
+		}
+
+		return newStr;
 	}
 
 	/**
