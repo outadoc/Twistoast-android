@@ -26,13 +26,14 @@ package fr.outadev.android.timeo.model;
  */
 public class TimeoIDNameObject {
 
+	private String id;
+	private String name;
+
 	/**
 	 * Creates an ID/name object.
 	 *
 	 * @param id   the id of the object
 	 * @param name the name of the object
-	 * @see TimeoRequestObject
-	 * @see TimeoStopSchedules
 	 */
 	public TimeoIDNameObject(String id, String name) {
 		this.id = id;
@@ -61,15 +62,15 @@ public class TimeoIDNameObject {
 
 	@Override
 	public String toString() {
-		return name;
+		return "TimeoIDNameObject{" +
+				"id='" + id + '\'' +
+				", name='" + name + '\'' +
+				'}';
 	}
 
 	@Override
 	public TimeoIDNameObject clone() {
 		return new TimeoIDNameObject(id, name);
 	}
-
-	private String id;
-	private String name;
 
 }

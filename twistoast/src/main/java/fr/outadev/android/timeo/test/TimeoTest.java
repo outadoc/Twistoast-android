@@ -27,6 +27,7 @@ import java.util.List;
 
 import fr.outadev.android.timeo.KeolisRequestHandler;
 import fr.outadev.android.timeo.model.TimeoLine;
+import fr.outadev.android.timeo.model.TimeoStop;
 
 public class TimeoTest {
 
@@ -47,6 +48,12 @@ public class TimeoTest {
 
 					for(TimeoLine line : lines) {
 						System.out.println(line.getDetails());
+					}
+
+					List<TimeoStop> stops = handler.getStops(lines.get(5));
+
+					for(TimeoStop stop : stops) {
+						System.out.println(stop);
 					}
 
 				} catch(XmlPullParserException e) {

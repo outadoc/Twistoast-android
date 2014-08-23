@@ -148,13 +148,65 @@ public class KeolisRequestHandler {
 		return lines;
 	}
 
-	public List<TimeoIDNameObject> getStops(TimeoLine line) throws HttpRequestException {
+	public List<TimeoStop> getStops(TimeoLine line) throws HttpRequestException, XmlPullParserException, IOException {
 		String params = "xml=1&ligne=" + line.getDetails().getId() + "&sens=" + line.getDirection().getId();
 		String result = requestWebPage(BASE_URL, params, true);
 
-		//TODO: parsing
+		XmlPullParser parser = getParserForXMLString(result);
 
-		return null;
+		if(parser == null) {
+			return null;
+		}
+
+		int eventType = parser.getEventType();
+
+		TimeoStop tmpStop = null;
+		ArrayList<TimeoStop> stops = new ArrayList<TimeoStop>();
+
+		String text = null;
+		boolean isInStopTag = true;
+
+		while(eventType != XmlPullParser.END_DOCUMENT) {
+			String tagname = parser.getName();
+
+			switch(eventType) {
+				case XmlPullParser.START_TAG:
+
+					if(tagname.equalsIgnoreCase("ligne")) {
+						isInStopTag = false;
+					} else if(tagname.equalsIgnoreCase("arret")) {
+						isInStopTag = true;
+						tmpStop = new TimeoStop(line);
+					}
+
+					break;
+
+				case XmlPullParser.TEXT:
+					text = parser.getText();
+					break;
+
+				case XmlPullParser.END_TAG:
+					if(tagname.equalsIgnoreCase("als")) {
+						// add employee object to list
+						stops.add(tmpStop);
+					} else if(tmpStop != null && tagname.equalsIgnoreCase("code") && isInStopTag) {
+						tmpStop.setId(text);
+					} else if(tmpStop != null && tagname.equalsIgnoreCase("nom") && isInStopTag) {
+						tmpStop.setName(smartCapitalize(text));
+					} else if(tmpStop != null && tagname.equalsIgnoreCase("refs")) {
+						tmpStop.setReference(Long.valueOf(text));
+					}
+
+					break;
+
+				default:
+					break;
+			}
+
+			eventType = parser.next();
+		}
+
+		return stops;
 	}
 
 	public TimeoStopSchedule getSingleSchedule(TimeoStop stop) throws HttpRequestException {

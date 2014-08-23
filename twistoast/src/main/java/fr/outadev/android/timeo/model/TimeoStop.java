@@ -39,6 +39,10 @@ public class TimeoStop extends TimeoIDNameObject {
 		this.line = line;
 	}
 
+	public TimeoStop(TimeoLine line) {
+		this.line = line;
+	}
+
 	public long getReference() {
 		return ref;
 	}
