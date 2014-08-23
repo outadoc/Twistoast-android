@@ -32,36 +32,32 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
-
-import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.Map;
 
-import fr.outadev.android.timeo.TimeoRequestHandler;
-import fr.outadev.android.timeo.TimeoScheduleObject;
+import fr.outadev.android.timeo.model.TimeoStop;
+import fr.outadev.android.timeo.model.TimeoStopSchedule;
 import fr.outadev.twistoast.MainActivity;
 import fr.outadev.twistoast.R;
 import fr.outadev.twistoast.database.TwistoastDatabase;
 
-public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
+public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 
 	private final StopsListFragment fragment;
-	private ArrayList<TimeoScheduleObject> objects;
+	private ArrayList<TimeoStop> stops;
+	private Map<TimeoStop, TimeoStopSchedule> schedules;
 
-	public StopsListArrayAdapter(Context context, StopsListFragment fragment, int resource,
-	                             ArrayList<TimeoScheduleObject> objects) {
-		super(context, resource, objects);
+	public StopsListArrayAdapter(Context context, StopsListFragment fragment, int resource, ArrayList<TimeoStop> stops) {
+		super(context, resource, stops);
 
 		this.fragment = fragment;
-		this.objects = objects;
+		this.stops = stops;
 	}
 
 	@Override
 	public View getView(final int position, View convertView, final ViewGroup parent) {
-		TimeoScheduleObject currentItem = getItem(position);
+		TimeoStop currentItem = getItem(position);
 
 		if(convertView == null) {
 			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -83,6 +79,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 		TextView lbl_message_title = (TextView) convertView.findViewById(R.id.lbl_message_title);
 		TextView lbl_message_body = (TextView) convertView.findViewById(R.id.lbl_message_body);
 
+		/*
 		// set and make the message labels visible if necessary
 		if(currentItem.getMessageTitle() != null && currentItem.getMessageBody() != null
 				&& !currentItem.getMessageBody().isEmpty() && !currentItem.getMessageTitle().isEmpty()) {
@@ -92,11 +89,12 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 			view_traffic_message.setVisibility(View.VISIBLE);
 		} else {
 			view_traffic_message.setVisibility(View.GONE);
-		}
+		}*/
 
 		// line
-		view_line_id.setBackgroundColor(TwistoastDatabase.getColorFromLineID(currentItem.getLine().getId()));
-		lbl_line.setText(currentItem.getLine().getId());
+		view_line_id.setBackgroundColor(TwistoastDatabase.getColorFromLineID(currentItem.getLine().getDetails()
+				.getId()));
+		lbl_line.setText(currentItem.getLine().getDetails().getId());
 
 		if(lbl_line.getText().length() > 3) {
 			lbl_line.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
@@ -107,22 +105,28 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 		}
 
 		// stop
-		lbl_stop.setText(getContext().getResources().getString(R.string.stop_name, currentItem.getStop().getName()));
+		lbl_stop.setText(getContext().getResources().getString(R.string.stop_name, currentItem.getName()));
 
 		// direction
 		lbl_direction.setText(getContext().getResources()
-				.getString(R.string.direction_name, currentItem.getDirection().getName()));
+				.getString(R.string.direction_name, currentItem.getLine().getDirection().getName()));
 
-		// schedule
-		if(currentItem.getSchedule() != null && currentItem.getSchedule().length > 0 && currentItem.getSchedule()[0] != null) {
-			lbl_schedule_1.setText("- " + currentItem.getSchedule()[0]);
+		if(schedules != null && schedules.get(currentItem) != null && schedules.get(currentItem).getSchedules() != null) {
+			if(schedules.get(currentItem).getSchedules().size() > 0 && schedules.get(currentItem).getSchedules().get(0) !=
+					null) {
+				lbl_schedule_1.setText("- " + schedules.get(currentItem).getSchedules().get(0).getTime());
+			} else {
+				lbl_schedule_1.setText("- " + getContext().getResources().getString(R.string.loading_data));
+			}
+
+			if(schedules.get(currentItem).getSchedules().size() > 1 && schedules.get(currentItem).getSchedules().get(1) !=
+					null) {
+				lbl_schedule_2.setText("- " + schedules.get(currentItem).getSchedules().get(1).getTime());
+			}
 		} else {
 			lbl_schedule_1.setText("- " + getContext().getResources().getString(R.string.loading_data));
 		}
 
-		if(currentItem.getSchedule() != null && currentItem.getSchedule().length > 1 && currentItem.getSchedule()[1] != null) {
-			lbl_schedule_2.setText("- " + currentItem.getSchedule()[1]);
-		}
 
 		view_line_id.setOnClickListener(new OnClickListener() {
 
@@ -157,69 +161,12 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 		(new GetTimeoDataFromAPITask()).execute();
 	}
 
-	private class GetTimeoDataFromAPITask extends AsyncTask<Void, Void, ArrayList<TimeoScheduleObject>> {
+	private class GetTimeoDataFromAPITask extends AsyncTask<Void, Void, Map<TimeoStop, TimeoStopSchedule>> {
 
 		@Override
-		protected ArrayList<TimeoScheduleObject> doInBackground(Void... params) {
-
-			final TimeoRequestHandler handler = new TimeoRequestHandler();
-			ArrayList<TimeoScheduleObject> result = objects;
-
-			try {
-				try {
-					result = handler.getMultipleSchedules(getContext(), objects);
-				} catch(ClassCastException e) {
-					getActivity().runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							try {
-								TimeoRequestHandler.displayErrorMessageFromTextResult(handler.getLastHTTPResponse(),
-										getActivity());
-							} catch(JSONException e) {
-								if(!handler.getLastHTTPResponse().isEmpty()) {
-									Toast.makeText(getActivity(), handler.getLastHTTPResponse(), Toast.LENGTH_LONG).show();
-								}
-
-								e.printStackTrace();
-							}
-						}
-					});
-				}
-			} catch(final JSONException e) {
-				getActivity().runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						if(!handler.getLastHTTPResponse().isEmpty()) {
-							Toast.makeText(getActivity(), handler.getLastHTTPResponse(), Toast.LENGTH_LONG).show();
-						}
-
-						e.printStackTrace();
-					}
-				});
-			} catch(final HttpRequestException e) {
-				getActivity().runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.load_timeout),
-								Toast.LENGTH_LONG).show();
-					}
-				});
-
-				e.printStackTrace();
-			}
-
-			return result;
-		}
-
-		@Override
-		protected void onPostExecute(ArrayList<TimeoScheduleObject> result) {
-			if(result != null) {
-				objects = result;
-			}
-
-			// refresh the display and callback MainActivity to end refresh
-			notifyDataSetChanged();
-			fragment.endRefresh();
+		protected Map<TimeoStop, TimeoStopSchedule> doInBackground(Void... params) {
+			//TODO get and display data for new stops
+			return null;
 		}
 	}
 

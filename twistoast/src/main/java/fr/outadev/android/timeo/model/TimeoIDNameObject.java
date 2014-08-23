@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.android.timeo;
+package fr.outadev.android.timeo.model;
 
 /**
  * Associates an ID to a name. Used to associate a line ID with its name, for
@@ -32,7 +32,7 @@ public class TimeoIDNameObject {
 	 * @param id   the id of the object
 	 * @param name the name of the object
 	 * @see TimeoRequestObject
-	 * @see TimeoScheduleObject
+	 * @see TimeoStopSchedules
 	 */
 	public TimeoIDNameObject(String id, String name) {
 		this.id = id;

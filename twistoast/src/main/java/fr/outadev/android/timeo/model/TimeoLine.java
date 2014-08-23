@@ -1,5 +1,5 @@
 /*
- * Twistoast - TimeoRequestObject
+ * Twistoast - TimeoLine
  * Copyright (C) 2013-2014  Baptiste Candellier
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,60 +16,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.android.timeo;
+package fr.outadev.android.timeo.model;
 
 /**
- * Contains the data necessary to make a call to the API.
- *
- * @author outadoc
+ * Created by outadoc on 23/08/14.
  */
-public class TimeoRequestObject {
+public class TimeoLine {
 
-	public TimeoRequestObject(String line, String direction, String stop) {
-		this.line = line;
-		this.direction = direction;
-		this.stop = stop;
-	}
+	private TimeoIDNameObject line;
+	private TimeoIDNameObject direction;
 
-	public TimeoRequestObject(String line, String direction) {
+	public TimeoLine(TimeoIDNameObject line, TimeoIDNameObject direction) {
 		this.line = line;
 		this.direction = direction;
 	}
 
-	public TimeoRequestObject(String line) {
-		this.line = line;
-	}
-
-	public TimeoRequestObject() {
-
-	}
-
-	public String getLine() {
+	public TimeoIDNameObject getDetails() {
 		return line;
 	}
 
-	public void setLine(String line) {
+	public void setDetails(TimeoIDNameObject line) {
 		this.line = line;
 	}
 
-	public String getDirection() {
+	public TimeoIDNameObject getDirection() {
 		return direction;
 	}
 
-	public void setDirection(String direction) {
+	public void setDirection(TimeoIDNameObject direction) {
 		this.direction = direction;
 	}
-
-	public String getStop() {
-		return stop;
-	}
-
-	public void setStop(String stop) {
-		this.stop = stop;
-	}
-
-	private String line;
-	private String direction;
-	private String stop;
-
 }

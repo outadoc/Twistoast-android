@@ -29,8 +29,9 @@ import com.getpebble.android.kit.util.PebbleDictionary;
 
 import java.util.UUID;
 
-import fr.outadev.android.timeo.TimeoRequestHandler;
-import fr.outadev.android.timeo.TimeoScheduleObject;
+import fr.outadev.android.timeo.KeolisRequestHandler;
+import fr.outadev.android.timeo.model.TimeoStop;
+import fr.outadev.android.timeo.model.TimeoStopSchedule;
 import fr.outadev.twistoast.database.TwistoastDatabase;
 
 public class TwistoastPebbleReceiver extends PebbleDataReceiver {
@@ -79,47 +80,46 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 			final short busIndex = (short) (data.getInteger(KEY_STOP_INDEX).shortValue() % stopsCount);
 
 			// get the stop that interests us
-			TimeoScheduleObject schedule = databaseHandler.getStopAtIndex(busIndex);
+			final TimeoStop stop = databaseHandler.getStopAtIndex(busIndex);
 
 			Log.d("TwistoastPebbleReceiver", "loading data for stop #" + busIndex + "...");
 
 			// fetch schedule
-			new AsyncTask<TimeoScheduleObject, Void, TimeoScheduleObject>() {
+			new AsyncTask<TimeoStop, Void, TimeoStopSchedule>() {
 
 				@Override
-				protected TimeoScheduleObject doInBackground(TimeoScheduleObject... params) {
-					TimeoRequestHandler handler = new TimeoRequestHandler();
-					TimeoScheduleObject schedule = params[0];
+				protected TimeoStopSchedule doInBackground(TimeoStop... params) {
+					KeolisRequestHandler handler = new KeolisRequestHandler();
+					TimeoStop stop = params[0];
 
 					try {
-						schedule = handler.getSingleSchedule(schedule);
+						return handler.getSingleSchedule(stop);
 					} catch(Exception e) {
 						PebbleKit.sendNackToPebble(context, transactionId);
 						e.printStackTrace();
 					}
 
-					return schedule;
+					return null;
 				}
 
 				@Override
-				protected void onPostExecute(TimeoScheduleObject schedule) {
+				protected void onPostExecute(TimeoStopSchedule schedule) {
 					if(schedule != null) {
 						// parse the schedule and set it for our
 						// TimeoScheduleObject, then refresh
-						String[] scheduleArray = schedule.getSchedule();
 
-						if(scheduleArray == null) {
-							schedule.setSchedule(new String[]{context.getResources().getString(R.string.loading_error)});
+						if(schedule.getSchedules().size() == 0) {
+							schedule.getSchedules().get(0).setTime(context.getResources().getString(R.string.loading_error));
 						}
 
 						Log.d("TwistoastPebbleReceiver", "got data for stop: " + schedule);
-						craftAndSendSchedulePacket(context, transactionId, schedule);
+						craftAndSendSchedulePacket(context, schedule);
 					} else {
 						PebbleKit.sendNackToPebble(context, transactionId);
 					}
 				}
 
-			}.execute(schedule);
+			}.execute(stop);
 
 		} else {
 			PebbleKit.sendNackToPebble(context, transactionId);
@@ -127,18 +127,22 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 
 	}
 
-	public void craftAndSendSchedulePacket(Context context, int transactionId, TimeoScheduleObject schedule) {
+	public void craftAndSendSchedulePacket(Context context, TimeoStopSchedule schedule) {
 		PebbleDictionary response = new PebbleDictionary();
 
 		response.addInt8(KEY_TWISTOAST_MESSAGE_TYPE, BUS_STOP_DATA_RESPONSE);
-		response.addString(KEY_BUS_LINE_NAME, processStringForPebble(schedule.getLine().getName(), 10));
-		response.addString(KEY_BUS_DIRECTION_NAME, processStringForPebble(schedule.getDirection().getName(), 15));
+		response.addString(KEY_BUS_LINE_NAME, processStringForPebble(schedule.getStop().getLine().getDetails().getName(), 10));
+		response.addString(KEY_BUS_DIRECTION_NAME, processStringForPebble(schedule.getStop().getLine().getDirection().getName(),
+				15));
 		response.addString(KEY_BUS_STOP_NAME, processStringForPebble(schedule.getStop().getName(), 15));
-		response.addString(KEY_BUS_NEXT_SCHEDULE, processStringForPebble(schedule.getSchedule()[0], 15, true));
+		response.addString(KEY_BUS_NEXT_SCHEDULE, processStringForPebble(schedule.getSchedules().get(0).getTime(), 15, true));
 		response.addString(KEY_BUS_SECOND_SCHEDULE,
-				(schedule.getSchedule().length > 1) ? processStringForPebble(schedule.getSchedule()[1], 15, true) : "");
+				(schedule.getSchedules().size() > 1) ? processStringForPebble(schedule.getSchedules().get(1).getTime(), 15,
+						true) : "");
 
-		if(schedule.getSchedule()[0].contains("imminent") || schedule.getSchedule()[0].contains("en cours")) {
+		//TODO update vibration pattern
+		if(schedule.getSchedules().get(0).getTime().contains("imminent") || schedule.getSchedules().get(0).getTime().contains
+				("en cours")) {
 			response.addInt8(KEY_SHOULD_VIBRATE, (byte) 1);
 		}
 

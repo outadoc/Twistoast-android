@@ -49,7 +49,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import java.util.ArrayList;
 
-import fr.outadev.android.timeo.TimeoScheduleObject;
+import fr.outadev.android.timeo.model.TimeoStop;
 import fr.outadev.twistoast.R;
 import fr.outadev.twistoast.database.TwistoastDatabase;
 
@@ -115,7 +115,7 @@ public class StopsListFragment extends Fragment {
 							public void onClick(DialogInterface dialog, int id) {
 								// get the positions of the selected elements
 								SparseBooleanArray checked = listView.getCheckedItemPositions();
-								ArrayList<TimeoScheduleObject> objectsToDelete = new ArrayList<TimeoScheduleObject>();
+								ArrayList<TimeoStop> objectsToDelete = new ArrayList<TimeoStop>();
 
 								// add every stop we want to delete to the list
 								for(int i = 0; i < checked.size(); i++) {
@@ -125,9 +125,9 @@ public class StopsListFragment extends Fragment {
 								}
 
 								// DELETE EVERYTHING AAAAAAAAA-
-								for(TimeoScheduleObject anObjectsToDelete : objectsToDelete) {
-									databaseHandler.deleteStop(anObjectsToDelete);
-									listAdapter.remove(anObjectsToDelete);
+								for(TimeoStop object : objectsToDelete) {
+									databaseHandler.deleteStop(object);
+									listAdapter.remove(object);
 								}
 
 								// this was a triumph, say we've deleted teh

@@ -1,5 +1,5 @@
 /*
- * Twistoast - TimeoStopObject
+ * Twistoast - TimeoTest
  * Copyright (C) 2013-2014  Baptiste Candellier
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,33 +16,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.android.timeo;
+package fr.outadev.android.timeo.test;
 
-/**
- * Created by outadoc on 23/08/14.
- */
-public class TimeoStopObject extends TimeoIDNameObject {
+import android.os.AsyncTask;
 
-	private String ref;
+import fr.outadev.android.timeo.KeolisRequestHandler;
 
-	/**
-	 * Creates an ID/name object.
-	 *
-	 * @param id   the id of the object
-	 * @param name the name of the object
-	 * @see fr.outadev.android.timeo.TimeoRequestObject
-	 * @see fr.outadev.android.timeo.TimeoScheduleObject
-	 */
-	public TimeoStopObject(String id, String name, String ref) {
-		super(id, name);
-		this.ref = ref;
+public class TimeoTest {
+
+	private KeolisRequestHandler handler;
+
+	public TimeoTest() {
+		handler = new KeolisRequestHandler();
+		test1();
 	}
 
-	public String getReference() {
-		return ref;
+	private void test1() {
+		(new AsyncTask<Void, Void, Void>() {
+
+			@Override
+			protected Void doInBackground(Void... voids) {
+				handler.getLines();
+				return null;
+			}
+
+		}).execute();
 	}
 
-	public void setReference(String ref) {
-		this.ref = ref;
-	}
 }

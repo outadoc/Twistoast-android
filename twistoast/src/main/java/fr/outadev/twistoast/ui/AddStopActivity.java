@@ -20,7 +20,6 @@ package fr.outadev.twistoast.ui;
 
 import android.app.Activity;
 import android.database.sqlite.SQLiteConstraintException;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.Menu;
@@ -29,23 +28,12 @@ import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
-
-import org.json.JSONException;
-
-import java.util.ArrayList;
-
-import fr.outadev.android.timeo.TimeoIDNameObject;
-import fr.outadev.android.timeo.TimeoRequestHandler;
-import fr.outadev.android.timeo.TimeoRequestHandler.EndPoints;
-import fr.outadev.android.timeo.TimeoRequestObject;
-import fr.outadev.android.timeo.TimeoScheduleObject;
+import fr.outadev.android.timeo.model.TimeoIDNameObject;
 import fr.outadev.twistoast.R;
 import fr.outadev.twistoast.database.TwistoastDatabase;
 
@@ -106,9 +94,6 @@ public class AddStopActivity extends Activity {
 		// schedule labels, most important of all
 		lbl_schedule_1 = (TextView) findViewById(R.id.lbl_schedule_1);
 		lbl_schedule_2 = (TextView) findViewById(R.id.lbl_schedule_2);
-
-		// start fetching
-		fetchDataFromAPI(EndPoints.LINES, (new TimeoRequestObject()));
 	}
 
 	@Override
@@ -117,6 +102,7 @@ public class AddStopActivity extends Activity {
 
 		// when a line has been selected
 		spinLine.setOnItemSelectedListener(new OnItemSelectedListener() {
+
 			@Override
 			public void onItemSelected(AdapterView<?> parentView, View view, int position, long id) {
 				// set loading labels
@@ -153,14 +139,14 @@ public class AddStopActivity extends Activity {
 					}
 
 					// fetch the directions
-					fetchDataFromAPI(EndPoints.DIRECTIONS, (new TimeoRequestObject(item.getId())));
+					//fetchDataFromAPI(EndPoints.DIRECTIONS, (new TimeoRequestObject(item.getId())));
 				}
 			}
 
 			@Override
 			public void onNothingSelected(AdapterView<?> parentView) {
-
 			}
+
 		});
 
 		// when a direction has been selected
@@ -180,8 +166,8 @@ public class AddStopActivity extends Activity {
 				if(getCurrentLine() != null && getCurrentDirection() != null && getCurrentLine().getId() != null
 						&& getCurrentDirection().getId() != null) {
 					lbl_direction.setText(getResources().getString(R.string.direction_name, getCurrentDirection().getName()));
-					fetchDataFromAPI(EndPoints.STOPS, (new TimeoRequestObject(getCurrentLine().getId(), getCurrentDirection()
-							.getId())));
+					//fetchDataFromAPI(EndPoints.STOPS, (new TimeoRequestObject(getCurrentLine().getId(),
+					// getCurrentDirection().getId())));
 				}
 			}
 
@@ -209,8 +195,7 @@ public class AddStopActivity extends Activity {
 						&& stop.getId() != null) {
 					lbl_stop.setText(getResources().getString(R.string.stop_name, stop.getName()));
 
-					fetchDataFromAPI(EndPoints.SCHEDULE, (new TimeoRequestObject(line.getId(), direction.getId(),
-							stop.getId())));
+					//fetchDataFromAPI(EndPoints.SCHEDULE, (new TimeoRequestObject(line.getId(), direction.getId(),stop.getId())));
 				}
 			}
 
@@ -252,7 +237,7 @@ public class AddStopActivity extends Activity {
 		TimeoIDNameObject direction = getCurrentDirection();
 
 		try {
-			databaseHandler.addStopToDatabase(line, direction, stop);
+			//databaseHandler.addStopToDatabase(stop);
 
 			Toast.makeText(this,
 					getResources().getString(R.string.added_toast, line.getName(), direction.getName(), stop.getName()),
@@ -273,162 +258,14 @@ public class AddStopActivity extends Activity {
 		}
 	}
 
-	public void fetchDataFromAPI(final EndPoints endPoint, final TimeoRequestObject data) {
-		setProgressBarIndeterminateVisibility(true);
+	/*
+		ArrayAdapter<TimeoIDNameObject> adapter = new ArrayAdapter<TimeoIDNameObject>(AddStopActivity.this,
+				android.R.layout.simple_spinner_item, result.toArray(new TimeoIDNameObject[result.size()]));
 
-		final TimeoRequestHandler handler = new TimeoRequestHandler();
-
-		if(endPoint == EndPoints.SCHEDULE) {
-			new AsyncTask<Void, Void, TimeoScheduleObject>() {
-				@Override
-				protected TimeoScheduleObject doInBackground(Void... params) {
-
-					try {
-						try {
-							return handler.getSingleSchedule(new TimeoScheduleObject(getCurrentLine(), getCurrentDirection(),
-									getCurrentStop(), null));
-						} catch(ClassCastException e) {
-							AddStopActivity.this.runOnUiThread(new Runnable() {
-								public void run() {
-									try {
-										TimeoRequestHandler.displayErrorMessageFromTextResult(handler.getLastHTTPResponse(),
-												AddStopActivity.this);
-									} catch(JSONException e) {
-										Toast.makeText(AddStopActivity.this, handler.getLastHTTPResponse(), Toast.LENGTH_LONG)
-												.show();
-										e.printStackTrace();
-									}
-								}
-							});
-						}
-					} catch(JSONException e) {
-						AddStopActivity.this.runOnUiThread(new Runnable() {
-							public void run() {
-								Toast.makeText(AddStopActivity.this, handler.getLastHTTPResponse(), Toast.LENGTH_LONG).show();
-							}
-						});
-					} catch(final HttpRequestException e) {
-						AddStopActivity.this.runOnUiThread(new Runnable() {
-							public void run() {
-								Toast.makeText(AddStopActivity.this,
-										AddStopActivity.this.getResources().getString(R.string.load_timeout), Toast.LENGTH_LONG)
-										.show();
-							}
-						});
-
-						e.printStackTrace();
-					}
-
-					return null;
-				}
-
-				@Override
-				protected void onPostExecute(TimeoScheduleObject result) {
-					setProgressBarIndeterminateVisibility(false);
-
-					if(result != null) {
-						String[] scheduleArray = result.getSchedule();
-
-						// set the schedule labels, if we need to
-						if(scheduleArray != null) {
-							if(scheduleArray[0] != null) {
-								lbl_schedule_1.setText("- " + scheduleArray[0]);
-							}
-							if(scheduleArray[1] != null) {
-								lbl_schedule_2.setText("- " + scheduleArray[1]);
-							} else {
-								lbl_schedule_2.setText("");
-							}
-						}
-
-						result.setSchedule(scheduleArray);
-					}
-				}
-
-			}.execute();
-		} else {
-			// start loading the requested data
-			new AsyncTask<Void, Void, ArrayList<TimeoIDNameObject>>() {
-				@Override
-				protected ArrayList<TimeoIDNameObject> doInBackground(Void... params) {
-
-					if(endPoint == EndPoints.LINES || endPoint == EndPoints.DIRECTIONS || endPoint == EndPoints.STOPS) {
-						try {
-							try {
-								if(endPoint == EndPoints.LINES) {
-									spinner = spinLine;
-									return handler.getLines(data);
-								} else if(endPoint == EndPoints.DIRECTIONS) {
-									spinner = spinDirection;
-									return handler.getDirections(data);
-								} else {
-									spinner = spinStop;
-									return handler.getStops(data);
-								}
-
-							} catch(ClassCastException e) {
-								AddStopActivity.this.runOnUiThread(new Runnable() {
-									public void run() {
-										try {
-											TimeoRequestHandler.displayErrorMessageFromTextResult(handler.getLastHTTPResponse(),
-													AddStopActivity.this);
-										} catch(JSONException e) {
-											Toast.makeText(AddStopActivity.this, handler.getLastHTTPResponse(),
-													Toast.LENGTH_LONG)
-													.show();
-											e.printStackTrace();
-										}
-									}
-								});
-							}
-						} catch(JSONException e) {
-							AddStopActivity.this.runOnUiThread(new Runnable() {
-								public void run() {
-									Toast.makeText(AddStopActivity.this, handler.getLastHTTPResponse(),
-											Toast.LENGTH_LONG).show();
-								}
-							});
-						} catch(final HttpRequestException e) {
-							AddStopActivity.this.runOnUiThread(new Runnable() {
-								public void run() {
-									Toast.makeText(AddStopActivity.this,
-											AddStopActivity.this.getResources().getString(R.string.load_timeout),
-											Toast.LENGTH_LONG).show();
-								}
-							});
-
-							e.printStackTrace();
-						}
-					}
-
-					return null;
-				}
-
-				@Override
-				protected void onPostExecute(ArrayList<TimeoIDNameObject> result) {
-					setProgressBarIndeterminateVisibility(false);
-
-					// when we're done loading
-					if((endPoint == EndPoints.LINES || endPoint == EndPoints.DIRECTIONS || endPoint == EndPoints.STOPS)
-							&& spinner != null) {
-						if(result != null) {
-							// load the data into our ArrayAdapter to
-							// populate the list
-							ArrayAdapter<TimeoIDNameObject> adapter = new ArrayAdapter<TimeoIDNameObject>(AddStopActivity.this,
-									android.R.layout.simple_spinner_item, result.toArray(new TimeoIDNameObject[result.size()]));
-
-							adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-							spinner.setAdapter(adapter);
-							spinner.setEnabled(true);
-						}
-					}
-				}
-
-				private Spinner spinner;
-
-			}.execute();
-		}
-	}
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinner.setAdapter(adapter);
+		spinner.setEnabled(true);
+	*/
 
 	public TimeoIDNameObject getCurrentStop() {
 		return (TimeoIDNameObject) spinStop.getItemAtPosition(spinStop.getSelectedItemPosition());

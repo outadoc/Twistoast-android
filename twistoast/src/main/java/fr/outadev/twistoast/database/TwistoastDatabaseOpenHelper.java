@@ -28,10 +28,12 @@ public class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "twistoast.db";
 
 	private static final String LINES_TABLE_CREATE = "CREATE TABLE twi_line(line_id TEXT PRIMARY KEY, line_name TEXT);";
-	private static final String DIRECTIONS_TABLE_CREATE = "CREATE TABLE twi_direction(dir_id TEXT, line_id TEXT, dir_name TEXT, " +
+	private static final String DIRECTIONS_TABLE_CREATE = "CREATE TABLE twi_direction(dir_id TEXT, line_id TEXT, dir_name TEXT," +
+			" " +
 			"PRIMARY KEY(dir_id, line_id), FOREIGN KEY(line_id) REFERENCES twi_line(line_id));";
 	private static final String STOPS_TABLE_CREATE = "CREATE TABLE twi_stop(stop_id INTEGER, line_id TEXT, dir_id TEXT, " +
-			"stop_name TEXT, PRIMARY KEY(stop_id, line_id, dir_id), FOREIGN KEY(dir_id, line_id) REFERENCES twi_direction" +
+			"stop_name TEXT, stop_ref INTEGER, PRIMARY KEY(stop_id, line_id, dir_id), FOREIGN KEY(dir_id, " +
+			"line_id) REFERENCES twi_direction" +
 			"(dir_id, line_id));";
 
 	TwistoastDatabaseOpenHelper(Context context) {

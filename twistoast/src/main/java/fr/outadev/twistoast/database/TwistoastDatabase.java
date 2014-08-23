@@ -27,22 +27,23 @@ import android.graphics.Color;
 
 import java.util.ArrayList;
 
-import fr.outadev.android.timeo.TimeoIDNameObject;
-import fr.outadev.android.timeo.TimeoScheduleObject;
+import fr.outadev.android.timeo.model.TimeoIDNameObject;
+import fr.outadev.android.timeo.model.TimeoLine;
+import fr.outadev.android.timeo.model.TimeoStop;
 
 public class TwistoastDatabase {
+
+	private final TwistoastDatabaseOpenHelper databaseOpenHelper;
 
 	public TwistoastDatabase(Context context) {
 		databaseOpenHelper = new TwistoastDatabaseOpenHelper(context);
 	}
 
-	public void addStopToDatabase(TimeoIDNameObject line, TimeoIDNameObject direction,
-	                              TimeoIDNameObject stop) throws IllegalArgumentException, SQLiteConstraintException {
-		if(line != null && direction != null && stop != null) {
+	public void addStopToDatabase(TimeoStop stop) throws IllegalArgumentException, SQLiteConstraintException {
+		if(stop != null) {
 			// when we want to add a stop, we add the line first, then the
 			// direction
-			addLineToDatabase(line);
-			addDirectionToDatabase(line, direction);
+			addLineToDatabase(stop.getLine());
 
 			// then, open the database, and start enumerating when we'll need to
 			// add
@@ -50,9 +51,10 @@ public class TwistoastDatabase {
 			ContentValues values = new ContentValues();
 
 			values.put("stop_id", stop.getId());
-			values.put("line_id", line.getId());
-			values.put("dir_id", direction.getId());
+			values.put("line_id", stop.getLine().getDetails().getId());
+			values.put("dir_id", stop.getLine().getDirection().getId());
 			values.put("stop_name", stop.getName());
+			values.put("stop_ref", stop.getReference());
 
 			try {
 				// insert the stop with the specified columns
@@ -66,55 +68,67 @@ public class TwistoastDatabase {
 		}
 	}
 
-	private void addLineToDatabase(TimeoIDNameObject line) {
-		if(line != null) {
+	private void addLineToDatabase(TimeoLine line) {
+		if(line != null && line.getDetails() != null) {
 			SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
 			ContentValues values = new ContentValues();
 
-			values.put("line_id", line.getId());
-			values.put("line_name", line.getName());
+			values.put("line_id", line.getDetails().getId());
+			values.put("line_name", line.getDetails().getName());
 
 			db.insert("twi_line", null, values);
 			db.close();
+
+			addDirectionToDatabase(line);
 		}
 	}
 
-	private void addDirectionToDatabase(TimeoIDNameObject line, TimeoIDNameObject direction) {
-		if(line != null && direction != null) {
+	private void addDirectionToDatabase(TimeoLine line) {
+		if(line != null && line.getDirection() != null) {
 			SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
 			ContentValues values = new ContentValues();
 
-			values.put("dir_id", direction.getId());
-			values.put("line_id", line.getId());
-			values.put("dir_name", direction.getName());
+			values.put("dir_id", line.getDirection().getId());
+			values.put("line_id", line.getDetails().getId());
+			values.put("dir_name", line.getDirection().getName());
 
 			db.insert("twi_direction", null, values);
 			db.close();
 		}
 	}
 
-	public ArrayList<TimeoScheduleObject> getAllStops() {
+	public ArrayList<TimeoStop> getAllStops() {
 		SQLiteDatabase db = databaseOpenHelper.getReadableDatabase();
 
 		// that's a nice query you got tthhhere
 		Cursor results = db
 				.rawQuery(
-						"SELECT stop.stop_id, stop.stop_name, line.line_id, line.line_name, dir.dir_id, " +
+						"SELECT stop.stop_id, stop.stop_name, stop.stop_ref, line.line_id, line.line_name, dir.dir_id, " +
 								"dir.dir_name FROM twi_stop stop JOIN twi_direction dir USING(dir_id, " +
 								"line_id) JOIN twi_line line USING(line_id) ORDER BY CAST(line.line_id AS INTEGER), " +
 								"stop.stop_name, dir.dir_name",
 						null);
 
-		ArrayList<TimeoScheduleObject> stopsList = new ArrayList<TimeoScheduleObject>();
+		ArrayList<TimeoStop> stopsList = new ArrayList<TimeoStop>();
 
 		// while there's a stop available
 		while(results.moveToNext()) {
+			TimeoLine line = new TimeoLine(
+					new TimeoIDNameObject(
+							results.getString(results.getColumnIndex("line_id")),
+							results.getString(results.getColumnIndex("line_name"))),
+					new TimeoIDNameObject(
+							results.getString(results.getColumnIndex("dir_id")),
+							results.getString(results.getColumnIndex("dir_name"))));
+
+			TimeoStop stop = new TimeoStop(
+					results.getString(results.getColumnIndex("stop_id")),
+					results.getString(results.getColumnIndex("stop_name")),
+					results.getLong(results.getColumnIndex("stop_ref")),
+					line);
+
 			// add it to the list
-			stopsList.add(new TimeoScheduleObject(new TimeoIDNameObject(results.getString(results.getColumnIndex("line_id")),
-					results.getString(results.getColumnIndex("line_name"))), new TimeoIDNameObject(results.getString(results
-					.getColumnIndex("dir_id")), results.getString(results.getColumnIndex("dir_name"))),
-					new TimeoIDNameObject(results.getString(results.getColumnIndex("stop_id")), results.getString(results
-							.getColumnIndex("stop_name"))), null));
+			stopsList.add(stop);
 		}
 
 		// close the cursor and the database
@@ -124,29 +138,34 @@ public class TwistoastDatabase {
 		return stopsList;
 	}
 
-	public TimeoScheduleObject getStopAtIndex(int index) {
+	public TimeoStop getStopAtIndex(int index) {
 		SQLiteDatabase db = databaseOpenHelper.getReadableDatabase();
 		String indexStr = String.valueOf(index);
-		TimeoScheduleObject stop = null;
 
 		// that's a nice query you got tthhhere
 		Cursor results = db
 				.rawQuery(
-						"SELECT stop.stop_id, stop.stop_name, line.line_id, line.line_name, dir.dir_id, " +
+						"SELECT stop.stop_id, stop.stop_name, stop.stop_ref, line.line_id, line.line_name, dir.dir_id, " +
 								"dir.dir_name FROM twi_stop stop JOIN twi_direction dir USING(dir_id, " +
 								"line_id) JOIN twi_line line USING(line_id) ORDER BY CAST(line.line_id AS INTEGER), " +
 								"stop.stop_name, dir.dir_name LIMIT ? OFFSET ?",
 						new String[]{"1", indexStr});
 
-		// while there's a stop available
-		while(results.moveToNext()) {
-			// add it to the list
-			stop = new TimeoScheduleObject(new TimeoIDNameObject(results.getString(results.getColumnIndex("line_id")),
-					results.getString(results.getColumnIndex("line_name"))), new TimeoIDNameObject(results.getString(results
-					.getColumnIndex("dir_id")), results.getString(results.getColumnIndex("dir_name"))),
-					new TimeoIDNameObject(results.getString(results.getColumnIndex("stop_id")), results.getString(results
-							.getColumnIndex("stop_name"))), null);
-		}
+		results.moveToFirst();
+
+		TimeoLine line = new TimeoLine(
+				new TimeoIDNameObject(
+						results.getString(results.getColumnIndex("line_id")),
+						results.getString(results.getColumnIndex("line_name"))),
+				new TimeoIDNameObject(
+						results.getString(results.getColumnIndex("dir_id")),
+						results.getString(results.getColumnIndex("dir_name"))));
+
+		TimeoStop stop = new TimeoStop(
+				results.getString(results.getColumnIndex("stop_id")),
+				results.getString(results.getColumnIndex("stop_name")),
+				results.getLong(results.getColumnIndex("stop_ref")),
+				line);
 
 		// close the cursor and the database
 		results.close();
@@ -170,11 +189,14 @@ public class TwistoastDatabase {
 		return count;
 	}
 
-	public void deleteStop(TimeoScheduleObject stop) {
+	public void deleteStop(TimeoStop stop) {
 		SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
 
-		db.delete("twi_stop", "stop_id=? AND line_id=? AND dir_id=?", new String[]{stop.getStop().getId(),
-				stop.getLine().getId(), stop.getDirection().getId()});
+		db.delete("twi_stop", "stop_id=? AND line_id=? AND dir_id=?", new String[]{
+				stop.getId(),
+				stop.getLine().getDetails().getId(),
+				stop.getLine().getDirection().getId()
+		});
 
 		db.close();
 	}
@@ -257,7 +279,5 @@ public class TwistoastDatabase {
 
 		return Color.parseColor(color);
 	}
-
-	private final TwistoastDatabaseOpenHelper databaseOpenHelper;
 
 }
