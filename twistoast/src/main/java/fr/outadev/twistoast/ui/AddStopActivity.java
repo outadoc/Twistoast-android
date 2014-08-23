@@ -45,7 +45,6 @@ import fr.outadev.android.timeo.TimeoIDNameObject;
 import fr.outadev.android.timeo.TimeoRequestHandler;
 import fr.outadev.android.timeo.TimeoRequestHandler.EndPoints;
 import fr.outadev.android.timeo.TimeoRequestObject;
-import fr.outadev.android.timeo.TimeoResultParser;
 import fr.outadev.android.timeo.TimeoScheduleObject;
 import fr.outadev.twistoast.R;
 import fr.outadev.twistoast.database.TwistoastDatabase;
@@ -292,8 +291,8 @@ public class AddStopActivity extends Activity {
 							AddStopActivity.this.runOnUiThread(new Runnable() {
 								public void run() {
 									try {
-										TimeoResultParser.displayErrorMessageFromTextResult(handler.getLastHTTPResponse(),
-												(Activity) AddStopActivity.this);
+										TimeoRequestHandler.displayErrorMessageFromTextResult(handler.getLastHTTPResponse(),
+												AddStopActivity.this);
 									} catch(JSONException e) {
 										Toast.makeText(AddStopActivity.this, handler.getLastHTTPResponse(), Toast.LENGTH_LONG)
 												.show();
@@ -371,7 +370,7 @@ public class AddStopActivity extends Activity {
 								AddStopActivity.this.runOnUiThread(new Runnable() {
 									public void run() {
 										try {
-											TimeoResultParser.displayErrorMessageFromTextResult(handler.getLastHTTPResponse(),
+											TimeoRequestHandler.displayErrorMessageFromTextResult(handler.getLastHTTPResponse(),
 													AddStopActivity.this);
 										} catch(JSONException e) {
 											Toast.makeText(AddStopActivity.this, handler.getLastHTTPResponse(),

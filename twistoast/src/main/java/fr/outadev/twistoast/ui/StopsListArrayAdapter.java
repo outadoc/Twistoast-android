@@ -41,7 +41,6 @@ import org.json.JSONException;
 import java.util.ArrayList;
 
 import fr.outadev.android.timeo.TimeoRequestHandler;
-import fr.outadev.android.timeo.TimeoResultParser;
 import fr.outadev.android.timeo.TimeoScheduleObject;
 import fr.outadev.twistoast.MainActivity;
 import fr.outadev.twistoast.R;
@@ -174,7 +173,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoScheduleObject> {
 						@Override
 						public void run() {
 							try {
-								TimeoResultParser.displayErrorMessageFromTextResult(handler.getLastHTTPResponse(),
+								TimeoRequestHandler.displayErrorMessageFromTextResult(handler.getLastHTTPResponse(),
 										getActivity());
 							} catch(JSONException e) {
 								if(!handler.getLastHTTPResponse().isEmpty()) {
