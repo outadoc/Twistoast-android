@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.List;
 
 import fr.outadev.android.timeo.KeolisRequestHandler;
+import fr.outadev.android.timeo.model.TimeoException;
 import fr.outadev.android.timeo.model.TimeoLine;
 import fr.outadev.android.timeo.model.TimeoStop;
 import fr.outadev.android.timeo.model.TimeoStopNotReturnedException;
@@ -46,29 +47,39 @@ public class TimeoTest {
 			@Override
 			protected Void doInBackground(Void... voids) {
 				try {
+
+					//lines
 					List<TimeoLine> lines = handler.getLines();
 
 					for(TimeoLine line : lines) {
 						System.out.println(line.getDetails());
 					}
 
+					//stops
 					List<TimeoStop> stops = handler.getStops(lines.get(5));
 
 					for(TimeoStop stop : stops) {
 						System.out.println(stop);
 					}
 
+					//multiple schedules
 					List<TimeoStopSchedule> schedules = handler.getMultipleSchedules(stops);
 
 					for(TimeoStopSchedule schedule : schedules) {
 						System.out.println(schedule);
 					}
 
+					//single schedules)àç
+					TimeoStopSchedule schedule = handler.getSingleSchedule(stops.get(0));
+					System.out.println(schedule);
+
 				} catch(XmlPullParserException e) {
 					e.printStackTrace();
 				} catch(IOException e) {
 					e.printStackTrace();
 				} catch(TimeoStopNotReturnedException e) {
+					e.printStackTrace();
+				} catch(TimeoException e) {
 					e.printStackTrace();
 				}
 				return null;
