@@ -81,7 +81,7 @@ public class KeolisRequestHandler {
 	}
 
 
-	public List<TimeoLine> getLines() throws HttpRequestException, XmlPullParserException, IOException {
+	public List<TimeoLine> getLines() throws HttpRequestException, XmlPullParserException, IOException, TimeoException {
 		String params = "xml=1";
 		String result = requestWebPage(BASE_URL, params, true);
 
@@ -133,6 +133,8 @@ public class KeolisRequestHandler {
 						tmpLine.getDirection().setId(text);
 					} else if(tmpLine != null && tagname.equalsIgnoreCase("vers") && isInLineTag) {
 						tmpLine.getDirection().setName(smartCapitalize(text));
+					} else if(tagname.equalsIgnoreCase("erreur") && text != null && !text.trim().isEmpty()) {
+						throw new TimeoException(text);
 					}
 
 					break;
@@ -147,7 +149,8 @@ public class KeolisRequestHandler {
 		return lines;
 	}
 
-	public List<TimeoStop> getStops(TimeoLine line) throws HttpRequestException, XmlPullParserException, IOException {
+	public List<TimeoStop> getStops(TimeoLine line) throws HttpRequestException, XmlPullParserException, IOException,
+			TimeoException {
 		String params = "xml=1&ligne=" + line.getDetails().getId() + "&sens=" + line.getDirection().getId();
 		String result = requestWebPage(BASE_URL, params, true);
 
@@ -194,6 +197,8 @@ public class KeolisRequestHandler {
 						tmpStop.setName(smartCapitalize(text));
 					} else if(tmpStop != null && tagname.equalsIgnoreCase("refs")) {
 						tmpStop.setReference(Long.valueOf(text));
+					} else if(tagname.equalsIgnoreCase("erreur") && text != null && !text.trim().isEmpty()) {
+						throw new TimeoException(text);
 					}
 
 					break;
@@ -222,7 +227,7 @@ public class KeolisRequestHandler {
 	}
 
 	public List<TimeoStopSchedule> getMultipleSchedules(List<TimeoStop> stops) throws HttpRequestException,
-			TimeoStopNotReturnedException, XmlPullParserException, IOException {
+			TimeoException, XmlPullParserException, IOException {
 		String refs = "";
 
 		for(TimeoStop stop : stops) {
@@ -231,7 +236,7 @@ public class KeolisRequestHandler {
 
 		refs = refs.substring(0, refs.length() - 1);
 
-		String params = "xml=3&refs=" + refs + "&ran=1";
+		String params = "xml=3&refs=;" + refs + "&ran=1";
 		String result = requestWebPage(BASE_URL, params, true);
 
 		XmlPullParser parser = getParserForXMLString(result);
@@ -287,6 +292,8 @@ public class KeolisRequestHandler {
 						tmpSchedule.getSchedules().add(tmpSingleSchedule);
 					} else if(tmpSchedule != null && tagname.equalsIgnoreCase("horaire")) {
 						schedules.add(tmpSchedule);
+					} else if(tagname.equalsIgnoreCase("erreur") && text != null && !text.trim().isEmpty()) {
+						throw new TimeoException(text);
 					}
 
 					break;
