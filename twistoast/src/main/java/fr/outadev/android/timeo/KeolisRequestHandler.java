@@ -37,9 +37,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import fr.outadev.android.timeo.model.TimeoException;
 import fr.outadev.android.timeo.model.TimeoIDNameObject;
 import fr.outadev.android.timeo.model.TimeoLine;
+import fr.outadev.android.timeo.model.TimeoSingleSchedule;
 import fr.outadev.android.timeo.model.TimeoStop;
+import fr.outadev.android.timeo.model.TimeoStopNotReturnedException;
 import fr.outadev.android.timeo.model.TimeoStopSchedule;
 import fr.outadev.android.timeo.model.TimeoTrafficAlert;
 
@@ -56,10 +59,6 @@ public class KeolisRequestHandler {
 	private final static int REQUEST_TIMEOUT = 10000;
 
 	private String lastHTTPResponse;
-
-	public enum EndPoints {
-		LINES, DIRECTIONS, STOPS, SCHEDULE
-	}
 
 	/**
 	 * Creates a Timeo request handler.
@@ -209,32 +208,98 @@ public class KeolisRequestHandler {
 		return stops;
 	}
 
-	public TimeoStopSchedule getSingleSchedule(TimeoStop stop) throws HttpRequestException {
-		String params = "xml=3&refs=" + stop.getReference() + "&ran=1";
-		String result = requestWebPage(BASE_URL, params, true);
+	public TimeoStopSchedule getSingleSchedule(TimeoStop stop) throws HttpRequestException, TimeoException, IOException,
+			XmlPullParserException {
+		List<TimeoStop> list = new ArrayList<TimeoStop>();
+		list.add(stop);
+		List<TimeoStopSchedule> schedules = getMultipleSchedules(list);
 
-		//TODO: parsing
-
-		return null;
+		if(schedules != null && schedules.size() > 0) {
+			return schedules.get(0);
+		} else {
+			throw new TimeoException();
+		}
 	}
 
-	public List<TimeoStopSchedule> getMultipleSchedules(List<TimeoStop> stops) throws HttpRequestException {
+	public List<TimeoStopSchedule> getMultipleSchedules(List<TimeoStop> stops) throws HttpRequestException,
+			TimeoStopNotReturnedException, XmlPullParserException, IOException {
 		String refs = "";
 
 		for(TimeoStop stop : stops) {
-			refs += stop.getReference();
+			refs += stop.getReference() + ";";
 		}
 
-		refs = refs.substring(0, refs.length());
+		refs = refs.substring(0, refs.length() - 1);
 
-		String params = "xml=1";
+		String params = "xml=3&refs=" + refs + "&ran=1";
 		String result = requestWebPage(BASE_URL, params, true);
 
-		//TODO: parsing
+		XmlPullParser parser = getParserForXMLString(result);
 
-		return null;
+		if(parser == null) {
+			return null;
+		}
+
+		int eventType = parser.getEventType();
+
+		//final schedules to return
+		List<TimeoStopSchedule> schedules = new ArrayList<TimeoStopSchedule>();
+
+		//temporary schedule (associated with a stop and a few schedules)
+		TimeoStopSchedule tmpSchedule = null;
+		//temporary single schedule (one time, one destination)
+		TimeoSingleSchedule tmpSingleSchedule = null;
+
+		String text = null;
+
+		while(eventType != XmlPullParser.END_DOCUMENT) {
+			String tagname = parser.getName();
+
+			switch(eventType) {
+				case XmlPullParser.START_TAG:
+
+					if(tagname.equalsIgnoreCase("horaire")) {
+						tmpSchedule = new TimeoStopSchedule(null, new ArrayList<TimeoSingleSchedule>());
+					} else if(tagname.equalsIgnoreCase("passage")) {
+						tmpSingleSchedule = new TimeoSingleSchedule();
+					}
+
+					break;
+
+				case XmlPullParser.TEXT:
+					text = parser.getText();
+					break;
+
+				case XmlPullParser.END_TAG:
+					if(tagname.equalsIgnoreCase("code")) {
+						//the next stop returned by the API /isn't/ the next stop in the list, abort
+						if(!stops.get(schedules.size()).getId().equals(text)) {
+							throw new TimeoStopNotReturnedException("Trying to associate returned stop " + text + " with stop "
+									+ stops.get(schedules.size()).getId());
+						} else if(tmpSchedule != null) {
+							tmpSchedule.setStop(stops.get(schedules.size()));
+						}
+					} else if(tmpSingleSchedule != null && tagname.equalsIgnoreCase("duree")) {
+						tmpSingleSchedule.setTime(text);
+					} else if(tmpSingleSchedule != null && tagname.equalsIgnoreCase("destination")) {
+						tmpSingleSchedule.setDirection(smartCapitalize(text));
+					} else if(tmpSingleSchedule != null && tmpSchedule != null && tagname.equalsIgnoreCase("passage")) {
+						tmpSchedule.getSchedules().add(tmpSingleSchedule);
+					} else if(tmpSchedule != null && tagname.equalsIgnoreCase("horaire")) {
+						schedules.add(tmpSchedule);
+					}
+
+					break;
+
+				default:
+					break;
+			}
+
+			eventType = parser.next();
+		}
+
+		return schedules;
 	}
-
 
 	public TimeoTrafficAlert getGlobalTrafficAlert() {
 		String response = requestWebPage(BASE_PRE_HOME_URL, true);

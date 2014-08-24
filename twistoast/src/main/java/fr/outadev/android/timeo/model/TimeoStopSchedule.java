@@ -51,4 +51,12 @@ public class TimeoStopSchedule {
 	public void setSchedules(List<TimeoSingleSchedule> schedules) {
 		this.schedules = schedules;
 	}
+
+	@Override
+	public String toString() {
+		return "TimeoStopSchedule{" +
+				"stop=" + stop +
+				", schedules=" + schedules +
+				'}';
+	}
 }

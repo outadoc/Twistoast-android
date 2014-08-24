@@ -28,6 +28,8 @@ import java.util.List;
 import fr.outadev.android.timeo.KeolisRequestHandler;
 import fr.outadev.android.timeo.model.TimeoLine;
 import fr.outadev.android.timeo.model.TimeoStop;
+import fr.outadev.android.timeo.model.TimeoStopNotReturnedException;
+import fr.outadev.android.timeo.model.TimeoStopSchedule;
 
 public class TimeoTest {
 
@@ -56,9 +58,17 @@ public class TimeoTest {
 						System.out.println(stop);
 					}
 
+					List<TimeoStopSchedule> schedules = handler.getMultipleSchedules(stops);
+
+					for(TimeoStopSchedule schedule : schedules) {
+						System.out.println(schedule);
+					}
+
 				} catch(XmlPullParserException e) {
 					e.printStackTrace();
 				} catch(IOException e) {
+					e.printStackTrace();
+				} catch(TimeoStopNotReturnedException e) {
 					e.printStackTrace();
 				}
 				return null;

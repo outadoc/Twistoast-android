@@ -1,5 +1,5 @@
 /*
- * Twistoast - TimeoSingleSchedule
+ * Twistoast - TimeoStopNotReturnedException
  * Copyright (C) 2013-2014  Baptiste Candellier
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,35 +19,10 @@
 package fr.outadev.android.timeo.model;
 
 /**
- * Created by outadoc on 23/08/14.
+ * Created by outadoc on 24/08/14.
  */
-public class TimeoSingleSchedule {
-
-	private String time;
-	private String direction;
-
-	public TimeoSingleSchedule(String time, String direction) {
-		this.time = time;
-		this.direction = direction;
-	}
-
-	public TimeoSingleSchedule() {
-
-	}
-
-	public String getTime() {
-		return time;
-	}
-
-	public void setTime(String time) {
-		this.time = time;
-	}
-
-	public String getDirection() {
-		return direction;
-	}
-
-	public void setDirection(String direction) {
-		this.direction = direction;
+public class TimeoStopNotReturnedException extends TimeoException {
+	public TimeoStopNotReturnedException(String s) {
+		super(s);
 	}
 }
