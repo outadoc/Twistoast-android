@@ -123,7 +123,6 @@ public class KeolisRequestHandler {
 
 				case XmlPullParser.END_TAG:
 					if(tagname.equalsIgnoreCase("ligne")) {
-						// add employee object to list
 						lines.add(tmpLine);
 					} else if(tmpLine != null && tagname.equalsIgnoreCase("code") && isInLineTag) {
 						tmpLine.getDetails().setId(text);
@@ -189,7 +188,6 @@ public class KeolisRequestHandler {
 
 				case XmlPullParser.END_TAG:
 					if(tagname.equalsIgnoreCase("als")) {
-						// add employee object to list
 						stops.add(tmpStop);
 					} else if(tmpStop != null && tagname.equalsIgnoreCase("code") && isInStopTag) {
 						tmpStop.setId(text);
