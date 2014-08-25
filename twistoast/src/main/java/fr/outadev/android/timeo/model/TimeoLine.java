@@ -50,4 +50,9 @@ public class TimeoLine {
 	public void setDirection(TimeoIDNameObject direction) {
 		this.direction = direction;
 	}
+
+	@Override
+	public String toString() {
+		return line.toString();
+	}
 }

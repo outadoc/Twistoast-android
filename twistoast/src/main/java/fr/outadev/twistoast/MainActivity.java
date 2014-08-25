@@ -39,7 +39,6 @@ import android.widget.TextView;
 
 import fr.outadev.android.timeo.KeolisRequestHandler;
 import fr.outadev.android.timeo.model.TimeoTrafficAlert;
-import fr.outadev.android.timeo.test.TimeoTest;
 import fr.outadev.twistoast.ui.NavDrawerArrayAdapter;
 import fr.outadev.twistoast.ui.PrefsFragment;
 import fr.outadev.twistoast.ui.StopsListFragment;
@@ -65,7 +64,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		new TimeoTest();
+		//new TimeoTest();
 
 		drawerEntries = getResources().getStringArray(R.array.drawer_entries);
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);

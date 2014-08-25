@@ -18,6 +18,7 @@
 
 package fr.outadev.android.timeo;
 
+import android.util.Log;
 import android.util.Xml;
 
 import com.github.kevinsawicki.http.HttpRequest;
@@ -68,6 +69,7 @@ public class KeolisRequestHandler {
 	}
 
 	private String requestWebPage(String url, String params, boolean useCaches) throws HttpRequestException {
+		Log.i("Twistoast", "requested " + params);
 		lastHTTPResponse = HttpRequest.get(url + "?" + params)
 				.useCaches(useCaches)
 				.readTimeout(REQUEST_TIMEOUT)

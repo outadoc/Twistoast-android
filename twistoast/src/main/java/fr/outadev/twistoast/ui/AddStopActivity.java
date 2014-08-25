@@ -20,6 +20,7 @@ package fr.outadev.twistoast.ui;
 
 import android.app.Activity;
 import android.database.sqlite.SQLiteConstraintException;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.Menu;
@@ -28,12 +29,21 @@ import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import fr.outadev.android.timeo.KeolisRequestHandler;
 import fr.outadev.android.timeo.model.TimeoIDNameObject;
+import fr.outadev.android.timeo.model.TimeoLine;
+import fr.outadev.android.timeo.model.TimeoSingleSchedule;
+import fr.outadev.android.timeo.model.TimeoStop;
+import fr.outadev.android.timeo.model.TimeoStopSchedule;
 import fr.outadev.twistoast.R;
 import fr.outadev.twistoast.database.TwistoastDatabase;
 
@@ -42,6 +52,14 @@ public class AddStopActivity extends Activity {
 	private Spinner spinLine;
 	private Spinner spinDirection;
 	private Spinner spinStop;
+
+	private List<TimeoLine> lineList;
+	private List<TimeoIDNameObject> directionList;
+	private List<TimeoStop> stopList;
+
+	private ArrayAdapter<TimeoLine> lineAdapter;
+	private ArrayAdapter<TimeoIDNameObject> directionAdapter;
+	private ArrayAdapter<TimeoStop> stopAdapter;
 
 	private TextView lbl_line;
 	private FrameLayout view_line_id;
@@ -52,7 +70,8 @@ public class AddStopActivity extends Activity {
 
 	private MenuItem item_next;
 
-	TwistoastDatabase databaseHandler;
+	private TwistoastDatabase databaseHandler;
+	private KeolisRequestHandler requestHandler;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +90,7 @@ public class AddStopActivity extends Activity {
 		}
 
 		databaseHandler = new TwistoastDatabase(this);
+		requestHandler = new KeolisRequestHandler();
 
 		// get all the UI elements we'll need in the future
 
@@ -79,9 +99,10 @@ public class AddStopActivity extends Activity {
 		spinDirection = (Spinner) findViewById(R.id.spin_direction);
 		spinStop = (Spinner) findViewById(R.id.spin_stop);
 
-		spinLine.setEnabled(false);
-		spinDirection.setEnabled(false);
-		spinStop.setEnabled(false);
+		//lists
+		lineList = new ArrayList<TimeoLine>();
+		directionList = new ArrayList<TimeoIDNameObject>();
+		stopList = new ArrayList<TimeoStop>();
 
 		// labels
 		lbl_line = (TextView) findViewById(R.id.lbl_line_id);
@@ -100,6 +121,21 @@ public class AddStopActivity extends Activity {
 	public void onStart() {
 		super.onStart();
 
+		//setup spinners here
+		setupLineSpinner();
+		setupDirectionSpinner();
+		setupStopSpinner();
+
+		getLinesFromAPI();
+	}
+
+	public void setupLineSpinner() {
+		lineAdapter = new ArrayAdapter<TimeoLine>(this, android.R.layout.simple_spinner_item, getFilteredLineList());
+
+		lineAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinLine.setAdapter(lineAdapter);
+		spinLine.setEnabled(true);
+
 		// when a line has been selected
 		spinLine.setOnItemSelectedListener(new OnItemSelectedListener() {
 
@@ -113,21 +149,17 @@ public class AddStopActivity extends Activity {
 				lbl_schedule_1.setText(getResources().getString(R.string.loading_data));
 				lbl_schedule_2.setText(getResources().getString(R.string.loading_data));
 
-				// disable adapters
-				spinDirection.setEnabled(false);
-				spinStop.setEnabled(false);
-
 				if(item_next != null) {
 					item_next.setEnabled(false);
 				}
 
 				// get the selected line
-				TimeoIDNameObject item = getCurrentLine();
+				TimeoLine item = getCurrentLine();
 
-				if(item != null && item.getId() != null) {
+				if(item != null && item.getDetails().getId() != null) {
 					// set the line view
-					lbl_line.setText(item.getId());
-					view_line_id.setBackgroundColor(TwistoastDatabase.getColorFromLineID(item.getId()));
+					lbl_line.setText(item.getDetails().getId());
+					view_line_id.setBackgroundColor(TwistoastDatabase.getColorFromLineID(item.getDetails().getId()));
 
 					// adapt the size based on the size of the line ID
 					if(lbl_line.getText().length() > 3) {
@@ -138,8 +170,9 @@ public class AddStopActivity extends Activity {
 						lbl_line.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
 					}
 
-					// fetch the directions
-					//fetchDataFromAPI(EndPoints.DIRECTIONS, (new TimeoRequestObject(item.getId())));
+					directionList.clear();
+					directionList.addAll(getDirectionsList());
+					directionAdapter.notifyDataSetChanged();
 				}
 			}
 
@@ -148,9 +181,17 @@ public class AddStopActivity extends Activity {
 			}
 
 		});
+	}
 
-		// when a direction has been selected
+	public void setupDirectionSpinner() {
+
+		directionAdapter = new ArrayAdapter<TimeoIDNameObject>(this, android.R.layout.simple_spinner_item, directionList);
+		directionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinDirection.setAdapter(directionAdapter);
+
+		// when a line has been selected
 		spinDirection.setOnItemSelectedListener(new OnItemSelectedListener() {
+
 			@Override
 			public void onItemSelected(AdapterView<?> parentView, View view, int position, long id) {
 				// set loading labels
@@ -158,27 +199,54 @@ public class AddStopActivity extends Activity {
 				lbl_schedule_1.setText(getResources().getString(R.string.loading_data));
 				lbl_schedule_2.setText(getResources().getString(R.string.loading_data));
 
-				// disable adapters
-				spinStop.setEnabled(false);
-
 				item_next.setEnabled(false);
 
-				if(getCurrentLine() != null && getCurrentDirection() != null && getCurrentLine().getId() != null
+				if(getCurrentLine() != null && getCurrentDirection() != null && getCurrentLine().getDetails().getId() != null
 						&& getCurrentDirection().getId() != null) {
 					lbl_direction.setText(getResources().getString(R.string.direction_name, getCurrentDirection().getName()));
-					//fetchDataFromAPI(EndPoints.STOPS, (new TimeoRequestObject(getCurrentLine().getId(),
-					// getCurrentDirection().getId())));
+
+					(new AsyncTask<Void, Void, List<TimeoStop>>() {
+
+						@Override
+						protected List<TimeoStop> doInBackground(Void... voids) {
+							try {
+								getCurrentLine().setDirection(getCurrentDirection());
+								return requestHandler.getStops(getCurrentLine());
+							} catch(Exception e) {
+								handleAsyncExceptions(e);
+							}
+
+							return null;
+						}
+
+						@Override
+						protected void onPostExecute(List<TimeoStop> timeoStops) {
+							if(timeoStops != null) {
+								stopList.clear();
+								stopList.addAll(timeoStops);
+								stopAdapter.notifyDataSetChanged();
+							}
+						}
+
+					}).execute();
 				}
 			}
 
 			@Override
 			public void onNothingSelected(AdapterView<?> parentView) {
-
 			}
+
 		});
+	}
+
+	public void setupStopSpinner() {
+		stopAdapter = new ArrayAdapter<TimeoStop>(this, android.R.layout.simple_spinner_item, stopList);
+		stopAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinDirection.setAdapter(stopAdapter);
 
 		// when a stop has been selected
 		spinStop.setOnItemSelectedListener(new OnItemSelectedListener() {
+
 			@Override
 			public void onItemSelected(AdapterView<?> parentView, View view, int position, long id) {
 				lbl_stop.setText(getResources().getString(R.string.loading_data));
@@ -186,25 +254,85 @@ public class AddStopActivity extends Activity {
 				lbl_schedule_2.setText(getResources().getString(R.string.loading_data));
 
 				TimeoIDNameObject stop = getCurrentStop();
-				TimeoIDNameObject line = getCurrentLine();
-				TimeoIDNameObject direction = getCurrentDirection();
-
 				item_next.setEnabled(true);
 
-				if(line != null && direction != null && stop != null && line.getId() != null && direction.getId() != null
-						&& stop.getId() != null) {
+				if(stop != null && stop.getId() != null) {
 					lbl_stop.setText(getResources().getString(R.string.stop_name, stop.getName()));
 
-					//fetchDataFromAPI(EndPoints.SCHEDULE, (new TimeoRequestObject(line.getId(), direction.getId(),stop.getId())));
+					(new AsyncTask<Void, Void, TimeoStopSchedule>() {
+
+						@Override
+						protected TimeoStopSchedule doInBackground(Void... voids) {
+							try {
+								return requestHandler.getSingleSchedule(getCurrentStop());
+							} catch(Exception e) {
+								handleAsyncExceptions(e);
+							}
+
+							return null;
+						}
+
+						@Override
+						protected void onPostExecute(TimeoStopSchedule schedule) {
+							if(schedule != null) {
+								List<TimeoSingleSchedule> schedList = schedule.getSchedules();
+
+								// set the schedule labels, if we need to
+								if(schedList != null) {
+									if(schedList.get(0) != null) {
+										lbl_schedule_1.setText("- " + schedList.get(0).getTime());
+									}
+
+									if(schedList.get(1) != null) {
+										lbl_schedule_2.setText("- " + schedList.get(1).getTime());
+									} else {
+										lbl_schedule_2.setText("");
+									}
+								}
+							}
+						}
+
+					}).execute();
 				}
 			}
 
 			@Override
 			public void onNothingSelected(AdapterView<?> parentView) {
-
 			}
-		});
 
+		});
+	}
+
+	public void getLinesFromAPI() {
+
+		// fetch the directions
+		(new AsyncTask<Void, Void, List<TimeoLine>>() {
+
+			@Override
+			protected List<TimeoLine> doInBackground(Void... voids) {
+				try {
+					return requestHandler.getLines();
+				} catch(Exception e) {
+					handleAsyncExceptions(e);
+				}
+
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(List<TimeoLine> timeoLines) {
+				if(timeoLines != null) {
+					lineList.clear();
+					lineList.addAll(timeoLines);
+					lineAdapter.notifyDataSetChanged();
+				}
+			}
+
+		}).execute();
+	}
+
+	public void handleAsyncExceptions(Exception e) {
+		e.printStackTrace();
 	}
 
 	@Override
@@ -232,15 +360,13 @@ public class AddStopActivity extends Activity {
 	}
 
 	public void registerStopToDatabase() {
-		TimeoIDNameObject stop = getCurrentStop();
-		TimeoIDNameObject line = getCurrentLine();
-		TimeoIDNameObject direction = getCurrentDirection();
+		TimeoStop stop = getCurrentStop();
 
 		try {
-			//databaseHandler.addStopToDatabase(stop);
+			databaseHandler.addStopToDatabase(stop);
 
 			Toast.makeText(this,
-					getResources().getString(R.string.added_toast, line.getName(), direction.getName(), stop.getName()),
+					getResources().getString(R.string.added_toast, stop.toString()),
 					Toast.LENGTH_SHORT).show();
 			this.finish();
 		} catch(SQLiteConstraintException e) {
@@ -258,25 +384,34 @@ public class AddStopActivity extends Activity {
 		}
 	}
 
-	/*
-		ArrayAdapter<TimeoIDNameObject> adapter = new ArrayAdapter<TimeoIDNameObject>(AddStopActivity.this,
-				android.R.layout.simple_spinner_item, result.toArray(new TimeoIDNameObject[result.size()]));
+	private List<TimeoLine> getFilteredLineList() {
+		return lineList;
 
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spinner.setAdapter(adapter);
-		spinner.setEnabled(true);
-	*/
+		//TODO filter lines to remove duplicates
+	}
 
-	public TimeoIDNameObject getCurrentStop() {
-		return (TimeoIDNameObject) spinStop.getItemAtPosition(spinStop.getSelectedItemPosition());
+	private List<TimeoIDNameObject> getDirectionsList() {
+		List<TimeoIDNameObject> directionsList = new ArrayList<TimeoIDNameObject>();
+
+		for(TimeoLine line : lineList) {
+			if(line.getDetails().getId().equals(getCurrentLine().getDetails().getId())) {
+				directionsList.add(line.getDirection());
+			}
+		}
+
+		return directionsList;
+	}
+
+	public TimeoStop getCurrentStop() {
+		return (TimeoStop) spinStop.getItemAtPosition(spinStop.getSelectedItemPosition());
 	}
 
 	public TimeoIDNameObject getCurrentDirection() {
 		return (TimeoIDNameObject) spinDirection.getItemAtPosition(spinDirection.getSelectedItemPosition());
 	}
 
-	public TimeoIDNameObject getCurrentLine() {
-		return (TimeoIDNameObject) spinLine.getItemAtPosition(spinLine.getSelectedItemPosition());
+	public TimeoLine getCurrentLine() {
+		return (TimeoLine) spinLine.getItemAtPosition(spinLine.getSelectedItemPosition());
 	}
 
 }
