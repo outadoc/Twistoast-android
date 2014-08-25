@@ -132,6 +132,30 @@ public class AddStopActivity extends Activity {
 		getLinesFromAPI();
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.add_stop, menu);
+		item_next = menu.findItem(R.id.action_ok);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch(item.getItemId()) {
+			case R.id.action_ok:
+				// add the current stop to the database
+				registerStopToDatabase();
+				return true;
+			case android.R.id.home:
+				// go back
+				this.finish();
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+	}
+
 	public void setupLineSpinner() {
 		lineAdapter = new ArrayAdapter<TimeoLine>(this, android.R.layout.simple_spinner_item, filteredLineList);
 		lineAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -376,30 +400,6 @@ public class AddStopActivity extends Activity {
 
 	public void handleAsyncExceptions(Exception e) {
 		e.printStackTrace();
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.add_stop, menu);
-		item_next = menu.findItem(R.id.action_ok);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch(item.getItemId()) {
-			case R.id.action_ok:
-				// add the current stop to the database
-				registerStopToDatabase();
-				return true;
-			case android.R.id.home:
-				// go back
-				this.finish();
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
-		}
 	}
 
 	public void registerStopToDatabase() {
