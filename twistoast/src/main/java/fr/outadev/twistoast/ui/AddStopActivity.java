@@ -120,17 +120,16 @@ public class AddStopActivity extends Activity {
 		lbl_schedule_1 = (TextView) findViewById(R.id.lbl_schedule_1);
 		lbl_schedule_2 = (TextView) findViewById(R.id.lbl_schedule_2);
 
+		spinLine.setEnabled(false);
+		spinDirection.setEnabled(false);
+		spinStop.setEnabled(false);
+
 		//setup spinners here
 		setupLineSpinner();
 		setupDirectionSpinner();
 		setupStopSpinner();
 
 		getLinesFromAPI();
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
 	}
 
 	public void setupLineSpinner() {
@@ -151,6 +150,8 @@ public class AddStopActivity extends Activity {
 				lbl_schedule_1.setText(getResources().getString(R.string.loading_data));
 				lbl_schedule_2.setText(getResources().getString(R.string.loading_data));
 
+				spinStop.setEnabled(false);
+
 				if(item_next != null) {
 					item_next.setEnabled(false);
 				}
@@ -162,6 +163,8 @@ public class AddStopActivity extends Activity {
 					// set the line view
 					lbl_line.setText(item.getDetails().getId());
 					view_line_id.setBackgroundColor(TwistoastDatabase.getColorFromLineID(item.getDetails().getId()));
+
+					spinDirection.setEnabled(true);
 
 					// adapt the size based on the size of the line ID
 					if(lbl_line.getText().length() > 3) {
@@ -201,12 +204,18 @@ public class AddStopActivity extends Activity {
 				lbl_schedule_2.setText(getResources().getString(R.string.loading_data));
 
 				item_next.setEnabled(false);
+				spinStop.setEnabled(false);
 
 				if(getCurrentLine() != null && getCurrentDirection() != null && getCurrentLine().getDetails().getId() != null
 						&& getCurrentDirection().getId() != null) {
 					lbl_direction.setText(getResources().getString(R.string.direction_name, getCurrentDirection().getName()));
 
 					(new AsyncTask<Void, Void, List<TimeoStop>>() {
+
+						@Override
+						protected void onPreExecute() {
+							setProgressBarIndeterminateVisibility(true);
+						}
 
 						@Override
 						protected List<TimeoStop> doInBackground(Void... voids) {
@@ -222,7 +231,11 @@ public class AddStopActivity extends Activity {
 
 						@Override
 						protected void onPostExecute(List<TimeoStop> timeoStops) {
+							setProgressBarIndeterminateVisibility(false);
+
 							if(timeoStops != null) {
+								spinStop.setEnabled(true);
+
 								stopList.clear();
 								stopList.addAll(timeoStops);
 								setupStopSpinner();
@@ -263,6 +276,11 @@ public class AddStopActivity extends Activity {
 					(new AsyncTask<Void, Void, TimeoStopSchedule>() {
 
 						@Override
+						protected void onPreExecute() {
+							setProgressBarIndeterminateVisibility(true);
+						}
+
+						@Override
 						protected TimeoStopSchedule doInBackground(Void... voids) {
 							try {
 								return requestHandler.getSingleSchedule(getCurrentStop());
@@ -275,6 +293,8 @@ public class AddStopActivity extends Activity {
 
 						@Override
 						protected void onPostExecute(TimeoStopSchedule schedule) {
+							setProgressBarIndeterminateVisibility(false);
+
 							if(schedule != null) {
 								List<TimeoSingleSchedule> schedList = schedule.getSchedules();
 
@@ -310,6 +330,11 @@ public class AddStopActivity extends Activity {
 		(new AsyncTask<Void, Void, List<TimeoLine>>() {
 
 			@Override
+			protected void onPreExecute() {
+				setProgressBarIndeterminateVisibility(true);
+			}
+
+			@Override
 			protected List<TimeoLine> doInBackground(Void... voids) {
 				try {
 					return requestHandler.getLines();
@@ -322,12 +347,17 @@ public class AddStopActivity extends Activity {
 
 			@Override
 			protected void onPostExecute(List<TimeoLine> timeoLines) {
+				setProgressBarIndeterminateVisibility(false);
+
 				if(timeoLines != null) {
 					lineList.clear();
 					lineList.addAll(timeoLines);
 
 					filteredLineList.clear();
 					filteredLineList.addAll(lineList);
+
+					spinLine.setEnabled(true);
+					spinDirection.setEnabled(true);
 
 					for(int i = filteredLineList.size() - 1; i >= 0; i--) {
 						//if the last line in the list is the same line (but with a different direction)
