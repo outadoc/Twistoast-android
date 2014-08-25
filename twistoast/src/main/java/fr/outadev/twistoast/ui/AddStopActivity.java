@@ -131,10 +131,8 @@ public class AddStopActivity extends Activity {
 
 	public void setupLineSpinner() {
 		lineAdapter = new ArrayAdapter<TimeoLine>(this, android.R.layout.simple_spinner_item, getFilteredLineList());
-
 		lineAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinLine.setAdapter(lineAdapter);
-		spinLine.setEnabled(true);
 
 		// when a line has been selected
 		spinLine.setOnItemSelectedListener(new OnItemSelectedListener() {
@@ -184,7 +182,6 @@ public class AddStopActivity extends Activity {
 	}
 
 	public void setupDirectionSpinner() {
-
 		directionAdapter = new ArrayAdapter<TimeoIDNameObject>(this, android.R.layout.simple_spinner_item, directionList);
 		directionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinDirection.setAdapter(directionAdapter);
@@ -242,7 +239,7 @@ public class AddStopActivity extends Activity {
 	public void setupStopSpinner() {
 		stopAdapter = new ArrayAdapter<TimeoStop>(this, android.R.layout.simple_spinner_item, stopList);
 		stopAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spinDirection.setAdapter(stopAdapter);
+		spinStop.setAdapter(stopAdapter);
 
 		// when a stop has been selected
 		spinStop.setOnItemSelectedListener(new OnItemSelectedListener() {
@@ -365,9 +362,7 @@ public class AddStopActivity extends Activity {
 		try {
 			databaseHandler.addStopToDatabase(stop);
 
-			Toast.makeText(this,
-					getResources().getString(R.string.added_toast, stop.toString()),
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, getResources().getString(R.string.added_toast, stop.toString()), Toast.LENGTH_SHORT).show();
 			this.finish();
 		} catch(SQLiteConstraintException e) {
 			// stop already in database

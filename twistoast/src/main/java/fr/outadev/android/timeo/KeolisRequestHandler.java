@@ -236,7 +236,7 @@ public class KeolisRequestHandler {
 
 		refs = refs.substring(0, refs.length() - 1);
 
-		String params = "xml=3&refs=;" + refs + "&ran=1";
+		String params = "xml=3&refs=" + refs + "&ran=1";
 		String result = requestWebPage(BASE_URL, params, true);
 
 		XmlPullParser parser = getParserForXMLString(result);
@@ -340,7 +340,7 @@ public class KeolisRequestHandler {
 	 */
 	public String smartCapitalize(String str) {
 		String newStr = "";
-		str = str.toLowerCase();
+		str = str.toLowerCase().trim();
 
 		//these words will never be capitalized
 		String[] determinants = new String[]{"de", "du", "des", "au", "aux", "à", "la", "le", "les", "d", "et", "l"};
