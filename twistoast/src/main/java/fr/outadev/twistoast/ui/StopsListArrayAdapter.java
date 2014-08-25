@@ -18,7 +18,6 @@
 
 package fr.outadev.twistoast.ui;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.SparseBooleanArray;
@@ -38,21 +37,23 @@ import java.util.Map;
 
 import fr.outadev.android.timeo.model.TimeoStop;
 import fr.outadev.android.timeo.model.TimeoStopSchedule;
-import fr.outadev.twistoast.MainActivity;
+import fr.outadev.twistoast.IStopsListContainer;
 import fr.outadev.twistoast.R;
 import fr.outadev.twistoast.database.TwistoastDatabase;
 
 public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 
-	private final StopsListFragment fragment;
+	private final IStopsListContainer stopsListContainer;
+
 	private ArrayList<TimeoStop> stops;
 	private Map<TimeoStop, TimeoStopSchedule> schedules;
 
-	public StopsListArrayAdapter(Context context, StopsListFragment fragment, int resource, ArrayList<TimeoStop> stops) {
+	public StopsListArrayAdapter(Context context, int resource, ArrayList<TimeoStop> stops,
+	                             IStopsListContainer stopsListContainer) {
 		super(context, resource, stops);
 
-		this.fragment = fragment;
 		this.stops = stops;
+		this.stopsListContainer = stopsListContainer;
 	}
 
 	@Override
@@ -148,7 +149,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 
 			@Override
 			public void onClick(View v) {
-				((MainActivity) fragment.getActivity()).loadFragmentFromDrawerPosition(3);
+				stopsListContainer.loadFragmentFromDrawerPosition(3);
 			}
 
 		});
@@ -166,14 +167,6 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 		@Override
 		protected Map<TimeoStop, TimeoStopSchedule> doInBackground(Void... params) {
 			//TODO get and display data for new stops
-			return null;
-		}
-	}
-
-	private Activity getActivity() {
-		if(getContext() instanceof Activity) {
-			return (Activity) getContext();
-		} else {
 			return null;
 		}
 	}

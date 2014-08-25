@@ -50,10 +50,12 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import java.util.ArrayList;
 
 import fr.outadev.android.timeo.model.TimeoStop;
+import fr.outadev.twistoast.IStopsListContainer;
+import fr.outadev.twistoast.MainActivity;
 import fr.outadev.twistoast.R;
 import fr.outadev.twistoast.database.TwistoastDatabase;
 
-public class StopsListFragment extends Fragment {
+public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 	private ListView listView;
 	private SwipeRefreshLayout swipeLayout;
@@ -338,8 +340,8 @@ public class StopsListFragment extends Fragment {
 		// if we don't do that, bugs will appear when the database has been
 		// modified
 		if(resetList) {
-			listAdapter = new StopsListArrayAdapter(getActivity(), this, android.R.layout.simple_list_item_1,
-					databaseHandler.getAllStops());
+			listAdapter = new StopsListArrayAdapter(getActivity(), android.R.layout.simple_list_item_1,
+					databaseHandler.getAllStops(), this);
 			listView.setAdapter(listAdapter);
 		}
 
@@ -347,6 +349,7 @@ public class StopsListFragment extends Fragment {
 		listAdapter.updateScheduleData();
 	}
 
+	@Override
 	public void endRefresh() {
 		// notify the pull to refresh view that the refresh has finished
 		swipeLayout.setRefreshing(false);
@@ -355,7 +358,8 @@ public class StopsListFragment extends Fragment {
 		Log.i("Twistoast", "refreshed, " + listAdapter.getCount() + " stops in db");
 
 		if(getActivity() != null && listAdapter.getCount() > 0) {
-			Toast.makeText(getActivity(), getResources().getString(R.string.refreshed_stops), Toast.LENGTH_SHORT).show();
+			Toast.makeText(getActivity(), getResources().getString(R.string.refreshed_stops),
+					Toast.LENGTH_SHORT).show();
 		} else if(listAdapter.getCount() < 1) {
 			Toast.makeText(getActivity(), getResources().getString(R.string.no_content), Toast.LENGTH_SHORT).show();
 		}
@@ -366,6 +370,11 @@ public class StopsListFragment extends Fragment {
 		if(!isInBackground) {
 			handler.postDelayed(runnable, REFRESH_INTERVAL);
 		}
+	}
+
+	@Override
+	public void loadFragmentFromDrawerPosition(int index) {
+		((MainActivity) getActivity()).loadFragmentFromDrawerPosition(index);
 	}
 
 }
