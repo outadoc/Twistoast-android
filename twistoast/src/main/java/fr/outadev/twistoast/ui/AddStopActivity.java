@@ -418,19 +418,15 @@ public class AddStopActivity extends Activity {
 			databaseHandler.addStopToDatabase(stop);
 
 			Toast.makeText(this, getResources().getString(R.string.added_toast, stop.toString()), Toast.LENGTH_SHORT).show();
-			this.finish();
+			finish();
 		} catch(SQLiteConstraintException e) {
 			// stop already in database
-			Toast.makeText(this,
-					getResources().getString(R.string.error_toast, getResources().getString(R.string.add_error_duplicate)),
-					Toast.LENGTH_LONG).show();
+			Toast.makeText(this, getResources().getString(R.string.error_toast, getResources().getString(R.string
+					.add_error_duplicate)), Toast.LENGTH_LONG).show();
 		} catch(IllegalArgumentException e) {
 			// one of the fields was null
-			Toast.makeText(
-					this,
-					getResources().getString(R.string.error_toast, getResources().getString(R.string
-							.add_error_illegal_argument)),
-					Toast.LENGTH_LONG).show();
+			Toast.makeText(this, getResources().getString(R.string.error_toast, getResources().getString(R.string
+					.add_error_illegal_argument)), Toast.LENGTH_LONG).show();
 		}
 	}
 
