@@ -398,8 +398,17 @@ public class AddStopActivity extends Activity {
 		}).execute();
 	}
 
-	public void handleAsyncExceptions(Exception e) {
+	public void handleAsyncExceptions(final Exception e) {
 		e.printStackTrace();
+
+		runOnUiThread(new Runnable() {
+
+			@Override
+			public void run() {
+				Toast.makeText(AddStopActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+			}
+
+		});
 	}
 
 	public void registerStopToDatabase() {
