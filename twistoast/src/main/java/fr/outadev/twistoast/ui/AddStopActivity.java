@@ -57,6 +57,8 @@ public class AddStopActivity extends Activity {
 	private List<TimeoIDNameObject> directionList;
 	private List<TimeoStop> stopList;
 
+	private List<TimeoLine> filteredLineList;
+
 	private ArrayAdapter<TimeoLine> lineAdapter;
 	private ArrayAdapter<TimeoIDNameObject> directionAdapter;
 	private ArrayAdapter<TimeoStop> stopAdapter;
@@ -104,6 +106,8 @@ public class AddStopActivity extends Activity {
 		directionList = new ArrayList<TimeoIDNameObject>();
 		stopList = new ArrayList<TimeoStop>();
 
+		filteredLineList = new ArrayList<TimeoLine>(lineList);
+
 		// labels
 		lbl_line = (TextView) findViewById(R.id.lbl_line_id);
 		lbl_stop = (TextView) findViewById(R.id.lbl_stop_name);
@@ -115,11 +119,6 @@ public class AddStopActivity extends Activity {
 		// schedule labels, most important of all
 		lbl_schedule_1 = (TextView) findViewById(R.id.lbl_schedule_1);
 		lbl_schedule_2 = (TextView) findViewById(R.id.lbl_schedule_2);
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
 
 		//setup spinners here
 		setupLineSpinner();
@@ -129,8 +128,13 @@ public class AddStopActivity extends Activity {
 		getLinesFromAPI();
 	}
 
+	@Override
+	public void onStart() {
+		super.onStart();
+	}
+
 	public void setupLineSpinner() {
-		lineAdapter = new ArrayAdapter<TimeoLine>(this, android.R.layout.simple_spinner_item, getFilteredLineList());
+		lineAdapter = new ArrayAdapter<TimeoLine>(this, android.R.layout.simple_spinner_item, filteredLineList);
 		lineAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinLine.setAdapter(lineAdapter);
 
@@ -170,7 +174,7 @@ public class AddStopActivity extends Activity {
 
 					directionList.clear();
 					directionList.addAll(getDirectionsList());
-					directionAdapter.notifyDataSetChanged();
+					setupDirectionSpinner();
 				}
 			}
 
@@ -221,7 +225,7 @@ public class AddStopActivity extends Activity {
 							if(timeoStops != null) {
 								stopList.clear();
 								stopList.addAll(timeoStops);
-								stopAdapter.notifyDataSetChanged();
+								setupStopSpinner();
 							}
 						}
 
@@ -321,6 +325,18 @@ public class AddStopActivity extends Activity {
 				if(timeoLines != null) {
 					lineList.clear();
 					lineList.addAll(timeoLines);
+
+					filteredLineList.clear();
+					filteredLineList.addAll(lineList);
+
+					for(int i = filteredLineList.size() - 1; i >= 0; i--) {
+						//if the last line in the list is the same line (but with a different direction)
+						if(i > 0 && filteredLineList.get(i).getDetails().getId().equals(filteredLineList.get(i - 1).getDetails()
+								.getId())) {
+							filteredLineList.remove(i);
+						}
+					}
+
 					lineAdapter.notifyDataSetChanged();
 				}
 			}
@@ -377,12 +393,6 @@ public class AddStopActivity extends Activity {
 							.add_error_illegal_argument)),
 					Toast.LENGTH_LONG).show();
 		}
-	}
-
-	private List<TimeoLine> getFilteredLineList() {
-		return lineList;
-
-		//TODO filter lines to remove duplicates
 	}
 
 	private List<TimeoIDNameObject> getDirectionsList() {

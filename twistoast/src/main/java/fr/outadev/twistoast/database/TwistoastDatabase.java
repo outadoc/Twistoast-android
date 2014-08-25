@@ -124,7 +124,7 @@ public class TwistoastDatabase {
 			TimeoStop stop = new TimeoStop(
 					results.getString(results.getColumnIndex("stop_id")),
 					results.getString(results.getColumnIndex("stop_name")),
-					results.getLong(results.getColumnIndex("stop_ref")),
+					results.getString(results.getColumnIndex("stop_ref")),
 					line);
 
 			// add it to the list
@@ -164,7 +164,7 @@ public class TwistoastDatabase {
 		TimeoStop stop = new TimeoStop(
 				results.getString(results.getColumnIndex("stop_id")),
 				results.getString(results.getColumnIndex("stop_name")),
-				results.getLong(results.getColumnIndex("stop_ref")),
+				results.getString(results.getColumnIndex("stop_ref")),
 				line);
 
 		// close the cursor and the database

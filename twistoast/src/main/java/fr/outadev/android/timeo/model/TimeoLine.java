@@ -53,6 +53,6 @@ public class TimeoLine {
 
 	@Override
 	public String toString() {
-		return line.toString();
+		return line.getName();
 	}
 }

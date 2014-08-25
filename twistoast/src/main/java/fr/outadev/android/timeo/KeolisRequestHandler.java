@@ -196,7 +196,7 @@ public class KeolisRequestHandler {
 					} else if(tmpStop != null && tagname.equalsIgnoreCase("nom") && isInStopTag) {
 						tmpStop.setName(smartCapitalize(text));
 					} else if(tmpStop != null && tagname.equalsIgnoreCase("refs")) {
-						tmpStop.setReference(Long.valueOf(text));
+						tmpStop.setReference(text);
 					} else if(tagname.equalsIgnoreCase("erreur") && text != null && !text.trim().isEmpty()) {
 						throw new TimeoException(text);
 					}

@@ -23,7 +23,7 @@ package fr.outadev.android.timeo.model;
  */
 public class TimeoStop extends TimeoIDNameObject {
 
-	private long ref;
+	private String ref;
 	private TimeoLine line;
 
 	/**
@@ -33,7 +33,7 @@ public class TimeoStop extends TimeoIDNameObject {
 	 * @param name the name of the stop
 	 * @param ref  the reference of the stop
 	 */
-	public TimeoStop(String id, String name, long ref, TimeoLine line) {
+	public TimeoStop(String id, String name, String ref, TimeoLine line) {
 		super(id, name);
 		this.ref = ref;
 		this.line = line;
@@ -43,11 +43,11 @@ public class TimeoStop extends TimeoIDNameObject {
 		this.line = line;
 	}
 
-	public long getReference() {
+	public String getReference() {
 		return ref;
 	}
 
-	public void setReference(long ref) {
+	public void setReference(String ref) {
 		this.ref = ref;
 	}
 
@@ -57,5 +57,10 @@ public class TimeoStop extends TimeoIDNameObject {
 
 	public void setLine(TimeoLine line) {
 		this.line = line;
+	}
+
+	@Override
+	public String toString() {
+		return getName();
 	}
 }

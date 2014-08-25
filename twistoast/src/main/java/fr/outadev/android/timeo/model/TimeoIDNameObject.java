@@ -62,10 +62,7 @@ public class TimeoIDNameObject {
 
 	@Override
 	public String toString() {
-		return "TimeoIDNameObject{" +
-				"id='" + id + '\'' +
-				", name='" + name + '\'' +
-				'}';
+		return id + " - " + name;
 	}
 
 	@Override
