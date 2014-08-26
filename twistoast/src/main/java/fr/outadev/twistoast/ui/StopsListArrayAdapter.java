@@ -19,6 +19,7 @@
 package fr.outadev.twistoast.ui;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.SparseBooleanArray;
 import android.util.TypedValue;
@@ -45,7 +46,6 @@ import fr.outadev.android.timeo.model.TimeoStop;
 import fr.outadev.android.timeo.model.TimeoStopSchedule;
 import fr.outadev.twistoast.IStopsListContainer;
 import fr.outadev.twistoast.R;
-import fr.outadev.twistoast.database.TwistoastDatabase;
 
 public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 
@@ -101,8 +101,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 		}*/
 
 		// line
-		view_line_id.setBackgroundColor(TwistoastDatabase.getColorFromLineID(currentItem.getLine().getDetails()
-				.getId()));
+		view_line_id.setBackgroundColor(Color.parseColor(currentItem.getLine().getColor()));
 		lbl_line.setText(currentItem.getLine().getDetails().getId());
 
 		if(lbl_line.getText().length() > 3) {

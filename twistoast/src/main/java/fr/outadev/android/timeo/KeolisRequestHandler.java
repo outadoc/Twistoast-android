@@ -134,6 +134,8 @@ public class KeolisRequestHandler {
 						tmpLine.getDirection().setId(text);
 					} else if(tmpLine != null && tagname.equalsIgnoreCase("vers") && isInLineTag) {
 						tmpLine.getDirection().setName(smartCapitalize(text));
+					} else if(tmpLine != null && tagname.equalsIgnoreCase("couleur") && isInLineTag) {
+						tmpLine.setColor("#" + Integer.toHexString(Integer.valueOf(text)));
 					} else if(tagname.equalsIgnoreCase("erreur") && text != null && !text.trim().isEmpty()) {
 						throw new TimeoException(text);
 					}

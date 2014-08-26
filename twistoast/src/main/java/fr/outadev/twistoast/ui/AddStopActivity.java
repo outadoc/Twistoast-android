@@ -21,6 +21,7 @@ package fr.outadev.twistoast.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.database.sqlite.SQLiteConstraintException;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.TypedValue;
@@ -186,7 +187,7 @@ public class AddStopActivity extends Activity {
 				if(item != null && item.getDetails().getId() != null) {
 					// set the line view
 					lbl_line.setText(item.getDetails().getId());
-					view_line_id.setBackgroundColor(TwistoastDatabase.getColorFromLineID(item.getDetails().getId()));
+					view_line_id.setBackgroundColor(Color.parseColor(item.getColor()));
 
 					spinDirection.setEnabled(true);
 

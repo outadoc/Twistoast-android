@@ -75,6 +75,7 @@ public class TwistoastDatabase {
 
 			values.put("line_id", line.getDetails().getId());
 			values.put("line_name", line.getDetails().getName());
+			values.put("line_color", line.getColor());
 
 			db.insert("twi_line", null, values);
 			db.close();
@@ -103,9 +104,9 @@ public class TwistoastDatabase {
 		// that's a nice query you got tthhhere
 		Cursor results = db
 				.rawQuery(
-						"SELECT stop.stop_id, stop.stop_name, stop.stop_ref, line.line_id, line.line_name, dir.dir_id, " +
-								"dir.dir_name FROM twi_stop stop JOIN twi_direction dir USING(dir_id, " +
-								"line_id) JOIN twi_line line USING(line_id) ORDER BY CAST(line.line_id AS INTEGER), " +
+						"SELECT stop.stop_id, stop.stop_name, stop.stop_ref, line.line_id, line.line_name, " +
+								"line.line_color, dir.dir_id, dir.dir_name FROM twi_stop stop JOIN twi_direction dir USING" +
+								"(dir_id, line_id) JOIN twi_line line USING(line_id) ORDER BY CAST(line.line_id AS INTEGER), " +
 								"stop.stop_name, dir.dir_name",
 						null);
 
@@ -119,7 +120,8 @@ public class TwistoastDatabase {
 							results.getString(results.getColumnIndex("line_name"))),
 					new TimeoIDNameObject(
 							results.getString(results.getColumnIndex("dir_id")),
-							results.getString(results.getColumnIndex("dir_name"))));
+							results.getString(results.getColumnIndex("dir_name"))),
+					results.getString(results.getColumnIndex("line_color")));
 
 			TimeoStop stop = new TimeoStop(
 					results.getString(results.getColumnIndex("stop_id")),
@@ -145,8 +147,8 @@ public class TwistoastDatabase {
 		// that's a nice query you got tthhhere
 		Cursor results = db
 				.rawQuery(
-						"SELECT stop.stop_id, stop.stop_name, stop.stop_ref, line.line_id, line.line_name, dir.dir_id, " +
-								"dir.dir_name FROM twi_stop stop JOIN twi_direction dir USING(dir_id, " +
+						"SELECT stop.stop_id, stop.stop_name, stop.stop_ref, line.line_id, line.line_name, line.line_color, " +
+								"dir.dir_id, dir.dir_name FROM twi_stop stop JOIN twi_direction dir USING(dir_id, " +
 								"line_id) JOIN twi_line line USING(line_id) ORDER BY CAST(line.line_id AS INTEGER), " +
 								"stop.stop_name, dir.dir_name LIMIT ? OFFSET ?",
 						new String[]{"1", indexStr});
@@ -159,7 +161,8 @@ public class TwistoastDatabase {
 						results.getString(results.getColumnIndex("line_name"))),
 				new TimeoIDNameObject(
 						results.getString(results.getColumnIndex("dir_id")),
-						results.getString(results.getColumnIndex("dir_name"))));
+						results.getString(results.getColumnIndex("dir_name"))),
+				results.getString(results.getColumnIndex("line_color")));
 
 		TimeoStop stop = new TimeoStop(
 				results.getString(results.getColumnIndex("stop_id")),

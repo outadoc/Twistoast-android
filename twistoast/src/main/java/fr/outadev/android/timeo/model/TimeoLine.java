@@ -26,13 +26,16 @@ public class TimeoLine {
 	private TimeoIDNameObject line;
 	private TimeoIDNameObject direction;
 
+	private String color;
+
+	public TimeoLine(TimeoIDNameObject line, TimeoIDNameObject direction, String color) {
+		this(line, direction);
+		this.color = color;
+	}
+
 	public TimeoLine(TimeoIDNameObject line, TimeoIDNameObject direction) {
 		this.line = line;
 		this.direction = direction;
-	}
-
-	public TimeoLine() {
-
 	}
 
 	public TimeoIDNameObject getDetails() {
@@ -51,8 +54,17 @@ public class TimeoLine {
 		this.direction = direction;
 	}
 
+	public String getColor() {
+		return (color == null) ? "#34495E" : color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
+
 	@Override
 	public String toString() {
 		return line.getName();
 	}
+
 }
