@@ -18,6 +18,8 @@
 
 package fr.outadev.android.timeo.model;
 
+import android.content.Context;
+
 /**
  * Created by outadoc on 23/08/14.
  */
@@ -49,5 +51,9 @@ public class TimeoSingleSchedule {
 
 	public void setDirection(String direction) {
 		this.direction = direction;
+	}
+
+	public String getFormattedTime(Context context) {
+		return getTime();
 	}
 }

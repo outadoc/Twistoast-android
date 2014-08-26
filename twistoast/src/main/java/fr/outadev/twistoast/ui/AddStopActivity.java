@@ -325,11 +325,11 @@ public class AddStopActivity extends Activity {
 								// set the schedule labels, if we need to
 								if(schedList != null) {
 									if(schedList.get(0) != null) {
-										lbl_schedule_1.setText("- " + schedList.get(0).getTime());
+										lbl_schedule_1.setText("- " + schedList.get(0).getFormattedTime(AddStopActivity.this));
 									}
 
 									if(schedList.get(1) != null) {
-										lbl_schedule_2.setText("- " + schedList.get(1).getTime());
+										lbl_schedule_2.setText("- " + schedList.get(1).getFormattedTime(AddStopActivity.this));
 									} else {
 										lbl_schedule_2.setText("");
 									}
