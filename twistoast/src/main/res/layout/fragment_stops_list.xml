@@ -38,9 +38,11 @@
 			android:id="@+id/stops_list"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:paddingLeft="4dp"
-			android:paddingRight="4dp">
-		</ListView>
+			android:paddingTop="5dp"
+			android:paddingBottom="5dp"
+			android:background="#F0F0F0"
+			android:divider="@null" />
+
 	</android.support.v4.widget.SwipeRefreshLayout>
 
 	<com.google.android.gms.ads.AdView

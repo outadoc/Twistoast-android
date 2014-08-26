@@ -19,13 +19,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 21
+    compileSdkVersion "android-L"
     buildToolsVersion "20.0.0"
 
     defaultConfig {
         applicationId "fr.outadev.twistoast"
-        minSdkVersion 14
-        targetSdkVersion 21
+        minSdkVersion "android-L"
+        targetSdkVersion "android-L"
         versionCode 9
         versionName "1.7"
 
@@ -41,7 +41,8 @@ android {
 
 dependencies {
     compile project(':pebble_kit')
-    compile 'com.android.support:support-v4:20.+'
+    compile 'com.android.support:support-v4:21.+'
+    compile 'com.android.support:cardview-v7:+'
     compile 'com.google.android.gms:play-services:+'
     compile 'org.apache.commons:commons-lang3:3.3.2'
     compile 'com.github.kevinsawicki:http-request:5.6'
