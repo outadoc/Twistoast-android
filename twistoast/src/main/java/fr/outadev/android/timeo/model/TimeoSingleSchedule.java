@@ -20,6 +20,8 @@ package fr.outadev.android.timeo.model;
 
 import android.content.Context;
 
+import fr.outadev.twistoast.ScheduleTime;
+
 /**
  * Created by outadoc on 23/08/14.
  */
@@ -54,11 +56,11 @@ public class TimeoSingleSchedule {
 	}
 
 	public String getFormattedTime(Context context) {
-		return getTime() + " → " + getDirection();
+		return ScheduleTime.formatDate(getTime()) + " → " + getDirection();
 	}
 
 	public String getShortFormattedTime(Context context) {
 		String dir = (getDirection() != null && getDirection().matches("(A|B) .+")) ? getDirection().charAt(0) + " : " : "";
-		return dir + getTime();
+		return dir + ScheduleTime.formatDate(getTime());
 	}
 }
