@@ -27,6 +27,7 @@ import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.PebbleKit.PebbleDataReceiver;
 import com.getpebble.android.kit.util.PebbleDictionary;
 
+import java.util.Calendar;
 import java.util.UUID;
 
 import fr.outadev.android.timeo.KeolisRequestHandler;
@@ -141,9 +142,10 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 				(schedule.getSchedules().size() > 1) ? processStringForPebble(schedule.getSchedules().get(1)
 						.getShortFormattedTime(context), 15) : "");
 
-		//TODO update vibration pattern
-		if(schedule.getSchedules().get(0).getTime().contains("imminent") || schedule.getSchedules().get(0).getShortFormattedTime
-				(context).contains("en cours")) {
+		Calendar scheduleCalendar = ScheduleTime.getNextDateForTime(schedule.getSchedules().get(0).getTime());
+
+		if(ScheduleTime.getTimeDisplayMode(scheduleCalendar) == ScheduleTime.TimeDisplayMode.ARRIVAL_IMMINENT
+				|| ScheduleTime.getTimeDisplayMode(scheduleCalendar) == ScheduleTime.TimeDisplayMode.CURRENTLY_AT_STOP) {
 			response.addInt8(KEY_SHOULD_VIBRATE, (byte) 1);
 		}
 

@@ -18,6 +18,8 @@
 
 package fr.outadev.twistoast;
 
+import android.content.Context;
+
 import java.util.Calendar;
 
 /**
@@ -29,16 +31,16 @@ public abstract class ScheduleTime {
 		CURRENTLY_AT_STOP, ARRIVAL_IMMINENT, COUNTDOWN, FULL
 	}
 
-	public static String formatDate(String time) {
+	public static String formatDate(Context context, String time) {
 		Calendar schedule = getNextDateForTime(time);
 
 		switch(getTimeDisplayMode(schedule)) {
 			case CURRENTLY_AT_STOP:
-				return "Passage en cours";
+				return context.getString(R.string.schedule_time_currently_at_stop);
 			case ARRIVAL_IMMINENT:
-				return "Passage imminent";
+				return context.getString(R.string.schedule_time_arrival_imminent);
 			case COUNTDOWN:
-				return getMinutesUntilBus(schedule) + " minutes";
+				return context.getString(R.string.schedule_time_countdown, getMinutesUntilBus(schedule));
 			default:
 			case FULL:
 				return time;

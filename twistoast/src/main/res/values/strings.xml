@@ -54,6 +54,10 @@
 	<string name="action_open_website">Ouvrir dans le navigateur</string>
 	<string name="traffic_info">Info trafic</string>
 
+	<string name="schedule_time_currently_at_stop">Passage en cours</string>
+	<string name="schedule_time_arrival_imminent">Passage imminent</string>
+	<string name="schedule_time_countdown">%1$s minutes</string>
+
 	<string-array name="drawer_entries">
 		<item>Temps réel</item>
 		<item>Horaires à l\'arrêt</item>
