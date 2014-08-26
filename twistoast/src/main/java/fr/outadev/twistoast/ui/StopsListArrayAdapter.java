@@ -31,10 +31,15 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import fr.outadev.android.timeo.KeolisRequestHandler;
+import fr.outadev.android.timeo.model.TimeoException;
 import fr.outadev.android.timeo.model.TimeoStop;
 import fr.outadev.android.timeo.model.TimeoStopSchedule;
 import fr.outadev.twistoast.IStopsListContainer;
@@ -48,12 +53,16 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 	private ArrayList<TimeoStop> stops;
 	private Map<TimeoStop, TimeoStopSchedule> schedules;
 
+	private KeolisRequestHandler requestHandler;
+
 	public StopsListArrayAdapter(Context context, int resource, ArrayList<TimeoStop> stops,
 	                             IStopsListContainer stopsListContainer) {
 		super(context, resource, stops);
 
 		this.stops = stops;
 		this.stopsListContainer = stopsListContainer;
+		this.schedules = new HashMap<TimeoStop, TimeoStopSchedule>();
+		this.requestHandler = new KeolisRequestHandler();
 	}
 
 	@Override
@@ -115,14 +124,14 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 		if(schedules != null && schedules.get(currentItem) != null && schedules.get(currentItem).getSchedules() != null) {
 			if(schedules.get(currentItem).getSchedules().size() > 0 && schedules.get(currentItem).getSchedules().get(0) !=
 					null) {
-				lbl_schedule_1.setText("- " + schedules.get(currentItem).getSchedules().get(0).getTime());
+				lbl_schedule_1.setText("- " + schedules.get(currentItem).getSchedules().get(0).getFormattedTime(getContext()));
 			} else {
 				lbl_schedule_1.setText("- " + getContext().getResources().getString(R.string.loading_data));
 			}
 
 			if(schedules.get(currentItem).getSchedules().size() > 1 && schedules.get(currentItem).getSchedules().get(1) !=
 					null) {
-				lbl_schedule_2.setText("- " + schedules.get(currentItem).getSchedules().get(1).getTime());
+				lbl_schedule_2.setText("- " + schedules.get(currentItem).getSchedules().get(1).getFormattedTime(getContext()));
 			}
 		} else {
 			lbl_schedule_1.setText("- " + getContext().getResources().getString(R.string.loading_data));
@@ -159,16 +168,46 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 
 	public void updateScheduleData() {
 		// start refreshing schedules
-		(new GetTimeoDataFromAPITask()).execute();
+		(new AsyncTask<Void, Void, Map<TimeoStop, TimeoStopSchedule>>() {
+
+			@Override
+			protected Map<TimeoStop, TimeoStopSchedule> doInBackground(Void... params) {
+				try {
+					List<TimeoStopSchedule> schedulesList = requestHandler.getMultipleSchedules(stops);
+					Map<TimeoStop, TimeoStopSchedule> schedulesMap = new HashMap<TimeoStop, TimeoStopSchedule>();
+
+					if(schedulesList != null) {
+						for(TimeoStopSchedule schedule : schedulesList) {
+							schedulesMap.put(schedule.getStop(), schedule);
+						}
+
+						return schedulesMap;
+					} else {
+						throw new TimeoException();
+					}
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
+
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Map<TimeoStop, TimeoStopSchedule> scheduleMap) {
+				schedules.clear();
+
+				if(scheduleMap != null) {
+					schedules.putAll(scheduleMap);
+				}
+
+				notifyDataSetChanged();
+				stopsListContainer.endRefresh();
+
+				Toast.makeText(getContext(), R.string.refreshed_stops, Toast.LENGTH_SHORT).show();
+			}
+
+		}).execute();
 	}
 
-	private class GetTimeoDataFromAPITask extends AsyncTask<Void, Void, Map<TimeoStop, TimeoStopSchedule>> {
-
-		@Override
-		protected Map<TimeoStop, TimeoStopSchedule> doInBackground(Void... params) {
-			//TODO get and display data for new stops
-			return null;
-		}
-	}
 
 }
