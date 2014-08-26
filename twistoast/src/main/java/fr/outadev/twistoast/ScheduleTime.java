@@ -47,12 +47,12 @@ public abstract class ScheduleTime {
 		}
 	}
 
-	public static long getMillisUntilBus(Calendar schedule) {
+	private static long getMillisUntilBus(Calendar schedule) {
 		Calendar now = Calendar.getInstance();
 		return schedule.getTimeInMillis() - now.getTimeInMillis();
 	}
 
-	public static long getMinutesUntilBus(Calendar schedule) {
+	private static long getMinutesUntilBus(Calendar schedule) {
 		return (long) Math.ceil(getMillisUntilBus(schedule) / 1000 / 60);
 	}
 
