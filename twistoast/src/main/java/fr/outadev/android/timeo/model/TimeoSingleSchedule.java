@@ -19,6 +19,7 @@
 package fr.outadev.android.timeo.model;
 
 import android.content.Context;
+import android.preference.PreferenceManager;
 
 import fr.outadev.twistoast.ScheduleTime;
 
@@ -30,13 +31,14 @@ public class TimeoSingleSchedule {
 	private String time;
 	private String direction;
 
+	private static Boolean relative;
+
 	public TimeoSingleSchedule(String time, String direction) {
 		this.time = time;
 		this.direction = direction;
 	}
 
 	public TimeoSingleSchedule() {
-
 	}
 
 	public String getTime() {
@@ -56,11 +58,19 @@ public class TimeoSingleSchedule {
 	}
 
 	public String getFormattedTime(Context context) {
-		return ScheduleTime.formatDate(context, getTime());
+		return (isRelative(context)) ? ScheduleTime.formatDate(context, getTime()) : getTime();
 	}
 
 	public String getShortFormattedTime(Context context) {
 		String dir = (getDirection() != null && getDirection().matches("(A|B) .+")) ? getDirection().charAt(0) + " : " : "";
-		return dir + ScheduleTime.formatDate(context, getTime());
+		return (isRelative(context)) ? dir + ScheduleTime.formatDate(context, getTime()) : dir + getTime();
+	}
+
+	private static boolean isRelative(Context context) {
+		if(relative == null) {
+			relative = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("pref_relative_time", true);
+		}
+
+		return relative;
 	}
 }

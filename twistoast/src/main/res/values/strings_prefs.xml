@@ -33,4 +33,6 @@
 	<string name="pref_twisto_website_sum">Visitez twisto.mobi, le site mobile du réseau Twisto.</string>
 	<string name="pref_twisto_website_title">Site web Twisto</string>
 	<string name="pref_about_title">À propos</string>
+	<string name="pref_relative_time_sum">Afficher les horaires de façon relative. (ex: dans 3 minutes)</string>
+	<string name="pref_relative_time_title">Horaires relatives</string>
 </resources>

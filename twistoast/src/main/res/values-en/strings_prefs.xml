@@ -33,5 +33,7 @@
 	<string name="pref_twisto_website_sum">Visit twisto.mobi, the official website for the Twisto network. (in French)</string>
 	<string name="pref_twisto_website_title">Twisto Website</string>
 	<string name="pref_about_title">About</string>
+	<string name="pref_relative_time_sum">Display timestamps relatively to current time. (e.g. in 3 minutes)</string>
+	<string name="pref_relative_time_title">Relative timestamps</string>
 
 </resources>
