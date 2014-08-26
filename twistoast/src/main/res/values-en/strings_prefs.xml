@@ -27,7 +27,7 @@
 	<string name="pref_cat_stops">Stops List</string>
 	<string name="pref_cat_other">Others</string>
 	<string name="pref_legal_title">Legal</string>
-	<string name="pref_legal_sum">Twistoast is an application developed by Baptiste Candellier. &#169; outa[dev] - 2014.\nTwisto is a brand of Keolis Caen.\nouta[dev] disclaims any responsibility in the case of erroneous data.</string>
+	<string name="pref_legal_sum">Twistoast is an application developed by Baptiste Candellier. &#169; outa[dev] - 2014.\n\nTwisto is a brand of Keolis Caen.\n\nouta[dev] disclaims any responsibility in the case of erroneous data.\n\nTwistoast is released under the terms of the GNU GPL v3 license.</string>
 	<string name="pref_outadev_website_sum">Go to dev.outadoc.fr for more handy apps!</string>
 	<string name="pref_outadev_website_title">More applications</string>
 	<string name="pref_twisto_website_sum">Visit twisto.mobi, the official website for the Twisto network. (in French)</string>
