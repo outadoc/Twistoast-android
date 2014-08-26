@@ -21,6 +21,12 @@
 
 	<style name="AppBaseTheme" parent="android:Theme.Material.Light.DarkActionBar">
 		<item name="android:colorPrimary">@color/colorPrimary</item>
+		<!-- darker variant of colorPrimary (for status bar, contextual app bars) -->
+		<item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
+		<!-- theme UI controls like checkboxes and text fields -->
+		<item name="android:colorAccent">@color/colorAccent</item>
+		<item name="android:navigationBarColor">@color/colorPrimaryDark</item>
+		<item name="android:statusBarColor">@color/colorPrimaryDark</item>
 	</style>
 
 	<style name="TwistoastActionBar" parent="android:Widget.Material.ActionBar.Solid" />
