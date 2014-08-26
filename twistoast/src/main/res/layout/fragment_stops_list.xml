@@ -24,7 +24,6 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:orientation="vertical"
-	android:fitsSystemWindows="true"
 	android:background="#F0F0F0">
 
 <include layout="@layout/traffic_alert" />
@@ -41,6 +40,7 @@
 			android:layout_height="match_parent"
 			android:paddingTop="5dp"
 			android:paddingBottom="5dp"
+			android:clipToPadding="false"
 			android:divider="@null" />
 
 	</android.support.v4.widget.SwipeRefreshLayout>
