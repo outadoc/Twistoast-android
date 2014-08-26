@@ -23,7 +23,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
 
 import java.util.ArrayList;
 
@@ -202,85 +201,6 @@ public class TwistoastDatabase {
 		});
 
 		db.close();
-	}
-
-	public static int getColorFromLineID(String line) {
-		// every stop has a specific color: we can get it here
-		String color;
-
-		if(line.equalsIgnoreCase("TRAM")) {
-			color = "#EB6909";
-		} else if(line.equalsIgnoreCase("CEX")) {
-			color = "#642175";
-		} else if(line.equalsIgnoreCase("1")) {
-			color = "#CC007B";
-		} else if(line.equalsIgnoreCase("2")) {
-			color = "#008BCF";
-		} else if(line.equalsIgnoreCase("3")) {
-			color = "#27A22D";
-		} else if(line.equalsIgnoreCase("4")) {
-			color = "#EC7497";
-		} else if(line.equalsIgnoreCase("5")) {
-			color = "#B97CAF";
-		} else if(line.equalsIgnoreCase("6")) {
-			color = "#8F87C7";
-		} else if(line.equalsIgnoreCase("7")) {
-			color = "#87BBC3";
-		} else if(line.equalsIgnoreCase("8")) {
-			color = "#BCCF2F";
-		} else if(line.equalsIgnoreCase("9")) {
-			color = "#DFAE00";
-		} else if(line.equalsIgnoreCase("10")) {
-			color = "#60BFE8";
-		} else if(line.equalsIgnoreCase("11")) {
-			color = "#BC7419";
-		} else if(line.equalsIgnoreCase("14")) {
-			color = "#FFDD00";
-		} else if(line.equalsIgnoreCase("15")) {
-			color = "#FECC00";
-		} else if(line.equalsIgnoreCase("16")) {
-			color = "#D8B083";
-		} else if(line.equalsIgnoreCase("17")) {
-			color = "#E585B1";
-		} else if(line.equalsIgnoreCase("18")) {
-			color = "#F9B200";
-		} else if(line.equalsIgnoreCase("19")) {
-			color = "#E3004F";
-		} else if(line.equalsIgnoreCase("20")) {
-			color = "#94A6B0";
-		} else if(line.equalsIgnoreCase("21")) {
-			color = "#9C917F";
-		} else if(line.equalsIgnoreCase("22")) {
-			color = "#28338A";
-		} else if(line.equalsIgnoreCase("23")) {
-			color = "#172055";
-		} else if(line.equalsIgnoreCase("24")) {
-			color = "#E85761";
-		} else if(line.equalsIgnoreCase("25")) {
-			color = "#A5A213";
-		} else if(line.equalsIgnoreCase("26")) {
-			color = "#03B4E6";
-		} else if(line.equalsIgnoreCase("28")) {
-			color = "#F6A924";
-		} else if(line.equalsIgnoreCase("29")) {
-			color = "#807CAE";
-		} else if(line.equalsIgnoreCase("31")) {
-			color = "#EB6C68";
-		} else if(line.equalsIgnoreCase("32")) {
-			color = "#8B2412";
-		} else if(line.equalsIgnoreCase("33")) {
-			color = "#FFDD05";
-		} else if(line.equalsIgnoreCase("61")) {
-			color = "#005478";
-		} else if(line.equalsIgnoreCase("62")) {
-			color = "#857AB3";
-		} else if(line.equalsIgnoreCase("NUIT")) {
-			color = "#23255F";
-		} else {
-			color = "#34495E";
-		}
-
-		return Color.parseColor(color);
 	}
 
 }
