@@ -24,5 +24,6 @@
 	<color name="twisto_primary">#00A885</color>
 	<color name="twisto_secondary">#FCB840</color>
 	<color name="colorPrimary">#0171BB</color>
+	<color name="main_background_color">#F0F0F0</color>
 
 </resources>
