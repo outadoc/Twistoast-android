@@ -56,4 +56,9 @@ public class TimeoSingleSchedule {
 	public String getFormattedTime(Context context) {
 		return getTime() + " → " + getDirection();
 	}
+
+	public String getShortFormattedTime(Context context) {
+		String dir = (getDirection() != null && getDirection().matches("(A|B) .+")) ? getDirection().charAt(0) + " : " : "";
+		return dir + getTime();
+	}
 }

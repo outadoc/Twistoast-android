@@ -135,14 +135,15 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 		response.addString(KEY_BUS_DIRECTION_NAME, processStringForPebble(schedule.getStop().getLine().getDirection().getName(),
 				15));
 		response.addString(KEY_BUS_STOP_NAME, processStringForPebble(schedule.getStop().getName(), 15));
-		response.addString(KEY_BUS_NEXT_SCHEDULE, processStringForPebble(schedule.getSchedules().get(0).getTime(), 15, true));
+		response.addString(KEY_BUS_NEXT_SCHEDULE, processStringForPebble(schedule.getSchedules().get(0).getShortFormattedTime
+				(context), 15));
 		response.addString(KEY_BUS_SECOND_SCHEDULE,
-				(schedule.getSchedules().size() > 1) ? processStringForPebble(schedule.getSchedules().get(1).getTime(), 15,
-						true) : "");
+				(schedule.getSchedules().size() > 1) ? processStringForPebble(schedule.getSchedules().get(1)
+						.getShortFormattedTime(context), 15) : "");
 
 		//TODO update vibration pattern
-		if(schedule.getSchedules().get(0).getTime().contains("imminent") || schedule.getSchedules().get(0).getTime().contains
-				("en cours")) {
+		if(schedule.getSchedules().get(0).getTime().contains("imminent") || schedule.getSchedules().get(0).getShortFormattedTime
+				(context).contains("en cours")) {
 			response.addInt8(KEY_SHOULD_VIBRATE, (byte) 1);
 		}
 
@@ -151,19 +152,8 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 	}
 
 	private String processStringForPebble(String str, int length) {
-		return processStringForPebble(str, length, false);
-	}
-
-	private String processStringForPebble(String str, int length, boolean stripLine) {
 		if(str == null) {
 			return "";
-		}
-
-		if(stripLine) {
-			// don't keep the part that's before the ":", it's making it less
-			// readable
-			String[] stra = str.split("Ligne ");
-			str = (stra.length > 1) ? stra[1] : str;
 		}
 
 		try {
