@@ -121,6 +121,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 
 		//remove all existing schedules in that view
 		view_schedule_container.removeAllViewsInLayout();
+		view_schedule_container.setVisibility(View.GONE);
 
 		//add the new schedules one by one
 		if(schedules != null && schedules.containsKey(currentItem) && schedules.get(currentItem) != null && schedules.get
@@ -133,6 +134,10 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 
 				label.setText("- " + currSched.getFormattedTime(getContext()));
 				view_schedule_container.addView(singleScheduleView);
+			}
+
+			if(currScheds.size() > 0) {
+				view_schedule_container.setVisibility(View.VISIBLE);
 			}
 		}
 

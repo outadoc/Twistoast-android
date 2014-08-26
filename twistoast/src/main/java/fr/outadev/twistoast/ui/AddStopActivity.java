@@ -174,6 +174,7 @@ public class AddStopActivity extends Activity {
 				lbl_stop.setText(getResources().getString(R.string.loading_data));
 
 				view_schedule_container.removeAllViewsInLayout();
+				view_schedule_container.setVisibility(View.GONE);
 
 				spinStop.setEnabled(false);
 
@@ -226,6 +227,7 @@ public class AddStopActivity extends Activity {
 				// set loading labels
 				lbl_direction.setText(getResources().getString(R.string.loading_data));
 				view_schedule_container.removeAllViewsInLayout();
+				view_schedule_container.setVisibility(View.GONE);
 
 				item_next.setEnabled(false);
 				spinStop.setEnabled(false);
@@ -289,6 +291,7 @@ public class AddStopActivity extends Activity {
 			public void onItemSelected(AdapterView<?> parentView, View view, int position, long id) {
 				lbl_stop.setText(getResources().getString(R.string.loading_data));
 				view_schedule_container.removeAllViewsInLayout();
+				view_schedule_container.setVisibility(View.GONE);
 
 				TimeoIDNameObject stop = getCurrentStop();
 				item_next.setEnabled(true);
@@ -331,6 +334,10 @@ public class AddStopActivity extends Activity {
 
 										label.setText("- " + currSched.getFormattedTime(AddStopActivity.this));
 										view_schedule_container.addView(singleScheduleView);
+									}
+
+									if(schedList.size() > 0) {
+										view_schedule_container.setVisibility(View.VISIBLE);
 									}
 								}
 							}
