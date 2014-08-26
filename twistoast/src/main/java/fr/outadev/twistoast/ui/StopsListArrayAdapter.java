@@ -130,9 +130,13 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 
 			for(TimeoSingleSchedule currSched : currScheds) {
 				View singleScheduleView = inflater.inflate(R.layout.single_schedule_label, null);
-				TextView label = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule);
 
-				label.setText("- " + currSched.getFormattedTime(getContext()));
+				TextView lbl_schedule_time = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule);
+				TextView lbl_schedule_direction = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule_direction);
+
+				lbl_schedule_time.setText("- " + currSched.getFormattedTime(getContext()));
+				lbl_schedule_direction.setText(" → " + currSched.getDirection());
+
 				view_schedule_container.addView(singleScheduleView);
 			}
 
