@@ -83,7 +83,6 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 		TextView lbl_direction = (TextView) convertView.findViewById(R.id.lbl_direction_name);
 
 		LinearLayout view_schedule_container = (LinearLayout) convertView.findViewById(R.id.view_schedule_labels_container);
-
 		LinearLayout view_traffic_message = (LinearLayout) convertView.findViewById(R.id.view_traffic_message);
 
 		TextView lbl_message_title = (TextView) convertView.findViewById(R.id.lbl_message_title);

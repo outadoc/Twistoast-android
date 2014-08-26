@@ -19,10 +19,12 @@
 package fr.outadev.twistoast.ui;
 
 import android.app.Activity;
+import android.content.Context;
 import android.database.sqlite.SQLiteConstraintException;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +33,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -67,8 +70,8 @@ public class AddStopActivity extends Activity {
 	private FrameLayout view_line_id;
 	private TextView lbl_stop;
 	private TextView lbl_direction;
-	private TextView lbl_schedule_1;
-	private TextView lbl_schedule_2;
+
+	private LinearLayout view_schedule_container;
 
 	private MenuItem item_next;
 
@@ -116,11 +119,7 @@ public class AddStopActivity extends Activity {
 		// line view (to set its background color)
 		view_line_id = (FrameLayout) findViewById(R.id.view_line_id);
 
-		/*
-		// schedule labels, most important of all
-		lbl_schedule_1 = (TextView) findViewById(R.id.lbl_schedule_1);
-		lbl_schedule_2 = (TextView) findViewById(R.id.lbl_schedule_2);
-		*/
+		view_schedule_container = (LinearLayout) findViewById(R.id.view_schedule_labels_container);
 
 		spinLine.setEnabled(false);
 		spinDirection.setEnabled(false);
@@ -173,8 +172,7 @@ public class AddStopActivity extends Activity {
 				lbl_direction.setText(getResources().getString(R.string.loading_data));
 				lbl_stop.setText(getResources().getString(R.string.loading_data));
 
-				lbl_schedule_1.setText(getResources().getString(R.string.loading_data));
-				lbl_schedule_2.setText(getResources().getString(R.string.loading_data));
+				view_schedule_container.removeAllViewsInLayout();
 
 				spinStop.setEnabled(false);
 
@@ -226,8 +224,7 @@ public class AddStopActivity extends Activity {
 			public void onItemSelected(AdapterView<?> parentView, View view, int position, long id) {
 				// set loading labels
 				lbl_direction.setText(getResources().getString(R.string.loading_data));
-				lbl_schedule_1.setText(getResources().getString(R.string.loading_data));
-				lbl_schedule_2.setText(getResources().getString(R.string.loading_data));
+				view_schedule_container.removeAllViewsInLayout();
 
 				item_next.setEnabled(false);
 				spinStop.setEnabled(false);
@@ -290,8 +287,7 @@ public class AddStopActivity extends Activity {
 			@Override
 			public void onItemSelected(AdapterView<?> parentView, View view, int position, long id) {
 				lbl_stop.setText(getResources().getString(R.string.loading_data));
-				lbl_schedule_1.setText(getResources().getString(R.string.loading_data));
-				lbl_schedule_2.setText(getResources().getString(R.string.loading_data));
+				view_schedule_container.removeAllViewsInLayout();
 
 				TimeoIDNameObject stop = getCurrentStop();
 				item_next.setEnabled(true);
@@ -320,20 +316,20 @@ public class AddStopActivity extends Activity {
 						@Override
 						protected void onPostExecute(TimeoStopSchedule schedule) {
 							setProgressBarIndeterminateVisibility(false);
+							LayoutInflater inflater = (LayoutInflater) AddStopActivity.this.getSystemService(Context
+									.LAYOUT_INFLATER_SERVICE);
 
 							if(schedule != null) {
 								List<TimeoSingleSchedule> schedList = schedule.getSchedules();
 
 								// set the schedule labels, if we need to
 								if(schedList != null) {
-									if(schedList.get(0) != null) {
-										lbl_schedule_1.setText("- " + schedList.get(0).getFormattedTime(AddStopActivity.this));
-									}
+									for(TimeoSingleSchedule currSched : schedList) {
+										View singleScheduleView = inflater.inflate(R.layout.single_schedule_label, null);
+										TextView label = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule);
 
-									if(schedList.get(1) != null) {
-										lbl_schedule_2.setText("- " + schedList.get(1).getFormattedTime(AddStopActivity.this));
-									} else {
-										lbl_schedule_2.setText("");
+										label.setText("- " + currSched.getFormattedTime(AddStopActivity.this));
+										view_schedule_container.addView(singleScheduleView);
 									}
 								}
 							}
