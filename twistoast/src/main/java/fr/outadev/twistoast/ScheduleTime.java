@@ -27,6 +27,9 @@ import java.util.Calendar;
  */
 public abstract class ScheduleTime {
 
+	private final static int IMMINENT_THRESHOLD_MINUTES = 1;
+	private final static int COUNTDOWN_THRESHOLD_MINUTES = 45;
+
 	public enum TimeDisplayMode {
 		CURRENTLY_AT_STOP, ARRIVAL_IMMINENT, COUNTDOWN, FULL
 	}
@@ -61,9 +64,9 @@ public abstract class ScheduleTime {
 
 		if(offset <= 0) {
 			return TimeDisplayMode.CURRENTLY_AT_STOP;
-		} else if(offset <= 1) {
+		} else if(offset <= IMMINENT_THRESHOLD_MINUTES) {
 			return TimeDisplayMode.ARRIVAL_IMMINENT;
-		} else if(offset <= 45) {
+		} else if(offset <= COUNTDOWN_THRESHOLD_MINUTES) {
 			return TimeDisplayMode.COUNTDOWN;
 		} else {
 			return TimeDisplayMode.FULL;
