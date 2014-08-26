@@ -56,11 +56,11 @@ public class TimeoSingleSchedule {
 	}
 
 	public String getFormattedTime(Context context) {
-		return ScheduleTime.formatDate(getTime()) + " → " + getDirection();
+		return ScheduleTime.formatDate(context, getTime()) + " → " + getDirection();
 	}
 
 	public String getShortFormattedTime(Context context) {
 		String dir = (getDirection() != null && getDirection().matches("(A|B) .+")) ? getDirection().charAt(0) + " : " : "";
-		return dir + ScheduleTime.formatDate(getTime());
+		return dir + ScheduleTime.formatDate(context, getTime());
 	}
 }
