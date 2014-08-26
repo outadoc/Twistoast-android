@@ -60,6 +60,8 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 	private ListView listView;
 	private SwipeRefreshLayout swipeLayout;
 
+	private MenuItem menuItemRefresh;
+
 	private boolean isRefreshing;
 	private final long REFRESH_INTERVAL = 60000L;
 
@@ -296,6 +298,8 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		inflater.inflate(R.menu.main, menu);
+		menuItemRefresh = menu.findItem(R.id.action_refresh);
+
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
@@ -336,6 +340,10 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 		// show the refresh animation
 		swipeLayout.setRefreshing(true);
 
+		if(menuItemRefresh != null) {
+			menuItemRefresh.setEnabled(false);
+		}
+
 		// we have to reset the adapter so it correctly loads the stops
 		// if we don't do that, bugs will appear when the database has been
 		// modified
@@ -352,8 +360,12 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 	@Override
 	public void endRefresh() {
 		// notify the pull to refresh view that the refresh has finished
-		swipeLayout.setRefreshing(false);
 		isRefreshing = false;
+		swipeLayout.setRefreshing(false);
+
+		if(menuItemRefresh != null) {
+			menuItemRefresh.setEnabled(true);
+		}
 
 		Log.i("Twistoast", "refreshed, " + listAdapter.getCount() + " stops in db");
 
