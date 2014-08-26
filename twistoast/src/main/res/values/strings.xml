@@ -19,7 +19,7 @@
 
 <resources>
 
-	<string name="app_name">Twistoast</string>
+	<string name="app_name" translatable="false">Twistoast</string>
 	<string name="action_settings">Préférences</string>
 	<string name="lbl_line">Ligne</string>
 	<string name="lbl_direction">Direction</string>

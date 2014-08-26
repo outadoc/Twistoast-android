@@ -19,7 +19,6 @@
 
 <resources>
 
-	<string name="app_name">Twistoast</string>
 	<string name="action_settings">Preferences</string>
 	<string name="lbl_line">Line</string>
 	<string name="lbl_direction">Direction</string>
@@ -53,6 +52,10 @@
 	<string name="no_content">No content for the moment.</string>
 	<string name="action_open_website">Open in Browser</string>
 	<string name="traffic_info">Traffic Info</string>
+
+	<string name="schedule_time_currently_at_stop">Currently at stop</string>
+	<string name="schedule_time_arrival_imminent">Now incoming</string>
+	<string name="schedule_time_countdown">%1$s minutes</string>
 
 	<string-array name="drawer_entries">
 		<item>Real-time</item>
