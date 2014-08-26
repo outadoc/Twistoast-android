@@ -54,6 +54,6 @@ public class TimeoSingleSchedule {
 	}
 
 	public String getFormattedTime(Context context) {
-		return getTime();
+		return getTime() + " → " + getDirection();
 	}
 }
