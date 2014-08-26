@@ -18,7 +18,6 @@
 
 package fr.outadev.twistoast;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 /**
@@ -26,21 +25,46 @@ import java.util.Calendar;
  */
 public abstract class ScheduleTime {
 
+	public enum TimeDisplayMode {
+		CURRENTLY_AT_STOP, ARRIVAL_IMMINENT, COUNTDOWN, FULL
+	}
+
 	public static String formatDate(String time) {
-		Calendar now = Calendar.getInstance();
 		Calendar schedule = getNextDateForTime(time);
 
-		int offset = (int) (schedule.getTimeInMillis() - now.getTimeInMillis());
-		System.out.println(time + " >> " + (new SimpleDateFormat().format(schedule.getTime())));
+		switch(getTimeDisplayMode(schedule)) {
+			case CURRENTLY_AT_STOP:
+				return "Passage en cours";
+			case ARRIVAL_IMMINENT:
+				return "Passage imminent";
+			case COUNTDOWN:
+				return getMinutesUntilBus(schedule) + " minutes";
+			default:
+			case FULL:
+				return time;
+		}
+	}
 
-		if(offset < 0) {
-			return "Passage en cours";
-		} else if(offset < 60 * 1000) {
-			return "Passage imminent";
-		} else if(offset < 45 * 60 * 1000) {
-			return (offset / 60 / 1000) + " minutes";
+	public static long getMillisUntilBus(Calendar schedule) {
+		Calendar now = Calendar.getInstance();
+		return schedule.getTimeInMillis() - now.getTimeInMillis();
+	}
+
+	public static long getMinutesUntilBus(Calendar schedule) {
+		return (long) Math.ceil(getMillisUntilBus(schedule) / 1000 / 60);
+	}
+
+	public static TimeDisplayMode getTimeDisplayMode(Calendar schedule) {
+		long offset = getMinutesUntilBus(schedule);
+
+		if(offset <= 0) {
+			return TimeDisplayMode.CURRENTLY_AT_STOP;
+		} else if(offset <= 1) {
+			return TimeDisplayMode.ARRIVAL_IMMINENT;
+		} else if(offset <= 45) {
+			return TimeDisplayMode.COUNTDOWN;
 		} else {
-			return time;
+			return TimeDisplayMode.FULL;
 		}
 	}
 
@@ -50,14 +74,14 @@ public abstract class ScheduleTime {
 		int hours = Integer.valueOf(splitTime[0]);
 		int minutes = Integer.valueOf(splitTime[1]);
 
-		Calendar now = Calendar.getInstance();
 		Calendar scheduledTime = Calendar.getInstance();
+		Calendar now = Calendar.getInstance();
 
 		scheduledTime.set(Calendar.HOUR_OF_DAY, hours);
 		scheduledTime.set(Calendar.MINUTE, minutes);
 
 		if(now.get(Calendar.HOUR_OF_DAY) > hours
-				|| now.get(Calendar.HOUR_OF_DAY) == hours && now.get(Calendar.MINUTE) > minutes + 2) {
+				|| now.get(Calendar.HOUR_OF_DAY) == hours && now.get(Calendar.MINUTE) > minutes) {
 			scheduledTime.add(Calendar.DAY_OF_YEAR, 1);
 		}
 
