@@ -88,7 +88,8 @@
 			android:layout_height="wrap_content"
 			android:layout_margin="5dp"
 			android:orientation="vertical"
-			android:paddingLeft="5dp">
+			android:paddingLeft="5dp"
+			android:paddingStart="5dp">
 
 			<TextView
 				android:id="@+id/lbl_stop_name"
@@ -107,30 +108,13 @@
 				android:textSize="15sp"
 				android:textStyle="italic" />
 
-			<TextView
-				android:id="@+id/lbl_schedule_1"
-				android:layout_width="wrap_content"
+			<LinearLayout
+				android:id="@+id/view_schedule_labels_container"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_marginLeft="15dp"
-				android:layout_marginTop="3dp"
-				android:ellipsize="end"
-				android:maxLines="1"
-				android:scrollHorizontally="true"
-				android:textAppearance="?android:attr/textAppearanceMedium"
-				android:textColor="#333333"
-				android:textSize="15sp" />
+				android:orientation="vertical">
 
-			<TextView
-				android:id="@+id/lbl_schedule_2"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginLeft="15dp"
-				android:ellipsize="end"
-				android:maxLines="1"
-				android:scrollHorizontally="true"
-				android:textAppearance="?android:attr/textAppearanceMedium"
-				android:textColor="#333333"
-				android:textSize="15sp" />
+			</LinearLayout>
 		</LinearLayout>
 	</LinearLayout>
 

@@ -40,6 +40,7 @@ import java.util.Map;
 
 import fr.outadev.android.timeo.KeolisRequestHandler;
 import fr.outadev.android.timeo.model.TimeoException;
+import fr.outadev.android.timeo.model.TimeoSingleSchedule;
 import fr.outadev.android.timeo.model.TimeoStop;
 import fr.outadev.android.timeo.model.TimeoStopSchedule;
 import fr.outadev.twistoast.IStopsListContainer;
@@ -68,9 +69,9 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 	@Override
 	public View getView(final int position, View convertView, final ViewGroup parent) {
 		TimeoStop currentItem = getItem(position);
+		LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		if(convertView == null) {
-			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			convertView = inflater.inflate(R.layout.schedule_row, parent, false);
 		}
 
@@ -81,8 +82,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 		TextView lbl_stop = (TextView) convertView.findViewById(R.id.lbl_stop_name);
 		TextView lbl_direction = (TextView) convertView.findViewById(R.id.lbl_direction_name);
 
-		TextView lbl_schedule_1 = (TextView) convertView.findViewById(R.id.lbl_schedule_1);
-		TextView lbl_schedule_2 = (TextView) convertView.findViewById(R.id.lbl_schedule_2);
+		LinearLayout view_schedule_container = (LinearLayout) convertView.findViewById(R.id.view_schedule_labels_container);
 
 		LinearLayout view_traffic_message = (LinearLayout) convertView.findViewById(R.id.view_traffic_message);
 
@@ -121,22 +121,22 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 		lbl_direction.setText(getContext().getResources()
 				.getString(R.string.direction_name, currentItem.getLine().getDirection().getName()));
 
-		if(schedules != null && schedules.get(currentItem) != null && schedules.get(currentItem).getSchedules() != null) {
-			if(schedules.get(currentItem).getSchedules().size() > 0 && schedules.get(currentItem).getSchedules().get(0) !=
-					null) {
-				lbl_schedule_1.setText("- " + schedules.get(currentItem).getSchedules().get(0).getFormattedTime(getContext()));
-			} else {
-				lbl_schedule_1.setText("- " + getContext().getResources().getString(R.string.loading_data));
-			}
+		//remove all existing schedules in that view
+		view_schedule_container.removeAllViewsInLayout();
 
-			if(schedules.get(currentItem).getSchedules().size() > 1 && schedules.get(currentItem).getSchedules().get(1) !=
-					null) {
-				lbl_schedule_2.setText("- " + schedules.get(currentItem).getSchedules().get(1).getFormattedTime(getContext()));
+		//add the new schedules one by one
+		if(schedules != null && schedules.containsKey(currentItem) && schedules.get(currentItem) != null && schedules.get
+				(currentItem).getSchedules() != null) {
+			List<TimeoSingleSchedule> currScheds = schedules.get(currentItem).getSchedules();
+
+			for(TimeoSingleSchedule currSched : currScheds) {
+				View singleScheduleView = inflater.inflate(R.layout.single_schedule_label, null);
+				TextView label = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule);
+
+				label.setText("- " + currSched.getFormattedTime(getContext()));
+				view_schedule_container.addView(singleScheduleView);
 			}
-		} else {
-			lbl_schedule_1.setText("- " + getContext().getResources().getString(R.string.loading_data));
 		}
-
 
 		view_line_id.setOnClickListener(new OnClickListener() {
 

@@ -116,9 +116,11 @@ public class AddStopActivity extends Activity {
 		// line view (to set its background color)
 		view_line_id = (FrameLayout) findViewById(R.id.view_line_id);
 
+		/*
 		// schedule labels, most important of all
 		lbl_schedule_1 = (TextView) findViewById(R.id.lbl_schedule_1);
 		lbl_schedule_2 = (TextView) findViewById(R.id.lbl_schedule_2);
+		*/
 
 		spinLine.setEnabled(false);
 		spinDirection.setEnabled(false);
