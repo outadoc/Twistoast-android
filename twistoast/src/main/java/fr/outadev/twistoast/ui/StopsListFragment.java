@@ -99,24 +99,24 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 		SwipeDismissListViewTouchListener touchListener = new SwipeDismissListViewTouchListener(listView,
 				new SwipeDismissListViewTouchListener.DismissCallbacks() {
 
-			@Override
-			public boolean canDismiss(int position) {
-				return true;
-			}
+					@Override
+					public boolean canDismiss(int position) {
+						return true;
+					}
 
-			@Override
-			public void onDismiss(ListView listView, int[] reverseSortedPositions) {
-				for(int position : reverseSortedPositions) {
-					databaseHandler.deleteStop(listAdapter.getItem(position));
-					listAdapter.remove(listAdapter.getItem(position));
-				}
+					@Override
+					public void onDismiss(ListView listView, int[] reverseSortedPositions) {
+						for(int position : reverseSortedPositions) {
+							databaseHandler.deleteStop(listAdapter.getItem(position));
+							listAdapter.remove(listAdapter.getItem(position));
+						}
 
-				if(listAdapter.isEmpty()) {
-					noContentView.setVisibility(View.VISIBLE);
-				}
+						if(listAdapter.isEmpty()) {
+							noContentView.setVisibility(View.VISIBLE);
+						}
 
-				listAdapter.notifyDataSetChanged();
-			}
+						listAdapter.notifyDataSetChanged();
+					}
 
 				});
 
