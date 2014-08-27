@@ -26,8 +26,8 @@ android {
         applicationId "fr.outadev.twistoast"
         minSdkVersion "android-L"
         targetSdkVersion "android-L"
-        versionCode 9
-        versionName "1.7"
+        versionCode 10
+        versionName "2.0"
 
     }
 
