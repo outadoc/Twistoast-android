@@ -101,7 +101,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 					@Override
 					public boolean canDismiss(int position) {
-						return true;
+						return !isRefreshing;
 					}
 
 					@Override
