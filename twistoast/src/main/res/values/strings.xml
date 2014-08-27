@@ -59,6 +59,9 @@
 	<string name="schedule_time_arrival_imminent">Passage imminent</string>
 	<string name="schedule_time_countdown">%1$s minutes</string>
 
+	<string name="add_first_stop_title">Rien pour l\'instant !</string>
+	<string name="add_first_stop_instructions">Pour ajouter un arrêt, appuyez sur <b>+</b>.</string>
+
 	<string-array name="drawer_entries">
 		<item>Temps réel</item>
 		<item>Horaires à l\'arrêt</item>

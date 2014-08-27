@@ -62,6 +62,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 	private SwipeRefreshLayout swipeLayout;
 
 	private MenuItem menuItemRefresh;
+	private View noContentView;
 
 	private boolean isRefreshing;
 	private final long REFRESH_INTERVAL = 60000L;
@@ -102,6 +103,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 				R.color.twisto_primary, R.color.twisto_secondary);
 
 		listView = (ListView) view.findViewById(R.id.stops_list);
+		noContentView = view.findViewById(R.id.view_no_content);
 
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 		listView.setMultiChoiceModeListener(new MultiChoiceModeListener() {
@@ -370,16 +372,16 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 		Log.i("Twistoast", "refreshed, " + listAdapter.getCount() + " stops in db");
 
-		if(getActivity() != null && listAdapter.getCount() > 0) {
-			Toast.makeText(getActivity(), getResources().getString(R.string.refreshed_stops),
-					Toast.LENGTH_SHORT).show();
-		} else if(listAdapter.getCount() < 1) {
-			Toast.makeText(getActivity(), getResources().getString(R.string.no_content), Toast.LENGTH_SHORT).show();
+		if(getActivity() != null && !listAdapter.isEmpty()) {
+			Toast.makeText(getActivity(), getResources().getString(R.string.refreshed_stops), Toast.LENGTH_SHORT).show();
 		}
+
+		noContentView.setVisibility((listAdapter.isEmpty()) ? View.VISIBLE : View.GONE);
 
 		// reset the timer loop, and start it again
 		// this ensures the list is refreshed automatically every 60 seconds
 		handler.removeCallbacks(runnable);
+
 		if(!isInBackground) {
 			handler.postDelayed(runnable, REFRESH_INTERVAL);
 		}

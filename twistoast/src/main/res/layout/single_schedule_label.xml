@@ -44,6 +44,6 @@
 		android:ellipsize="end"
 		android:maxLines="1"
 		android:textAppearance="?android:attr/textAppearanceMedium"
-		android:textColor="#ff939393"
+		android:textColor="#ff707070"
 		android:textSize="15sp" />
 </LinearLayout>
