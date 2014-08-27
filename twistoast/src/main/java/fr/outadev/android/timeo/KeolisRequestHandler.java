@@ -473,7 +473,8 @@ public class KeolisRequestHandler {
 		//these words will never be capitalized
 		String[] determinants = new String[]{"de", "du", "des", "au", "aux", "à", "la", "le", "les", "d", "et", "l"};
 		//these words will always be capitalized
-		String[] specialWords = new String[]{"sncf", "chu", "chr", "crous", "suaps", "fpa", "za", "zi", "zac", "cpam", "efs",
+		String[] specialWords = new String[]{"sncf", "chu", "chr", "chs", "crous", "suaps", "fpa", "za", "zi", "zac", "cpam",
+				"efs",
 				"mjc"};
 
 		//explode the string with both spaces and apostrophes
