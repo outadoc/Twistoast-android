@@ -18,6 +18,7 @@
 
 package fr.outadev.twistoast.ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -53,16 +54,18 @@ import fr.outadev.twistoast.R;
 public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 
 	private final IStopsListContainer stopsListContainer;
+	private Activity activity;
 
 	private List<TimeoStop> stops;
 	private Map<TimeoStop, TimeoStopSchedule> schedules;
 
 	private KeolisRequestHandler requestHandler;
 
-	public StopsListArrayAdapter(Context context, int resource, List<TimeoStop> stops,
+	public StopsListArrayAdapter(Context context, Activity activity, int resource, List<TimeoStop> stops,
 	                             IStopsListContainer stopsListContainer) {
 		super(context, resource, stops);
 
+		this.activity = activity;
 		this.stops = stops;
 		this.stopsListContainer = stopsListContainer;
 		this.schedules = new HashMap<TimeoStop, TimeoStopSchedule>();
@@ -194,8 +197,16 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 					}
 
 					return schedulesMap;
-				} catch(Exception e) {
+				} catch(final Exception e) {
 					e.printStackTrace();
+					activity.runOnUiThread(new Runnable() {
+
+						@Override
+						public void run() {
+							Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+						}
+
+					});
 				}
 
 				return null;

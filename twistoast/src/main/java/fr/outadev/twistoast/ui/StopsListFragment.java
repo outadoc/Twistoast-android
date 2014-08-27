@@ -349,7 +349,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 		// if we don't do that, bugs will appear when the database has been
 		// modified
 		if(resetList) {
-			listAdapter = new StopsListArrayAdapter(getActivity(), android.R.layout.simple_list_item_1,
+			listAdapter = new StopsListArrayAdapter(getActivity(), getActivity(), android.R.layout.simple_list_item_1,
 					databaseHandler.getAllStops(), this);
 			listView.setAdapter(listAdapter);
 		}
