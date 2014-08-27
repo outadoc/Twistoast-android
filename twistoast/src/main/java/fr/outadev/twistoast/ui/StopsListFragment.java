@@ -18,9 +18,7 @@
 
 package fr.outadev.twistoast.ui;
 
-import android.app.AlertDialog;
 import android.app.Fragment;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -29,15 +27,12 @@ import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.Log;
-import android.util.SparseBooleanArray;
-import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -47,10 +42,6 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import fr.outadev.android.timeo.model.TimeoStop;
 import fr.outadev.twistoast.IStopsListContainer;
 import fr.outadev.twistoast.MainActivity;
 import fr.outadev.twistoast.R;
@@ -105,119 +96,32 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 		listView = (ListView) view.findViewById(R.id.stops_list);
 		noContentView = view.findViewById(R.id.view_no_content);
 
-		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-		listView.setMultiChoiceModeListener(new MultiChoiceModeListener() {
+		SwipeDismissListViewTouchListener touchListener = new SwipeDismissListViewTouchListener(listView,
+				new SwipeDismissListViewTouchListener.DismissCallbacks() {
 
 			@Override
-			public boolean onActionItemClicked(final ActionMode mode, MenuItem item) {
-				switch(item.getItemId()) {
-					case R.id.action_delete:
-						// if we want to remove a bus stop, we'll have to ask a
-						// confirmation
-						AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			public boolean canDismiss(int position) {
+				return true;
+			}
 
-						// add the buttons
-						builder.setPositiveButton(R.string.confirm_yes, new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int id) {
-								// get the positions of the selected elements
-								SparseBooleanArray checked = listView.getCheckedItemPositions();
-								List<TimeoStop> objectsToDelete = new ArrayList<TimeoStop>();
-
-								// add every stop we want to delete to the list
-								for(int i = 0; i < checked.size(); i++) {
-									if(checked.valueAt(i)) {
-										objectsToDelete.add(listAdapter.getItem(checked.keyAt(i)));
-									}
-								}
-
-								// DELETE EVERYTHING AAAAAAAAA-
-								for(TimeoStop object : objectsToDelete) {
-									databaseHandler.deleteStop(object);
-									listAdapter.remove(object);
-								}
-
-								// this was a triumph, say we've deleted teh
-								// stuff
-								Toast.makeText(getActivity(), getResources().getString(R.string.confirm_delete_success),
-										Toast.LENGTH_SHORT).show();
-
-								mode.finish();
-								refreshListFromDB(true);
-							}
-						});
-
-						// on the other hand, if we don't actually want to delete
-						// anything,
-						// well.
-						builder.setNegativeButton(R.string.confirm_no, null);
-
-						// set dialog title
-						builder.setTitle(getResources().getString(R.string.confirm_delete_title));
-
-						// correctly set the message of the dialog
-						if(listView.getCheckedItemCount() > 1) {
-							builder.setMessage(String.format(getResources().getString(R.string.confirm_delete_msg_multi),
-									listView.getCheckedItemCount()));
-						} else {
-							builder.setMessage(getResources().getString(R.string.confirm_delete_msg_single));
-						}
-
-						// create the AlertDialog and show it
-						AlertDialog dialog = builder.create();
-						dialog.show();
-
-						break;
+			@Override
+			public void onDismiss(ListView listView, int[] reverseSortedPositions) {
+				for(int position : reverseSortedPositions) {
+					databaseHandler.deleteStop(listAdapter.getItem(position));
+					listAdapter.remove(listAdapter.getItem(position));
 				}
 
-				return true;
-			}
-
-			@Override
-			public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-				// yay, inflation
-				MenuInflater inflater = getActivity().getMenuInflater();
-
-				inflater.inflate(R.menu.main_edit, menu);
-				mode.setTitle(getActivity().getResources().getString(R.string.select_items));
-				setSubtitle(mode);
-
-				return true;
-			}
-
-			@Override
-			public void onDestroyActionMode(ActionMode mode) {
-
-			}
-
-			@Override
-			public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-				return true;
-			}
-
-			@Override
-			public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-				setSubtitle(mode);
-			}
-
-			public void setSubtitle(ActionMode mode) {
-				// set the action bar subtitle accordingly
-				final int checkedCount = listView.getCheckedItemCount();
-
-				switch(checkedCount) {
-					case 0:
-						mode.setSubtitle(null);
-						break;
-					case 1:
-						mode.setSubtitle(getActivity().getResources().getString(R.string.one_stop_selected));
-						break;
-					default:
-						mode.setSubtitle(String.format(getActivity().getResources().getString(R.string.multi_stops_selected),
-								checkedCount));
-						break;
+				if(listAdapter.isEmpty()) {
+					noContentView.setVisibility(View.VISIBLE);
 				}
+
+				listAdapter.notifyDataSetChanged();
 			}
-		});
+
+				});
+
+		listView.setOnTouchListener(touchListener);
+		listView.setOnScrollListener(touchListener.makeScrollListener());
 
 		return view;
 	}
