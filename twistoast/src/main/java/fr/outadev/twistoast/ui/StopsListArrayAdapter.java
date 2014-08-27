@@ -22,7 +22,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
-import android.util.SparseBooleanArray;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +30,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -151,22 +149,6 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 				view_schedule_container.setVisibility(View.VISIBLE);
 			}
 		}
-
-		view_line_id.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				SparseBooleanArray checked = ((ListView) parent).getCheckedItemPositions();
-
-				if(checked.get(position)) {
-					((ListView) parent).setItemChecked(position, false);
-				} else {
-					((ListView) parent).setItemChecked(position, true);
-				}
-			}
-
-		});
 
 		view_traffic_message.setOnClickListener(new OnClickListener() {
 
