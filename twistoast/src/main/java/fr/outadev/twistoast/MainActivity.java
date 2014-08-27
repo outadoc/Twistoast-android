@@ -190,13 +190,15 @@ public class MainActivity extends Activity {
 
 	@Override
 	public void onBackPressed() {
-		if(frags[currentFragmentIndex] instanceof WebViewFragment && ((WebViewFragment) frags[currentFragmentIndex]).canGoBack
-				()) {
+		if(frags[currentFragmentIndex] instanceof WebViewFragment
+				&& ((WebViewFragment) frags[currentFragmentIndex]).canGoBack()) {
 			((WebViewFragment) frags[currentFragmentIndex]).goBack();
 		} else if(currentFragmentIndex == 0) {
 			super.onBackPressed();
-		} else {
+		} else if(!drawerLayout.isDrawerOpen(Gravity.START)) {
 			drawerLayout.openDrawer(Gravity.START);
+		} else {
+			loadFragmentFromDrawerPosition(0);
 		}
 	}
 
