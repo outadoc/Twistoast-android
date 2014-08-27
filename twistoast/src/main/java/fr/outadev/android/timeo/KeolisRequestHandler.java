@@ -256,8 +256,7 @@ public class KeolisRequestHandler {
 	 */
 	@NonNull
 	public List<TimeoStop> getStops(int networkCode, TimeoLine line) throws HttpRequestException, XmlPullParserException,
-			IOException,
-			TimeoException {
+			IOException, TimeoException {
 		String params = "xml=1&ligne=" + line.getDetails().getId() + "&sens=" + line.getDirection().getId();
 		String result = requestWebPage(BASE_URL + getPageNameForNetworkCode(networkCode), params, true);
 
@@ -327,8 +326,7 @@ public class KeolisRequestHandler {
 	 */
 	@NonNull
 	public TimeoStopSchedule getSingleSchedule(int networkCode, TimeoStop stop) throws HttpRequestException, TimeoException,
-			IOException,
-			XmlPullParserException {
+			IOException, XmlPullParserException {
 		List<TimeoStop> list = new ArrayList<TimeoStop>();
 		list.add(stop);
 		List<TimeoStopSchedule> schedules = getMultipleSchedules(networkCode, list);
