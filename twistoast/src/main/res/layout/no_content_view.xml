@@ -38,7 +38,7 @@
 			android:layout_gravity="center_horizontal"
 			android:text="@string/add_first_stop_title"
 			android:textAppearance="?android:attr/textAppearanceLarge"
-			android:textColor="#ff434343" />
+			android:textColor="#ff5d5d5d" />
 
 		<TextView
 			android:id="@+id/txt_add_skin_instruction"
@@ -47,7 +47,7 @@
 			android:layout_gravity="center_horizontal"
 			android:text="@string/add_first_stop_instructions"
 			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:textColor="#ff707070" />
+			android:textColor="#ff909090" />
 	</LinearLayout>
 
 </FrameLayout>
