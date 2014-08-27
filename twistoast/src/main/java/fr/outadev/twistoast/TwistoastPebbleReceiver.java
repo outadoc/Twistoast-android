@@ -128,6 +128,12 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 
 	}
 
+	/**
+	 * Sens a response packet to the Pebble.
+	 *
+	 * @param context  a context
+	 * @param schedule the schedule to send back
+	 */
 	public void craftAndSendSchedulePacket(Context context, TimeoStopSchedule schedule) {
 		PebbleDictionary response = new PebbleDictionary();
 
@@ -153,6 +159,13 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 		PebbleKit.sendDataToPebble(context, PEBBLE_UUID, response);
 	}
 
+	/**
+	 * Processes a string for the Pebble's screen.
+	 *
+	 * @param str    the string to process
+	 * @param length the max length of the string
+	 * @return the processed string
+	 */
 	private String processStringForPebble(String str, int length) {
 		if(str == null) {
 			return "";

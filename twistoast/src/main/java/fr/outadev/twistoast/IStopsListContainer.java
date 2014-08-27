@@ -1,5 +1,5 @@
 /*
- * Twistoast - OnRefreshEndListener
+ * Twistoast - IStopsListContainer
  * Copyright (C) 2013-2014  Baptiste Candellier
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,9 @@
 package fr.outadev.twistoast;
 
 /**
- * Created by outadoc on 25/08/14.
+ * Implements methods a stops list container activity/fragment should have.
+ *
+ * @author outadoc
  */
 public interface IStopsListContainer {
 

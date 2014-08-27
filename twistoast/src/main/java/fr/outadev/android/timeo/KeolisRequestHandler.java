@@ -18,6 +18,8 @@
 
 package fr.outadev.android.timeo;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.util.Xml;
 
@@ -59,40 +61,59 @@ public class KeolisRequestHandler {
 
 	private final static int REQUEST_TIMEOUT = 10000;
 
-	private String lastHTTPResponse;
-
 	/**
 	 * Creates a Timeo request handler.
 	 */
 	public KeolisRequestHandler() {
-		this.lastHTTPResponse = null;
+
 	}
 
+	/**
+	 * Requests a web page via an HTTP GET request.
+	 *
+	 * @param url       URL to fetch
+	 * @param params    HTTP GET parameters as a string (e.g. foo=bar&bar=foobar)
+	 * @param useCaches true if the client can cache the request
+	 * @return the raw body of the page
+	 * @throws HttpRequestException if an HTTP error occurred
+	 */
 	private String requestWebPage(String url, String params, boolean useCaches) throws HttpRequestException {
 		Log.i("Twistoast", "requested " + params);
-		lastHTTPResponse = HttpRequest.get(url + "?" + params)
+
+		return HttpRequest.get(url + "?" + params)
 				.useCaches(useCaches)
 				.readTimeout(REQUEST_TIMEOUT)
 				.body();
-
-		return lastHTTPResponse;
 	}
 
+	/**
+	 * Requests a web page via an HTTP GET request.
+	 *
+	 * @param url       URL to fetch
+	 * @param useCaches true if the client can cache the request
+	 * @return the raw body of the page
+	 * @throws HttpRequestException if an HTTP error occurred
+	 */
 	private String requestWebPage(String url, boolean useCaches) throws HttpRequestException {
 		return requestWebPage(url, "", useCaches);
 	}
 
 
+	/**
+	 * Fetch the bus lines from the API.
+	 *
+	 * @return a list of lines.
+	 * @throws HttpRequestException   if an HTTP error occurred
+	 * @throws XmlPullParserException if a parsing exception occurred
+	 * @throws IOException            if an I/O exception occurred whilst parsing the XML
+	 * @throws TimeoException         if the API returned an error
+	 */
+	@NonNull
 	public List<TimeoLine> getLines() throws HttpRequestException, XmlPullParserException, IOException, TimeoException {
 		String params = "xml=1";
 		String result = requestWebPage(BASE_URL, params, true);
 
 		XmlPullParser parser = getParserForXMLString(result);
-
-		if(parser == null) {
-			return null;
-		}
-
 		int eventType = parser.getEventType();
 
 		TimeoLine tmpLine = null;
@@ -152,17 +173,23 @@ public class KeolisRequestHandler {
 		return lines;
 	}
 
+	/**
+	 * Fetch a list of bus stops from the API.
+	 *
+	 * @param line the line for which we should fetch the stops
+	 * @return a list of bus stops
+	 * @throws HttpRequestException   if an HTTP error occurred
+	 * @throws XmlPullParserException if a parsing exception occurred
+	 * @throws IOException            if an I/O exception occurred whilst parsing the XML
+	 * @throws TimeoException         if the API returned an error
+	 */
+	@NonNull
 	public List<TimeoStop> getStops(TimeoLine line) throws HttpRequestException, XmlPullParserException, IOException,
 			TimeoException {
 		String params = "xml=1&ligne=" + line.getDetails().getId() + "&sens=" + line.getDirection().getId();
 		String result = requestWebPage(BASE_URL, params, true);
 
 		XmlPullParser parser = getParserForXMLString(result);
-
-		if(parser == null) {
-			return null;
-		}
-
 		int eventType = parser.getEventType();
 
 		TimeoStop tmpStop = null;
@@ -215,19 +242,41 @@ public class KeolisRequestHandler {
 		return stops;
 	}
 
+	/**
+	 * Fetches a schedule for a single bus stop from the API.
+	 *
+	 * @param stop the bus stop to fetch the schedule for
+	 * @return a TimeoStopSchedule containing said schedule
+	 * @throws HttpRequestException   if an HTTP error occurred
+	 * @throws XmlPullParserException if a parsing exception occurred
+	 * @throws IOException            if an I/O exception occurred whilst parsing the XML
+	 * @throws TimeoException         if the API returned an error
+	 */
+	@NonNull
 	public TimeoStopSchedule getSingleSchedule(TimeoStop stop) throws HttpRequestException, TimeoException, IOException,
 			XmlPullParserException {
 		List<TimeoStop> list = new ArrayList<TimeoStop>();
 		list.add(stop);
 		List<TimeoStopSchedule> schedules = getMultipleSchedules(list);
 
-		if(schedules != null && schedules.size() > 0) {
+		if(schedules.size() > 0) {
 			return schedules.get(0);
 		} else {
 			throw new TimeoException();
 		}
 	}
 
+	/**
+	 * Fetches schedules for multiple bus stops from the API.
+	 *
+	 * @param stops a list of bus stops we should fetch the schedules for
+	 * @return a list of TimeoStopSchedule containing said schedules
+	 * @throws HttpRequestException   if an HTTP error occurred
+	 * @throws XmlPullParserException if a parsing exception occurred
+	 * @throws IOException            if an I/O exception occurred whilst parsing the XML
+	 * @throws TimeoException         if the API returned an error
+	 */
+	@NonNull
 	public List<TimeoStopSchedule> getMultipleSchedules(List<TimeoStop> stops) throws HttpRequestException,
 			TimeoException, XmlPullParserException, IOException {
 		String refs = "";
@@ -242,11 +291,6 @@ public class KeolisRequestHandler {
 		String result = requestWebPage(BASE_URL, params, true);
 
 		XmlPullParser parser = getParserForXMLString(result);
-
-		if(parser == null) {
-			return null;
-		}
-
 		int eventType = parser.getEventType();
 
 		//final schedules to return
@@ -310,12 +354,15 @@ public class KeolisRequestHandler {
 		return schedules;
 	}
 
+	/**
+	 * Fetches the current global traffic alert message. Might or might not be null.
+	 *
+	 * @return a TimeoTrafficAlert if an alert is currently broadcasted on the website, else null
+	 */
+	@Nullable
 	public TimeoTrafficAlert getGlobalTrafficAlert() {
-		String response = requestWebPage(BASE_PRE_HOME_URL, true);
-		return parseGlobalTrafficAlert(response);
-	}
+		String source = requestWebPage(BASE_PRE_HOME_URL, true);
 
-	private TimeoTrafficAlert parseGlobalTrafficAlert(String source) {
 		if(source != null && !source.isEmpty()) {
 			try {
 				JSONObject obj = (JSONObject) new JSONTokener(source).nextValue();
@@ -377,31 +424,20 @@ public class KeolisRequestHandler {
 		return newStr;
 	}
 
-	public XmlPullParser getParserForXMLString(String xml) {
-		try {
-			XmlPullParser parser = Xml.newPullParser();
-
-			parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-			parser.setInput(new StringReader(xml));
-			parser.nextTag();
-
-			return parser;
-		} catch(XmlPullParserException e) {
-			e.printStackTrace();
-			return null;
-		} catch(IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
 	/**
-	 * Gets the last plain text web response that was returned by the API.
+	 * Gets an XmlPullParser for an XML string.
 	 *
-	 * @return last result of the HTTP request
+	 * @param xml an xml document in a String, sexy
+	 * @return an XmlPullParser ready to parse the document
 	 */
-	public String getLastHTTPResponse() {
-		return lastHTTPResponse;
+	public XmlPullParser getParserForXMLString(String xml) throws XmlPullParserException, IOException {
+		XmlPullParser parser = Xml.newPullParser();
+
+		parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+		parser.setInput(new StringReader(xml));
+		parser.nextTag();
+
+		return parser;
 	}
 
 }

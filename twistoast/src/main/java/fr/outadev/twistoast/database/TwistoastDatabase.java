@@ -25,11 +25,15 @@ import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import fr.outadev.android.timeo.model.TimeoIDNameObject;
 import fr.outadev.android.timeo.model.TimeoLine;
 import fr.outadev.android.timeo.model.TimeoStop;
 
+/**
+ * Database management class.
+ */
 public class TwistoastDatabase {
 
 	private final TwistoastDatabaseOpenHelper databaseOpenHelper;
@@ -38,6 +42,13 @@ public class TwistoastDatabase {
 		databaseOpenHelper = new TwistoastDatabaseOpenHelper(context);
 	}
 
+	/**
+	 * Adds a bus stop to the database.
+	 *
+	 * @param stop the bus stop to add
+	 * @throws IllegalArgumentException  if the stop is not valid
+	 * @throws SQLiteConstraintException if a constraint failed
+	 */
 	public void addStopToDatabase(TimeoStop stop) throws IllegalArgumentException, SQLiteConstraintException {
 		if(stop != null) {
 			// when we want to add a stop, we add the line first, then the
@@ -67,6 +78,11 @@ public class TwistoastDatabase {
 		}
 	}
 
+	/**
+	 * Adds a bus line to the database.
+	 *
+	 * @param line the bus line to add
+	 */
 	private void addLineToDatabase(TimeoLine line) {
 		if(line != null && line.getDetails() != null) {
 			SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
@@ -83,6 +99,11 @@ public class TwistoastDatabase {
 		}
 	}
 
+	/**
+	 * Adds a direction to the database.
+	 *
+	 * @param line the bus line whose direction to add
+	 */
 	private void addDirectionToDatabase(TimeoLine line) {
 		if(line != null && line.getDirection() != null) {
 			SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
@@ -97,7 +118,12 @@ public class TwistoastDatabase {
 		}
 	}
 
-	public ArrayList<TimeoStop> getAllStops() {
+	/**
+	 * Gets all stops currently stored in the database.
+	 *
+	 * @return a list of all the stops
+	 */
+	public List<TimeoStop> getAllStops() {
 		SQLiteDatabase db = databaseOpenHelper.getReadableDatabase();
 
 		// that's a nice query you got tthhhere
@@ -139,6 +165,12 @@ public class TwistoastDatabase {
 		return stopsList;
 	}
 
+	/**
+	 * Gets a bus stop at a specific index. Useful for Pebble, for example.
+	 *
+	 * @param index the index of the stop in the database, sorted by line id, stop name, and direction name
+	 * @return the corresponding stop object
+	 */
 	public TimeoStop getStopAtIndex(int index) {
 		SQLiteDatabase db = databaseOpenHelper.getReadableDatabase();
 		String indexStr = String.valueOf(index);
@@ -152,30 +184,39 @@ public class TwistoastDatabase {
 								"stop.stop_name, dir.dir_name LIMIT ? OFFSET ?",
 						new String[]{"1", indexStr});
 
-		results.moveToFirst();
+		if(results.getCount() > 0) {
+			results.moveToFirst();
 
-		TimeoLine line = new TimeoLine(
-				new TimeoIDNameObject(
-						results.getString(results.getColumnIndex("line_id")),
-						results.getString(results.getColumnIndex("line_name"))),
-				new TimeoIDNameObject(
-						results.getString(results.getColumnIndex("dir_id")),
-						results.getString(results.getColumnIndex("dir_name"))),
-				results.getString(results.getColumnIndex("line_color")));
+			TimeoLine line = new TimeoLine(
+					new TimeoIDNameObject(
+							results.getString(results.getColumnIndex("line_id")),
+							results.getString(results.getColumnIndex("line_name"))),
+					new TimeoIDNameObject(
+							results.getString(results.getColumnIndex("dir_id")),
+							results.getString(results.getColumnIndex("dir_name"))),
+					results.getString(results.getColumnIndex("line_color")));
 
-		TimeoStop stop = new TimeoStop(
-				results.getString(results.getColumnIndex("stop_id")),
-				results.getString(results.getColumnIndex("stop_name")),
-				results.getString(results.getColumnIndex("stop_ref")),
-				line);
+			TimeoStop stop = new TimeoStop(
+					results.getString(results.getColumnIndex("stop_id")),
+					results.getString(results.getColumnIndex("stop_name")),
+					results.getString(results.getColumnIndex("stop_ref")),
+					line);
 
-		// close the cursor and the database
-		results.close();
-		db.close();
+			// close the cursor and the database
+			results.close();
+			db.close();
 
-		return stop;
+			return stop;
+		} else {
+			return null;
+		}
 	}
 
+	/**
+	 * Gets the number of stops in the database.
+	 *
+	 * @return the number of bus stops
+	 */
 	public int getStopsCount() {
 		SQLiteDatabase db = databaseOpenHelper.getReadableDatabase();
 
@@ -191,6 +232,11 @@ public class TwistoastDatabase {
 		return count;
 	}
 
+	/**
+	 * Deletes a bus stop from the database.
+	 *
+	 * @param stop the bus stop to delete
+	 */
 	public void deleteStop(TimeoStop stop) {
 		SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
 

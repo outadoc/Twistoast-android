@@ -19,7 +19,9 @@
 package fr.outadev.android.timeo.model;
 
 /**
- * Created by outadoc on 23/08/14.
+ * Stores a bus line and its direction.
+ *
+ * @author outadoc
  */
 public class TimeoLine {
 
@@ -28,6 +30,13 @@ public class TimeoLine {
 
 	private String color;
 
+	/**
+	 * Create a new line with line details, a direction, and a color.
+	 *
+	 * @param line      line details: id = line id, name = line name
+	 * @param direction direction details
+	 * @param color     line color, as an HTML-like color string (e.g. #123456)
+	 */
 	public TimeoLine(TimeoIDNameObject line, TimeoIDNameObject direction, String color) {
 		this(line, direction);
 		this.color = color;

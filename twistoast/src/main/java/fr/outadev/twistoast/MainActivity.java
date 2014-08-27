@@ -124,7 +124,11 @@ public class MainActivity extends Activity {
 		displayGlobalTrafficInfo();
 	}
 
-	// Swaps fragments in the main content view
+	/**
+	 * Load the fragment at the specified drawer index.
+	 *
+	 * @param position the index of the element of the drawer we should load
+	 */
 	public void loadFragmentFromDrawerPosition(int position) {
 		currentFragmentIndex = position;
 
@@ -228,6 +232,9 @@ public class MainActivity extends Activity {
 		outState.putInt("key_current_frag", currentFragmentIndex);
 	}
 
+	/**
+	 * Fetches and stores a global traffic info if there is one available.
+	 */
 	private void checkForGlobalTrafficInfo() {
 		(new AsyncTask<Void, Void, TimeoTrafficAlert>() {
 
@@ -251,6 +258,9 @@ public class MainActivity extends Activity {
 		}).execute();
 	}
 
+	/**
+	 * Displays a global traffic info if one was downloaded by checkForGlobalTrafficInfo.
+	 */
 	private void displayGlobalTrafficInfo() {
 		View trafficView = findViewById(R.id.view_global_traffic_alert);
 		TextView trafficLabel = (TextView) findViewById(R.id.lbl_traffic_info_string);

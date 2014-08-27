@@ -23,7 +23,10 @@ import android.content.Context;
 import java.util.Calendar;
 
 /**
- * Created by outadoc on 26/08/14.
+ * Time formatter class. Used to turn strings returned by the API (e.g. "13:42") into readable Calendar objects and/or
+ * processed strings to display information to the user.
+ *
+ * @author outadoc
  */
 public abstract class ScheduleTime {
 
@@ -34,6 +37,16 @@ public abstract class ScheduleTime {
 		CURRENTLY_AT_STOP, ARRIVAL_IMMINENT, COUNTDOWN, FULL
 	}
 
+	/**
+	 * Formats a date into a more user-friendly fashion.
+	 * It converts the time parameter to a string that is either this time, a countdown to this time,
+	 * or messages that warn the user the time has almost come (no, that's not a threat).
+	 *
+	 * @param context a context (used to fetch strings and prefs)
+	 * @param time    a time in a string: e.g. "14:53"
+	 * @return if time is less than one minute in the future: "imminent arrival"-ish, if less than 45 minutes in the future: "in
+	 * xx minutes", if more than that: the untouched time parameter
+	 */
 	public static String formatDate(Context context, String time) {
 		Calendar schedule = getNextDateForTime(time);
 
@@ -50,15 +63,37 @@ public abstract class ScheduleTime {
 		}
 	}
 
+	/**
+	 * Computes the number of milliseconds after which the bus shall arrive.
+	 * Note: might not be accurate down to the millisecond.
+	 *
+	 * @param schedule the time at which the bus will arrive
+	 * @return the difference between now and then, in milliseconds
+	 */
 	private static long getMillisUntilBus(Calendar schedule) {
 		Calendar now = Calendar.getInstance();
 		return schedule.getTimeInMillis() - now.getTimeInMillis();
 	}
 
+	/**
+	 * Similar to getMillisUntilBus, except it does it for minutes.
+	 *
+	 * @param schedule the time at which the bus will arrive
+	 * @return the difference between now and then, in minutes
+	 */
 	private static long getMinutesUntilBus(Calendar schedule) {
 		return (long) Math.ceil(getMillisUntilBus(schedule) / 1000 / 60);
 	}
 
+	/**
+	 * Decides which mode the app should use to show the time to the user.
+	 * <p/>
+	 * If time is less than one minute in the future: ARRIVAL_IMMINENT; if less than 45 minutes in the future: COUNTDOWN; if
+	 * more than that: FULL; if it was in the past, CURRENTLY_AT_STOP
+	 *
+	 * @param schedule the time at which the bus will arrive
+	 * @return a TimeDisplayMode constant to tell you the right mode
+	 */
 	public static TimeDisplayMode getTimeDisplayMode(Calendar schedule) {
 		long offset = getMinutesUntilBus(schedule);
 
@@ -73,6 +108,14 @@ public abstract class ScheduleTime {
 		}
 	}
 
+	/**
+	 * Converts a time string to a Calendar object.
+	 * This method will return a calendar of the next day this time will occur; for example, if the string is "13:37" but it's
+	 * currently 15:45, the method will assume this time is tomorrow's, and set the date of the calendar object in consequence.
+	 *
+	 * @param time a time in a string, separated with a colon: e.g. "14:53"
+	 * @return a calendar object, with the time in the string set for the next valid day
+	 */
 	public static Calendar getNextDateForTime(String time) {
 		String[] splitTime = time.split(":");
 

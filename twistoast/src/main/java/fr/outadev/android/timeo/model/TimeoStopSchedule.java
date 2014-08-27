@@ -1,5 +1,5 @@
 /*
- * Twistoast - TimeoScheduleObject
+ * Twistoast - TimeoStopSchedule
  * Copyright (C) 2013-2014  Baptiste Candellier
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,7 @@ package fr.outadev.android.timeo.model;
 import java.util.List;
 
 /**
- * Used to store a schedule, with its corresponding line, direction, and stop
+ * Used to store a list of schedules, with their corresponding line, direction, and stop
  * objects.
  *
  * @author outadoc
@@ -31,6 +31,12 @@ public class TimeoStopSchedule {
 	private TimeoStop stop;
 	private List<TimeoSingleSchedule> schedules;
 
+	/**
+	 * Create a new schedule.
+	 *
+	 * @param stop      the stop this schedule corresponds to.
+	 * @param schedules a list of the schedules the stop is associated with.
+	 */
 	public TimeoStopSchedule(TimeoStop stop, List<TimeoSingleSchedule> schedules) {
 		this.stop = stop;
 		this.schedules = schedules;

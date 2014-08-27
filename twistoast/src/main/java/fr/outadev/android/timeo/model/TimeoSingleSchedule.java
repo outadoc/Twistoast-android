@@ -24,7 +24,9 @@ import android.preference.PreferenceManager;
 import fr.outadev.twistoast.ScheduleTime;
 
 /**
- * Created by outadoc on 23/08/14.
+ * Stores a single schedule, containing a time and a direction.
+ *
+ * @author outadoc
  */
 public class TimeoSingleSchedule {
 
@@ -33,11 +35,20 @@ public class TimeoSingleSchedule {
 
 	private static Boolean relative;
 
+	/**
+	 * Create a new schedule.
+	 *
+	 * @param time      the time at which the bus should arrive (e.g. "13:53")
+	 * @param direction the direction towards which the bus is heading
+	 */
 	public TimeoSingleSchedule(String time, String direction) {
 		this.time = time;
 		this.direction = direction;
 	}
 
+	/**
+	 * Create a new empty schedule.
+	 */
 	public TimeoSingleSchedule() {
 	}
 

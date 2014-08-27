@@ -65,9 +65,4 @@ public class TimeoIDNameObject {
 		return id + " - " + name;
 	}
 
-	@Override
-	public TimeoIDNameObject clone() {
-		return new TimeoIDNameObject(id, name);
-	}
-
 }

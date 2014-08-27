@@ -19,7 +19,9 @@
 package fr.outadev.android.timeo.model;
 
 /**
- * Created by outadoc on 24/08/14.
+ * Thrown when an error was encountered while fetching data from the API.
+ *
+ * @author outadoc
  */
 public class TimeoException extends Exception {
 
