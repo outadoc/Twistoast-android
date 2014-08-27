@@ -67,6 +67,7 @@ public class TwistoastDatabase {
 			values.put("dir_id", stop.getLine().getDirection().getId());
 			values.put("stop_name", stop.getName());
 			values.put("stop_ref", stop.getReference());
+			values.put("network_code", stop.getLine().getNetworkCode());
 
 			try {
 				// insert the stop with the specified columns
@@ -93,6 +94,7 @@ public class TwistoastDatabase {
 			values.put("line_id", line.getDetails().getId());
 			values.put("line_name", line.getDetails().getName());
 			values.put("line_color", line.getColor());
+			values.put("network_code", line.getNetworkCode());
 
 			db.insert("twi_line", null, values);
 			db.close();
@@ -114,6 +116,7 @@ public class TwistoastDatabase {
 			values.put("dir_id", line.getDirection().getId());
 			values.put("line_id", line.getDetails().getId());
 			values.put("dir_name", line.getDirection().getName());
+			values.put("network_code", line.getNetworkCode());
 
 			db.insert("twi_direction", null, values);
 			db.close();
@@ -132,9 +135,10 @@ public class TwistoastDatabase {
 		Cursor results = db
 				.rawQuery(
 						"SELECT stop.stop_id, stop.stop_name, stop.stop_ref, line.line_id, line.line_name, " +
-								"line.line_color, dir.dir_id, dir.dir_name FROM twi_stop stop JOIN twi_direction dir USING" +
-								"(dir_id, line_id) JOIN twi_line line USING(line_id) ORDER BY CAST(line.line_id AS INTEGER), " +
-								"stop.stop_name, dir.dir_name",
+								"line.line_color, dir.dir_id, dir.dir_name, line.network_code FROM twi_stop stop " +
+								"JOIN twi_direction dir USING(dir_id, line_id, network_code) " +
+								"JOIN twi_line line USING(line_id, network_code) " +
+								"ORDER BY CAST(line.line_id AS INTEGER), stop.stop_name, dir.dir_name",
 						null);
 
 		ArrayList<TimeoStop> stopsList = new ArrayList<TimeoStop>();
@@ -148,7 +152,8 @@ public class TwistoastDatabase {
 					new TimeoIDNameObject(
 							results.getString(results.getColumnIndex("dir_id")),
 							results.getString(results.getColumnIndex("dir_name"))),
-					results.getString(results.getColumnIndex("line_color")));
+					results.getString(results.getColumnIndex("line_color")),
+					results.getInt(results.getColumnIndex("network_code")));
 
 			TimeoStop stop = new TimeoStop(
 					results.getString(results.getColumnIndex("stop_id")),
@@ -181,9 +186,11 @@ public class TwistoastDatabase {
 		Cursor results = db
 				.rawQuery(
 						"SELECT stop.stop_id, stop.stop_name, stop.stop_ref, line.line_id, line.line_name, line.line_color, " +
-								"dir.dir_id, dir.dir_name FROM twi_stop stop JOIN twi_direction dir USING(dir_id, " +
-								"line_id) JOIN twi_line line USING(line_id) ORDER BY CAST(line.line_id AS INTEGER), " +
-								"stop.stop_name, dir.dir_name LIMIT ? OFFSET ?",
+								"dir.dir_id, dir.dir_name, line.network_code FROM twi_stop stop " +
+								"JOIN twi_direction dir USING(dir_id, line_id, network_code) " +
+								"JOIN twi_line line USING(line_id, network_code) " +
+								"ORDER BY CAST(line.line_id AS INTEGER), stop.stop_name, dir.dir_name " +
+								"LIMIT ? OFFSET ?",
 						new String[]{"1", indexStr});
 
 		if(results.getCount() > 0) {
@@ -196,7 +203,8 @@ public class TwistoastDatabase {
 					new TimeoIDNameObject(
 							results.getString(results.getColumnIndex("dir_id")),
 							results.getString(results.getColumnIndex("dir_name"))),
-					results.getString(results.getColumnIndex("line_color")));
+					results.getString(results.getColumnIndex("line_color")),
+					results.getInt(results.getColumnIndex("network_code")));
 
 			TimeoStop stop = new TimeoStop(
 					results.getString(results.getColumnIndex("stop_id")),
@@ -242,10 +250,11 @@ public class TwistoastDatabase {
 	public void deleteStop(TimeoStop stop) {
 		SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
 
-		db.delete("twi_stop", "stop_id=? AND line_id=? AND dir_id=?", new String[]{
+		db.delete("twi_stop", "stop_id = ? AND line_id = ? AND dir_id = ? AND network_code = ?", new String[]{
 				stop.getId(),
 				stop.getLine().getDetails().getId(),
-				stop.getLine().getDirection().getId()
+				stop.getLine().getDirection().getId(),
+				stop.getLine().getNetworkCode() + ""
 		});
 
 		db.close();

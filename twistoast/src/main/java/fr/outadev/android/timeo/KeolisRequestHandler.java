@@ -131,7 +131,7 @@ public class KeolisRequestHandler {
 	@NonNull
 	public List<TimeoStop> getStops(TimeoLine line) throws HttpRequestException, XmlPullParserException, IOException,
 			TimeoException {
-		return getStops(DEFAULT_NETWORK_CODE, line);
+		return getStops(line.getNetworkCode(), line);
 	}
 
 	/**
@@ -147,7 +147,7 @@ public class KeolisRequestHandler {
 	@NonNull
 	public TimeoStopSchedule getSingleSchedule(TimeoStop stop) throws HttpRequestException, TimeoException, IOException,
 			XmlPullParserException {
-		return getSingleSchedule(DEFAULT_NETWORK_CODE, stop);
+		return getSingleSchedule(stop.getLine().getNetworkCode(), stop);
 	}
 
 	/**
@@ -203,7 +203,7 @@ public class KeolisRequestHandler {
 					if(tagname.equalsIgnoreCase("ligne")) {
 						isInLineTag = true;
 						tmpDirection = new TimeoIDNameObject();
-						tmpLine = new TimeoLine(new TimeoIDNameObject(), tmpDirection);
+						tmpLine = new TimeoLine(new TimeoIDNameObject(), tmpDirection, networkCode);
 					} else if(tagname.equalsIgnoreCase("arret")) {
 						isInLineTag = false;
 					}
@@ -355,6 +355,10 @@ public class KeolisRequestHandler {
 	public List<TimeoStopSchedule> getMultipleSchedules(int networkCode, List<TimeoStop> stops) throws HttpRequestException,
 			TimeoException, XmlPullParserException, IOException {
 		String refs = "";
+
+		if(stops.isEmpty()) {
+			return new ArrayList<TimeoStopSchedule>();
+		}
 
 		for(TimeoStop stop : stops) {
 			refs += stop.getReference() + ";";

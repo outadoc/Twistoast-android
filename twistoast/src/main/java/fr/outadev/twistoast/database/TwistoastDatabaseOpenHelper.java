@@ -22,6 +22,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import fr.outadev.android.timeo.KeolisRequestHandler;
+
 /**
  * Opens, creates and manages database versions.
  *
@@ -32,14 +34,33 @@ public class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 	private static final int DATABASE_VERSION = 1;
 	private static final String DATABASE_NAME = "twistoast.db";
 
-	private static final String LINES_TABLE_CREATE = "CREATE TABLE twi_line(line_id TEXT PRIMARY KEY, line_name TEXT, " +
-			"line_color TEXT);";
-	private static final String DIRECTIONS_TABLE_CREATE = "CREATE TABLE twi_direction(dir_id TEXT, line_id TEXT, " +
-			"dir_name TEXT, " + "PRIMARY KEY(dir_id, line_id), FOREIGN KEY(line_id) REFERENCES twi_line(line_id));";
-	private static final String STOPS_TABLE_CREATE = "CREATE TABLE twi_stop(stop_id INTEGER, line_id TEXT, dir_id TEXT, " +
-			"stop_name TEXT, stop_ref TEXT, PRIMARY KEY(stop_id, line_id, dir_id), FOREIGN KEY(dir_id, " +
-			"line_id) REFERENCES twi_direction" +
-			"(dir_id, line_id));";
+	private static final String LINES_TABLE_CREATE =
+			"CREATE TABLE twi_line(" +
+					"line_id TEXT, " +
+					"line_name TEXT, " +
+					"line_color TEXT, " +
+					"network_code INTEGER DEFAULT " + KeolisRequestHandler.DEFAULT_NETWORK_CODE + ", " +
+					"PRIMARY KEY (line_id, network_code));";
+
+	private static final String DIRECTIONS_TABLE_CREATE =
+			"CREATE TABLE twi_direction(" +
+					"dir_id TEXT, " +
+					"line_id TEXT, " +
+					"dir_name TEXT, " +
+					"network_code INTEGER DEFAULT " + KeolisRequestHandler.DEFAULT_NETWORK_CODE + ", " +
+					"PRIMARY KEY(dir_id, line_id, network_code), " +
+					"FOREIGN KEY(line_id, network_code) REFERENCES twi_line(line_id, network_code));";
+
+	private static final String STOPS_TABLE_CREATE =
+			"CREATE TABLE twi_stop(" +
+					"stop_id INTEGER, " +
+					"line_id TEXT, " +
+					"dir_id TEXT, " +
+					"stop_name TEXT, " +
+					"stop_ref TEXT, " +
+					"network_code INTEGER DEFAULT " + KeolisRequestHandler.DEFAULT_NETWORK_CODE + ", " +
+					"PRIMARY KEY(stop_id, line_id, dir_id, network_code), " +
+					"FOREIGN KEY(dir_id, line_id, network_code) REFERENCES twi_direction(dir_id, line_id, network_code));";
 
 	TwistoastDatabaseOpenHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
