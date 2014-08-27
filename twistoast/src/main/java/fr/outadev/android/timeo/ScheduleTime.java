@@ -16,11 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast;
+package fr.outadev.android.timeo;
 
 import android.content.Context;
 
 import java.util.Calendar;
+
+import fr.outadev.twistoast.R;
 
 /**
  * Time formatter class. Used to turn strings returned by the API (e.g. "13:42") into readable Calendar objects and/or

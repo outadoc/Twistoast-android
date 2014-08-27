@@ -31,6 +31,7 @@ import java.util.Calendar;
 import java.util.UUID;
 
 import fr.outadev.android.timeo.KeolisRequestHandler;
+import fr.outadev.android.timeo.ScheduleTime;
 import fr.outadev.android.timeo.model.TimeoStop;
 import fr.outadev.android.timeo.model.TimeoStopSchedule;
 import fr.outadev.twistoast.database.TwistoastDatabase;

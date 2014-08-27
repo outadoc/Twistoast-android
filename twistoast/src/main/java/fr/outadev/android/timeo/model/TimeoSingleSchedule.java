@@ -21,7 +21,7 @@ package fr.outadev.android.timeo.model;
 import android.content.Context;
 import android.preference.PreferenceManager;
 
-import fr.outadev.twistoast.ScheduleTime;
+import fr.outadev.android.timeo.ScheduleTime;
 
 /**
  * Stores a single schedule, containing a time and a direction.

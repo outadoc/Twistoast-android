@@ -50,7 +50,7 @@ import fr.outadev.twistoast.database.TwistoastDatabase;
 public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 	private ListView listView;
-	private SwipeRefreshLayout swipeLayout;
+	private SwipeRefreshLayout swipeRefreshLayout;
 
 	private MenuItem menuItemRefresh;
 	private View noContentView;
@@ -80,8 +80,8 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 		View view = inflater.inflate(R.layout.fragment_stops_list, container, false);
 
 		// get pull to refresh view
-		swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.ptr_layout);
-		swipeLayout.setOnRefreshListener(new OnRefreshListener() {
+		swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.ptr_layout);
+		swipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
 
 			@Override
 			public void onRefresh() {
@@ -90,7 +90,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 		});
 
-		swipeLayout.setColorSchemeResources(R.color.twisto_primary, R.color.twisto_secondary,
+		swipeRefreshLayout.setColorSchemeResources(R.color.twisto_primary, R.color.twisto_secondary,
 				R.color.twisto_primary, R.color.twisto_secondary);
 
 		listView = (ListView) view.findViewById(R.id.stops_list);
@@ -245,7 +245,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 		}
 
 		// show the refresh animation
-		swipeLayout.setRefreshing(true);
+		swipeRefreshLayout.setRefreshing(true);
 
 		if(menuItemRefresh != null) {
 			menuItemRefresh.setEnabled(false);
@@ -268,7 +268,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 	public void endRefresh() {
 		// notify the pull to refresh view that the refresh has finished
 		isRefreshing = false;
-		swipeLayout.setRefreshing(false);
+		swipeRefreshLayout.setRefreshing(false);
 
 		if(menuItemRefresh != null) {
 			menuItemRefresh.setEnabled(true);
