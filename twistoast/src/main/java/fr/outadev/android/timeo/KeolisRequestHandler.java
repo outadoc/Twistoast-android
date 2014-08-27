@@ -56,8 +56,10 @@ import fr.outadev.android.timeo.model.TimeoTrafficAlert;
  */
 public class KeolisRequestHandler {
 
-	private final static String BASE_URL = "http://timeo3.keolis.com/relais/147.php";
+	private final static String BASE_URL = "http://timeo3.keolis.com/relais/";
 	private final static String BASE_PRE_HOME_URL = "http://twisto.fr/module/mobile/App2014/utils/getPreHome.php";
+
+	public final static int DEFAULT_NETWORK_CODE = 147;
 
 	private final static int REQUEST_TIMEOUT = 10000;
 
@@ -65,7 +67,6 @@ public class KeolisRequestHandler {
 	 * Creates a Timeo request handler.
 	 */
 	public KeolisRequestHandler() {
-
 	}
 
 	/**
@@ -100,9 +101,13 @@ public class KeolisRequestHandler {
 
 
 	/**
+	 * Shorthand methods for requesting data from the default city's API (Twisto/Caen)
+	 */
+
+	/**
 	 * Fetch the bus lines from the API.
 	 *
-	 * @return a list of lines.
+	 * @return a list of lines
 	 * @throws HttpRequestException   if an HTTP error occurred
 	 * @throws XmlPullParserException if a parsing exception occurred
 	 * @throws IOException            if an I/O exception occurred whilst parsing the XML
@@ -110,8 +115,73 @@ public class KeolisRequestHandler {
 	 */
 	@NonNull
 	public List<TimeoLine> getLines() throws HttpRequestException, XmlPullParserException, IOException, TimeoException {
+		return getLines(DEFAULT_NETWORK_CODE);
+	}
+
+	/**
+	 * Fetch a list of bus stops from the API.
+	 *
+	 * @param line the line for which we should fetch the stops
+	 * @return a list of bus stops
+	 * @throws HttpRequestException   if an HTTP error occurred
+	 * @throws XmlPullParserException if a parsing exception occurred
+	 * @throws IOException            if an I/O exception occurred whilst parsing the XML
+	 * @throws TimeoException         if the API returned an error
+	 */
+	@NonNull
+	public List<TimeoStop> getStops(TimeoLine line) throws HttpRequestException, XmlPullParserException, IOException,
+			TimeoException {
+		return getStops(DEFAULT_NETWORK_CODE, line);
+	}
+
+	/**
+	 * Fetches a schedule for a single bus stop from the API.
+	 *
+	 * @param stop the bus stop to fetch the schedule for
+	 * @return a TimeoStopSchedule containing said schedule
+	 * @throws HttpRequestException   if an HTTP error occurred
+	 * @throws XmlPullParserException if a parsing exception occurred
+	 * @throws IOException            if an I/O exception occurred whilst parsing the XML
+	 * @throws TimeoException         if the API returned an error
+	 */
+	@NonNull
+	public TimeoStopSchedule getSingleSchedule(TimeoStop stop) throws HttpRequestException, TimeoException, IOException,
+			XmlPullParserException {
+		return getSingleSchedule(DEFAULT_NETWORK_CODE, stop);
+	}
+
+	/**
+	 * Fetches schedules for multiple bus stops from the API.
+	 *
+	 * @param stops a list of bus stops we should fetch the schedules for
+	 * @return a list of TimeoStopSchedule containing said schedules
+	 * @throws HttpRequestException   if an HTTP error occurred
+	 * @throws XmlPullParserException if a parsing exception occurred
+	 * @throws IOException            if an I/O exception occurred whilst parsing the XML
+	 * @throws TimeoException         if the API returned an error
+	 */
+	@NonNull
+	public List<TimeoStopSchedule> getMultipleSchedules(List<TimeoStop> stops) throws HttpRequestException,
+			TimeoException, XmlPullParserException, IOException {
+		return getMultipleSchedules(DEFAULT_NETWORK_CODE, stops);
+	}
+
+
+	/**
+	 * Fetch the bus lines from the API.
+	 *
+	 * @param networkCode the code for the city's bus network
+	 * @return a list of lines
+	 * @throws HttpRequestException   if an HTTP error occurred
+	 * @throws XmlPullParserException if a parsing exception occurred
+	 * @throws IOException            if an I/O exception occurred whilst parsing the XML
+	 * @throws TimeoException         if the API returned an error
+	 */
+	@NonNull
+	public List<TimeoLine> getLines(int networkCode) throws HttpRequestException, XmlPullParserException, IOException,
+			TimeoException {
 		String params = "xml=1";
-		String result = requestWebPage(BASE_URL, params, true);
+		String result = requestWebPage(BASE_URL + getPageNameForNetworkCode(networkCode), params, true);
 
 		XmlPullParser parser = getParserForXMLString(result);
 		int eventType = parser.getEventType();
@@ -176,6 +246,7 @@ public class KeolisRequestHandler {
 	/**
 	 * Fetch a list of bus stops from the API.
 	 *
+	 * @param networkCode the code for the city's bus network
 	 * @param line the line for which we should fetch the stops
 	 * @return a list of bus stops
 	 * @throws HttpRequestException   if an HTTP error occurred
@@ -184,10 +255,11 @@ public class KeolisRequestHandler {
 	 * @throws TimeoException         if the API returned an error
 	 */
 	@NonNull
-	public List<TimeoStop> getStops(TimeoLine line) throws HttpRequestException, XmlPullParserException, IOException,
+	public List<TimeoStop> getStops(int networkCode, TimeoLine line) throws HttpRequestException, XmlPullParserException,
+			IOException,
 			TimeoException {
 		String params = "xml=1&ligne=" + line.getDetails().getId() + "&sens=" + line.getDirection().getId();
-		String result = requestWebPage(BASE_URL, params, true);
+		String result = requestWebPage(BASE_URL + getPageNameForNetworkCode(networkCode), params, true);
 
 		XmlPullParser parser = getParserForXMLString(result);
 		int eventType = parser.getEventType();
@@ -245,6 +317,7 @@ public class KeolisRequestHandler {
 	/**
 	 * Fetches a schedule for a single bus stop from the API.
 	 *
+	 * @param networkCode the code for the city's bus network
 	 * @param stop the bus stop to fetch the schedule for
 	 * @return a TimeoStopSchedule containing said schedule
 	 * @throws HttpRequestException   if an HTTP error occurred
@@ -253,11 +326,12 @@ public class KeolisRequestHandler {
 	 * @throws TimeoException         if the API returned an error
 	 */
 	@NonNull
-	public TimeoStopSchedule getSingleSchedule(TimeoStop stop) throws HttpRequestException, TimeoException, IOException,
+	public TimeoStopSchedule getSingleSchedule(int networkCode, TimeoStop stop) throws HttpRequestException, TimeoException,
+			IOException,
 			XmlPullParserException {
 		List<TimeoStop> list = new ArrayList<TimeoStop>();
 		list.add(stop);
-		List<TimeoStopSchedule> schedules = getMultipleSchedules(list);
+		List<TimeoStopSchedule> schedules = getMultipleSchedules(networkCode, list);
 
 		if(schedules.size() > 0) {
 			return schedules.get(0);
@@ -269,6 +343,7 @@ public class KeolisRequestHandler {
 	/**
 	 * Fetches schedules for multiple bus stops from the API.
 	 *
+	 * @param networkCode the code for the city's bus network
 	 * @param stops a list of bus stops we should fetch the schedules for
 	 * @return a list of TimeoStopSchedule containing said schedules
 	 * @throws HttpRequestException   if an HTTP error occurred
@@ -277,7 +352,7 @@ public class KeolisRequestHandler {
 	 * @throws TimeoException         if the API returned an error
 	 */
 	@NonNull
-	public List<TimeoStopSchedule> getMultipleSchedules(List<TimeoStop> stops) throws HttpRequestException,
+	public List<TimeoStopSchedule> getMultipleSchedules(int networkCode, List<TimeoStop> stops) throws HttpRequestException,
 			TimeoException, XmlPullParserException, IOException {
 		String refs = "";
 
@@ -288,7 +363,7 @@ public class KeolisRequestHandler {
 		refs = refs.substring(0, refs.length() - 1);
 
 		String params = "xml=3&refs=" + refs + "&ran=1";
-		String result = requestWebPage(BASE_URL, params, true);
+		String result = requestWebPage(BASE_URL + getPageNameForNetworkCode(networkCode), params, true);
 
 		XmlPullParser parser = getParserForXMLString(result);
 		int eventType = parser.getEventType();
@@ -430,7 +505,7 @@ public class KeolisRequestHandler {
 	 * @param xml an xml document in a String, sexy
 	 * @return an XmlPullParser ready to parse the document
 	 */
-	public XmlPullParser getParserForXMLString(String xml) throws XmlPullParserException, IOException {
+	private XmlPullParser getParserForXMLString(String xml) throws XmlPullParserException, IOException {
 		XmlPullParser parser = Xml.newPullParser();
 
 		parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
@@ -438,6 +513,10 @@ public class KeolisRequestHandler {
 		parser.nextTag();
 
 		return parser;
+	}
+
+	private String getPageNameForNetworkCode(int networkCode) {
+		return networkCode + ".php";
 	}
 
 }
