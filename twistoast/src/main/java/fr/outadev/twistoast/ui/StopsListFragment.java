@@ -116,6 +116,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 						}
 
 						listAdapter.notifyDataSetChanged();
+						Toast.makeText(getActivity(), R.string.confirm_delete_success, Toast.LENGTH_SHORT).show();
 					}
 
 				});

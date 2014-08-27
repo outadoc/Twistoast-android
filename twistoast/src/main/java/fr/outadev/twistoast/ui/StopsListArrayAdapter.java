@@ -42,6 +42,7 @@ import java.util.Map;
 import fr.outadev.android.timeo.KeolisRequestHandler;
 import fr.outadev.android.timeo.model.TimeoSingleSchedule;
 import fr.outadev.android.timeo.model.TimeoStop;
+import fr.outadev.android.timeo.model.TimeoStopNotReturnedException;
 import fr.outadev.android.timeo.model.TimeoStopSchedule;
 import fr.outadev.twistoast.IStopsListContainer;
 import fr.outadev.twistoast.R;
@@ -197,6 +198,17 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 					}
 
 					return schedulesMap;
+				} catch(TimeoStopNotReturnedException e) {
+					e.printStackTrace();
+					activity.runOnUiThread(new Runnable() {
+
+						@Override
+						public void run() {
+							Toast.makeText(getContext(), getContext().getString(R.string.error_stop_not_returned_exception),
+									Toast.LENGTH_LONG).show();
+						}
+
+					});
 				} catch(final Exception e) {
 					e.printStackTrace();
 					activity.runOnUiThread(new Runnable() {
