@@ -34,29 +34,32 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import fr.outadev.android.timeo.KeolisRequestHandler;
-import fr.outadev.android.timeo.model.TimeoException;
 import fr.outadev.android.timeo.model.TimeoSingleSchedule;
 import fr.outadev.android.timeo.model.TimeoStop;
 import fr.outadev.android.timeo.model.TimeoStopSchedule;
 import fr.outadev.twistoast.IStopsListContainer;
 import fr.outadev.twistoast.R;
 
+/**
+ * An array adapter for the main list of bus stops.
+ *
+ * @author outadoc
+ */
 public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 
 	private final IStopsListContainer stopsListContainer;
 
-	private ArrayList<TimeoStop> stops;
+	private List<TimeoStop> stops;
 	private Map<TimeoStop, TimeoStopSchedule> schedules;
 
 	private KeolisRequestHandler requestHandler;
 
-	public StopsListArrayAdapter(Context context, int resource, ArrayList<TimeoStop> stops,
+	public StopsListArrayAdapter(Context context, int resource, List<TimeoStop> stops,
 	                             IStopsListContainer stopsListContainer) {
 		super(context, resource, stops);
 
@@ -173,6 +176,9 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 		return convertView;
 	}
 
+	/**
+	 * Fetches from the API and reloads the schedules.
+	 */
 	public void updateScheduleData() {
 		// start refreshing schedules
 		(new AsyncTask<Void, Void, Map<TimeoStop, TimeoStopSchedule>>() {
@@ -183,15 +189,11 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 					List<TimeoStopSchedule> schedulesList = requestHandler.getMultipleSchedules(stops);
 					Map<TimeoStop, TimeoStopSchedule> schedulesMap = new HashMap<TimeoStop, TimeoStopSchedule>();
 
-					if(schedulesList != null) {
-						for(TimeoStopSchedule schedule : schedulesList) {
-							schedulesMap.put(schedule.getStop(), schedule);
-						}
-
-						return schedulesMap;
-					} else {
-						throw new TimeoException();
+					for(TimeoStopSchedule schedule : schedulesList) {
+						schedulesMap.put(schedule.getStop(), schedule);
 					}
+
+					return schedulesMap;
 				} catch(Exception e) {
 					e.printStackTrace();
 				}

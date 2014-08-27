@@ -36,6 +36,10 @@ import android.webkit.WebViewClient;
 
 import fr.outadev.twistoast.R;
 
+/**
+ * A fragment that contains a webview and its controls.
+ * Will automatically inject some JS in the pages to make their title disappear, for cosmetic reasons.
+ */
 public class WebViewFragment extends Fragment {
 
 	private WebView webView;
@@ -94,6 +98,9 @@ public class WebViewFragment extends Fragment {
 		webView.goBack();
 	}
 
+	/**
+	 * A custom webview with event listeners and custom settings.
+	 */
 	private class TwistoastWebView extends WebView {
 
 		@SuppressLint("SetJavaScriptEnabled")

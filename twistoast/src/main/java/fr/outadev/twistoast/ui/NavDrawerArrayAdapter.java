@@ -30,6 +30,11 @@ import android.widget.TextView;
 import fr.outadev.twistoast.MainActivity;
 import fr.outadev.twistoast.R;
 
+/**
+ * An array adapter for the navigation drawer.
+ *
+ * @author outadoc
+ */
 public class NavDrawerArrayAdapter extends ArrayAdapter<String> {
 
 	private int selectedItemIndex;
@@ -37,10 +42,6 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<String> {
 	public NavDrawerArrayAdapter(Context context, int resource, String[] objects, int selectedItemIndex) {
 		super(context, resource, objects);
 		this.selectedItemIndex = selectedItemIndex;
-	}
-
-	public NavDrawerArrayAdapter(Context context, int resource, String[] objects) {
-		this(context, resource, objects, 0);
 	}
 
 	@Override

@@ -20,6 +20,8 @@ package fr.outadev.android.timeo.model;
 
 /**
  * Thrown when a stop is missing from the API response.
+ *
+ * @author outadoc
  */
 public class TimeoStopNotReturnedException extends TimeoException {
 	public TimeoStopNotReturnedException(String s) {

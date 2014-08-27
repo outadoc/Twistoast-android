@@ -44,6 +44,11 @@ import fr.outadev.twistoast.ui.PrefsFragment;
 import fr.outadev.twistoast.ui.StopsListFragment;
 import fr.outadev.twistoast.ui.WebViewFragment;
 
+/**
+ * The main activity of the app.
+ *
+ * @author outadoc
+ */
 public class MainActivity extends Activity {
 
 	private String[] drawerEntries;

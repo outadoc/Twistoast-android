@@ -33,6 +33,8 @@ import fr.outadev.android.timeo.model.TimeoStop;
 
 /**
  * Database management class.
+ *
+ * @author outadoc
  */
 public class TwistoastDatabase {
 

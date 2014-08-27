@@ -25,8 +25,16 @@ package fr.outadev.twistoast;
  */
 public interface IStopsListContainer {
 
+	/**
+	 * Called when the list of bus stops is refreshed and the user should be notified.
+	 */
 	public void endRefresh();
 
-	public void loadFragmentFromDrawerPosition(int index);
+	/**
+	 * Load the fragment at the specified drawer index.
+	 *
+	 * @param position the index of the element of the drawer we should load
+	 */
+	public void loadFragmentFromDrawerPosition(int position);
 
 }

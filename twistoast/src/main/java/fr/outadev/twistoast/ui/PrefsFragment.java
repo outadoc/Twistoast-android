@@ -27,6 +27,11 @@ import android.preference.PreferenceFragment;
 
 import fr.outadev.twistoast.R;
 
+/**
+ * A preferences fragment for the preferences of the app.
+ *
+ * @author outadoc
+ */
 public class PrefsFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
 
 	@Override

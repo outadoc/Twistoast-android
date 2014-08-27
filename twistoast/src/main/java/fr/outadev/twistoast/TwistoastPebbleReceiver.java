@@ -35,6 +35,11 @@ import fr.outadev.android.timeo.model.TimeoStop;
 import fr.outadev.android.timeo.model.TimeoStopSchedule;
 import fr.outadev.twistoast.database.TwistoastDatabase;
 
+/**
+ * Receives and handles the Twistoast Pebble app requests in the background.
+ *
+ * @author outadoc
+ */
 public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 
 	private static final UUID PEBBLE_UUID = UUID.fromString("020f9398-c407-454b-996c-6ac341337281");

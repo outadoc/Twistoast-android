@@ -1,5 +1,5 @@
 /*
- * Twistoast - TimeoStopObject
+ * Twistoast - TimeoStop
  * Copyright (C) 2013-2014  Baptiste Candellier
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,9 @@
 package fr.outadev.android.timeo.model;
 
 /**
- * Created by outadoc on 23/08/14.
+ * A bus stop.
+ *
+ * @author outadoc
  */
 public class TimeoStop extends TimeoIDNameObject {
 

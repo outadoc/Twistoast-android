@@ -51,6 +51,11 @@ import fr.outadev.android.timeo.model.TimeoStopSchedule;
 import fr.outadev.twistoast.R;
 import fr.outadev.twistoast.database.TwistoastDatabase;
 
+/**
+ * Activity that allows the user to add a bus stop to the app.
+ *
+ * @author outadoc
+ */
 public class AddStopActivity extends Activity {
 
 	private Spinner spinLine;
@@ -158,6 +163,9 @@ public class AddStopActivity extends Activity {
 		}
 	}
 
+	/**
+	 * Initialises, sets up the even listeners, and populates the line spinner.
+	 */
 	public void setupLineSpinner() {
 		lineAdapter = new ArrayAdapter<TimeoLine>(this, android.R.layout.simple_spinner_item, filteredLineList);
 		lineAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -214,6 +222,9 @@ public class AddStopActivity extends Activity {
 		});
 	}
 
+	/**
+	 * Initialises, sets up the even listeners, and populates the direction spinner.
+	 */
 	public void setupDirectionSpinner() {
 		directionAdapter = new ArrayAdapter<TimeoIDNameObject>(this, android.R.layout.simple_spinner_item, directionList);
 		directionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -279,6 +290,9 @@ public class AddStopActivity extends Activity {
 		});
 	}
 
+	/**
+	 * Initialises, sets up the even listeners, and populates the stop spinner.
+	 */
 	public void setupStopSpinner() {
 		stopAdapter = new ArrayAdapter<TimeoStop>(this, android.R.layout.simple_spinner_item, stopList);
 		stopAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -354,6 +368,9 @@ public class AddStopActivity extends Activity {
 		});
 	}
 
+	/**
+	 * Fetches the bus lines from the API, and populates the line spinner when done.
+	 */
 	public void getLinesFromAPI() {
 
 		// fetch the directions
@@ -404,6 +421,11 @@ public class AddStopActivity extends Activity {
 		}).execute();
 	}
 
+	/**
+	 * Displays an exception in a toast on the UI thread.
+	 *
+	 * @param e the exception to display
+	 */
 	public void handleAsyncExceptions(final Exception e) {
 		e.printStackTrace();
 
@@ -417,6 +439,9 @@ public class AddStopActivity extends Activity {
 		});
 	}
 
+	/**
+	 * Stores the selected bus stop in the database.
+	 */
 	public void registerStopToDatabase() {
 		TimeoStop stop = getCurrentStop();
 
@@ -436,6 +461,11 @@ public class AddStopActivity extends Activity {
 		}
 	}
 
+	/**
+	 * Gets a list of directions for the selected bus line, as they're stored in the same object.
+	 *
+	 * @return a list of ID/name objects containing the id and name of the directions to display
+	 */
 	private List<TimeoIDNameObject> getDirectionsList() {
 		List<TimeoIDNameObject> directionsList = new ArrayList<TimeoIDNameObject>();
 
@@ -448,14 +478,26 @@ public class AddStopActivity extends Activity {
 		return directionsList;
 	}
 
+	/**
+	 * Gets the bus stop that's currently selected.
+	 * @return a stop
+	 */
 	public TimeoStop getCurrentStop() {
 		return (TimeoStop) spinStop.getItemAtPosition(spinStop.getSelectedItemPosition());
 	}
 
+	/**
+	 * Gets the bus line direction that's currently selected.
+	 * @return an ID/name object for the direction
+	 */
 	public TimeoIDNameObject getCurrentDirection() {
 		return (TimeoIDNameObject) spinDirection.getItemAtPosition(spinDirection.getSelectedItemPosition());
 	}
 
+	/**
+	 * Gets the bus line that's currently selected.
+	 * @return a line
+	 */
 	public TimeoLine getCurrentLine() {
 		return (TimeoLine) spinLine.getItemAtPosition(spinLine.getSelectedItemPosition());
 	}

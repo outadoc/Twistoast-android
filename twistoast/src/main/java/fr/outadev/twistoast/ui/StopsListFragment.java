@@ -48,6 +48,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import fr.outadev.android.timeo.model.TimeoStop;
 import fr.outadev.twistoast.IStopsListContainer;
@@ -119,7 +120,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 							public void onClick(DialogInterface dialog, int id) {
 								// get the positions of the selected elements
 								SparseBooleanArray checked = listView.getCheckedItemPositions();
-								ArrayList<TimeoStop> objectsToDelete = new ArrayList<TimeoStop>();
+								List<TimeoStop> objectsToDelete = new ArrayList<TimeoStop>();
 
 								// add every stop we want to delete to the list
 								for(int i = 0; i < checked.size(); i++) {

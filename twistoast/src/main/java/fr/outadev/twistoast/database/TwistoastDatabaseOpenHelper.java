@@ -22,6 +22,11 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+/**
+ * Opens, creates and manages database versions.
+ *
+ * @author outadoc
+ */
 public class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 
 	private static final int DATABASE_VERSION = 1;
