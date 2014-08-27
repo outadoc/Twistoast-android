@@ -36,15 +36,23 @@ public class TimeoLine {
 	/**
 	 * Create a new line with line details, a direction, and a color.
 	 *
-	 * @param line      line details: id = line id, name = line name
-	 * @param direction direction details
-	 * @param color     line color, as an HTML-like color string (e.g. #123456)
+	 * @param line        line details: id = line id, name = line name
+	 * @param direction   direction details
+	 * @param color       line color, as an HTML-like color string (e.g. #123456)
+	 * @param networkCode the identifier of the network this line is a part of (e.g. 147 for Twisto)
 	 */
 	public TimeoLine(TimeoIDNameObject line, TimeoIDNameObject direction, String color, int networkCode) {
 		this(line, direction, networkCode);
 		this.color = color;
 	}
 
+	/**
+	 * Create a new line with line details, a direction, and a color.
+	 *
+	 * @param line        line details: id = line id, name = line name
+	 * @param direction   direction details
+	 * @param networkCode the identifier of the network this line is a part of (e.g. 147 for Twisto)
+	 */
 	public TimeoLine(TimeoIDNameObject line, TimeoIDNameObject direction, int networkCode) {
 		this.line = line;
 		this.direction = direction;
