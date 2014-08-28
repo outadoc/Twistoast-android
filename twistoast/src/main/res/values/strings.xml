@@ -46,7 +46,6 @@
 	<string name="load_timeout">Chargement interrompu (timeout)</string>
 	<string name="add_error_duplicate">Cet arrêt a déjà été ajouté dans l\'application</string>
 	<string name="add_error_illegal_argument">Quelque-chose ne va pas, vérifiez les valeurs de la ligne, direction et arrêt.</string>
-	<string name="no_content">Pas d\'arrêts pour l\'instant.</string>
 	<string name="action_open_website">Ouvrir dans le navigateur</string>
 	<string name="traffic_info">Info trafic</string>
 
