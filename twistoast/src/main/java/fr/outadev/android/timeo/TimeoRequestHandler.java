@@ -59,7 +59,7 @@ public abstract class TimeoRequestHandler {
 	private final static String BASE_URL = "http://timeo3.keolis.com/relais/";
 	private final static String BASE_PRE_HOME_URL = "http://twisto.fr/module/mobile/App2014/utils/getPreHome.php";
 
-	public final static int DEFAULT_NETWORK_CODE = 147;
+	public final static int DEFAULT_NETWORK_CODE = 117;
 
 	private final static int REQUEST_TIMEOUT = 10000;
 
@@ -157,7 +157,30 @@ public abstract class TimeoRequestHandler {
 	@NonNull
 	public static List<TimeoStopSchedule> getMultipleSchedules(List<TimeoStop> stops) throws HttpRequestException,
 			TimeoException, XmlPullParserException, IOException {
-		return getMultipleSchedules(DEFAULT_NETWORK_CODE, stops);
+		List<Integer> networks = new ArrayList<Integer>();
+		List<TimeoStopSchedule> finalScheduleList = new ArrayList<TimeoStopSchedule>();
+
+		for(TimeoStop stop : stops) {
+			if(!networks.contains(stop.getLine().getNetworkCode())) {
+				networks.add(stop.getLine().getNetworkCode());
+			}
+		}
+
+		Log.i("Twistoast", networks.size() + " different bus networks to refresh");
+
+		for(Integer network : networks) {
+			List<TimeoStop> stopsForThisNetwork = new ArrayList<TimeoStop>();
+
+			for(TimeoStop stop : stops) {
+				if(stop.getLine().getNetworkCode() == network) {
+					stopsForThisNetwork.add(stop);
+				}
+			}
+
+			finalScheduleList.addAll(getMultipleSchedules(network, stopsForThisNetwork));
+		}
+
+		return finalScheduleList;
 	}
 
 
