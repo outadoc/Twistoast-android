@@ -73,7 +73,7 @@ public abstract class TimeoRequestHandler {
 	 * @throws HttpRequestException if an HTTP error occurred
 	 */
 	private static String requestWebPage(String url, String params, boolean useCaches) throws HttpRequestException {
-		Log.i("Twistoast", "requested " + params);
+		Log.i("Twistoast", "requested " + url + " /w params " + params);
 
 		return HttpRequest.get(url + "?" + params)
 				.useCaches(useCaches)
