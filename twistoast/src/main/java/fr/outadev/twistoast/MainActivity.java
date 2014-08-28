@@ -248,7 +248,7 @@ public class MainActivity extends Activity {
 			@Override
 			protected TimeoTrafficAlert doInBackground(Void... voids) {
 				try {
-					return (new KeolisRequestHandler()).getGlobalTrafficAlert();
+					return KeolisRequestHandler.getGlobalTrafficAlert();
 				} catch(Exception e) {
 					e.printStackTrace();
 				}

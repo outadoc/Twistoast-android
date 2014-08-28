@@ -82,7 +82,6 @@ public class AddStopActivity extends Activity {
 	private MenuItem item_next;
 
 	private TwistoastDatabase databaseHandler;
-	private KeolisRequestHandler requestHandler;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +100,6 @@ public class AddStopActivity extends Activity {
 		}
 
 		databaseHandler = new TwistoastDatabase(this);
-		requestHandler = new KeolisRequestHandler();
 
 		// get all the UI elements we'll need in the future
 
@@ -258,7 +256,7 @@ public class AddStopActivity extends Activity {
 						protected List<TimeoStop> doInBackground(Void... voids) {
 							try {
 								getCurrentLine().setDirection(getCurrentDirection());
-								return requestHandler.getStops(getCurrentLine());
+								return KeolisRequestHandler.getStops(getCurrentLine());
 							} catch(Exception e) {
 								handleAsyncExceptions(e);
 							}
@@ -323,7 +321,7 @@ public class AddStopActivity extends Activity {
 						@Override
 						protected TimeoStopSchedule doInBackground(Void... voids) {
 							try {
-								return requestHandler.getSingleSchedule(getCurrentStop());
+								return KeolisRequestHandler.getSingleSchedule(getCurrentStop());
 							} catch(Exception e) {
 								handleAsyncExceptions(e);
 							}
@@ -384,7 +382,7 @@ public class AddStopActivity extends Activity {
 			@Override
 			protected List<TimeoLine> doInBackground(Void... voids) {
 				try {
-					return requestHandler.getLines();
+					return KeolisRequestHandler.getLines();
 				} catch(Exception e) {
 					handleAsyncExceptions(e);
 				}

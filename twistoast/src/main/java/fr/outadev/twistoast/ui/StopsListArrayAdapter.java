@@ -58,8 +58,6 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 	private List<TimeoStop> stops;
 	private Map<TimeoStop, TimeoStopSchedule> schedules;
 
-	private KeolisRequestHandler requestHandler;
-
 	public StopsListArrayAdapter(Context context, Activity activity, int resource, List<TimeoStop> stops,
 	                             IStopsListContainer stopsListContainer) {
 		super(context, resource, stops);
@@ -68,7 +66,6 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 		this.stops = stops;
 		this.stopsListContainer = stopsListContainer;
 		this.schedules = new HashMap<TimeoStop, TimeoStopSchedule>();
-		this.requestHandler = new KeolisRequestHandler();
 	}
 
 	@Override
@@ -172,7 +169,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 			@Override
 			protected Map<TimeoStop, TimeoStopSchedule> doInBackground(Void... params) {
 				try {
-					List<TimeoStopSchedule> schedulesList = requestHandler.getMultipleSchedules(stops);
+					List<TimeoStopSchedule> schedulesList = KeolisRequestHandler.getMultipleSchedules(stops);
 					Map<TimeoStop, TimeoStopSchedule> schedulesMap = new HashMap<TimeoStop, TimeoStopSchedule>();
 
 					for(TimeoStopSchedule schedule : schedulesList) {

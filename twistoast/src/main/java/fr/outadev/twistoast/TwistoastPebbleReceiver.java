@@ -96,11 +96,10 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 
 				@Override
 				protected TimeoStopSchedule doInBackground(TimeoStop... params) {
-					KeolisRequestHandler handler = new KeolisRequestHandler();
 					TimeoStop stop = params[0];
 
 					try {
-						return handler.getSingleSchedule(stop);
+						return KeolisRequestHandler.getSingleSchedule(stop);
 					} catch(Exception e) {
 						PebbleKit.sendNackToPebble(context, transactionId);
 						e.printStackTrace();
