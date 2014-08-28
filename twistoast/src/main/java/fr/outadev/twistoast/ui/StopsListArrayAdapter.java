@@ -37,7 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import fr.outadev.android.timeo.KeolisRequestHandler;
+import fr.outadev.android.timeo.TimeoRequestHandler;
 import fr.outadev.android.timeo.model.TimeoSingleSchedule;
 import fr.outadev.android.timeo.model.TimeoStop;
 import fr.outadev.android.timeo.model.TimeoStopNotReturnedException;
@@ -169,7 +169,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 			@Override
 			protected Map<TimeoStop, TimeoStopSchedule> doInBackground(Void... params) {
 				try {
-					List<TimeoStopSchedule> schedulesList = KeolisRequestHandler.getMultipleSchedules(stops);
+					List<TimeoStopSchedule> schedulesList = TimeoRequestHandler.getMultipleSchedules(stops);
 					Map<TimeoStop, TimeoStopSchedule> schedulesMap = new HashMap<TimeoStop, TimeoStopSchedule>();
 
 					for(TimeoStopSchedule schedule : schedulesList) {

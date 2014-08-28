@@ -54,7 +54,7 @@ import fr.outadev.android.timeo.model.TimeoTrafficAlert;
  *
  * @author outadoc
  */
-public abstract class KeolisRequestHandler {
+public abstract class TimeoRequestHandler {
 
 	private final static String BASE_URL = "http://timeo3.keolis.com/relais/";
 	private final static String BASE_PRE_HOME_URL = "http://twisto.fr/module/mobile/App2014/utils/getPreHome.php";

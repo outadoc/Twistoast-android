@@ -37,7 +37,7 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import fr.outadev.android.timeo.KeolisRequestHandler;
+import fr.outadev.android.timeo.TimeoRequestHandler;
 import fr.outadev.android.timeo.model.TimeoTrafficAlert;
 import fr.outadev.twistoast.ui.NavDrawerArrayAdapter;
 import fr.outadev.twistoast.ui.PrefsFragment;
@@ -248,7 +248,7 @@ public class MainActivity extends Activity {
 			@Override
 			protected TimeoTrafficAlert doInBackground(Void... voids) {
 				try {
-					return KeolisRequestHandler.getGlobalTrafficAlert();
+					return TimeoRequestHandler.getGlobalTrafficAlert();
 				} catch(Exception e) {
 					e.printStackTrace();
 				}

@@ -42,7 +42,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.outadev.android.timeo.KeolisRequestHandler;
+import fr.outadev.android.timeo.TimeoRequestHandler;
 import fr.outadev.android.timeo.model.TimeoIDNameObject;
 import fr.outadev.android.timeo.model.TimeoLine;
 import fr.outadev.android.timeo.model.TimeoSingleSchedule;
@@ -256,7 +256,7 @@ public class AddStopActivity extends Activity {
 						protected List<TimeoStop> doInBackground(Void... voids) {
 							try {
 								getCurrentLine().setDirection(getCurrentDirection());
-								return KeolisRequestHandler.getStops(getCurrentLine());
+								return TimeoRequestHandler.getStops(getCurrentLine());
 							} catch(Exception e) {
 								handleAsyncExceptions(e);
 							}
@@ -321,7 +321,7 @@ public class AddStopActivity extends Activity {
 						@Override
 						protected TimeoStopSchedule doInBackground(Void... voids) {
 							try {
-								return KeolisRequestHandler.getSingleSchedule(getCurrentStop());
+								return TimeoRequestHandler.getSingleSchedule(getCurrentStop());
 							} catch(Exception e) {
 								handleAsyncExceptions(e);
 							}
@@ -382,7 +382,7 @@ public class AddStopActivity extends Activity {
 			@Override
 			protected List<TimeoLine> doInBackground(Void... voids) {
 				try {
-					return KeolisRequestHandler.getLines();
+					return TimeoRequestHandler.getLines();
 				} catch(Exception e) {
 					handleAsyncExceptions(e);
 				}
@@ -478,6 +478,7 @@ public class AddStopActivity extends Activity {
 
 	/**
 	 * Gets the bus stop that's currently selected.
+	 *
 	 * @return a stop
 	 */
 	public TimeoStop getCurrentStop() {
@@ -486,6 +487,7 @@ public class AddStopActivity extends Activity {
 
 	/**
 	 * Gets the bus line direction that's currently selected.
+	 *
 	 * @return an ID/name object for the direction
 	 */
 	public TimeoIDNameObject getCurrentDirection() {
@@ -494,6 +496,7 @@ public class AddStopActivity extends Activity {
 
 	/**
 	 * Gets the bus line that's currently selected.
+	 *
 	 * @return a line
 	 */
 	public TimeoLine getCurrentLine() {

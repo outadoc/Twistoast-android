@@ -18,7 +18,7 @@
 
 package fr.outadev.android.timeo.model;
 
-import fr.outadev.android.timeo.KeolisRequestHandler;
+import fr.outadev.android.timeo.TimeoRequestHandler;
 
 /**
  * Stores a bus line and its direction.
@@ -31,7 +31,7 @@ public class TimeoLine {
 	private TimeoIDNameObject direction;
 
 	private String color;
-	private int networkCode = KeolisRequestHandler.DEFAULT_NETWORK_CODE;
+	private int networkCode = TimeoRequestHandler.DEFAULT_NETWORK_CODE;
 
 	/**
 	 * Create a new line with line details, a direction, and a color.

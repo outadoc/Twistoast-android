@@ -29,7 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import fr.outadev.android.timeo.KeolisRequestHandler;
+import fr.outadev.android.timeo.TimeoRequestHandler;
 
 /**
  * Opens, creates and manages database versions.
@@ -48,7 +48,7 @@ public class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 					"line_id TEXT, " +
 					"line_name TEXT, " +
 					"line_color TEXT, " +
-					"network_code INTEGER DEFAULT " + KeolisRequestHandler.DEFAULT_NETWORK_CODE + ", " +
+					"network_code INTEGER DEFAULT " + TimeoRequestHandler.DEFAULT_NETWORK_CODE + ", " +
 					"PRIMARY KEY (line_id, network_code));";
 
 	private static final String DIRECTIONS_TABLE_CREATE =
@@ -56,7 +56,7 @@ public class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 					"dir_id TEXT, " +
 					"line_id TEXT, " +
 					"dir_name TEXT, " +
-					"network_code INTEGER DEFAULT " + KeolisRequestHandler.DEFAULT_NETWORK_CODE + ", " +
+					"network_code INTEGER DEFAULT " + TimeoRequestHandler.DEFAULT_NETWORK_CODE + ", " +
 					"PRIMARY KEY(dir_id, line_id, network_code), " +
 					"FOREIGN KEY(line_id, network_code) REFERENCES twi_line(line_id, network_code));";
 
@@ -67,7 +67,7 @@ public class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 					"dir_id TEXT, " +
 					"stop_name TEXT, " +
 					"stop_ref TEXT, " +
-					"network_code INTEGER DEFAULT " + KeolisRequestHandler.DEFAULT_NETWORK_CODE + ", " +
+					"network_code INTEGER DEFAULT " + TimeoRequestHandler.DEFAULT_NETWORK_CODE + ", " +
 					"PRIMARY KEY(stop_id, line_id, dir_id, network_code), " +
 					"FOREIGN KEY(dir_id, line_id, network_code) REFERENCES twi_direction(dir_id, line_id, network_code));";
 
@@ -103,11 +103,11 @@ public class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 			db.execSQL("ALTER TABLE twi_line ADD COLUMN line_color TEXT");
 			db.execSQL("ALTER TABLE twi_stop ADD COLUMN stop_ref TEXT");
 
-			db.execSQL("ALTER TABLE twi_line ADD COLUMN network_code INTEGER DEFAULT " + KeolisRequestHandler
+			db.execSQL("ALTER TABLE twi_line ADD COLUMN network_code INTEGER DEFAULT " + TimeoRequestHandler
 					.DEFAULT_NETWORK_CODE);
-			db.execSQL("ALTER TABLE twi_direction ADD COLUMN network_code INTEGER DEFAULT " + KeolisRequestHandler
+			db.execSQL("ALTER TABLE twi_direction ADD COLUMN network_code INTEGER DEFAULT " + TimeoRequestHandler
 					.DEFAULT_NETWORK_CODE);
-			db.execSQL("ALTER TABLE twi_stop ADD COLUMN network_code INTEGER DEFAULT " + KeolisRequestHandler
+			db.execSQL("ALTER TABLE twi_stop ADD COLUMN network_code INTEGER DEFAULT " + TimeoRequestHandler
 					.DEFAULT_NETWORK_CODE);
 
 
