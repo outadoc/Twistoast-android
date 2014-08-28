@@ -19,8 +19,15 @@
 package fr.outadev.twistoast.database;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import fr.outadev.android.timeo.KeolisRequestHandler;
 
@@ -64,7 +71,7 @@ public class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 					"PRIMARY KEY(stop_id, line_id, dir_id, network_code), " +
 					"FOREIGN KEY(dir_id, line_id, network_code) REFERENCES twi_direction(dir_id, line_id, network_code));";
 
-	TwistoastDatabaseOpenHelper(Context context) {
+	public TwistoastDatabaseOpenHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		this.context = context;
 	}
@@ -86,6 +93,77 @@ public class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 
 	private void upgradeToV2(SQLiteDatabase db) {
 
+		try {
+			SQLiteDatabase db_upgrade = getV2UpgradeDatabase();
+
+			Cursor linesCur = db_upgrade.rawQuery("SELECT * FROM twi_v2_line", null);
+			Cursor stopsCur = db_upgrade.rawQuery("SELECT * FROM twi_v2_stop", null);
+
+			//upgrade tables
+			db.execSQL("ALTER TABLE twi_line ADD COLUMN line_color TEXT");
+			db.execSQL("ALTER TABLE twi_stop ADD COLUMN stop_ref TEXT");
+
+			db.execSQL("ALTER TABLE twi_line ADD COLUMN network_code INTEGER DEFAULT " + KeolisRequestHandler
+					.DEFAULT_NETWORK_CODE);
+			db.execSQL("ALTER TABLE twi_direction ADD COLUMN network_code INTEGER DEFAULT " + KeolisRequestHandler
+					.DEFAULT_NETWORK_CODE);
+			db.execSQL("ALTER TABLE twi_stop ADD COLUMN network_code INTEGER DEFAULT " + KeolisRequestHandler
+					.DEFAULT_NETWORK_CODE);
+
+
+			// while there's a stop available
+			while(linesCur.moveToNext()) {
+				db.execSQL("UPDATE twi_line SET line_color = ? WHERE line_id = ?",
+						new Object[]{linesCur.getString(linesCur.getColumnIndex("line_color")),
+								linesCur.getString(linesCur.getColumnIndex("line_id"))});
+			}
+
+			linesCur.close();
+
+			while(stopsCur.moveToNext()) {
+				db.execSQL("UPDATE twi_stop SET stop_ref = ? WHERE line_id = ? AND dir_id = ? AND stop_id = ?",
+						new Object[]{stopsCur.getString(stopsCur.getColumnIndex("stop_ref")),
+								stopsCur.getString(stopsCur.getColumnIndex("line_id")),
+								stopsCur.getString(stopsCur.getColumnIndex("dir_id")),
+								stopsCur.getString(stopsCur.getColumnIndex("stop_id"))});
+			}
+
+			stopsCur.close();
+			db_upgrade.close();
+		} catch(Exception e) {
+			e.printStackTrace();
+
+			deleteAllData(db);
+			onCreate(db);
+		}
+	}
+
+	private SQLiteDatabase getV2UpgradeDatabase() throws IOException {
+		final String DB_DESTINATION = "/data/data/fr.outadev.twistoast/databases/db_upgrade_v2.db";
+
+		// Check if the database exists before copying
+		boolean initialiseDatabase = (new File(DB_DESTINATION)).exists();
+
+		if(!initialiseDatabase) {
+			// Open the .db file in your assets directory
+			InputStream is = context.getAssets().open("db_upgrade_v2.db");
+
+			// Copy the database into the destination
+			OutputStream os = new FileOutputStream(DB_DESTINATION);
+			byte[] buffer = new byte[1024];
+			int length;
+
+			while((length = is.read(buffer)) > 0) {
+				os.write(buffer, 0, length);
+			}
+
+			os.flush();
+
+			os.close();
+			is.close();
+		}
+
+		return context.openOrCreateDatabase("db_upgrade_v2.db", Context.MODE_PRIVATE, null);
 	}
 
 	private void deleteAllData(SQLiteDatabase db) {
