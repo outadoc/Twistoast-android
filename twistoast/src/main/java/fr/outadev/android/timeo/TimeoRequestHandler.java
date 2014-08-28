@@ -243,7 +243,7 @@ public abstract class TimeoRequestHandler {
 					} else if(tmpLine != null && tagname.equalsIgnoreCase("vers") && isInLineTag) {
 						tmpLine.getDirection().setName(smartCapitalize(text));
 					} else if(tmpLine != null && tagname.equalsIgnoreCase("couleur") && isInLineTag) {
-						tmpLine.setColor("#" + Integer.toHexString(Integer.valueOf(text)));
+						tmpLine.setColor("#" + StringUtils.leftPad(Integer.toHexString(Integer.valueOf(text)), 6, '0'));
 					} else if(tagname.equalsIgnoreCase("erreur") && text != null && !text.trim().isEmpty()) {
 						throw new TimeoException(text);
 					}
