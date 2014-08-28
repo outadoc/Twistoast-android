@@ -52,6 +52,10 @@
 			android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize">
 		</activity>
 
+		<activity
+			android:name=".DBUpgradeTest"
+			android:exported="true" />
+
 		<receiver
 			android:name="fr.outadev.twistoast.TwistoastPebbleReceiver"
 			android:exported="true">

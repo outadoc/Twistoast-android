@@ -31,8 +31,10 @@ import fr.outadev.android.timeo.KeolisRequestHandler;
  */
 public class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
 	private static final String DATABASE_NAME = "twistoast.db";
+
+	private Context context;
 
 	private static final String LINES_TABLE_CREATE =
 			"CREATE TABLE twi_line(" +
@@ -64,6 +66,7 @@ public class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 
 	TwistoastDatabaseOpenHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+		this.context = context;
 	}
 
 	@Override
@@ -74,7 +77,20 @@ public class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 	}
 
 	@Override
-	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+	public void onUpgrade(final SQLiteDatabase db, int oldVersion, int newVersion) {
+		switch(newVersion) {
+			case 2:
+				upgradeToV2(db);
+		}
+	}
 
+	private void upgradeToV2(SQLiteDatabase db) {
+
+	}
+
+	private void deleteAllData(SQLiteDatabase db) {
+		db.execSQL("DROP TABLE twi_stop");
+		db.execSQL("DROP TABLE twi_direction");
+		db.execSQL("DROP TABLE twi_line");
 	}
 }
