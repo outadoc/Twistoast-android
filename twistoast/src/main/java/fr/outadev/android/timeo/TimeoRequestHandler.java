@@ -364,7 +364,7 @@ public abstract class TimeoRequestHandler {
 		if(schedules.size() > 0) {
 			return schedules.get(0);
 		} else {
-			throw new TimeoException();
+			throw new TimeoException("No schedules were returned.");
 		}
 	}
 
