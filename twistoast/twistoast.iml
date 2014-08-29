@@ -85,7 +85,7 @@
     <orderEntry type="library" exported="" name="support-v4-21.0.0-rc1" level="project" />
     <orderEntry type="library" exported="" name="guava-17.0" level="project" />
     <orderEntry type="library" exported="" name="cardview-v7-21.0.0-rc1" level="project" />
-    <orderEntry type="library" exported="" name="play-services-5.2.08" level="project" />
+    <orderEntry type="library" exported="" name="play-services-5.0.89" level="project" />
     <orderEntry type="library" exported="" name="commons-lang3-3.3.2" level="project" />
     <orderEntry type="module" module-name="pebble_kit" exported="" />
   </component>
