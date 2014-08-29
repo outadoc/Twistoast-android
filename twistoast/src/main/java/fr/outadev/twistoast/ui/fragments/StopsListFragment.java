@@ -44,6 +44,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import fr.outadev.twistoast.IStopsListContainer;
 import fr.outadev.twistoast.R;
+import fr.outadev.twistoast.Utils;
 import fr.outadev.twistoast.database.TwistoastDatabase;
 import fr.outadev.twistoast.ui.StopsListArrayAdapter;
 import fr.outadev.twistoast.ui.SwipeDismissListViewTouchListener;
@@ -200,7 +201,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 	public void onPause() {
 		super.onPause();
 		// when the activity is pausing, stop refreshing automatically
-		Log.i("Twistoast", "stopping automatic refresh, app paused");
+		Log.i(Utils.TAG, "stopping automatic refresh, app paused");
 		isInBackground = true;
 		handler.removeCallbacks(runnable);
 	}
@@ -278,7 +279,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 			menuItemRefresh.setEnabled(true);
 		}
 
-		Log.i("Twistoast", "refreshed, " + listAdapter.getCount() + " stops in db");
+		Log.i(Utils.TAG, "refreshed, " + listAdapter.getCount() + " stops in db");
 
 		if(getActivity() != null && !listAdapter.isEmpty()) {
 			Toast.makeText(getActivity(), getResources().getString(R.string.refreshed_stops), Toast.LENGTH_SHORT).show();

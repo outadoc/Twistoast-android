@@ -30,6 +30,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import fr.outadev.android.timeo.TimeoRequestHandler;
+import fr.outadev.twistoast.Utils;
 
 /**
  * Opens, creates and manages database versions.
@@ -89,9 +90,9 @@ public class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 	public void onUpgrade(final SQLiteDatabase db, int oldVersion, int newVersion) {
 		switch(newVersion) {
 			case 2:
-				Log.i("Twistoast", "upgrading database to v" + newVersion + ", was v" + oldVersion);
+				Log.i(Utils.TAG, "upgrading database to v" + newVersion + ", was v" + oldVersion);
 				upgradeToV2(db);
-				Log.i("Twistoast", "successful database upgrade!");
+				Log.i(Utils.TAG, "successful database upgrade!");
 		}
 	}
 

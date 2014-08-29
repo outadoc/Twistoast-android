@@ -48,6 +48,7 @@ import fr.outadev.android.timeo.model.TimeoStop;
 import fr.outadev.android.timeo.model.TimeoStopNotReturnedException;
 import fr.outadev.android.timeo.model.TimeoStopSchedule;
 import fr.outadev.android.timeo.model.TimeoTrafficAlert;
+import fr.outadev.twistoast.Utils;
 
 /**
  * Handles all connections to the Twisto Realtime API.
@@ -73,7 +74,7 @@ public abstract class TimeoRequestHandler {
 	 * @throws HttpRequestException if an HTTP error occurred
 	 */
 	private static String requestWebPage(String url, String params, boolean useCaches) throws HttpRequestException {
-		Log.i("Twistoast", "requested " + url + " /w params " + params);
+		Log.i(Utils.TAG, "requested " + url + " /w params " + params);
 
 		return HttpRequest.get(url + "?" + params)
 				.useCaches(useCaches)
@@ -173,7 +174,7 @@ public abstract class TimeoRequestHandler {
 			}
 		}
 
-		Log.i("Twistoast", networks.size() + " different bus networks to refresh");
+		Log.i(Utils.TAG, networks.size() + " different bus networks to refresh");
 
 		//for each network
 		for(Integer network : networks) {
