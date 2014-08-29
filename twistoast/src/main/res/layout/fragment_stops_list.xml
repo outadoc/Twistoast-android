@@ -18,13 +18,13 @@
   -->
 
 <LinearLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:ads="http://schemas.android.com/apk/res-auto"
 	android:id="@+id/main_lin_layout"
+	xmlns:ads="http://schemas.android.com/apk/res-auto"
+	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:orientation="vertical"
-	android:background="@color/main_background_color">
+	android:background="@color/main_background_color"
+	android:orientation="vertical">
 
 	<include layout="@layout/traffic_alert" />
 
@@ -40,10 +40,12 @@
 			android:id="@+id/stops_list"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:paddingTop="5dp"
-			android:paddingBottom="5dp"
+			android:cacheColorHint="@android:color/transparent"
 			android:clipToPadding="false"
-			android:divider="@null" />
+			android:divider="@null"
+			android:listSelector="@android:color/transparent"
+			android:paddingBottom="5dp"
+			android:paddingTop="5dp" />
 
 	</android.support.v4.widget.SwipeRefreshLayout>
 
@@ -51,8 +53,8 @@
 		android:id="@+id/adView"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		ads:adSize="SMART_BANNER"
 		android:visibility="gone"
+		ads:adSize="SMART_BANNER"
 		ads:adUnitId="@string/admob_adunitid" />
 
 </LinearLayout>
