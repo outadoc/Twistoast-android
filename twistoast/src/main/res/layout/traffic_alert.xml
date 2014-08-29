@@ -39,8 +39,8 @@
 	<TextView
 		android:layout_width="wrap_content"
 		android:layout_height="match_parent"
-		android:layout_marginLeft="7dp"
-		android:layout_marginStart="7dp"
+		android:layout_marginLeft="3dp"
+		android:layout_marginStart="3dp"
 		android:gravity="center"
 		android:text="@string/traffic_info"
 		android:textSize="20sp"
