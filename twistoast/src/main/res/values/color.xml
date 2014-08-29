@@ -33,4 +33,8 @@
 	<color name="traffic_alert_text_primary">#FBDB9B</color>
 	<color name="traffic_alert_text_secondary">#FBDB9B</color>
 
+	<color name="bus_stop_alert_background">#9bf5a400</color>
+	<color name="bus_stop_alert_text_primary">#ffffff</color>
+	<color name="bus_stop_alert_text_secondary">#ffffe9cf</color>
+
 </resources>
