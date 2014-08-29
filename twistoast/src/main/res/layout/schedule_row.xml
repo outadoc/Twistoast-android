@@ -17,121 +17,126 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical">
+<FrameLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:card_view="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:paddingLeft="10dp"
+	android:paddingRight="10dp"
+	android:paddingBottom="5dp"
+	android:paddingTop="5dp">
 
-	<LinearLayout
-		android:id="@+id/view_traffic_message"
+	<android.support.v7.widget.CardView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:background="#E9E9E9"
-		android:orientation="horizontal"
-		android:visibility="gone">
-
-		<TextView
-			android:layout_width="50dp"
-			android:layout_height="50dp"
-			android:gravity="center"
-			android:text="\u26A0"
-			android:textSize="25sp" />
+		android:layout_gravity="center"
+		card_view:cardCornerRadius="3dp">
 
 		<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
 			android:orientation="vertical"
-			android:padding="3dp">
-
-			<TextView
-				android:id="@+id/lbl_message_title"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:textSize="17sp"
-				android:textStyle="italic" />
-
-			<TextView
-				android:id="@+id/lbl_message_body"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_margin="2dp" />
-		</LinearLayout>
-	</LinearLayout>
-
-	<LinearLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:background="?android:attr/activatedBackgroundIndicator"
-		android:orientation="horizontal"
-		android:padding="3dp">
-
-		<FrameLayout
-			android:id="@+id/view_line_id"
-			android:layout_width="60dp"
-			android:layout_height="60dp"
-			android:layout_gravity="center"
-			android:layout_margin="5dp"
-			android:background="#446678">
-
-			<TextView
-				android:id="@+id/lbl_line_id"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:gravity="center"
-				android:textAppearance="?android:attr/textAppearanceLarge"
-				android:textColor="#ffffff"
-				android:textStyle="bold" />
-		</FrameLayout>
-
-		<LinearLayout
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_margin="5dp"
-			android:orientation="vertical"
-			android:paddingLeft="5dp">
+			android:layout_height="wrap_content">
 
-			<TextView
-				android:id="@+id/lbl_stop_name"
-				android:layout_width="wrap_content"
+			<LinearLayout
+				android:id="@+id/view_traffic_message"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:maxLines="1"
-				android:textAppearance="?android:attr/textAppearanceLarge"
-				android:textSize="19sp" />
+				android:background="#E9E9E9"
+				android:orientation="horizontal"
+				android:visibility="gone">
 
-			<TextView
-				android:id="@+id/lbl_direction_name"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:maxLines="1"
-				android:textAppearance="?android:attr/textAppearanceSmall"
-				android:textSize="15sp"
-				android:textStyle="italic" />
+				<TextView
+					android:layout_width="50dp"
+					android:layout_height="50dp"
+					android:gravity="center"
+					android:text="\u26A0"
+					android:textSize="25sp" />
 
-			<TextView
-				android:id="@+id/lbl_schedule_1"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginLeft="15dp"
-				android:layout_marginTop="3dp"
-				android:ellipsize="end"
-				android:maxLines="1"
-				android:scrollHorizontally="true"
-				android:textAppearance="?android:attr/textAppearanceMedium"
-				android:textColor="#333333"
-				android:textSize="15sp" />
+				<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:orientation="vertical"
+					android:padding="3dp">
 
-			<TextView
-				android:id="@+id/lbl_schedule_2"
-				android:layout_width="wrap_content"
+					<TextView
+						android:id="@+id/lbl_message_title"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:textSize="17sp"
+						android:textStyle="italic" />
+
+					<TextView
+						android:id="@+id/lbl_message_body"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layout_margin="2dp" />
+				</LinearLayout>
+			</LinearLayout>
+
+			<LinearLayout
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_marginLeft="15dp"
-				android:ellipsize="end"
-				android:maxLines="1"
-				android:scrollHorizontally="true"
-				android:textAppearance="?android:attr/textAppearanceMedium"
-				android:textColor="#333333"
-				android:textSize="15sp" />
+				android:background="?android:attr/activatedBackgroundIndicator"
+				android:orientation="horizontal"
+				android:padding="3dp">
+
+				<FrameLayout
+					android:id="@+id/view_line_id"
+					android:layout_width="60dp"
+					android:layout_height="60dp"
+					android:layout_gravity="center"
+					android:layout_margin="10dp"
+					android:background="#446678">
+
+					<TextView
+						android:id="@+id/lbl_line_id"
+						android:layout_width="match_parent"
+						android:layout_height="match_parent"
+						android:gravity="center"
+						android:textAppearance="?android:attr/textAppearanceLarge"
+						android:textColor="#ffffff"
+						android:textStyle="bold" />
+				</FrameLayout>
+
+				<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_margin="5dp"
+					android:orientation="vertical"
+					android:paddingLeft="5dp"
+					android:paddingStart="5dp">
+
+					<TextView
+						android:id="@+id/lbl_stop_name"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:maxLines="1"
+						android:textAppearance="?android:attr/textAppearanceLarge"
+						android:textSize="19sp" />
+
+					<TextView
+						android:id="@+id/lbl_direction_name"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:maxLines="1"
+						android:textAppearance="?android:attr/textAppearanceSmall"
+						android:textSize="15sp"
+						android:textStyle="italic" />
+
+					<LinearLayout
+						android:id="@+id/view_schedule_labels_container"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:orientation="vertical"
+						android:layout_marginBottom="5dp"
+						android:layout_marginTop="5dp"
+						android:visibility="gone">
+
+					</LinearLayout>
+				</LinearLayout>
+			</LinearLayout>
+
 		</LinearLayout>
-	</LinearLayout>
-
-</LinearLayout>
+	</android.support.v7.widget.CardView>
+</FrameLayout>

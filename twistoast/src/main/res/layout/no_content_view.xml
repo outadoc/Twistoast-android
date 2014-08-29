@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Twistoast - fragment_stops_list.xml
+  ~ Twistoast - no_content_view.xml
   ~ Copyright (C) 2013-2014  Baptiste Candellier
   ~
   ~ This program is free software: you can redistribute it and/or modify
@@ -17,42 +17,37 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<LinearLayout
+<FrameLayout
+	android:id="@+id/view_no_content"
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:ads="http://schemas.android.com/apk/res-auto"
-	android:id="@+id/main_lin_layout"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:orientation="vertical"
-	android:background="@color/main_background_color">
+	android:layout_margin="15dp"
+	android:visibility="gone">
 
-	<include layout="@layout/traffic_alert" />
-
-	<include layout="@layout/no_content_view" />
-
-	<android.support.v4.widget.SwipeRefreshLayout
-		android:id="@+id/ptr_layout"
-		android:layout_width="match_parent"
-		android:layout_height="0dip"
-		android:layout_weight="1">
-
-		<ListView
-			android:id="@+id/stops_list"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:paddingTop="5dp"
-			android:paddingBottom="5dp"
-			android:clipToPadding="false"
-			android:divider="@null" />
-
-	</android.support.v4.widget.SwipeRefreshLayout>
-
-	<com.google.android.gms.ads.AdView
-		android:id="@+id/adView"
+	<LinearLayout
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		ads:adSize="SMART_BANNER"
-		android:visibility="gone"
-		ads:adUnitId="@string/admob_adunitid" />
+		android:layout_gravity="center"
+		android:orientation="vertical">
 
-</LinearLayout>
+		<TextView
+			android:id="@+id/txt_no_skins_title"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_horizontal"
+			android:text="@string/add_first_stop_title"
+			android:textAppearance="?android:attr/textAppearanceLarge"
+			android:textColor="#ff5d5d5d" />
+
+		<TextView
+			android:id="@+id/txt_add_skin_instruction"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_horizontal"
+			android:text="@string/add_first_stop_instructions"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:textColor="#ff909090" />
+	</LinearLayout>
+
+</FrameLayout>

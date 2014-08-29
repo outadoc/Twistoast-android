@@ -27,10 +27,12 @@
 	<string name="pref_cat_stops">Liste des arrêts</string>
 	<string name="pref_cat_other">Autres</string>
 	<string name="pref_legal_title">Mentions légales</string>
-	<string name="pref_legal_sum">Twistoast est une application développée par Baptiste Candellier. &#169; outa[dev] - 2014.\nTwisto est une marque de Keolis Caen.\nouta[dev] décline toute responsabilité en cas de données erronées.</string>
+	<string name="pref_legal_sum">Twistoast est une application développée par Baptiste Candellier. &#169; outa[dev] - 2014.\n\nTwisto est une marque de Keolis Caen.\n\nouta[dev] décline toute responsabilité en cas de données erronées.\n\nTwistoast est disponible selon les termes de la licence GNU GPL v3.</string>
 	<string name="pref_outadev_website_sum">Rendez-vous sur dev.outadoc.fr pour plus d\'applications pratiques !</string>
 	<string name="pref_outadev_website_title">Plus d\'applications</string>
 	<string name="pref_twisto_website_sum">Visitez twisto.mobi, le site mobile du réseau Twisto.</string>
 	<string name="pref_twisto_website_title">Site web Twisto</string>
 	<string name="pref_about_title">À propos</string>
+	<string name="pref_relative_time_sum">Afficher les horaires de façon relative. (ex: dans 3 minutes)</string>
+	<string name="pref_relative_time_title">Horaires relatives</string>
 </resources>

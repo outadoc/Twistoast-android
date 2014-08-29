@@ -1,0 +1,2 @@
+-keep public class TwistoastPebbleReceiver
+-dontwarn com.google.common.**

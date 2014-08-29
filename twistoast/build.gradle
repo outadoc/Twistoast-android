@@ -24,16 +24,16 @@ android {
 
     defaultConfig {
         applicationId "fr.outadev.twistoast"
-        minSdkVersion 14
+        minSdkVersion 15
         targetSdkVersion 21
-        versionCode 9
-        versionName "1.7"
+        versionCode 10
+        versionName "2.0"
 
     }
 
     buildTypes {
         release {
-            runProguard false
+            runProguard true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
@@ -41,7 +41,9 @@ android {
 
 dependencies {
     compile project(':pebble_kit')
-    compile 'com.android.support:support-v4:20.+'
-    compile 'com.google.android.gms:play-services:+'
+    compile 'com.android.support:support-v4:21.0.0-rc1'
+    compile 'com.android.support:cardview-v7:21.0.0-rc1'
+    compile 'com.google.android.gms:play-services:5.0.89'
+    compile 'org.apache.commons:commons-lang3:3.3.2'
     compile 'com.github.kevinsawicki:http-request:5.6'
 }

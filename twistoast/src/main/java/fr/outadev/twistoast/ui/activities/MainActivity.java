@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast;
+package fr.outadev.twistoast.ui.activities;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -38,12 +38,18 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import fr.outadev.android.timeo.TimeoRequestHandler;
-import fr.outadev.android.timeo.TimeoTrafficAlert;
+import fr.outadev.android.timeo.model.TimeoTrafficAlert;
+import fr.outadev.twistoast.R;
 import fr.outadev.twistoast.ui.NavDrawerArrayAdapter;
-import fr.outadev.twistoast.ui.PrefsFragment;
-import fr.outadev.twistoast.ui.StopsListFragment;
-import fr.outadev.twistoast.ui.WebViewFragment;
+import fr.outadev.twistoast.ui.fragments.PrefsFragment;
+import fr.outadev.twistoast.ui.fragments.StopsListFragment;
+import fr.outadev.twistoast.ui.fragments.WebViewFragment;
 
+/**
+ * The main activity of the app.
+ *
+ * @author outadoc
+ */
 public class MainActivity extends Activity {
 
 	private String[] drawerEntries;
@@ -124,7 +130,11 @@ public class MainActivity extends Activity {
 		displayGlobalTrafficInfo();
 	}
 
-	// Swaps fragments in the main content view
+	/**
+	 * Load the fragment at the specified drawer index.
+	 *
+	 * @param position the index of the element of the drawer we should load
+	 */
 	public void loadFragmentFromDrawerPosition(int position) {
 		currentFragmentIndex = position;
 
@@ -181,13 +191,15 @@ public class MainActivity extends Activity {
 
 	@Override
 	public void onBackPressed() {
-		if(frags[currentFragmentIndex] instanceof WebViewFragment && ((WebViewFragment) frags[currentFragmentIndex]).canGoBack
-				()) {
+		if(frags[currentFragmentIndex] instanceof WebViewFragment
+				&& ((WebViewFragment) frags[currentFragmentIndex]).canGoBack()) {
 			((WebViewFragment) frags[currentFragmentIndex]).goBack();
 		} else if(currentFragmentIndex == 0) {
 			super.onBackPressed();
-		} else {
+		} else if(!drawerLayout.isDrawerOpen(Gravity.START)) {
 			drawerLayout.openDrawer(Gravity.START);
+		} else {
+			loadFragmentFromDrawerPosition(0);
 		}
 	}
 
@@ -228,12 +240,21 @@ public class MainActivity extends Activity {
 		outState.putInt("key_current_frag", currentFragmentIndex);
 	}
 
+	/**
+	 * Fetches and stores a global traffic info if there is one available.
+	 */
 	private void checkForGlobalTrafficInfo() {
 		(new AsyncTask<Void, Void, TimeoTrafficAlert>() {
 
 			@Override
 			protected TimeoTrafficAlert doInBackground(Void... voids) {
-				return (new TimeoRequestHandler()).getGlobalTrafficAlert();
+				try {
+					return TimeoRequestHandler.getGlobalTrafficAlert();
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
+
+				return null;
 			}
 
 			@Override
@@ -245,6 +266,9 @@ public class MainActivity extends Activity {
 		}).execute();
 	}
 
+	/**
+	 * Displays a global traffic info if one was downloaded by checkForGlobalTrafficInfo.
+	 */
 	private void displayGlobalTrafficInfo() {
 		View trafficView = findViewById(R.id.view_global_traffic_alert);
 		TextView trafficLabel = (TextView) findViewById(R.id.lbl_traffic_info_string);

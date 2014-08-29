@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-  ~ Twistoast - traffic_alert.xml
+  ~ Twistoast - single_schedule_label.xml
   ~ Copyright (C) 2013-2014  Baptiste Candellier
   ~
   ~ This program is free software: you can redistribute it and/or modify
@@ -20,41 +20,30 @@
 
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/view_global_traffic_alert"
 	android:orientation="horizontal"
-	android:layout_width="match_parent"
-	android:layout_height="40dp"
-	android:padding="5dp"
-	android:visibility="gone"
-	android:background="#F5A400"
-	android:elevation="2dp">
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_marginLeft="15dp"
+	android:layout_marginStart="15dp"
+	android:layout_marginTop="5dp">
 
-<ImageView
+	<TextView
+		android:id="@+id/lbl_schedule"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:src="@drawable/traffic_cone"
-		android:padding="2dp"
-		android:tint="@android:color/white" />
+		android:ellipsize="end"
+		android:maxLines="1"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:textColor="#333333"
+		android:textSize="15sp" />
 
 	<TextView
+		android:id="@+id/lbl_schedule_direction"
 		android:layout_width="wrap_content"
-		android:layout_height="match_parent"
-		android:layout_marginLeft="7dp"
-		android:layout_marginStart="7dp"
-		android:gravity="center"
-		android:text="@string/traffic_info"
-		android:textSize="20sp"
-		android:textColor="#FBDB9B" />
-
-	<TextView
-		android:layout_width="wrap_content"
-		android:layout_height="match_parent"
-		android:gravity="center"
-		android:layout_marginLeft="10dp"
-		android:layout_marginStart="10dp"
-		android:id="@+id/lbl_traffic_info_string"
-		android:textColor="#ffba6414"
-		android:textSize="17sp"
-		android:singleLine="true" />
-
+		android:layout_height="wrap_content"
+		android:ellipsize="end"
+		android:maxLines="1"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:textColor="#ff707070"
+		android:textSize="15sp" />
 </LinearLayout>

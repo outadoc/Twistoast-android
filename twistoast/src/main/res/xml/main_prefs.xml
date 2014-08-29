@@ -25,6 +25,12 @@
 			android:key="pref_auto_refresh"
 			android:summary="@string/pref_auto_refresh_sum"
 			android:title="@string/pref_auto_refresh_title" />
+
+		<CheckBoxPreference
+			android:defaultValue="true"
+			android:key="pref_relative_time"
+			android:summary="@string/pref_relative_time_sum"
+			android:title="@string/pref_relative_time_title" />
 	</PreferenceCategory>
 	<PreferenceCategory android:title="@string/pref_cat_pebble">
 		<Preference

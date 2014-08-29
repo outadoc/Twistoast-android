@@ -1,5 +1,5 @@
 /*
- * Twistoast - build.gradle
+ * Twistoast - IStopsListContainer
  * Copyright (C) 2013-2014  Baptiste Candellier
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,18 +16,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:0.12.2'
-    }
-}
+package fr.outadev.twistoast;
 
-allprojects {
-    repositories {
-        jcenter()
-    }
+/**
+ * Implements methods a stops list container activity/fragment should have.
+ *
+ * @author outadoc
+ */
+public interface IStopsListContainer {
+
+	/**
+	 * Called when the list of bus stops is refreshed and the user should be notified.
+	 */
+	public void endRefresh();
+
+	/**
+	 * Load the fragment at the specified drawer index.
+	 *
+	 * @param position the index of the element of the drawer we should load
+	 */
+	public void loadFragmentFromDrawerPosition(int position);
+
 }

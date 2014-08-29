@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast.ui;
+package fr.outadev.twistoast.ui.fragments;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -27,6 +27,11 @@ import android.preference.PreferenceFragment;
 
 import fr.outadev.twistoast.R;
 
+/**
+ * A preferences fragment for the preferences of the app.
+ *
+ * @author outadoc
+ */
 public class PrefsFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
 
 	@Override

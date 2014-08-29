@@ -19,7 +19,8 @@
 
 <resources>
 
-	<string name="app_name">Twistoast</string>
+	<string name="app_name" translatable="false">Twistoast</string>
+
 	<string name="action_settings">Préférences</string>
 	<string name="lbl_line">Ligne</string>
 	<string name="lbl_direction">Direction</string>
@@ -30,29 +31,32 @@
 	<string name="action_ok">Ajouter</string>
 	<string name="action_delete">Supprimer</string>
 	<string name="action_refresh">Rafraîchir</string>
+	<string name="action_cancel">Annuler</string>
 	<string name="loading_data">Chargement&#8230;</string>
 	<string name="loading_error">Erreur de chargement</string>
-	<string name="select_items">Sélectionnez des éléments</string>
-	<string name="one_stop_selected">Un arrêt sélectionné</string>
-	<string name="multi_stops_selected">%1$d arrêts sélectionnés</string>
-	<string name="confirm_delete_title">Suppression des arrêts</string>
-	<string name="confirm_delete_msg_multi">Voulez-vous vraiment supprimer %1$d arrêts ?</string>
-	<string name="confirm_delete_msg_single">Voulez-vous vraiment supprimer cet arrêt ?</string>
 	<string name="confirm_yes">Oui</string>
 	<string name="confirm_no">Non</string>
 	<string name="confirm_delete_success">Succès de la suppression</string>
 	<string name="refreshed_stops">Horaires rafraîchis</string>
-	<string name="unknown_line_id">\?</string>
+	<string name="unknown_line_id" translatable="false">\?</string>
 	<string name="direction_name">→ Dir. %1$s</string>
 	<string name="stop_name">Arrêt %1$s</string>
 	<string name="error_toast">Erreur : %1$s</string>
-	<string name="added_toast">Ajouté : %1$s - %2$s - %3$s</string>
+	<string name="added_toast">Ajouté : %1$s</string>
 	<string name="load_timeout">Chargement interrompu (timeout)</string>
 	<string name="add_error_duplicate">Cet arrêt a déjà été ajouté dans l\'application</string>
 	<string name="add_error_illegal_argument">Quelque-chose ne va pas, vérifiez les valeurs de la ligne, direction et arrêt.</string>
-	<string name="no_content">Pas d\'arrêts pour l\'instant.</string>
 	<string name="action_open_website">Ouvrir dans le navigateur</string>
 	<string name="traffic_info">Info trafic</string>
+
+	<string name="schedule_time_currently_at_stop">Passage en cours</string>
+	<string name="schedule_time_arrival_imminent">Passage imminent</string>
+	<string name="schedule_time_countdown">%1$s minutes</string>
+
+	<string name="add_first_stop_title">Rien pour l\'instant !</string>
+	<string name="add_first_stop_instructions">Pour ajouter un arrêt, appuyez sur <b>+</b>.</string>
+
+	<string name="error_stop_not_returned_exception">Erreur : un arrêt n\'a pas pu être associé à ceux de l\'app. Réessayez.</string>
 
 	<string-array name="drawer_entries">
 		<item>Temps réel</item>

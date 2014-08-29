@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.android.timeo;
+package fr.outadev.android.timeo.model;
 
 /**
  * Associates an ID to a name. Used to associate a line ID with its name, for
@@ -26,17 +26,22 @@ package fr.outadev.android.timeo;
  */
 public class TimeoIDNameObject {
 
+	private String id;
+	private String name;
+
 	/**
 	 * Creates an ID/name object.
 	 *
 	 * @param id   the id of the object
 	 * @param name the name of the object
-	 * @see TimeoRequestObject
-	 * @see TimeoScheduleObject
 	 */
 	public TimeoIDNameObject(String id, String name) {
 		this.id = id;
 		this.name = name;
+	}
+
+	public TimeoIDNameObject() {
+
 	}
 
 	public String getId() {
@@ -57,15 +62,7 @@ public class TimeoIDNameObject {
 
 	@Override
 	public String toString() {
-		return name;
+		return id + " - " + name;
 	}
-
-	@Override
-	public TimeoIDNameObject clone() {
-		return new TimeoIDNameObject(id, name);
-	}
-
-	private String id;
-	private String name;
 
 }

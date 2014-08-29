@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-apply plugin: 'android-library'
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 19
@@ -35,5 +35,5 @@ android {
 }
 
 dependencies {
-    compile 'com.google.guava:guava:14.0.1'
+    compile 'com.google.guava:guava:17.0'
 }

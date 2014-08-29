@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.android.timeo;
+package fr.outadev.android.timeo.model;
 
 /**
  * Traffic alert. Used to inform the user of traffic perturbations.

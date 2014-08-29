@@ -1,5 +1,5 @@
 /*
- * Twistoast - build.gradle
+ * Twistoast - TimeoException
  * Copyright (C) 2013-2014  Baptiste Candellier
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,18 +16,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:0.12.2'
-    }
-}
+package fr.outadev.android.timeo.model;
 
-allprojects {
-    repositories {
-        jcenter()
-    }
+/**
+ * Thrown when an error was encountered while fetching data from the API.
+ *
+ * @author outadoc
+ */
+public class TimeoException extends Exception {
+
+	public TimeoException(String s) {
+		super(s);
+	}
+
+	public TimeoException() {
+
+	}
 }

@@ -16,11 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast.ui;
+package fr.outadev.twistoast.ui.fragments;
 
-import android.app.AlertDialog;
 import android.app.Fragment;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -29,15 +27,12 @@ import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.Log;
-import android.util.SparseBooleanArray;
-import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -47,16 +42,21 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
-import java.util.ArrayList;
-
-import fr.outadev.android.timeo.TimeoScheduleObject;
+import fr.outadev.twistoast.IStopsListContainer;
 import fr.outadev.twistoast.R;
 import fr.outadev.twistoast.database.TwistoastDatabase;
+import fr.outadev.twistoast.ui.StopsListArrayAdapter;
+import fr.outadev.twistoast.ui.SwipeDismissListViewTouchListener;
+import fr.outadev.twistoast.ui.activities.AddStopActivity;
+import fr.outadev.twistoast.ui.activities.MainActivity;
 
-public class StopsListFragment extends Fragment {
+public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 	private ListView listView;
-	private SwipeRefreshLayout swipeLayout;
+	private SwipeRefreshLayout swipeRefreshLayout;
+
+	private MenuItem menuItemRefresh;
+	private View noContentView;
 
 	private boolean isRefreshing;
 	private final long REFRESH_INTERVAL = 60000L;
@@ -83,8 +83,8 @@ public class StopsListFragment extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_stops_list, container, false);
 
 		// get pull to refresh view
-		swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.ptr_layout);
-		swipeLayout.setOnRefreshListener(new OnRefreshListener() {
+		swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.ptr_layout);
+		swipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
 
 			@Override
 			public void onRefresh() {
@@ -93,124 +93,39 @@ public class StopsListFragment extends Fragment {
 
 		});
 
-		swipeLayout.setColorSchemeResources(R.color.twisto_primary, R.color.twisto_secondary,
+		swipeRefreshLayout.setColorSchemeResources(R.color.twisto_primary, R.color.twisto_secondary,
 				R.color.twisto_primary, R.color.twisto_secondary);
 
 		listView = (ListView) view.findViewById(R.id.stops_list);
+		noContentView = view.findViewById(R.id.view_no_content);
 
-		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-		listView.setMultiChoiceModeListener(new MultiChoiceModeListener() {
+		SwipeDismissListViewTouchListener touchListener = new SwipeDismissListViewTouchListener(listView,
+				new SwipeDismissListViewTouchListener.DismissCallbacks() {
 
-			@Override
-			public boolean onActionItemClicked(final ActionMode mode, MenuItem item) {
-				switch(item.getItemId()) {
-					case R.id.action_delete:
-						// if we want to remove a bus stop, we'll have to ask a
-						// confirmation
-						AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+					@Override
+					public boolean canDismiss(int position) {
+						return !isRefreshing;
+					}
 
-						// add the buttons
-						builder.setPositiveButton(R.string.confirm_yes, new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int id) {
-								// get the positions of the selected elements
-								SparseBooleanArray checked = listView.getCheckedItemPositions();
-								ArrayList<TimeoScheduleObject> objectsToDelete = new ArrayList<TimeoScheduleObject>();
-
-								// add every stop we want to delete to the list
-								for(int i = 0; i < checked.size(); i++) {
-									if(checked.valueAt(i)) {
-										objectsToDelete.add(listAdapter.getItem(checked.keyAt(i)));
-									}
-								}
-
-								// DELETE EVERYTHING AAAAAAAAA-
-								for(TimeoScheduleObject anObjectsToDelete : objectsToDelete) {
-									databaseHandler.deleteStop(anObjectsToDelete);
-									listAdapter.remove(anObjectsToDelete);
-								}
-
-								// this was a triumph, say we've deleted teh
-								// stuff
-								Toast.makeText(getActivity(), getResources().getString(R.string.confirm_delete_success),
-										Toast.LENGTH_SHORT).show();
-
-								mode.finish();
-								refreshListFromDB(true);
-							}
-						});
-
-						// on the other hand, if we don't actually want to delete
-						// anything,
-						// well.
-						builder.setNegativeButton(R.string.confirm_no, null);
-
-						// set dialog title
-						builder.setTitle(getResources().getString(R.string.confirm_delete_title));
-
-						// correctly set the message of the dialog
-						if(listView.getCheckedItemCount() > 1) {
-							builder.setMessage(String.format(getResources().getString(R.string.confirm_delete_msg_multi),
-									listView.getCheckedItemCount()));
-						} else {
-							builder.setMessage(getResources().getString(R.string.confirm_delete_msg_single));
+					@Override
+					public void onDismiss(ListView listView, int[] reverseSortedPositions) {
+						for(int position : reverseSortedPositions) {
+							databaseHandler.deleteStop(listAdapter.getItem(position));
+							listAdapter.remove(listAdapter.getItem(position));
 						}
 
-						// create the AlertDialog and show it
-						AlertDialog dialog = builder.create();
-						dialog.show();
+						if(listAdapter.isEmpty()) {
+							noContentView.setVisibility(View.VISIBLE);
+						}
 
-						break;
-				}
+						listAdapter.notifyDataSetChanged();
+						Toast.makeText(getActivity(), R.string.confirm_delete_success, Toast.LENGTH_SHORT).show();
+					}
 
-				return true;
-			}
+				});
 
-			@Override
-			public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-				// yay, inflation
-				MenuInflater inflater = getActivity().getMenuInflater();
-
-				inflater.inflate(R.menu.main_edit, menu);
-				mode.setTitle(getActivity().getResources().getString(R.string.select_items));
-				setSubtitle(mode);
-
-				return true;
-			}
-
-			@Override
-			public void onDestroyActionMode(ActionMode mode) {
-
-			}
-
-			@Override
-			public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-				return true;
-			}
-
-			@Override
-			public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-				setSubtitle(mode);
-			}
-
-			public void setSubtitle(ActionMode mode) {
-				// set the action bar subtitle accordingly
-				final int checkedCount = listView.getCheckedItemCount();
-
-				switch(checkedCount) {
-					case 0:
-						mode.setSubtitle(null);
-						break;
-					case 1:
-						mode.setSubtitle(getActivity().getResources().getString(R.string.one_stop_selected));
-						break;
-					default:
-						mode.setSubtitle(String.format(getActivity().getResources().getString(R.string.multi_stops_selected),
-								checkedCount));
-						break;
-				}
-			}
-		});
+		listView.setOnTouchListener(touchListener);
+		listView.setOnScrollListener(touchListener.makeScrollListener());
 
 		return view;
 	}
@@ -294,6 +209,8 @@ public class StopsListFragment extends Fragment {
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		inflater.inflate(R.menu.main, menu);
+		menuItemRefresh = menu.findItem(R.id.action_refresh);
+
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
@@ -332,14 +249,18 @@ public class StopsListFragment extends Fragment {
 		}
 
 		// show the refresh animation
-		swipeLayout.setRefreshing(true);
+		swipeRefreshLayout.setRefreshing(true);
+
+		if(menuItemRefresh != null) {
+			menuItemRefresh.setEnabled(false);
+		}
 
 		// we have to reset the adapter so it correctly loads the stops
 		// if we don't do that, bugs will appear when the database has been
 		// modified
 		if(resetList) {
-			listAdapter = new StopsListArrayAdapter(getActivity(), this, android.R.layout.simple_list_item_1,
-					databaseHandler.getAllStops());
+			listAdapter = new StopsListArrayAdapter(getActivity(), getActivity(), android.R.layout.simple_list_item_1,
+					databaseHandler.getAllStops(), this);
 			listView.setAdapter(listAdapter);
 		}
 
@@ -347,25 +268,36 @@ public class StopsListFragment extends Fragment {
 		listAdapter.updateScheduleData();
 	}
 
+	@Override
 	public void endRefresh() {
 		// notify the pull to refresh view that the refresh has finished
-		swipeLayout.setRefreshing(false);
 		isRefreshing = false;
+		swipeRefreshLayout.setRefreshing(false);
+
+		if(menuItemRefresh != null) {
+			menuItemRefresh.setEnabled(true);
+		}
 
 		Log.i("Twistoast", "refreshed, " + listAdapter.getCount() + " stops in db");
 
-		if(getActivity() != null && listAdapter.getCount() > 0) {
+		if(getActivity() != null && !listAdapter.isEmpty()) {
 			Toast.makeText(getActivity(), getResources().getString(R.string.refreshed_stops), Toast.LENGTH_SHORT).show();
-		} else if(listAdapter.getCount() < 1) {
-			Toast.makeText(getActivity(), getResources().getString(R.string.no_content), Toast.LENGTH_SHORT).show();
 		}
+
+		noContentView.setVisibility((listAdapter.isEmpty()) ? View.VISIBLE : View.GONE);
 
 		// reset the timer loop, and start it again
 		// this ensures the list is refreshed automatically every 60 seconds
 		handler.removeCallbacks(runnable);
+
 		if(!isInBackground) {
 			handler.postDelayed(runnable, REFRESH_INTERVAL);
 		}
+	}
+
+	@Override
+	public void loadFragmentFromDrawerPosition(int index) {
+		((MainActivity) getActivity()).loadFragmentFromDrawerPosition(index);
 	}
 
 }
