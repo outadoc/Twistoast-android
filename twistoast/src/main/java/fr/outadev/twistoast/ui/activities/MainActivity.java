@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast;
+package fr.outadev.twistoast.ui.activities;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -39,10 +39,11 @@ import android.widget.TextView;
 
 import fr.outadev.android.timeo.TimeoRequestHandler;
 import fr.outadev.android.timeo.model.TimeoTrafficAlert;
+import fr.outadev.twistoast.R;
 import fr.outadev.twistoast.ui.NavDrawerArrayAdapter;
-import fr.outadev.twistoast.ui.PrefsFragment;
-import fr.outadev.twistoast.ui.StopsListFragment;
-import fr.outadev.twistoast.ui.WebViewFragment;
+import fr.outadev.twistoast.ui.fragments.PrefsFragment;
+import fr.outadev.twistoast.ui.fragments.StopsListFragment;
+import fr.outadev.twistoast.ui.fragments.WebViewFragment;
 
 /**
  * The main activity of the app.

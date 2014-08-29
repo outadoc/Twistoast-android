@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast.ui;
+package fr.outadev.twistoast.ui.activities;
 
 import android.app.Activity;
 import android.content.Context;

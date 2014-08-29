@@ -27,8 +27,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import fr.outadev.twistoast.MainActivity;
 import fr.outadev.twistoast.R;
+import fr.outadev.twistoast.ui.activities.MainActivity;
 
 /**
  * An array adapter for the navigation drawer.

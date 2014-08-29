@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast.ui;
+package fr.outadev.twistoast.ui.fragments;
 
 import android.app.Fragment;
 import android.content.Intent;
@@ -43,9 +43,12 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import fr.outadev.twistoast.IStopsListContainer;
-import fr.outadev.twistoast.MainActivity;
 import fr.outadev.twistoast.R;
 import fr.outadev.twistoast.database.TwistoastDatabase;
+import fr.outadev.twistoast.ui.StopsListArrayAdapter;
+import fr.outadev.twistoast.ui.SwipeDismissListViewTouchListener;
+import fr.outadev.twistoast.ui.activities.AddStopActivity;
+import fr.outadev.twistoast.ui.activities.MainActivity;
 
 public class StopsListFragment extends Fragment implements IStopsListContainer {
 
