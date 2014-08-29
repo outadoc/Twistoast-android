@@ -22,8 +22,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,7 +39,9 @@ import fr.outadev.android.timeo.TimeoRequestHandler;
 public class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 
 	private static final int DATABASE_VERSION = 2;
+
 	private static final String DATABASE_NAME = "twistoast.db";
+	private static final String DATABASE_V2_UPGRADE_NAME = "db_upgrade_v2.db";
 
 	private Context context;
 
@@ -87,10 +89,17 @@ public class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 	public void onUpgrade(final SQLiteDatabase db, int oldVersion, int newVersion) {
 		switch(newVersion) {
 			case 2:
+				Log.i("Twistoast", "upgrading database to v" + newVersion + ", was v" + oldVersion);
 				upgradeToV2(db);
+				Log.i("Twistoast", "successful database upgrade!");
 		}
 	}
 
+	/**
+	 * Upgrade the database to version 2.
+	 *
+	 * @param db the database to upgrade
+	 */
 	private void upgradeToV2(SQLiteDatabase db) {
 
 		try {
@@ -138,18 +147,22 @@ public class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 		}
 	}
 
+	/**
+	 * Get the v2 upgrade database.
+	 *
+	 * @return a database containing the info necessary for a v1 -> v2 upgrade
+	 * @throws IOException if we couldn't copy the database to the databases folder
+	 */
 	private SQLiteDatabase getV2UpgradeDatabase() throws IOException {
-		final String DB_DESTINATION = "/data/data/fr.outadev.twistoast/databases/db_upgrade_v2.db";
-
 		// Check if the database exists before copying
-		boolean initialiseDatabase = (new File(DB_DESTINATION)).exists();
+		boolean initialiseDatabase = (context.getDatabasePath(DATABASE_V2_UPGRADE_NAME)).exists();
 
 		if(!initialiseDatabase) {
 			// Open the .db file in your assets directory
-			InputStream is = context.getAssets().open("db_upgrade_v2.db");
+			InputStream is = context.getAssets().open(DATABASE_V2_UPGRADE_NAME);
 
 			// Copy the database into the destination
-			OutputStream os = new FileOutputStream(DB_DESTINATION);
+			OutputStream os = new FileOutputStream(context.getDatabasePath(DATABASE_V2_UPGRADE_NAME));
 			byte[] buffer = new byte[1024];
 			int length;
 
@@ -163,9 +176,13 @@ public class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 			is.close();
 		}
 
-		return context.openOrCreateDatabase("db_upgrade_v2.db", Context.MODE_PRIVATE, null);
+		return context.openOrCreateDatabase(DATABASE_V2_UPGRADE_NAME, Context.MODE_PRIVATE, null);
 	}
 
+	/**
+	 * Deletes all the tables in the database.
+	 * @param db the database to clean up
+	 */
 	private void deleteAllData(SQLiteDatabase db) {
 		db.execSQL("DROP TABLE twi_stop");
 		db.execSQL("DROP TABLE twi_direction");
