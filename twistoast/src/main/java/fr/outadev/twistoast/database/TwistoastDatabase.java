@@ -138,7 +138,7 @@ public class TwistoastDatabase {
 								"line.line_color, dir.dir_id, dir.dir_name, line.network_code FROM twi_stop stop " +
 								"JOIN twi_direction dir USING(dir_id, line_id, network_code) " +
 								"JOIN twi_line line USING(line_id, network_code) " +
-								"ORDER BY CAST(line.line_id AS INTEGER), stop.stop_name, dir.dir_name",
+								"ORDER BY network_code, CAST(line.line_id AS INTEGER), stop.stop_name, dir.dir_name",
 						null);
 
 		ArrayList<TimeoStop> stopsList = new ArrayList<TimeoStop>();
