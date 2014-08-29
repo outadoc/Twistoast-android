@@ -525,7 +525,7 @@ public abstract class TimeoRequestHandler {
 			}
 		}
 
-		return newStr;
+		return StringUtils.capitalize(newStr);
 	}
 
 	/**
