@@ -57,8 +57,8 @@ import fr.outadev.twistoast.Utils;
  */
 public abstract class TimeoRequestHandler {
 
-	private final static String BASE_URL = "http://timeo3.keolis.com/relais/";
-	private final static String BASE_PRE_HOME_URL = "http://twisto.fr/module/mobile/App2014/utils/getPreHome.php";
+	private final static String API_BASE_URL = "http://timeo3.keolis.com/relais/";
+	private final static String PRE_HOME_URL = "http://twisto.fr/module/mobile/App2014/utils/getPreHome.php";
 
 	public final static int DEFAULT_NETWORK_CODE = 147;
 
@@ -209,7 +209,7 @@ public abstract class TimeoRequestHandler {
 	public static List<TimeoLine> getLines(int networkCode) throws HttpRequestException, XmlPullParserException, IOException,
 			TimeoException {
 		String params = "xml=1";
-		String result = requestWebPage(BASE_URL + getPageNameForNetworkCode(networkCode), params, true);
+		String result = requestWebPage(API_BASE_URL + getPageNameForNetworkCode(networkCode), params, true);
 
 		XmlPullParser parser = getParserForXMLString(result);
 		int eventType = parser.getEventType();
@@ -286,7 +286,7 @@ public abstract class TimeoRequestHandler {
 	public static List<TimeoStop> getStops(int networkCode, TimeoLine line) throws HttpRequestException, XmlPullParserException,
 			IOException, TimeoException {
 		String params = "xml=1&ligne=" + line.getDetails().getId() + "&sens=" + line.getDirection().getId();
-		String result = requestWebPage(BASE_URL + getPageNameForNetworkCode(networkCode), params, true);
+		String result = requestWebPage(API_BASE_URL + getPageNameForNetworkCode(networkCode), params, true);
 
 		XmlPullParser parser = getParserForXMLString(result);
 		int eventType = parser.getEventType();
@@ -393,7 +393,7 @@ public abstract class TimeoRequestHandler {
 		refs = refs.substring(0, refs.length() - 1);
 
 		String params = "xml=3&refs=" + refs + "&ran=1";
-		String result = requestWebPage(BASE_URL + getPageNameForNetworkCode(networkCode), params, true);
+		String result = requestWebPage(API_BASE_URL + getPageNameForNetworkCode(networkCode), params, true);
 
 		XmlPullParser parser = getParserForXMLString(result);
 		int eventType = parser.getEventType();
@@ -466,7 +466,7 @@ public abstract class TimeoRequestHandler {
 	 */
 	@Nullable
 	public static TimeoTrafficAlert getGlobalTrafficAlert() {
-		String source = requestWebPage(BASE_PRE_HOME_URL, true);
+		String source = requestWebPage(PRE_HOME_URL, true);
 
 		if(source != null && !source.isEmpty()) {
 			try {
