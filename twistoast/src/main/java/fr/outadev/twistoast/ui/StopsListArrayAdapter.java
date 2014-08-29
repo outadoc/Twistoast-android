@@ -44,6 +44,7 @@ import fr.outadev.android.timeo.model.TimeoStopNotReturnedException;
 import fr.outadev.android.timeo.model.TimeoStopSchedule;
 import fr.outadev.twistoast.IStopsListContainer;
 import fr.outadev.twistoast.R;
+import fr.outadev.twistoast.database.TwistoastDatabase;
 
 /**
  * An array adapter for the main list of bus stops.
@@ -57,6 +58,9 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 
 	private List<TimeoStop> stops;
 	private Map<TimeoStop, TimeoStopSchedule> schedules;
+	private Map<Integer, String> networks;
+
+	private int networkCount = 0;
 
 	public StopsListArrayAdapter(Context context, Activity activity, int resource, List<TimeoStop> stops,
 	                             IStopsListContainer stopsListContainer) {
@@ -66,6 +70,8 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 		this.stops = stops;
 		this.stopsListContainer = stopsListContainer;
 		this.schedules = new HashMap<TimeoStop, TimeoStopSchedule>();
+		this.networks = TimeoRequestHandler.getNetworksList();
+		this.networkCount = (new TwistoastDatabase(getContext())).getNetworksCount();
 	}
 
 	@Override
@@ -79,6 +85,15 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 
 		// get all the stuff in it that we'll have to modify
 		FrameLayout view_line_id = (FrameLayout) convertView.findViewById(R.id.view_line_id);
+
+		TextView lbl_section_name = (TextView) convertView.findViewById(R.id.lbl_section_name);
+		lbl_section_name.setVisibility(View.GONE);
+
+		if(networkCount > 1 && (position == 0 ||
+				(position > 0 && getItem(position - 1).getLine().getNetworkCode() != currentItem.getLine().getNetworkCode()))) {
+			lbl_section_name.setText(networks.get(currentItem.getLine().getNetworkCode()));
+			lbl_section_name.setVisibility(View.VISIBLE);
+		}
 
 		TextView lbl_line = (TextView) convertView.findViewById(R.id.lbl_line_id);
 		TextView lbl_stop = (TextView) convertView.findViewById(R.id.lbl_stop_name);
@@ -210,6 +225,8 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 				if(scheduleMap != null) {
 					schedules.putAll(scheduleMap);
 				}
+
+				networkCount = (new TwistoastDatabase(getContext())).getNetworksCount();
 
 				notifyDataSetChanged();
 				stopsListContainer.endRefresh();

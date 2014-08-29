@@ -37,8 +37,10 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import fr.outadev.android.timeo.model.TimeoException;
 import fr.outadev.android.timeo.model.TimeoIDNameObject;
@@ -543,6 +545,29 @@ public abstract class TimeoRequestHandler {
 		parser.nextTag();
 
 		return parser;
+	}
+
+	public static Map<Integer, String> getNetworksList() {
+		Map<Integer, String> networks = new HashMap<Integer, String>();
+
+		networks.put(105, "Le Mans");
+		networks.put(117, "Pau");
+		networks.put(120, "Soissons");
+		networks.put(135, "Aix-en-Provence");
+		networks.put(147, "Caen");
+		networks.put(217, "Dijon");
+		networks.put(297, "Brest");
+		networks.put(402, "Pau-Agen");
+		networks.put(416, "Blois");
+		networks.put(422, "Saint-Étienne");
+		networks.put(440, "Nantes");
+		networks.put(457, "Montargis");
+		networks.put(497, "Angers");
+		networks.put(691, "Macon-Villefranche");
+		networks.put(910, "Épinay-sur-Orge");
+		networks.put(999, "Rennes");
+
+		return networks;
 	}
 
 	private static String getPageNameForNetworkCode(int networkCode) {

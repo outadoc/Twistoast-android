@@ -242,6 +242,20 @@ public class TwistoastDatabase {
 		return count;
 	}
 
+	public int getNetworksCount() {
+		SQLiteDatabase db = databaseOpenHelper.getReadableDatabase();
+
+		Cursor results = db.rawQuery("SELECT COUNT(*), network_code FROM twi_stop GROUP BY (network_code)", null);
+		results.moveToFirst();
+
+		int count = results.getCount();
+
+		results.close();
+		db.close();
+
+		return count;
+	}
+
 	/**
 	 * Deletes a bus stop from the database.
 	 *
