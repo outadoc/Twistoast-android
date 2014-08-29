@@ -23,7 +23,7 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="40dp"
-	android:background="#F5A400"
+	android:background="@color/traffic_alert_background"
 	android:elevation="2dp"
 	android:orientation="horizontal"
 	android:padding="5dp"
@@ -43,7 +43,7 @@
 		android:layout_marginStart="3dp"
 		android:gravity="center"
 		android:text="@string/traffic_info"
-		android:textColor="#FBDB9B"
+		android:textColor="@color/traffic_alert_text_primary"
 		android:textSize="20sp" />
 
 	<TextView
@@ -54,7 +54,7 @@
 		android:layout_marginStart="10dp"
 		android:gravity="center"
 		android:singleLine="true"
-		android:textColor="#ffba6414"
+		android:textColor="@color/traffic_alert_text_secondary"
 		android:textSize="17sp" />
 
 </LinearLayout>
