@@ -157,9 +157,16 @@ public abstract class TimeoRequestHandler {
 	@NonNull
 	public static List<TimeoStopSchedule> getMultipleSchedules(List<TimeoStop> stops) throws HttpRequestException,
 			TimeoException, XmlPullParserException, IOException {
+		//if we don't specify any network code when calling getMultipleSchedules, we'll have to figure them out ourselves.
+		//we can only fetch a list of schedules that are all part of the same network.
+		//therefore, we'll have to separate them in different lists and request them individually.
+
+		//a list of all the different network codes we'll have to check
 		List<Integer> networks = new ArrayList<Integer>();
+		//the final list that will contain all of our schedules
 		List<TimeoStopSchedule> finalScheduleList = new ArrayList<TimeoStopSchedule>();
 
+		//list all the required network codes, and add them to the list
 		for(TimeoStop stop : stops) {
 			if(!networks.contains(stop.getLine().getNetworkCode())) {
 				networks.add(stop.getLine().getNetworkCode());
@@ -168,15 +175,18 @@ public abstract class TimeoRequestHandler {
 
 		Log.i("Twistoast", networks.size() + " different bus networks to refresh");
 
+		//for each network
 		for(Integer network : networks) {
 			List<TimeoStop> stopsForThisNetwork = new ArrayList<TimeoStop>();
 
+			//get the list of stops we'll have to request
 			for(TimeoStop stop : stops) {
 				if(stop.getLine().getNetworkCode() == network) {
 					stopsForThisNetwork.add(stop);
 				}
 			}
 
+			//request the schedules and add them to the final list
 			finalScheduleList.addAll(getMultipleSchedules(network, stopsForThisNetwork));
 		}
 
