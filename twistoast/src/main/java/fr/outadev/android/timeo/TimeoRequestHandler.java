@@ -231,11 +231,11 @@ public abstract class TimeoRequestHandler {
 			switch(eventType) {
 				case XmlPullParser.START_TAG:
 
-					if(tagname.equalsIgnoreCase("ligne")) {
+					if(tagname.equals("ligne")) {
 						isInLineTag = true;
 						tmpDirection = new TimeoIDNameObject();
 						tmpLine = new TimeoLine(new TimeoIDNameObject(), tmpDirection, networkCode);
-					} else if(tagname.equalsIgnoreCase("arret")) {
+					} else if(tagname.equals("arret")) {
 						isInLineTag = false;
 					}
 
@@ -246,19 +246,19 @@ public abstract class TimeoRequestHandler {
 					break;
 
 				case XmlPullParser.END_TAG:
-					if(tagname.equalsIgnoreCase("ligne")) {
+					if(tagname.equals("ligne")) {
 						lines.add(tmpLine);
-					} else if(tmpLine != null && tagname.equalsIgnoreCase("code") && isInLineTag) {
+					} else if(tmpLine != null && tagname.equals("code") && isInLineTag) {
 						tmpLine.getDetails().setId(text);
-					} else if(tmpLine != null && tagname.equalsIgnoreCase("nom") && isInLineTag) {
+					} else if(tmpLine != null && tagname.equals("nom") && isInLineTag) {
 						tmpLine.getDetails().setName(smartCapitalize(text));
-					} else if(tmpLine != null && tagname.equalsIgnoreCase("sens") && isInLineTag) {
+					} else if(tmpLine != null && tagname.equals("sens") && isInLineTag) {
 						tmpLine.getDirection().setId(text);
-					} else if(tmpLine != null && tagname.equalsIgnoreCase("vers") && isInLineTag) {
+					} else if(tmpLine != null && tagname.equals("vers") && isInLineTag) {
 						tmpLine.getDirection().setName(smartCapitalize(text));
-					} else if(tmpLine != null && tagname.equalsIgnoreCase("couleur") && isInLineTag) {
+					} else if(tmpLine != null && tagname.equals("couleur") && isInLineTag) {
 						tmpLine.setColor("#" + StringUtils.leftPad(Integer.toHexString(Integer.valueOf(text)), 6, '0'));
-					} else if(tagname.equalsIgnoreCase("erreur") && text != null && !text.trim().isEmpty()) {
+					} else if(tagname.equals("erreur") && text != null && !text.trim().isEmpty()) {
 						throw new TimeoException(text);
 					}
 
@@ -306,9 +306,9 @@ public abstract class TimeoRequestHandler {
 			switch(eventType) {
 				case XmlPullParser.START_TAG:
 
-					if(tagname.equalsIgnoreCase("ligne")) {
+					if(tagname.equals("ligne")) {
 						isInStopTag = false;
-					} else if(tagname.equalsIgnoreCase("arret")) {
+					} else if(tagname.equals("arret")) {
 						isInStopTag = true;
 						tmpStop = new TimeoStop(line);
 					}
@@ -320,15 +320,15 @@ public abstract class TimeoRequestHandler {
 					break;
 
 				case XmlPullParser.END_TAG:
-					if(tagname.equalsIgnoreCase("als")) {
+					if(tagname.equals("als")) {
 						stops.add(tmpStop);
-					} else if(tmpStop != null && tagname.equalsIgnoreCase("code") && isInStopTag) {
+					} else if(tmpStop != null && tagname.equals("code") && isInStopTag) {
 						tmpStop.setId(text);
-					} else if(tmpStop != null && tagname.equalsIgnoreCase("nom") && isInStopTag) {
+					} else if(tmpStop != null && tagname.equals("nom") && isInStopTag) {
 						tmpStop.setName(smartCapitalize(text));
-					} else if(tmpStop != null && tagname.equalsIgnoreCase("refs")) {
+					} else if(tmpStop != null && tagname.equals("refs")) {
 						tmpStop.setReference(text);
-					} else if(tagname.equalsIgnoreCase("erreur") && text != null && !text.trim().isEmpty()) {
+					} else if(tagname.equals("erreur") && text != null && !text.trim().isEmpty()) {
 						throw new TimeoException(text);
 					}
 
@@ -419,11 +419,11 @@ public abstract class TimeoRequestHandler {
 			switch(eventType) {
 				case XmlPullParser.START_TAG:
 
-					if(tagname.equalsIgnoreCase("horaire")) {
+					if(tagname.equals("horaire")) {
 						tmpSchedule = new TimeoStopSchedule(null, new ArrayList<TimeoSingleSchedule>());
-					} else if(tagname.equalsIgnoreCase("passage")) {
+					} else if(tagname.equals("passage")) {
 						tmpSingleSchedule = new TimeoSingleSchedule();
-					} else if(tagname.equalsIgnoreCase("reseau")) {
+					} else if(tagname.equals("reseau")) {
 						tmpBlockingException = new TimeoBlockingMessageException();
 					}
 
@@ -434,7 +434,7 @@ public abstract class TimeoRequestHandler {
 					break;
 
 				case XmlPullParser.END_TAG:
-					if(tagname.equalsIgnoreCase("code")) {
+					if(tagname.equals("code")) {
 						//the next stop returned by the API /isn't/ the next stop in the list, abort
 						if(!stops.get(schedules.size()).getId().equals(text)) {
 							throw new TimeoStopNotReturnedException("Trying to associate returned stop " + text + " with stop "
@@ -442,15 +442,15 @@ public abstract class TimeoRequestHandler {
 						} else if(tmpSchedule != null) {
 							tmpSchedule.setStop(stops.get(schedules.size()));
 						}
-					} else if(tmpSingleSchedule != null && tagname.equalsIgnoreCase("duree")) {
+					} else if(tmpSingleSchedule != null && tagname.equals("duree")) {
 						tmpSingleSchedule.setTime(text);
-					} else if(tmpSingleSchedule != null && tagname.equalsIgnoreCase("destination")) {
+					} else if(tmpSingleSchedule != null && tagname.equals("destination")) {
 						tmpSingleSchedule.setDirection(smartCapitalize(text));
-					} else if(tmpSingleSchedule != null && tmpSchedule != null && tagname.equalsIgnoreCase("passage")) {
+					} else if(tmpSingleSchedule != null && tmpSchedule != null && tagname.equals("passage")) {
 						tmpSchedule.getSchedules().add(tmpSingleSchedule);
-					} else if(tmpSchedule != null && tagname.equalsIgnoreCase("horaire")) {
+					} else if(tmpSchedule != null && tagname.equals("horaire")) {
 						schedules.add(tmpSchedule);
-					} else if(tagname.equalsIgnoreCase("erreur") && text != null && !text.trim().isEmpty()) {
+					} else if(tagname.equals("erreur") && text != null && !text.trim().isEmpty()) {
 						throw new TimeoException(text);
 					} else if(tmpBlockingException != null && tagname.equals("titre")) {
 						tmpBlockingException.setMessageTitle(text);
