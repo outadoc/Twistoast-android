@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import fr.outadev.android.timeo.model.TimeoBlockingMessageException;
 import fr.outadev.android.timeo.model.TimeoException;
 import fr.outadev.android.timeo.model.TimeoIDNameObject;
 import fr.outadev.android.timeo.model.TimeoLine;
@@ -407,6 +408,8 @@ public abstract class TimeoRequestHandler {
 		TimeoStopSchedule tmpSchedule = null;
 		//temporary single schedule (one time, one destination)
 		TimeoSingleSchedule tmpSingleSchedule = null;
+		//temporary blocking exception, in case we meet a blocking network message
+		TimeoBlockingMessageException tmpBlockingException = null;
 
 		String text = null;
 
@@ -420,6 +423,8 @@ public abstract class TimeoRequestHandler {
 						tmpSchedule = new TimeoStopSchedule(null, new ArrayList<TimeoSingleSchedule>());
 					} else if(tagname.equalsIgnoreCase("passage")) {
 						tmpSingleSchedule = new TimeoSingleSchedule();
+					} else if(tagname.equalsIgnoreCase("reseau")) {
+						tmpBlockingException = new TimeoBlockingMessageException();
 					}
 
 					break;
@@ -447,6 +452,12 @@ public abstract class TimeoRequestHandler {
 						schedules.add(tmpSchedule);
 					} else if(tagname.equalsIgnoreCase("erreur") && text != null && !text.trim().isEmpty()) {
 						throw new TimeoException(text);
+					} else if(tmpBlockingException != null && tagname.equals("titre")) {
+						tmpBlockingException.setMessageTitle(text);
+					} else if(tmpBlockingException != null && tagname.equals("text")) {
+						tmpBlockingException.setMessageBody(text);
+					} else if(tmpBlockingException != null && tagname.equals("bloquant") && text.equals("true")) {
+						throw tmpBlockingException;
 					}
 
 					break;
