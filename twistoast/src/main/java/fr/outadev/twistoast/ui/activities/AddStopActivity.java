@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.outadev.android.timeo.TimeoRequestHandler;
+import fr.outadev.android.timeo.model.TimeoBlockingMessageException;
 import fr.outadev.android.timeo.model.TimeoIDNameObject;
 import fr.outadev.android.timeo.model.TimeoLine;
 import fr.outadev.android.timeo.model.TimeoSingleSchedule;
@@ -431,7 +432,11 @@ public class AddStopActivity extends Activity {
 
 			@Override
 			public void run() {
-				Toast.makeText(AddStopActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+				if(e instanceof TimeoBlockingMessageException) {
+					((TimeoBlockingMessageException) e).getAlertMessage(AddStopActivity.this).show();
+				} else {
+					Toast.makeText(AddStopActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+				}
 			}
 
 		});

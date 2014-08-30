@@ -18,6 +18,9 @@
 
 package fr.outadev.android.timeo.model;
 
+import android.app.AlertDialog;
+import android.content.Context;
+
 /**
  * Created by outadoc on 30/08/14.
  */
@@ -49,5 +52,13 @@ public class TimeoBlockingMessageException extends TimeoException {
 	@Override
 	public String getMessage() {
 		return getMessageTitle();
+	}
+
+	public AlertDialog getAlertMessage(Context context) {
+		return new AlertDialog.Builder(context)
+				.setTitle(getMessageTitle())
+				.setMessage(getMessageBody())
+				.setNeutralButton("OK", null)
+				.create();
 	}
 }

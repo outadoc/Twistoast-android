@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 
 import fr.outadev.android.timeo.TimeoRequestHandler;
+import fr.outadev.android.timeo.model.TimeoBlockingMessageException;
 import fr.outadev.android.timeo.model.TimeoSingleSchedule;
 import fr.outadev.android.timeo.model.TimeoStop;
 import fr.outadev.android.timeo.model.TimeoStopNotReturnedException;
@@ -209,7 +210,11 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 
 						@Override
 						public void run() {
-							Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+							if(e instanceof TimeoBlockingMessageException) {
+								((TimeoBlockingMessageException) e).getAlertMessage(getContext()).show();
+							} else {
+								Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+							}
 						}
 
 					});
