@@ -22,7 +22,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 
 /**
- * Created by outadoc on 30/08/14.
+ * A blocking message thrown by the API.
+ * Should be displayed in an alert dialog.
+ *
+ * @author outadoc
  */
 public class TimeoBlockingMessageException extends TimeoException {
 

@@ -53,8 +53,6 @@
 	<string name="add_first_stop_title">Nothing here yet!</string>
 	<string name="add_first_stop_instructions">To add a bus stop, tap <b>+</b>.</string>
 
-	<string name="error_stop_not_returned_exception">Error: a bus stop could not be associated with any of the app\'s. Try again.</string>
-
 	<string-array name="drawer_entries">
 		<item>Real-time</item>
 		<item>Timetables</item>

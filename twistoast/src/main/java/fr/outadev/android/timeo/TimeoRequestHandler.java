@@ -48,7 +48,6 @@ import fr.outadev.android.timeo.model.TimeoIDNameObject;
 import fr.outadev.android.timeo.model.TimeoLine;
 import fr.outadev.android.timeo.model.TimeoSingleSchedule;
 import fr.outadev.android.timeo.model.TimeoStop;
-import fr.outadev.android.timeo.model.TimeoStopNotReturnedException;
 import fr.outadev.android.timeo.model.TimeoStopSchedule;
 import fr.outadev.android.timeo.model.TimeoTrafficAlert;
 import fr.outadev.twistoast.Utils;
@@ -433,14 +432,8 @@ public abstract class TimeoRequestHandler {
 					break;
 
 				case XmlPullParser.END_TAG:
-					if(tagname.equals("code")) {
-						//the next stop returned by the API /isn't/ the next stop in the list, abort
-						if(!stops.get(schedules.size()).getId().equals(text)) {
-							throw new TimeoStopNotReturnedException("Trying to associate returned stop " + text + " with stop "
-									+ stops.get(schedules.size()).getId());
-						} else if(tmpSchedule != null) {
-							tmpSchedule.setStop(stops.get(schedules.size()));
-						}
+					if(tmpSchedule != null && tagname.equals("code")) {
+						tmpSchedule.setStop(stops.get(schedules.size()));
 					} else if(tmpSingleSchedule != null && tagname.equals("duree")) {
 						tmpSingleSchedule.setTime(text);
 					} else if(tmpSingleSchedule != null && tagname.equals("destination")) {

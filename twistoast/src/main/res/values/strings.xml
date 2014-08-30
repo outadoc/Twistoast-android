@@ -56,8 +56,6 @@
 	<string name="add_first_stop_title">Rien pour l\'instant !</string>
 	<string name="add_first_stop_instructions">Pour ajouter un arrêt, appuyez sur <b>+</b>.</string>
 
-	<string name="error_stop_not_returned_exception">Erreur : un arrêt n\'a pas pu être associé à ceux de l\'app. Réessayez.</string>
-
 	<string-array name="drawer_entries">
 		<item>Temps réel</item>
 		<item>Horaires à l\'arrêt</item>
