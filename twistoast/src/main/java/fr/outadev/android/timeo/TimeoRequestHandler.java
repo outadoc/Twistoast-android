@@ -60,12 +60,11 @@ import fr.outadev.twistoast.Utils;
  */
 public abstract class TimeoRequestHandler {
 
+	public final static int DEFAULT_NETWORK_CODE = 147;
+	private final static int REQUEST_TIMEOUT = 10000;
+
 	private final static String API_BASE_URL = "http://timeo3.keolis.com/relais/";
 	private final static String PRE_HOME_URL = "http://twisto.fr/module/mobile/App2014/utils/getPreHome.php";
-
-	public final static int DEFAULT_NETWORK_CODE = 147;
-
-	private final static int REQUEST_TIMEOUT = 10000;
 
 	/**
 	 * Requests a web page via an HTTP GET request.
