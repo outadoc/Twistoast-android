@@ -451,9 +451,9 @@ public abstract class TimeoRequestHandler {
 						schedules.add(tmpSchedule);
 					} else if(tagname.equals("erreur") && text != null && !text.trim().isEmpty()) {
 						throw new TimeoException(text);
-					} else if(tmpBlockingException != null && tagname.equals("titre")) {
+					} else if(tmpBlockingException != null && tagname.equals("titre") && !text.isEmpty()) {
 						tmpBlockingException.setMessageTitle(text);
-					} else if(tmpBlockingException != null && tagname.equals("text")) {
+					} else if(tmpBlockingException != null && tagname.equals("text") && !text.isEmpty()) {
 						tmpBlockingException.setMessageBody(text);
 					} else if(tmpBlockingException != null && tagname.equals("bloquant") && text.equals("true")) {
 						throw tmpBlockingException;
