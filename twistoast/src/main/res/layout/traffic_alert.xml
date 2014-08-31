@@ -34,7 +34,7 @@
 		android:layout_height="wrap_content"
 		android:padding="2dp"
 		android:src="@drawable/traffic_cone"
-		android:tint="@android:color/white" />
+		android:tint="@color/traffic_alert_text_primary" />
 
 	<TextView
 		android:layout_width="wrap_content"
