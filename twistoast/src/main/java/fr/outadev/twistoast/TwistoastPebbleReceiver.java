@@ -167,18 +167,20 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 	/**
 	 * Processes a string for the Pebble's screen.
 	 *
-	 * @param str    the string to process
-	 * @param length the max length of the string
-	 * @return the processed string
+	 * @param str       the string to process
+	 * @param maxLength the max length of the string
+	 * @return the processed string, or the original string if no action was required
 	 */
-	private String processStringForPebble(String str, int length) {
+	private String processStringForPebble(String str, int maxLength) {
 		if(str == null) {
 			return "";
 		}
 
 		try {
-			return str.substring(0, length);
+			//truncate the string to [maxLength] characters, and add an ellipsis character at the end
+			return str.substring(0, maxLength).trim() + "…";
 		} catch(IndexOutOfBoundsException e) {
+			//if the string is shorter than the max length, just return the string untouched
 			return str;
 		}
 	}
