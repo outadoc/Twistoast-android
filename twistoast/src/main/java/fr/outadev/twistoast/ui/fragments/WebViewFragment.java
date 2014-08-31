@@ -49,7 +49,12 @@ public class WebViewFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		webView = new TwistoastWebView(getActivity());
-		webView.loadUrl(getArguments().getString("url"));
+
+		if(savedInstanceState != null) {
+			webView.loadUrl(savedInstanceState.getString("url"));
+		} else {
+			webView.loadUrl(getArguments().getString("url"));
+		}
 
 		return webView;
 	}
@@ -88,6 +93,12 @@ public class WebViewFragment extends Fragment {
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putCharSequence("url", webView.getUrl());
 	}
 
 	public boolean canGoBack() {
