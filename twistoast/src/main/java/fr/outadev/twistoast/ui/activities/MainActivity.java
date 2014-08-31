@@ -119,9 +119,11 @@ public class MainActivity extends Activity {
 
 		if(savedInstanceState == null) {
 			loadFragmentFromDrawerPosition(currentFragmentIndex);
+			checkForGlobalTrafficInfo();
+		} else {
+			trafficAlert = (TimeoTrafficAlert) savedInstanceState.get("key_traffic_alert");
+			displayGlobalTrafficInfo();
 		}
-
-		checkForGlobalTrafficInfo();
 	}
 
 	@Override
@@ -227,17 +229,15 @@ public class MainActivity extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if(drawerToggle.onOptionsItemSelected(item)) {
-			return true;
-		}
+		return drawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
 
-		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
 	protected void onSaveInstanceState(@NonNull Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putInt("key_current_frag", currentFragmentIndex);
+		outState.putSerializable("key_traffic_alert", trafficAlert);
 	}
 
 	/**

@@ -18,12 +18,14 @@
 
 package fr.outadev.android.timeo.model;
 
+import java.io.Serializable;
+
 /**
  * Traffic alert. Used to inform the user of traffic perturbations.
  *
  * @author outadoc
  */
-public class TimeoTrafficAlert {
+public class TimeoTrafficAlert implements Serializable {
 
 	private int id;
 	private String label;
