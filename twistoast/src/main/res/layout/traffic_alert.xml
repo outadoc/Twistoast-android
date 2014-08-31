@@ -54,6 +54,7 @@
 		android:layout_marginStart="10dp"
 		android:gravity="center"
 		android:singleLine="true"
+		android:textStyle="italic"
 		android:textColor="@color/traffic_alert_text_secondary"
 		android:textSize="17sp" />
 
