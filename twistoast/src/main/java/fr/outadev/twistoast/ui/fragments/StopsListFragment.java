@@ -59,7 +59,6 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 	private MenuItem menuItemRefresh;
 	private View noContentView;
 
-	private boolean isRefreshing;
 	private final long REFRESH_INTERVAL = 60000L;
 
 	private final Handler handler = new Handler();
@@ -76,6 +75,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 	private StopsListArrayAdapter listAdapter;
 
 	private boolean autoRefresh;
+	private boolean isRefreshing;
 	private boolean isInBackground;
 
 	@Override

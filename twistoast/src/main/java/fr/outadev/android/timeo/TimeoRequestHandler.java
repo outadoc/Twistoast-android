@@ -21,6 +21,7 @@ package fr.outadev.android.timeo;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.util.SparseArray;
 import android.util.Xml;
 
 import com.github.kevinsawicki.http.HttpRequest;
@@ -37,10 +38,8 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import fr.outadev.android.timeo.model.TimeoBlockingMessageException;
 import fr.outadev.android.timeo.model.TimeoException;
@@ -394,7 +393,7 @@ public abstract class TimeoRequestHandler {
 		refs = refs.substring(0, refs.length() - 1);
 
 		String params = "xml=3&refs=" + refs + "&ran=1";
-		String result = requestWebPage(API_BASE_URL + getPageNameForNetworkCode(networkCode), params, true);
+		String result = requestWebPage(API_BASE_URL + getPageNameForNetworkCode(networkCode), params, false);
 
 		XmlPullParser parser = getParserForXMLString(result);
 		int eventType = parser.getEventType();
@@ -550,8 +549,8 @@ public abstract class TimeoRequestHandler {
 		return parser;
 	}
 
-	public static Map<Integer, String> getNetworksList() {
-		Map<Integer, String> networks = new HashMap<Integer, String>();
+	public static SparseArray<String> getNetworksList() {
+		SparseArray<String> networks = new SparseArray<String>();
 
 		networks.put(105, "Le Mans");
 		networks.put(117, "Pau");

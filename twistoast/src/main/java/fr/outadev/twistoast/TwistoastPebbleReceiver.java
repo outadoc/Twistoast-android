@@ -139,7 +139,7 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 	 * @param context  a context
 	 * @param schedule the schedule to send back
 	 */
-	public void craftAndSendSchedulePacket(Context context, TimeoStopSchedule schedule) {
+	private void craftAndSendSchedulePacket(Context context, TimeoStopSchedule schedule) {
 		PebbleDictionary response = new PebbleDictionary();
 
 		response.addInt8(KEY_TWISTOAST_MESSAGE_TYPE, BUS_STOP_DATA_RESPONSE);

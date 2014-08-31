@@ -64,7 +64,8 @@
 					android:gravity="center_vertical"
 					android:src="@drawable/traffic_cone"
 					android:textSize="25sp"
-					android:tint="@color/bus_stop_alert_text_primary" />
+					android:tint="@color/bus_stop_alert_text_primary"
+					android:contentDescription="@string/traffic_info" />
 
 				<LinearLayout
 					android:layout_width="match_parent"

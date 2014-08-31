@@ -22,6 +22,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,11 +55,11 @@ import fr.outadev.twistoast.database.TwistoastDatabase;
 public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 
 	private final IStopsListContainer stopsListContainer;
-	private Activity activity;
+	private final Activity activity;
 
-	private List<TimeoStop> stops;
-	private Map<TimeoStop, TimeoStopSchedule> schedules;
-	private Map<Integer, String> networks;
+	private final List<TimeoStop> stops;
+	private final Map<TimeoStop, TimeoStopSchedule> schedules;
+	private final SparseArray<String> networks;
 
 	private int networkCount = 0;
 

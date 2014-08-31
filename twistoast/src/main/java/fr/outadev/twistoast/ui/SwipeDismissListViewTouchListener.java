@@ -21,6 +21,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.graphics.Rect;
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -418,7 +419,7 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
 		}
 
 		@Override
-		public int compareTo(PendingDismissData other) {
+		public int compareTo(@NonNull PendingDismissData other) {
 			// Sort by descending position
 			return other.position - position;
 		}

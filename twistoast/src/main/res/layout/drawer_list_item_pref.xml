@@ -30,6 +30,7 @@
 		android:contentDescription="@string/action_settings"
 		android:paddingBottom="7dp"
 		android:paddingLeft="10dp"
+		android:paddingRight="10dp"
 		android:paddingTop="8dp"
 		android:src="@drawable/ic_action_settings" />
 
@@ -39,7 +40,6 @@
 		android:layout_height="match_parent"
 		android:fontFamily="sans-serif"
 		android:paddingBottom="15dp"
-		android:paddingLeft="12dp"
 		android:paddingTop="15dp"
 		android:textAllCaps="true"
 		android:textColor="#676767"

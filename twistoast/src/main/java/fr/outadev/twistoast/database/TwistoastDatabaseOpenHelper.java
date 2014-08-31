@@ -37,7 +37,7 @@ import fr.outadev.twistoast.Utils;
  *
  * @author outadoc
  */
-public class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
+class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 
 	private static final int DATABASE_VERSION = 2;
 
@@ -74,7 +74,7 @@ public class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 					"PRIMARY KEY(stop_id, line_id, dir_id, network_code), " +
 					"FOREIGN KEY(dir_id, line_id, network_code) REFERENCES twi_direction(dir_id, line_id, network_code));";
 
-	public TwistoastDatabaseOpenHelper(Context context) {
+	TwistoastDatabaseOpenHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		this.context = context;
 	}
@@ -182,6 +182,7 @@ public class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 
 	/**
 	 * Deletes all the tables in the database.
+	 *
 	 * @param db the database to clean up
 	 */
 	private void deleteAllData(SQLiteDatabase db) {

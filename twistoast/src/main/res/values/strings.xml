@@ -34,8 +34,6 @@
 	<string name="action_cancel">Annuler</string>
 	<string name="loading_data">Chargement&#8230;</string>
 	<string name="loading_error">Erreur de chargement</string>
-	<string name="confirm_yes">Oui</string>
-	<string name="confirm_no">Non</string>
 	<string name="confirm_delete_success">Succès de la suppression</string>
 	<string name="refreshed_stops">Horaires rafraîchis</string>
 	<string name="unknown_line_id" translatable="false">\?</string>
@@ -43,7 +41,6 @@
 	<string name="stop_name">Arrêt %1$s</string>
 	<string name="error_toast">Erreur : %1$s</string>
 	<string name="added_toast">Ajouté : %1$s</string>
-	<string name="load_timeout">Chargement interrompu (timeout)</string>
 	<string name="add_error_duplicate">Cet arrêt a déjà été ajouté dans l\'application</string>
 	<string name="add_error_illegal_argument">Quelque-chose ne va pas, vérifiez les valeurs de la ligne, direction et arrêt.</string>
 	<string name="action_open_website">Ouvrir dans le navigateur</string>
