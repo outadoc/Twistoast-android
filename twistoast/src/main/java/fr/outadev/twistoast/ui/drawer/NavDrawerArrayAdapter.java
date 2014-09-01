@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast.ui;
+package fr.outadev.twistoast.ui.drawer;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -30,8 +30,6 @@ import android.widget.TextView;
 import java.util.List;
 
 import fr.outadev.twistoast.IStopsListContainer;
-import fr.outadev.twistoast.NavigationDrawerItem;
-import fr.outadev.twistoast.NavigationDrawerSecondaryItem;
 import fr.outadev.twistoast.R;
 
 /**

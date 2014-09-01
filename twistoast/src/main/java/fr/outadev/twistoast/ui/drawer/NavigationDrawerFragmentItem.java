@@ -1,5 +1,5 @@
 /*
- * Twistoast - NavigationDrawerWebItem
+ * Twistoast - NavigationDrawerFragmentItem
  * Copyright (C) 2013-2014  Baptiste Candellier
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,35 +16,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast;
+package fr.outadev.twistoast.ui.drawer;
 
 import android.app.Fragment;
-import android.os.Bundle;
-
-import fr.outadev.twistoast.ui.fragments.WebViewFragment;
 
 /**
  * Created by outadoc on 01/09/14.
  */
-public class NavigationDrawerWebItem extends NavigationDrawerFragmentItem {
+public class NavigationDrawerFragmentItem extends NavigationDrawerItem {
 
-	private String url;
+	private Class classToInstanciate;
 
-	public NavigationDrawerWebItem(int titleResId, String url) {
-		super(titleResId, WebViewFragment.class);
-		this.url = url;
-	}
-
-	public String getUrl() {
-		return url;
+	public NavigationDrawerFragmentItem(int titleResId, Class classToInstanciate) {
+		super(titleResId);
+		this.classToInstanciate = classToInstanciate;
 	}
 
 	@Override
 	public Fragment getFragment() throws IllegalAccessException, InstantiationException {
-		Fragment frag = super.getFragment();
-		Bundle args = new Bundle();
-		args.putString("url", url);
-		frag.setArguments(args);
-		return frag;
+		return (Fragment) classToInstanciate.newInstance();
 	}
 }
