@@ -102,9 +102,10 @@ class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 	 * @param db the database to upgrade
 	 */
 	private void upgradeToV2(SQLiteDatabase db) {
+		SQLiteDatabase db_upgrade = null;
 
 		try {
-			SQLiteDatabase db_upgrade = getV2UpgradeDatabase();
+			db_upgrade = getV2UpgradeDatabase();
 
 			Cursor linesCur = db_upgrade.rawQuery("SELECT * FROM twi_v2_line", null);
 			Cursor stopsCur = db_upgrade.rawQuery("SELECT * FROM twi_v2_stop", null);
@@ -139,7 +140,6 @@ class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 			}
 
 			stopsCur.close();
-			db_upgrade.close();
 
 			db.execSQL("ALTER TABLE twi_stop RENAME TO old_twi_stop");
 			db.execSQL("ALTER TABLE twi_direction RENAME TO old_twi_direction");
@@ -159,6 +159,10 @@ class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 
 			deleteAllData(db);
 			onCreate(db);
+		} finally {
+			if(db_upgrade != null) {
+				db_upgrade.close();
+			}
 		}
 	}
 
