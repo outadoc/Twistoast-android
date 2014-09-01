@@ -21,12 +21,19 @@ package fr.outadev.twistoast.ui.drawer;
 import android.app.Fragment;
 
 /**
- * Created by outadoc on 01/09/14.
+ * An abstract navigation drawer item.
+ *
+ * @author outadoc
  */
 public abstract class NavigationDrawerItem {
 
 	private int titleResId;
 
+	/**
+	 * Creates a new NavigationDrawerItem.
+	 *
+	 * @param titleResId the id of the string resource for the title
+	 */
 	public NavigationDrawerItem(int titleResId) {
 		this.titleResId = titleResId;
 	}
@@ -35,5 +42,12 @@ public abstract class NavigationDrawerItem {
 		return titleResId;
 	}
 
+	/**
+	 * Gets a new fragment object for this item.
+	 *
+	 * @return a fragment corresponding to the view that should be displayed when this item is selected.
+	 * @throws IllegalAccessException if we couldn't instantiate the fragment
+	 * @throws InstantiationException if we couldn't instantiate the fragment
+	 */
 	public abstract Fragment getFragment() throws IllegalAccessException, InstantiationException;
 }

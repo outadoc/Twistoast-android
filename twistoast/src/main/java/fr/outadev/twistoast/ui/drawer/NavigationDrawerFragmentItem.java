@@ -21,19 +21,27 @@ package fr.outadev.twistoast.ui.drawer;
 import android.app.Fragment;
 
 /**
- * Created by outadoc on 01/09/14.
+ * A navigation drawer item designed to open a fragment when selected.
+ *
+ * @author outadoc
  */
 public class NavigationDrawerFragmentItem extends NavigationDrawerItem {
 
-	private Class classToInstanciate;
+	private Class classToInstantiate;
 
-	public NavigationDrawerFragmentItem(int titleResId, Class classToInstanciate) {
+	/**
+	 * Creates a new NavigationDrawerFragmentItem.
+	 *
+	 * @param titleResId         the id of the string resource for the title
+	 * @param classToInstantiate the Class object of the Fragment to return with getFragment
+	 */
+	public NavigationDrawerFragmentItem(int titleResId, Class classToInstantiate) {
 		super(titleResId);
-		this.classToInstanciate = classToInstanciate;
+		this.classToInstantiate = classToInstantiate;
 	}
 
 	@Override
 	public Fragment getFragment() throws IllegalAccessException, InstantiationException {
-		return (Fragment) classToInstanciate.newInstance();
+		return (Fragment) classToInstantiate.newInstance();
 	}
 }

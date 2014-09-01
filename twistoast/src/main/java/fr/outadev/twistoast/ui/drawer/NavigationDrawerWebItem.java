@@ -24,12 +24,20 @@ import android.os.Bundle;
 import fr.outadev.twistoast.ui.fragments.WebViewFragment;
 
 /**
- * Created by outadoc on 01/09/14.
+ * A navigation drawer item designed to open a web page fragment when selected.
+ *
+ * @author outadoc
  */
 public class NavigationDrawerWebItem extends NavigationDrawerFragmentItem {
 
 	private String url;
 
+	/**
+	 * Creates a new NavigationDrawerWebItem.
+	 *
+	 * @param titleResId the id of the string resource for the title
+	 * @param url        the URL of the page to open in the fragment
+	 */
 	public NavigationDrawerWebItem(int titleResId, String url) {
 		super(titleResId, WebViewFragment.class);
 		this.url = url;

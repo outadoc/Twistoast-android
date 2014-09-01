@@ -19,12 +19,21 @@
 package fr.outadev.twistoast.ui.drawer;
 
 /**
- * Created by outadoc on 01/09/14.
+ * A secondary navigation drawer item.
+ * Useful for pages like preferences or help.
+ *
+ * @author outadoc
  */
 public class NavigationDrawerSecondaryItem extends NavigationDrawerFragmentItem {
 
-	public NavigationDrawerSecondaryItem(int titleResId, Class classToInstanciate) {
-		super(titleResId, classToInstanciate);
+	/**
+	 * Creates a new NavigationDrawerSecondaryItem.
+	 *
+	 * @param titleResId         the id of the string resource for the title
+	 * @param classToInstantiate the Class object of the Fragment to return with getFragment
+	 */
+	public NavigationDrawerSecondaryItem(int titleResId, Class classToInstantiate) {
+		super(titleResId, classToInstantiate);
 	}
 
 }
