@@ -53,15 +53,13 @@
 	<string name="add_first_stop_title">Rien pour l\'instant !</string>
 	<string name="add_first_stop_instructions">Pour ajouter un arrêt, appuyez sur <b>+</b>.</string>
 
-	<string-array name="drawer_entries">
-		<item>Temps réel</item>
-		<item>Horaires à l\'arrêt</item>
-		<item>Itinéraires</item>
-		<item>Plan du réseau</item>
-		<item>Info trafic</item>
-		<item>Actualités</item>
-		<item>Tarifs</item>
-		<item>Paramètres</item>
-	</string-array>
+	<string name="drawer_item_realtime">Temps réel</string>
+	<string name="drawer_item_timetables">Horaires à l\'arrêt</string>
+	<string name="drawer_item_routes">Itinéraires</string>
+	<string name="drawer_item_map">Plan du réseau</string>
+	<string name="drawer_item_traffic">Info trafic</string>
+	<string name="drawer_item_news">Actualités</string>
+	<string name="drawer_item_pricing">Tarifs</string>
+	<string name="drawer_item_preferences">Paramètres</string>
 
 </resources>

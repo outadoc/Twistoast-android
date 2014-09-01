@@ -50,15 +50,13 @@
 	<string name="add_first_stop_title">Nothing here yet!</string>
 	<string name="add_first_stop_instructions">To add a bus stop, tap <b>+</b>.</string>
 
-	<string-array name="drawer_entries">
-		<item>Real-time</item>
-		<item>Timetables</item>
-		<item>Routes</item>
-		<item>Network Map</item>
-		<item>Traffic Info</item>
-		<item>News</item>
-		<item>Pricing</item>
-		<item>Preferences</item>
-	</string-array>
+	<string name="drawer_item_realtime">Real-time</string>
+	<string name="drawer_item_timetables">Timetables</string>
+	<string name="drawer_item_routes">Routes</string>
+	<string name="drawer_item_map">Network Map</string>
+	<string name="drawer_item_traffic">Traffic Info</string>
+	<string name="drawer_item_news">News</string>
+	<string name="drawer_item_pricing">Pricing</string>
+	<string name="drawer_item_preferences">Preferences</string>
 
 </resources>

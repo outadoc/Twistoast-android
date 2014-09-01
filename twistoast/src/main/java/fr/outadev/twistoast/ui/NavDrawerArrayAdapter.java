@@ -27,6 +27,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.util.List;
+
+import fr.outadev.twistoast.NavigationDrawerItem;
+import fr.outadev.twistoast.NavigationDrawerSecondaryItem;
 import fr.outadev.twistoast.R;
 import fr.outadev.twistoast.ui.activities.MainActivity;
 
@@ -35,33 +39,37 @@ import fr.outadev.twistoast.ui.activities.MainActivity;
  *
  * @author outadoc
  */
-public class NavDrawerArrayAdapter extends ArrayAdapter<String> {
+public class NavDrawerArrayAdapter extends ArrayAdapter<NavigationDrawerItem> {
 
 	private int selectedItemIndex;
 
-	public NavDrawerArrayAdapter(Context context, int resource, String[] objects, int selectedItemIndex) {
+	public NavDrawerArrayAdapter(Context context, int resource, List<NavigationDrawerItem> objects, int selectedItemIndex) {
 		super(context, resource, objects);
 		this.selectedItemIndex = selectedItemIndex;
 	}
 
 	@Override
 	public View getView(final int position, View convertView, final ViewGroup parent) {
-		LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View rowView;
+		//convert the view if we haz to
+		if(convertView == null) {
+			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		if(position < getCount() - 1) {
-			// if it's a normal row
-			rowView = inflater.inflate(R.layout.drawer_list_item, parent, false);
-		} else {
-			// if it's a secondary row (ex: preferences)
-			rowView = inflater.inflate(R.layout.drawer_list_item_pref, parent, false);
+			if(getItemViewType(position) == 1) {
+				// if it's a secondary row (ex: preferences)
+				convertView = inflater.inflate(R.layout.drawer_list_item_pref, parent, false);
+			} else {
+				// if it's a normal row
+				convertView = inflater.inflate(R.layout.drawer_list_item, parent, false);
+			}
 		}
 
-		TextView rowTitle = (TextView) rowView.findViewById(R.id.textTitle);
-		rowTitle.setText(getItem(position));
+		TextView rowTitle = (TextView) convertView.findViewById(R.id.textTitle);
+		rowTitle.setText(getContext().getResources().getString(getItem(position).getTitleResId()));
 
 		if(position == selectedItemIndex) {
 			rowTitle.setTypeface(null, Typeface.BOLD);
+		} else {
+			rowTitle.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
 		}
 
 		rowTitle.setOnClickListener(new OnClickListener() {
@@ -75,7 +83,7 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<String> {
 
 		});
 
-		return rowView;
+		return convertView;
 	}
 
 	public int getSelectedItemIndex() {
@@ -85,6 +93,17 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<String> {
 	public void setSelectedItemIndex(int selectedItemIndex) {
 		this.selectedItemIndex = selectedItemIndex;
 		notifyDataSetChanged();
+	}
+
+	@Override
+	public int getItemViewType(int position) {
+		// Define a way to determine which layout to use
+		return (getItem(position) instanceof NavigationDrawerSecondaryItem) ? 1 : 0;
+	}
+
+	@Override
+	public int getViewTypeCount() {
+		return 2;
 	}
 
 }

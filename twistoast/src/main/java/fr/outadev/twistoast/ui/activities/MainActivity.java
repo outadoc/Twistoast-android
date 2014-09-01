@@ -37,8 +37,15 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import fr.outadev.android.timeo.TimeoRequestHandler;
 import fr.outadev.android.timeo.model.TimeoTrafficAlert;
+import fr.outadev.twistoast.NavigationDrawerFragmentItem;
+import fr.outadev.twistoast.NavigationDrawerItem;
+import fr.outadev.twistoast.NavigationDrawerSecondaryItem;
+import fr.outadev.twistoast.NavigationDrawerWebItem;
 import fr.outadev.twistoast.R;
 import fr.outadev.twistoast.ui.NavDrawerArrayAdapter;
 import fr.outadev.twistoast.ui.fragments.PrefsFragment;
@@ -52,7 +59,7 @@ import fr.outadev.twistoast.ui.fragments.WebViewFragment;
  */
 public class MainActivity extends Activity {
 
-	private String[] drawerEntries;
+	private List<NavigationDrawerItem> drawerItems;
 	private DrawerLayout drawerLayout;
 	private ActionBarDrawerToggle drawerToggle;
 	private ListView drawerList;
@@ -61,7 +68,7 @@ public class MainActivity extends Activity {
 	private CharSequence actionBarTitle;
 
 	private int currentFragmentIndex;
-	private Fragment frags[];
+	private Fragment[] frags;
 
 	private TimeoTrafficAlert trafficAlert;
 
@@ -70,18 +77,17 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		drawerEntries = getResources().getStringArray(R.array.drawer_entries);
+		if(getActionBar() != null) {
+			getActionBar().setDisplayHomeAsUpEnabled(true);
+			getActionBar().setHomeButtonEnabled(true);
+		}
+
+		drawerItems = getDrawerItems();
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		drawerList = (ListView) findViewById(R.id.left_drawer);
 		drawerTitle = getTitle();
 
-		frags = new Fragment[drawerEntries.length];
-
-		if(savedInstanceState != null) {
-			currentFragmentIndex = savedInstanceState.getInt("key_current_frag");
-		} else {
-			currentFragmentIndex = 0;
-		}
+		frags = new Fragment[drawerItems.size()];
 
 		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_navigation_drawer, R.string.action_ok,
 				R.string.action_delete) {
@@ -106,23 +112,19 @@ public class MainActivity extends Activity {
 		drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 		drawerLayout.setDrawerListener(drawerToggle);
 
-		if(getActionBar() != null) {
-			getActionBar().setDisplayHomeAsUpEnabled(true);
-			getActionBar().setHomeButtonEnabled(true);
-		}
-
-		actionBarTitle = drawerEntries[currentFragmentIndex];
-		setTitle(actionBarTitle);
-
-		drawerList.setAdapter(new NavDrawerArrayAdapter(this, R.layout.drawer_list_item, drawerEntries, currentFragmentIndex));
+		drawerList.setAdapter(new NavDrawerArrayAdapter(this, R.layout.drawer_list_item, drawerItems, currentFragmentIndex));
 		drawerList.setItemChecked(currentFragmentIndex, true);
 
-		if(savedInstanceState == null) {
-			loadFragmentFromDrawerPosition(currentFragmentIndex);
-			checkForGlobalTrafficInfo();
-		} else {
+		refreshActionBarTitle();
+
+		if(savedInstanceState != null) {
+			currentFragmentIndex = savedInstanceState.getInt("key_current_frag");
 			trafficAlert = (TimeoTrafficAlert) savedInstanceState.get("key_traffic_alert");
 			displayGlobalTrafficInfo();
+		} else {
+			currentFragmentIndex = 0;
+			loadFragmentFromDrawerPosition(currentFragmentIndex);
+			checkForGlobalTrafficInfo();
 		}
 	}
 
@@ -140,47 +142,16 @@ public class MainActivity extends Activity {
 	public void loadFragmentFromDrawerPosition(int position) {
 		currentFragmentIndex = position;
 
-		if(frags[currentFragmentIndex] == null) {
-			switch(position) {
-				case 0:
-					frags[currentFragmentIndex] = new StopsListFragment();
-					break;
-				case 7:
-					frags[currentFragmentIndex] = new PrefsFragment();
-					break;
-				default: {
-					String url = "";
-					frags[currentFragmentIndex] = new WebViewFragment();
-
-					switch(position) {
-						case 1:
-							url = getResources().getString(R.string.timetables_url);
-							break;
-						case 2:
-							url = getResources().getString(R.string.routes_url);
-							break;
-						case 3:
-							url = getResources().getString(R.string.map_url);
-							break;
-						case 4:
-							url = getResources().getString(R.string.traffic_url);
-							break;
-						case 5:
-							url = getResources().getString(R.string.news_url);
-							break;
-						case 6:
-							url = getResources().getString(R.string.prices_url);
-							break;
-					}
-
-					Bundle args = new Bundle();
-					args.putString("url", url);
-					frags[currentFragmentIndex].setArguments(args);
-
-					break;
-				}
+		if(frags[currentFragmentIndex] == null && drawerItems != null && drawerItems.size() > currentFragmentIndex) {
+			try {
+				frags[currentFragmentIndex] = drawerItems.get(currentFragmentIndex).getFragment();
+			} catch(IllegalAccessException e) {
+				e.printStackTrace();
+			} catch(InstantiationException e) {
+				e.printStackTrace();
 			}
 		}
+
 
 		// Insert the fragment by replacing any existing fragment
 		FragmentManager fragmentManager = getFragmentManager();
@@ -206,13 +177,17 @@ public class MainActivity extends Activity {
 	}
 
 	public void checkDrawerItem(int position) {
-		actionBarTitle = drawerEntries[position];
+		refreshActionBarTitle();
+		drawerList.setItemChecked(position, true);
+		((NavDrawerArrayAdapter) drawerList.getAdapter()).setSelectedItemIndex(position);
+	}
+
+	public void refreshActionBarTitle() {
+		actionBarTitle = getString(drawerItems.get(currentFragmentIndex).getTitleResId());
+
 		if(getActionBar() != null) {
 			getActionBar().setTitle(actionBarTitle);
 		}
-
-		drawerList.setItemChecked(position, true);
-		((NavDrawerArrayAdapter) drawerList.getAdapter()).setSelectedItemIndex(position);
 	}
 
 	@Override
@@ -293,6 +268,24 @@ public class MainActivity extends Activity {
 		} else if(trafficView != null) {
 			trafficView.setVisibility(View.GONE);
 		}
+	}
+
+	private List<NavigationDrawerItem> getDrawerItems() {
+		List<NavigationDrawerItem> list = new ArrayList<NavigationDrawerItem>();
+
+		list.add(new NavigationDrawerFragmentItem(R.string.drawer_item_realtime, StopsListFragment.class));
+		list.add(new NavigationDrawerWebItem(R.string.drawer_item_timetables,
+				"http://dev.actigraph.fr/actipages/twisto/module/mobile/App/horairesalarret/?app=pivk-1.3-2014"));
+		list.add(new NavigationDrawerWebItem(R.string.drawer_item_routes,
+				"http://twisto.mobi/module/mobile/App/itineraire-android-4.x-dev/iti_formulaire.php"));
+		list.add(new NavigationDrawerWebItem(R.string.drawer_item_map,
+				"http://twisto.fr/module/mobile/App2014/leaflet/?ios=true"));
+		list.add(new NavigationDrawerWebItem(R.string.drawer_item_traffic, "http://twisto.mobi/module/mobile/App/trafic/"));
+		list.add(new NavigationDrawerWebItem(R.string.drawer_item_news, "http://twisto.mobi/module/mobile/App/actus/"));
+		list.add(new NavigationDrawerWebItem(R.string.drawer_item_pricing, "http://twisto.fr/module/mobile/App2014/tarifs/"));
+		list.add(new NavigationDrawerSecondaryItem(R.string.drawer_item_preferences, PrefsFragment.class));
+
+		return list;
 	}
 
 }
