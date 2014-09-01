@@ -42,6 +42,7 @@ import java.util.List;
 
 import fr.outadev.android.timeo.TimeoRequestHandler;
 import fr.outadev.android.timeo.model.TimeoTrafficAlert;
+import fr.outadev.twistoast.IStopsListContainer;
 import fr.outadev.twistoast.NavigationDrawerFragmentItem;
 import fr.outadev.twistoast.NavigationDrawerItem;
 import fr.outadev.twistoast.NavigationDrawerSecondaryItem;
@@ -57,7 +58,7 @@ import fr.outadev.twistoast.ui.fragments.WebViewFragment;
  *
  * @author outadoc
  */
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements IStopsListContainer {
 
 	private List<NavigationDrawerItem> drawerItems;
 	private DrawerLayout drawerLayout;
@@ -112,7 +113,8 @@ public class MainActivity extends Activity {
 		drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 		drawerLayout.setDrawerListener(drawerToggle);
 
-		drawerList.setAdapter(new NavDrawerArrayAdapter(this, R.layout.drawer_list_item, drawerItems, currentFragmentIndex));
+		drawerList.setAdapter(new NavDrawerArrayAdapter(this, this, R.layout.drawer_list_item, drawerItems,
+				currentFragmentIndex));
 		drawerList.setItemChecked(currentFragmentIndex, true);
 
 		refreshActionBarTitle();
@@ -134,11 +136,12 @@ public class MainActivity extends Activity {
 		displayGlobalTrafficInfo();
 	}
 
-	/**
-	 * Load the fragment at the specified drawer index.
-	 *
-	 * @param position the index of the element of the drawer we should load
-	 */
+	@Override
+	public void endRefresh() {
+		// useless here, wat
+	}
+
+	@Override
 	public void loadFragmentFromDrawerPosition(int position) {
 		currentFragmentIndex = position;
 
@@ -151,7 +154,6 @@ public class MainActivity extends Activity {
 				e.printStackTrace();
 			}
 		}
-
 
 		// Insert the fragment by replacing any existing fragment
 		FragmentManager fragmentManager = getFragmentManager();

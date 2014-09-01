@@ -29,10 +29,10 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import fr.outadev.twistoast.IStopsListContainer;
 import fr.outadev.twistoast.NavigationDrawerItem;
 import fr.outadev.twistoast.NavigationDrawerSecondaryItem;
 import fr.outadev.twistoast.R;
-import fr.outadev.twistoast.ui.activities.MainActivity;
 
 /**
  * An array adapter for the navigation drawer.
@@ -41,10 +41,13 @@ import fr.outadev.twistoast.ui.activities.MainActivity;
  */
 public class NavDrawerArrayAdapter extends ArrayAdapter<NavigationDrawerItem> {
 
+	private final IStopsListContainer container;
 	private int selectedItemIndex;
 
-	public NavDrawerArrayAdapter(Context context, int resource, List<NavigationDrawerItem> objects, int selectedItemIndex) {
+	public NavDrawerArrayAdapter(Context context, IStopsListContainer container, int resource,
+	                             List<NavigationDrawerItem> objects, int selectedItemIndex) {
 		super(context, resource, objects);
+		this.container = container;
 		this.selectedItemIndex = selectedItemIndex;
 	}
 
@@ -78,7 +81,7 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<NavigationDrawerItem> {
 			public void onClick(View v) {
 				selectedItemIndex = position;
 				notifyDataSetChanged();
-				((MainActivity) getContext()).loadFragmentFromDrawerPosition(position);
+				container.loadFragmentFromDrawerPosition(position);
 			}
 
 		});
