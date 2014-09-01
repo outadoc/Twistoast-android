@@ -143,7 +143,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 		view_schedule_container.setVisibility(View.GONE);
 
 		//add the new schedules one by one
-		if(schedules != null && schedules.containsKey(currentItem) && schedules.get(currentItem) != null && schedules.get
+		if(schedules.containsKey(currentItem) && schedules.get(currentItem) != null && schedules.get
 				(currentItem).getSchedules() != null) {
 			List<TimeoSingleSchedule> currScheds = schedules.get(currentItem).getSchedules();
 

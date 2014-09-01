@@ -1,12 +1,5 @@
-#built application files
-*.apk
-*.ap_
-
-# files for the dex VM
-*.dex
-
-# Java class files
-*.class
+# Build files
+build/
 
 # generated files
 bin/
@@ -29,5 +22,4 @@ Thumbs.db
 .idea
 #.idea/workspace.xml - remove # and delete .idea if it better suit your needs.
 .gradle
-build/
 
