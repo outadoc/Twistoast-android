@@ -71,7 +71,7 @@ class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 					"stop_name TEXT, " +
 					"stop_ref TEXT, " +
 					"network_code INTEGER DEFAULT " + TimeoRequestHandler.DEFAULT_NETWORK_CODE + ", " +
-					"PRIMARY KEY(stop_id, line_id, dir_id, network_code), " +
+					"PRIMARY KEY(stop_id, line_id, dir_id, stop_ref, network_code), " +
 					"FOREIGN KEY(dir_id, line_id, network_code) REFERENCES twi_direction(dir_id, line_id, network_code));";
 
 	TwistoastDatabaseOpenHelper(Context context) {
