@@ -140,6 +140,20 @@ class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 
 			stopsCur.close();
 			db_upgrade.close();
+
+			db.execSQL("ALTER TABLE twi_stop RENAME TO old_twi_stop");
+			db.execSQL("ALTER TABLE twi_direction RENAME TO old_twi_direction");
+			db.execSQL("ALTER TABLE twi_line RENAME TO old_twi_line");
+
+			onCreate(db);
+
+			db.execSQL("INSERT INTO twi_line SELECT * FROM old_twi_line");
+			db.execSQL("INSERT INTO twi_direction SELECT * FROM old_twi_direction");
+			db.execSQL("INSERT INTO twi_stop SELECT * FROM old_twi_stop");
+
+			db.execSQL("DROP TABLE old_twi_stop");
+			db.execSQL("DROP TABLE old_twi_direction");
+			db.execSQL("DROP TABLE old_twi_line");
 		} catch(Exception e) {
 			e.printStackTrace();
 
