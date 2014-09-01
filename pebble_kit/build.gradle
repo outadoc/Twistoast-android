@@ -24,6 +24,8 @@ android {
 
     defaultConfig {
         applicationId "com.getpebble.android.kit"
+        minSdkVersion 15
+        targetSdkVersion 19
     }
 
     buildTypes {

@@ -1,5 +1,7 @@
 package com.getpebble.android.kit.util;
 
+import android.util.SparseArray;
+
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +23,7 @@ final class PebbleTuple {
 		}
 	}
 
-	static final Map<Integer, Width> WIDTH_MAP = new HashMap<Integer, Width>();
+	static final SparseArray<Width> WIDTH_MAP = new SparseArray<Width>();
 
 	static {
 		for(Width w : Width.values()) {
@@ -60,7 +62,7 @@ final class PebbleTuple {
 
 	static PebbleTuple create(
 			final int key, final TupleType type, final Width width, final int value) {
-		return new PebbleTuple(key, type, width, width.value, Long.valueOf(value));
+		return new PebbleTuple(key, type, width, width.value, (long) value);
 	}
 
 	static PebbleTuple create(

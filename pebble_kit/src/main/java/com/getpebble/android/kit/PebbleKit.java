@@ -129,10 +129,7 @@ public final class PebbleKit {
 				context.getContentResolver().query(
 						Uri.parse("content://com.getpebble.android.provider/state"), null, null,
 						null, null);
-		if(c == null || !c.moveToNext()) {
-			return false;
-		}
-		return c.getInt(KIT_STATE_COLUMN_CONNECTED) == 1;
+		return !(c == null || !c.moveToNext()) && c.getInt(KIT_STATE_COLUMN_CONNECTED) == 1;
 	}
 
 	/**
@@ -150,10 +147,7 @@ public final class PebbleKit {
 				context.getContentResolver().query(
 						Uri.parse("content://com.getpebble.android.provider/state"), null, null,
 						null, null);
-		if(c == null || !c.moveToNext()) {
-			return false;
-		}
-		return c.getInt(KIT_STATE_COLUMN_APPMSG_SUPPORT) == 1;
+		return !(c == null || !c.moveToNext()) && c.getInt(KIT_STATE_COLUMN_APPMSG_SUPPORT) == 1;
 	}
 
 
@@ -198,10 +192,7 @@ public final class PebbleKit {
 				context.getContentResolver().query(
 						Uri.parse("content://com.getpebble.android.provider/state"),
 						null, null, null, null);
-		if(c == null || !c.moveToNext()) {
-			return false;
-		}
-		return c.getInt(KIT_STATE_COLUMN_DATALOGGING_SUPPORT) == 1;
+		return !(c == null || !c.moveToNext()) && c.getInt(KIT_STATE_COLUMN_DATALOGGING_SUPPORT) == 1;
 	}
 
 	/**
@@ -513,7 +504,6 @@ public final class PebbleKit {
 				receiveData(context, transactionId, data);
 			} catch(JSONException e) {
 				e.printStackTrace();
-				return;
 			}
 		}
 	}
@@ -682,10 +672,8 @@ public final class PebbleKit {
 		 * @param timestamp The timestamp when a data log was first created.
 		 * @param tag       The user-defined tag for the corresponding data log.
 		 */
-		public void onFinishSession(final Context context, UUID logUuid, final UnsignedInteger timestamp,
-		                            final UnsignedInteger tag) {
-			// Do nothing by default
-		}
+		public abstract void onFinishSession(final Context context, UUID logUuid, final UnsignedInteger timestamp,
+		                                     final UnsignedInteger tag);
 
 		private void handleReceiveDataIntent(final Context context, final Intent intent, final UUID logUuid,
 		                                     final UnsignedInteger timestamp, final UnsignedInteger tag) {
@@ -729,7 +717,7 @@ public final class PebbleKit {
 						throw new IllegalArgumentException();
 					}
 
-					receiveData(context, logUuid, timestamp, tag, i.intValue());
+					receiveData(context, logUuid, timestamp, tag, i);
 					break;
 				default:
 					throw new IllegalArgumentException("Invalid type:" + type.toString());
@@ -780,14 +768,13 @@ public final class PebbleKit {
 					throw new IllegalArgumentException();
 				}
 
-				if(intent.getAction() == INTENT_DL_RECEIVE_DATA) {
+				if(intent.getAction().equals(INTENT_DL_RECEIVE_DATA)) {
 					handleReceiveDataIntent(context, intent, logUuid, timestamp, tag);
-				} else if(intent.getAction() == INTENT_DL_FINISH_SESSION) {
+				} else if(intent.getAction().equals(INTENT_DL_FINISH_SESSION)) {
 					handleFinishSessionIntent(context, intent, logUuid, timestamp, tag);
 				}
 			} catch(IllegalArgumentException e) {
 				e.printStackTrace();
-				return;
 			}
 		}
 	}
@@ -823,7 +810,6 @@ public final class PebbleKit {
 	 *
 	 * @param context The context in which to register the BroadcastReceiver.
 	 * @param appUuid The app for which to request data logs.
-	 * @return The registered receiver.
 	 * @see Constants#INTENT_DL_RECEIVE_DATA
 	 * @see Constants#INTENT_DL_REQUEST_DATA
 	 */
