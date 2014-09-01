@@ -264,10 +264,11 @@ public class TwistoastDatabase {
 	public void deleteStop(TimeoStop stop) {
 		SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
 
-		db.delete("twi_stop", "stop_id = ? AND line_id = ? AND dir_id = ? AND network_code = ?", new String[]{
+		db.delete("twi_stop", "stop_id = ? AND line_id = ? AND dir_id = ? AND stop_ref = ? AND network_code = ?", new String[]{
 				stop.getId(),
 				stop.getLine().getDetails().getId(),
 				stop.getLine().getDirection().getId(),
+				stop.getReference(),
 				stop.getLine().getNetworkCode() + ""
 		});
 
