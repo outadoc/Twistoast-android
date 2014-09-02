@@ -29,7 +29,7 @@
 	<color name="main_background_color">#F0F0F0</color>
 
 	<color name="traffic_alert_background">#F5A400</color>
-	<color name="traffic_alert_text_primary">#fffbdb9a</color>
+	<color name="traffic_alert_text_primary">#ffffeda9</color>
 	<color name="traffic_alert_text_secondary">#FBDB9B</color>
 
 	<color name="bus_stop_alert_background">#9bf5a400</color>
