@@ -44,6 +44,7 @@ import fr.outadev.android.timeo.TimeoRequestHandler;
 import fr.outadev.android.timeo.model.TimeoTrafficAlert;
 import fr.outadev.twistoast.IStopsListContainer;
 import fr.outadev.twistoast.R;
+import fr.outadev.twistoast.Utils;
 import fr.outadev.twistoast.ui.drawer.NavDrawerArrayAdapter;
 import fr.outadev.twistoast.ui.drawer.NavigationDrawerFragmentItem;
 import fr.outadev.twistoast.ui.drawer.NavigationDrawerItem;
@@ -251,7 +252,7 @@ public class MainActivity extends Activity implements IStopsListContainer {
 		TextView trafficLabel = (TextView) findViewById(R.id.lbl_traffic_info_string);
 
 		if(trafficAlert != null && trafficView != null && trafficLabel != null) {
-			Log.i("SkinSwitch", trafficAlert.toString());
+			Log.i(Utils.TAG, trafficAlert.toString());
 			final String url = trafficAlert.getUrl();
 
 			trafficView.setOnClickListener(new View.OnClickListener() {
