@@ -225,8 +225,6 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 
 				notifyDataSetChanged();
 				stopsListContainer.endRefresh();
-
-				Toast.makeText(getContext(), R.string.refreshed_stops, Toast.LENGTH_SHORT).show();
 			}
 
 		}).execute();
