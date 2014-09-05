@@ -273,6 +273,11 @@ public class MainActivity extends Activity implements IStopsListContainer {
 		}
 	}
 
+	/**
+	 * Get the navigation drawer items that must be added to the drawer.
+	 *
+	 * @return a list of NavigationDrawerItems
+	 */
 	private List<NavigationDrawerItem> getDrawerItems() {
 		List<NavigationDrawerItem> list = new ArrayList<NavigationDrawerItem>();
 
