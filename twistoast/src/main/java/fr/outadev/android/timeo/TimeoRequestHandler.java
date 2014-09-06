@@ -74,9 +74,10 @@ public abstract class TimeoRequestHandler {
 	 * @throws HttpRequestException if an HTTP error occurred
 	 */
 	private static String requestWebPage(String url, String params, boolean useCaches) throws HttpRequestException {
-		Log.i(Utils.TAG, "requested " + url + " /w params " + params);
+		String finalUrl = url + "?" + params;
+		Log.i(Utils.TAG, "requesting " + finalUrl);
 
-		return HttpRequest.get(url + "?" + params)
+		return HttpRequest.get(finalUrl)
 				.useCaches(useCaches)
 				.readTimeout(REQUEST_TIMEOUT)
 				.body();
