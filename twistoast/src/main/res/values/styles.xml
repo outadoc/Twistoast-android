@@ -16,14 +16,18 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources>
 
-	<style name="TwistoastActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-		<item name="android:background">@color/colorPrimary</item>
+	<style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+		<item name="colorPrimary">@color/colorPrimary</item>
+		<!-- darker variant of colorPrimary (for status bar, contextual app bars) -->
+		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+		<!-- theme UI controls like checkboxes and text fields -->
+		<item name="colorAccent">@color/colorAccent</item>
 	</style>
 
-	<style name="AppBaseTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-		<item name="android:actionBarStyle">@style/TwistoastActionBar</item>
+	<style name="TwistoastActionBar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+		<item name="android:background">?attr/colorPrimary</item>
 	</style>
 
 	<style name="AppTheme" parent="AppBaseTheme" />

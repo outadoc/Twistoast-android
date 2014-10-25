@@ -18,7 +18,6 @@
 
 package fr.outadev.twistoast.ui.activities;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
@@ -27,9 +26,11 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -59,7 +60,7 @@ import fr.outadev.twistoast.ui.fragments.WebViewFragment;
  *
  * @author outadoc
  */
-public class MainActivity extends Activity implements IStopsListContainer {
+public class MainActivity extends ActionBarActivity implements IStopsListContainer {
 
 	private List<NavigationDrawerItem> drawerItems;
 	private DrawerLayout drawerLayout;
@@ -79,9 +80,12 @@ public class MainActivity extends Activity implements IStopsListContainer {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		if(getActionBar() != null) {
-			getActionBar().setDisplayHomeAsUpEnabled(true);
-			getActionBar().setHomeButtonEnabled(true);
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
+
+		if(getSupportActionBar() != null) {
+			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+			getSupportActionBar().setHomeButtonEnabled(true);
 		}
 
 		drawerItems = getDrawerItems();
@@ -91,21 +95,21 @@ public class MainActivity extends Activity implements IStopsListContainer {
 
 		frags = new Fragment[drawerItems.size()];
 
-		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_navigation_drawer, R.string.action_ok,
+		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.action_ok,
 				R.string.action_delete) {
 
 			@Override
 			public void onDrawerClosed(View view) {
-				if(getActionBar() != null) {
-					getActionBar().setTitle(actionBarTitle);
+				if(getSupportActionBar() != null) {
+					getSupportActionBar().setTitle(actionBarTitle);
 				}
 				super.onDrawerClosed(view);
 			}
 
 			@Override
 			public void onDrawerOpened(View drawerView) {
-				if(getActionBar() != null) {
-					getActionBar().setTitle(drawerTitle);
+				if(getSupportActionBar() != null) {
+					getSupportActionBar().setTitle(drawerTitle);
 				}
 				super.onDrawerOpened(drawerView);
 			}
@@ -188,8 +192,8 @@ public class MainActivity extends Activity implements IStopsListContainer {
 	public void refreshActionBarTitle() {
 		actionBarTitle = getString(drawerItems.get(currentFragmentIndex).getTitleResId());
 
-		if(getActionBar() != null) {
-			getActionBar().setTitle(actionBarTitle);
+		if(getSupportActionBar() != null) {
+			getSupportActionBar().setTitle(actionBarTitle);
 		}
 	}
 

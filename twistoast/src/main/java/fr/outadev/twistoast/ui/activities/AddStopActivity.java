@@ -18,18 +18,18 @@
 
 package fr.outadev.twistoast.ui.activities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.database.sqlite.SQLiteConstraintException;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -57,7 +57,7 @@ import fr.outadev.twistoast.database.TwistoastDatabase;
  *
  * @author outadoc
  */
-public class AddStopActivity extends Activity {
+public class AddStopActivity extends ActionBarActivity {
 
 	private Spinner spinLine;
 	private Spinner spinDirection;
@@ -88,16 +88,20 @@ public class AddStopActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		// we'll want to show a loading spinning wheel, we have to request that
-		// feature
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+		// we'll want to show a loading spinning wheel, we have to request that feature
+		//TODO: fix this, this is broken when using AppCompat for some reason
+		//supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
 		// setup everything
 		setContentView(R.layout.activity_add_stop);
-		setProgressBarIndeterminateVisibility(false);
 
-		if(getActionBar() != null) {
-			getActionBar().setDisplayHomeAsUpEnabled(true);
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
+
+		setSupportProgressBarIndeterminateVisibility(false);
+
+		if(getSupportActionBar() != null) {
+			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		}
 
 		databaseHandler = new TwistoastDatabase(this);
@@ -250,7 +254,7 @@ public class AddStopActivity extends Activity {
 
 						@Override
 						protected void onPreExecute() {
-							setProgressBarIndeterminateVisibility(true);
+							setSupportProgressBarIndeterminateVisibility(true);
 						}
 
 						@Override
@@ -267,7 +271,7 @@ public class AddStopActivity extends Activity {
 
 						@Override
 						protected void onPostExecute(List<TimeoStop> timeoStops) {
-							setProgressBarIndeterminateVisibility(false);
+							setSupportProgressBarIndeterminateVisibility(false);
 
 							if(timeoStops != null) {
 								spinStop.setEnabled(true);
@@ -316,7 +320,7 @@ public class AddStopActivity extends Activity {
 
 						@Override
 						protected void onPreExecute() {
-							setProgressBarIndeterminateVisibility(true);
+							setSupportProgressBarIndeterminateVisibility(true);
 						}
 
 						@Override
@@ -332,7 +336,7 @@ public class AddStopActivity extends Activity {
 
 						@Override
 						protected void onPostExecute(TimeoStopSchedule schedule) {
-							setProgressBarIndeterminateVisibility(false);
+							setSupportProgressBarIndeterminateVisibility(false);
 							LayoutInflater inflater = (LayoutInflater) AddStopActivity.this.getSystemService(Context
 									.LAYOUT_INFLATER_SERVICE);
 
@@ -377,7 +381,7 @@ public class AddStopActivity extends Activity {
 
 			@Override
 			protected void onPreExecute() {
-				setProgressBarIndeterminateVisibility(true);
+				setSupportProgressBarIndeterminateVisibility(true);
 			}
 
 			@Override
@@ -393,7 +397,7 @@ public class AddStopActivity extends Activity {
 
 			@Override
 			protected void onPostExecute(List<TimeoLine> timeoLines) {
-				setProgressBarIndeterminateVisibility(false);
+				setSupportProgressBarIndeterminateVisibility(false);
 
 				if(timeoLines != null) {
 					lineList.clear();

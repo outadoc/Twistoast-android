@@ -16,13 +16,14 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
 
 	<item
 		android:id="@+id/action_ok"
 		android:enabled="false"
-		android:showAsAction="ifRoom"
 		android:icon="@drawable/ic_action_accept"
-		android:title="@string/action_ok" />
+		android:title="@string/action_ok"
+		app:showAsAction="ifRoom" />
 
 </menu>

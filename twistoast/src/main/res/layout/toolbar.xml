@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Twistoast - styles.xml
+  ~ Twistoast - toolbar.xml
   ~ Copyright (C) 2013-2014  Baptiste Candellier
   ~
   ~ This program is free software: you can redistribute it and/or modify
@@ -17,18 +17,12 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<resources>
-
-	<style name="AppBaseTheme" parent="android:Theme.Material.Light.DarkActionBar">
-		<item name="android:colorPrimary">@color/colorPrimary</item>
-		<!-- darker variant of colorPrimary (for status bar, contextual app bars) -->
-		<item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
-		<!-- theme UI controls like checkboxes and text fields -->
-		<item name="android:colorAccent">@color/colorAccent</item>
-		<item name="android:navigationBarColor">@color/colorPrimaryDark</item>
-		<item name="android:statusBarColor">@color/colorPrimaryDark</item>
-	</style>
-
-	<style name="TwistoastActionBar" parent="android:Widget.Material.ActionBar.Solid" />
-
-</resources>
+<android.support.v7.widget.Toolbar
+	android:id="@+id/toolbar"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:minHeight="?attr/actionBarSize"
+	app:theme="@style/TwistoastActionBar">
+</android.support.v7.widget.Toolbar>
