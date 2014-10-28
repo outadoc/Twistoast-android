@@ -21,6 +21,7 @@ package fr.outadev.android.timeo;
 import android.content.Context;
 
 import java.util.Calendar;
+import java.util.TimeZone;
 
 import fr.outadev.twistoast.R;
 
@@ -73,7 +74,7 @@ public abstract class ScheduleTime {
 	 * @return the difference between now and then, in milliseconds
 	 */
 	private static long getMillisUntilBus(Calendar schedule) {
-		Calendar now = Calendar.getInstance();
+		Calendar now = getCurrentTime();
 		return schedule.getTimeInMillis() - now.getTimeInMillis();
 	}
 
@@ -124,8 +125,8 @@ public abstract class ScheduleTime {
 		int hours = Integer.valueOf(splitTime[0]);
 		int minutes = Integer.valueOf(splitTime[1]);
 
-		Calendar scheduledTime = Calendar.getInstance();
-		Calendar now = Calendar.getInstance();
+		Calendar scheduledTime = getCurrentTime();
+		Calendar now = getCurrentTime();
 
 		scheduledTime.set(Calendar.HOUR_OF_DAY, hours);
 		scheduledTime.set(Calendar.MINUTE, minutes);
@@ -136,6 +137,10 @@ public abstract class ScheduleTime {
 		}
 
 		return scheduledTime;
+	}
+
+	private static Calendar getCurrentTime() {
+		return Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
 	}
 
 }
