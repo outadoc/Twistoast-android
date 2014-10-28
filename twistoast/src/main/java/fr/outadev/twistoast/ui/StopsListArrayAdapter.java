@@ -203,7 +203,8 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 							if(e instanceof TimeoBlockingMessageException) {
 								((TimeoBlockingMessageException) e).getAlertMessage(getContext()).show();
 							} else {
-								Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+								Toast.makeText(getContext(), activity.getResources().getString(R.string.loading_error) + " (" +
+										e.getMessage() + ")", Toast.LENGTH_LONG).show();
 							}
 						}
 
