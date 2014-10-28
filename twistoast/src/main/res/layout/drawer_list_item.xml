@@ -20,13 +20,12 @@
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:minHeight="@dimen/material_drawer_item_height"
+	android:layout_height="@dimen/material_drawer_item_height"
 	android:layout_marginBottom="@dimen/material_drawer_item_margin"
 	android:layout_marginTop="@dimen/material_drawer_item_margin"
+	android:gravity="center_vertical"
 	android:orientation="horizontal"
-	android:paddingLeft="10dp"
-	android:gravity="center_vertical">
+	android:paddingLeft="15dp">
 
 	<ImageView
 		android:id="@+id/img_drawer_item_icon"
@@ -41,7 +40,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:fontFamily="sans-serif"
-		android:textSize="16sp"
-		android:textColor="@color/drawer_item_color_states" />
+		android:textColor="@color/drawer_item_color_states"
+		android:textSize="16sp" />
 
 </LinearLayout>
