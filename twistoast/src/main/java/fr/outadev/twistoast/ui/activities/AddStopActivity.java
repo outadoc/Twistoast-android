@@ -96,13 +96,10 @@ public class AddStopActivity extends ActionBarActivity {
 		setContentView(R.layout.activity_add_stop);
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
 		setSupportActionBar(toolbar);
-
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		setSupportProgressBarIndeterminateVisibility(false);
-
-		if(getSupportActionBar() != null) {
-			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		}
 
 		databaseHandler = new TwistoastDatabase(this);
 

@@ -83,10 +83,8 @@ public class MainActivity extends ActionBarActivity implements IStopsListContain
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 
-		if(getSupportActionBar() != null) {
-			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-			getSupportActionBar().setHomeButtonEnabled(true);
-		}
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setHomeButtonEnabled(true);
 
 		drawerItems = getDrawerItems();
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -100,17 +98,13 @@ public class MainActivity extends ActionBarActivity implements IStopsListContain
 
 			@Override
 			public void onDrawerClosed(View view) {
-				if(getSupportActionBar() != null) {
-					getSupportActionBar().setTitle(actionBarTitle);
-				}
+				getSupportActionBar().setTitle(actionBarTitle);
 				super.onDrawerClosed(view);
 			}
 
 			@Override
 			public void onDrawerOpened(View drawerView) {
-				if(getSupportActionBar() != null) {
-					getSupportActionBar().setTitle(drawerTitle);
-				}
+				getSupportActionBar().setTitle(drawerTitle);
 				super.onDrawerOpened(drawerView);
 			}
 		};
@@ -191,10 +185,7 @@ public class MainActivity extends ActionBarActivity implements IStopsListContain
 
 	public void refreshActionBarTitle() {
 		actionBarTitle = getString(drawerItems.get(currentFragmentIndex).getTitleResId());
-
-		if(getSupportActionBar() != null) {
-			getSupportActionBar().setTitle(actionBarTitle);
-		}
+		getSupportActionBar().setTitle(actionBarTitle);
 	}
 
 	@Override
