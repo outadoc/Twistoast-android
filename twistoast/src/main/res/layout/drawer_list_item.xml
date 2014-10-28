@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Twistoast - drawer_list_item.xml
+  ~ Twistoast - drawer_list_item_pref.xml
   ~ Copyright (C) 2013-2014  Baptiste Candellier
   ~
   ~ This program is free software: you can redistribute it and/or modify
@@ -17,14 +17,31 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-          android:id="@+id/textTitle"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:background="@drawable/drawer_item_bg"
-          android:fontFamily="sans-serif-light"
-          android:minHeight="?android:attr/listPreferredItemHeightSmall"
-          android:padding="15dp"
-          android:paddingBottom="25dp"
-          android:paddingTop="25dp"
-          android:textSize="22sp" />
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:minHeight="@dimen/material_drawer_item_height"
+	android:layout_marginBottom="@dimen/material_drawer_item_margin"
+	android:layout_marginTop="@dimen/material_drawer_item_margin"
+	android:orientation="horizontal"
+	android:paddingLeft="10dp"
+	android:gravity="center_vertical">
+
+	<ImageView
+		android:id="@+id/img_drawer_item_icon"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:contentDescription="@string/action_settings"
+		android:paddingRight="20dp"
+		android:src="@drawable/ic_action_settings" />
+
+	<TextView
+		android:id="@+id/lbl_drawer_item_title"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:fontFamily="sans-serif"
+		android:textSize="16sp"
+		android:textColor="@color/drawer_item_color_states" />
+
+</LinearLayout>

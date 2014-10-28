@@ -1,5 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Twistoast - dimens.xml
+  ~ Twistoast - drawer_item_color_states.xml
   ~ Copyright (C) 2013-2014  Baptiste Candellier
   ~
   ~ This program is free software: you can redistribute it and/or modify
@@ -16,14 +17,11 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<resources>
-
-	<!-- Default screen margins, per the Android Design guidelines. -->
-	<dimen name="activity_horizontal_margin">16dp</dimen>
-	<dimen name="activity_vertical_margin">16dp</dimen>
-
-	<dimen name="material_drawer_item_height">48dp</dimen>
-	<dimen name="material_drawer_width">300dp</dimen>
-	<dimen name="material_drawer_item_margin">8dp</dimen>
-
-</resources>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+	<item android:state_focused="false"
+	      android:state_selected="false"
+	      android:state_checked="false"
+	      android:state_hovered="false"
+	      android:color="@android:color/black" />
+	<item android:color="@color/colorPrimary" />
+</selector>

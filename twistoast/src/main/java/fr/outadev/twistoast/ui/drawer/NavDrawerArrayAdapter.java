@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -54,26 +55,27 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<NavigationDrawerItem> {
 		//convert the view if we haz to
 		if(convertView == null) {
 			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-			if(getItemViewType(position) == 1) {
-				// if it's a secondary row (ex: preferences)
-				convertView = inflater.inflate(R.layout.drawer_list_item_pref, parent, false);
-			} else {
-				// if it's a normal row
-				convertView = inflater.inflate(R.layout.drawer_list_item, parent, false);
-			}
+			convertView = inflater.inflate(R.layout.drawer_list_item, parent, false);
 		}
 
-		TextView rowTitle = (TextView) convertView.findViewById(R.id.textTitle);
+		TextView rowTitle = (TextView) convertView.findViewById(R.id.lbl_drawer_item_title);
+		ImageView rowIcon = (ImageView) convertView.findViewById(R.id.img_drawer_item_icon);
+
+		if(getItemViewType(position) == 1) {
+			rowIcon.setVisibility(View.GONE);
+		}
+
 		rowTitle.setText(getContext().getResources().getString(getItem(position).getTitleResId()));
 
+		rowTitle.setTypeface(Typeface.create("sans-serif", Typeface.NORMAL));
+		rowTitle.setSelected(false);
+
 		if(position == selectedItemIndex) {
+			rowTitle.setSelected(true);
 			rowTitle.setTypeface(null, Typeface.BOLD);
-		} else {
-			rowTitle.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
 		}
 
-		rowTitle.setOnClickListener(new OnClickListener() {
+		convertView.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {

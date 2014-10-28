@@ -37,8 +37,9 @@
 
 		<ListView
 			android:id="@+id/left_drawer"
-			android:layout_width="260dp"
+			android:layout_width="@dimen/material_drawer_width"
 			android:layout_height="match_parent"
+			android:paddingTop="10dp"
 			android:layout_gravity="start"
 			android:background="#F7F7F7"
 			android:choiceMode="singleChoice"
