@@ -20,6 +20,7 @@ package fr.outadev.twistoast.ui.drawer;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -85,9 +86,17 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<NavigationDrawerItem> {
 		rowTitle.setTypeface(Typeface.create("sans-serif", Typeface.NORMAL));
 		rowTitle.setSelected(false);
 
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.L) {
+			rowIcon.setImageTintList(null);
+		}
+
 		if(position == selectedItemIndex) {
 			rowTitle.setSelected(true);
 			rowTitle.setTypeface(null, Typeface.BOLD);
+
+			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.L) {
+				rowIcon.setImageTintList(getContext().getResources().getColorStateList(R.color.colorPrimary));
+			}
 		}
 
 		convertView.setOnClickListener(new OnClickListener() {
