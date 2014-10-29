@@ -19,6 +19,7 @@
 package fr.outadev.twistoast.ui.drawer;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -86,7 +87,7 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<NavigationDrawerItem> {
 		rowTitle.setTypeface(Typeface.create("sans-serif", Typeface.NORMAL));
 		rowTitle.setSelected(false);
 
-		rowIcon.setColorFilter(null);
+		rowIcon.setColorFilter(Color.rgb(100, 100, 100));
 
 		if(position == selectedItemIndex) {
 			rowTitle.setSelected(true);
