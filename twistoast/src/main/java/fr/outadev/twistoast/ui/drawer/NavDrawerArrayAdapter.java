@@ -40,6 +40,9 @@ import fr.outadev.twistoast.R;
  */
 public class NavDrawerArrayAdapter extends ArrayAdapter<NavigationDrawerItem> {
 
+	private static final int TYPE_NORMAL = 0;
+	private static final int TYPE_SECONDARY = 1;
+	private static final int TYPE_SEPARATOR = 2;
 	private final IStopsListContainer container;
 	private int selectedItemIndex;
 
@@ -52,16 +55,28 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<NavigationDrawerItem> {
 
 	@Override
 	public View getView(final int position, View convertView, final ViewGroup parent) {
+		int itemType = getItemViewType(position);
+
 		//convert the view if we haz to
 		if(convertView == null) {
 			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			convertView = inflater.inflate(R.layout.drawer_list_item, parent, false);
+
+			if(itemType == TYPE_SEPARATOR) {
+				convertView = inflater.inflate(R.layout.drawer_list_separator, parent, false);
+			} else {
+				convertView = inflater.inflate(R.layout.drawer_list_item, parent, false);
+			}
+		}
+
+		//if we're dealing with a separator, we only need to inflate it, nothing more
+		if(itemType == TYPE_SEPARATOR) {
+			return convertView;
 		}
 
 		TextView rowTitle = (TextView) convertView.findViewById(R.id.lbl_drawer_item_title);
 		ImageView rowIcon = (ImageView) convertView.findViewById(R.id.img_drawer_item_icon);
 
-		if(getItemViewType(position) == 1) {
+		if(itemType == TYPE_SECONDARY) {
 			rowIcon.setVisibility(View.GONE);
 		}
 
@@ -101,12 +116,19 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<NavigationDrawerItem> {
 	@Override
 	public int getItemViewType(int position) {
 		// Define a way to determine which layout to use
-		return (getItem(position) instanceof NavigationDrawerSecondaryItem) ? 1 : 0;
+		if(getItem(position) instanceof NavigationDrawerSecondaryItem) {
+			return TYPE_SECONDARY;
+		}
+		if(getItem(position) instanceof NavigationDrawerSeparator) {
+			return TYPE_SEPARATOR;
+		}
+
+		return TYPE_NORMAL;
 	}
 
 	@Override
 	public int getViewTypeCount() {
-		return 2;
+		return 3;
 	}
 
 }
