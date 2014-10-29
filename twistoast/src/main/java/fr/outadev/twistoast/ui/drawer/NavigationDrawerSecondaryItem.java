@@ -35,7 +35,7 @@ public class NavigationDrawerSecondaryItem extends NavigationDrawerFragmentItem 
 	 * @param classToInstantiate the Class object of the Fragment to return with getFragment
 	 */
 	public NavigationDrawerSecondaryItem(@StringRes int titleResId, Class classToInstantiate) {
-		super(titleResId, classToInstantiate);
+		super(-1, titleResId, classToInstantiate);
 	}
 
 }

@@ -20,6 +20,7 @@ package fr.outadev.twistoast.ui.drawer;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 
 import fr.outadev.twistoast.ui.fragments.WebViewFragment;
@@ -39,8 +40,8 @@ public class NavigationDrawerWebItem extends NavigationDrawerFragmentItem {
 	 * @param titleResId the id of the string resource for the title
 	 * @param url        the URL of the page to open in the fragment
 	 */
-	public NavigationDrawerWebItem(@StringRes int titleResId, String url) {
-		super(titleResId, WebViewFragment.class);
+	public NavigationDrawerWebItem(@DrawableRes int iconResId, @StringRes int titleResId, String url) {
+		super(iconResId, titleResId, WebViewFragment.class);
 		this.url = url;
 	}
 

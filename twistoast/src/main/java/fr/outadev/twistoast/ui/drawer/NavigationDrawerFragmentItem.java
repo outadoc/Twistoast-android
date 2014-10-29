@@ -19,6 +19,7 @@
 package fr.outadev.twistoast.ui.drawer;
 
 import android.app.Fragment;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 
 /**
@@ -36,8 +37,8 @@ public class NavigationDrawerFragmentItem extends NavigationDrawerItem {
 	 * @param titleResId         the id of the string resource for the title
 	 * @param classToInstantiate the Class object of the Fragment to return with getFragment
 	 */
-	public NavigationDrawerFragmentItem(@StringRes int titleResId, Class classToInstantiate) {
-		super(titleResId);
+	public NavigationDrawerFragmentItem(@DrawableRes int iconResId, @StringRes int titleResId, Class classToInstantiate) {
+		super(iconResId, titleResId);
 		this.classToInstantiate = classToInstantiate;
 	}
 

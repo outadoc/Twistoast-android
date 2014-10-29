@@ -29,11 +29,9 @@
 
 	<ImageView
 		android:id="@+id/img_drawer_item_icon"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:contentDescription="@string/action_settings"
-		android:paddingRight="20dp"
-		android:src="@drawable/ic_action_settings" />
+		android:layout_width="45dp"
+		android:layout_height="45dp"
+		android:paddingRight="20dp" />
 
 	<TextView
 		android:id="@+id/lbl_drawer_item_title"

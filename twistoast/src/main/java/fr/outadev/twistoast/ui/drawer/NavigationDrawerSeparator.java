@@ -26,7 +26,7 @@ import android.app.Fragment;
 public class NavigationDrawerSeparator extends NavigationDrawerItem {
 
 	public NavigationDrawerSeparator() {
-		super(-1);
+		super(-1, -1);
 	}
 
 	@Override

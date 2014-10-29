@@ -77,12 +77,13 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<NavigationDrawerItem> {
 		TextView rowTitle = (TextView) convertView.findViewById(R.id.lbl_drawer_item_title);
 		ImageView rowIcon = (ImageView) convertView.findViewById(R.id.img_drawer_item_icon);
 
-		if(itemType == TYPE_SECONDARY) {
+		if(itemType == TYPE_SECONDARY || getItem(position).getIconResId() == -1) {
 			rowIcon.setVisibility(View.GONE);
+		} else {
+			rowIcon.setImageResource(getItem(position).getIconResId());
 		}
 
 		rowTitle.setText(getContext().getResources().getString(getItem(position).getTitleResId()));
-
 		rowTitle.setTypeface(Typeface.create("sans-serif", Typeface.NORMAL));
 		rowTitle.setSelected(false);
 
