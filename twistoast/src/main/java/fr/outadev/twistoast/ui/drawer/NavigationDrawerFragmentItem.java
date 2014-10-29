@@ -19,6 +19,7 @@
 package fr.outadev.twistoast.ui.drawer;
 
 import android.app.Fragment;
+import android.support.annotation.StringRes;
 
 /**
  * A navigation drawer item designed to open a fragment when selected.
@@ -35,7 +36,7 @@ public class NavigationDrawerFragmentItem extends NavigationDrawerItem {
 	 * @param titleResId         the id of the string resource for the title
 	 * @param classToInstantiate the Class object of the Fragment to return with getFragment
 	 */
-	public NavigationDrawerFragmentItem(int titleResId, Class classToInstantiate) {
+	public NavigationDrawerFragmentItem(@StringRes int titleResId, Class classToInstantiate) {
 		super(titleResId);
 		this.classToInstantiate = classToInstantiate;
 	}
