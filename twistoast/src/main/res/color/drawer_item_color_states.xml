@@ -18,10 +18,7 @@
   -->
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-	<item android:state_focused="false"
-	      android:state_selected="false"
-	      android:state_checked="false"
-	      android:state_hovered="false"
-	      android:color="@android:color/black" />
-	<item android:color="@color/colorPrimary" />
+	<item android:color="@color/colorPrimary"
+	      android:state_selected="true" />
+	<item android:color="@android:color/black" />
 </selector>
