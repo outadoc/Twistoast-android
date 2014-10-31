@@ -151,7 +151,7 @@ public class MainActivity extends ActionBarActivity implements IStopsListContain
 	}
 
 	@Override
-	public void endRefresh() {
+	public void endRefresh(boolean success) {
 		// useless here, wat
 	}
 

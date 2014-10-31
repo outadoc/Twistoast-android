@@ -225,7 +225,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 				networkCount = (new TwistoastDatabase(getContext())).getNetworksCount();
 
 				notifyDataSetChanged();
-				stopsListContainer.endRefresh();
+				stopsListContainer.endRefresh((scheduleMap != null));
 			}
 
 		}).execute();

@@ -53,15 +53,15 @@ import fr.outadev.twistoast.ui.activities.MainActivity;
 
 public class StopsListFragment extends Fragment implements IStopsListContainer {
 
+	private final long REFRESH_INTERVAL = 60000L;
+	private final Handler handler = new Handler();
 	private ListView listView;
 	private SwipeRefreshLayout swipeRefreshLayout;
-
 	private MenuItem menuItemRefresh;
 	private View noContentView;
-
-	private final long REFRESH_INTERVAL = 60000L;
-
-	private final Handler handler = new Handler();
+	private TwistoastDatabase databaseHandler;
+	private StopsListArrayAdapter listAdapter;
+	private boolean autoRefresh;
 	private final Runnable runnable = new Runnable() {
 		@Override
 		public void run() {
@@ -70,13 +70,31 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 			}
 		}
 	};
-
-	private TwistoastDatabase databaseHandler;
-	private StopsListArrayAdapter listAdapter;
-
-	private boolean autoRefresh;
 	private boolean isRefreshing;
 	private boolean isInBackground;
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if(requestCode == 0) {
+			refreshListFromDB(true);
+		}
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		// yes hello please, I'd like to be inflated?
+		setHasOptionsMenu(true);
+
+		databaseHandler = new TwistoastDatabase(getActivity());
+
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+		autoRefresh = sharedPref.getBoolean("pref_auto_refresh", true);
+
+		isRefreshing = false;
+		isInBackground = false;
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -129,22 +147,6 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 		listView.setOnScrollListener(touchListener.makeScrollListener());
 
 		return view;
-	}
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		// yes hello please, I'd like to be inflated?
-		setHasOptionsMenu(true);
-
-		databaseHandler = new TwistoastDatabase(getActivity());
-
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-		autoRefresh = sharedPref.getBoolean("pref_auto_refresh", true);
-
-		isRefreshing = false;
-		isInBackground = false;
 	}
 
 	@Override
@@ -233,13 +235,6 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 		}
 	}
 
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if(requestCode == 0) {
-			refreshListFromDB(true);
-		}
-	}
-
 	public void refreshListFromDB(boolean resetList) {
 		// we don't want to try to refresh if we're already refreshing (causes
 		// bugs)
@@ -270,7 +265,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 	}
 
 	@Override
-	public void endRefresh() {
+	public void endRefresh(boolean success) {
 		// notify the pull to refresh view that the refresh has finished
 		isRefreshing = false;
 		swipeRefreshLayout.setRefreshing(false);
@@ -279,10 +274,12 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 			menuItemRefresh.setEnabled(true);
 		}
 
-		Log.i(Utils.TAG, "refreshed, " + listAdapter.getCount() + " stops in db");
+		if(success) {
+			Log.i(Utils.TAG, "refreshed, " + listAdapter.getCount() + " stops in db");
 
-		if(getActivity() != null && !listAdapter.isEmpty()) {
-			Toast.makeText(getActivity(), getResources().getString(R.string.refreshed_stops), Toast.LENGTH_SHORT).show();
+			if(getActivity() != null && !listAdapter.isEmpty()) {
+				Toast.makeText(getActivity(), getResources().getString(R.string.refreshed_stops), Toast.LENGTH_SHORT).show();
+			}
 		}
 
 		noContentView.setVisibility((listAdapter.isEmpty()) ? View.VISIBLE : View.GONE);
