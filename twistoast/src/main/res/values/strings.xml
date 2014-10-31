@@ -33,7 +33,7 @@
 	<string name="action_refresh">Rafraîchir</string>
 	<string name="action_cancel">Annuler</string>
 	<string name="loading_data">Chargement&#8230;</string>
-	<string name="loading_error">Erreur de chargement</string>
+	<string name="loading_error">Erreur lors du chargement des données, vérifiez la connexion.</string>
 	<string name="confirm_delete_success">Succès de la suppression</string>
 	<string name="refreshed_stops">Horaires rafraîchis</string>
 	<string name="unknown_line_id" translatable="false">\?</string>

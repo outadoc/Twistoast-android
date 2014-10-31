@@ -436,7 +436,8 @@ public class AddStopActivity extends ActionBarActivity {
 				if(e instanceof TimeoBlockingMessageException) {
 					((TimeoBlockingMessageException) e).getAlertMessage(AddStopActivity.this).show();
 				} else {
-					Toast.makeText(AddStopActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+					Toast.makeText(AddStopActivity.this, getResources().getString(R.string.loading_error),
+							Toast.LENGTH_LONG).show();
 				}
 			}
 
