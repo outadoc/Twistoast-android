@@ -122,6 +122,7 @@ public class MainActivity extends ActionBarActivity implements IStopsListContain
 		if(savedInstanceState != null) {
 			currentFragmentIndex = savedInstanceState.getInt("key_current_frag");
 			trafficAlert = (TimeoTrafficAlert) savedInstanceState.get("key_traffic_alert");
+			checkDrawerItem(currentFragmentIndex);
 			displayGlobalTrafficInfo();
 		} else {
 			currentFragmentIndex = 0;
