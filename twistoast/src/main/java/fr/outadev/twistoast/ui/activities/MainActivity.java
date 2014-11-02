@@ -283,7 +283,7 @@ public class MainActivity extends ActionBarActivity implements IStopsListContain
 		list.add(new NavigationDrawerWebItem(R.drawable.ic_directions_bus, R.string.drawer_item_timetables,
 				"http://dev.actigraph.fr/actipages/twisto/module/mobile/App/horairesalarret/?app=pivk-1.3-2014"));
 		list.add(new NavigationDrawerWebItem(R.drawable.ic_navigation, R.string.drawer_item_routes,
-				"http://twisto.mobi/module/mobile/App/itineraire-android-4.x-dev/iti_formulaire.php"));
+				"http://twisto.fr/module/mobile/App2014/itineraire-android-4.x-dev/iti_formulaire.php"));
 		list.add(new NavigationDrawerWebItem(R.drawable.ic_map, R.string.drawer_item_map,
 				"http://twisto.fr/module/mobile/App2014/leaflet/?ios=true"));
 		list.add(new NavigationDrawerSeparator());
@@ -292,7 +292,7 @@ public class MainActivity extends ActionBarActivity implements IStopsListContain
 		list.add(new NavigationDrawerWebItem(R.drawable.ic_books, R.string.drawer_item_news,
 				"http://twisto.mobi/module/mobile/App/actus/"));
 		list.add(new NavigationDrawerWebItem(R.drawable.ic_payment, R.string.drawer_item_pricing,
-				"http://twisto.fr/module/mobile/App2014/tarifs/"));
+				"http://twisto.fr/module/mobile/App2014/tarifs/index.php?ios=true"));
 		list.add(new NavigationDrawerSeparator());
 		list.add(new NavigationDrawerSecondaryItem(R.string.drawer_item_preferences, PrefsFragment.class));
 
