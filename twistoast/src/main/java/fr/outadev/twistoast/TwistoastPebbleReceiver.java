@@ -155,8 +155,9 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 
 		Calendar scheduleCalendar = ScheduleTime.getNextDateForTime(schedule.getSchedules().get(0).getTime());
 
-		if(ScheduleTime.getTimeDisplayMode(scheduleCalendar) == ScheduleTime.TimeDisplayMode.ARRIVAL_IMMINENT
-				|| ScheduleTime.getTimeDisplayMode(scheduleCalendar) == ScheduleTime.TimeDisplayMode.CURRENTLY_AT_STOP) {
+		if(ScheduleTime.getTimeDisplayMode(scheduleCalendar, context) == ScheduleTime.TimeDisplayMode.ARRIVAL_IMMINENT
+				|| ScheduleTime.getTimeDisplayMode(scheduleCalendar, context) == ScheduleTime.TimeDisplayMode
+				.CURRENTLY_AT_STOP) {
 			response.addInt8(KEY_SHOULD_VIBRATE, (byte) 1);
 		}
 
