@@ -87,15 +87,6 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 		// get all the stuff in it that we'll have to modify
 		FrameLayout view_line_id = (FrameLayout) convertView.findViewById(R.id.view_line_id);
 
-		TextView lbl_section_name = (TextView) convertView.findViewById(R.id.lbl_section_name);
-		lbl_section_name.setVisibility(View.GONE);
-
-		if(networkCount > 1 && (position == 0 ||
-				(position > 0 && getItem(position - 1).getLine().getNetworkCode() != currentItem.getLine().getNetworkCode()))) {
-			lbl_section_name.setText(networks.get(currentItem.getLine().getNetworkCode()));
-			lbl_section_name.setVisibility(View.VISIBLE);
-		}
-
 		TextView lbl_line = (TextView) convertView.findViewById(R.id.lbl_line_id);
 		TextView lbl_stop = (TextView) convertView.findViewById(R.id.lbl_stop_name);
 		TextView lbl_direction = (TextView) convertView.findViewById(R.id.lbl_direction_name);
