@@ -34,7 +34,7 @@
 		app:cardCornerRadius="3dp"
 		app:cardElevation="3dp">
 
-	<LinearLayout
+		<LinearLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:orientation="vertical">
