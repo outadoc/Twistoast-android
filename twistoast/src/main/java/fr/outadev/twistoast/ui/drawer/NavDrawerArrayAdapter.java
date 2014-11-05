@@ -84,7 +84,7 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<NavigationDrawerItem> {
 		}
 
 		rowTitle.setText(getContext().getResources().getString(getItem(position).getTitleResId()));
-		rowTitle.setTypeface(Typeface.create("sans-serif", Typeface.NORMAL));
+		rowTitle.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
 		rowTitle.setSelected(false);
 
 		rowIcon.setColorFilter(Color.rgb(100, 100, 100));
