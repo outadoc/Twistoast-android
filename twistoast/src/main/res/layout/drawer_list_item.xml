@@ -23,6 +23,7 @@
 	android:layout_height="@dimen/material_drawer_item_height"
 	android:layout_marginBottom="@dimen/material_drawer_item_margin"
 	android:layout_marginTop="@dimen/material_drawer_item_margin"
+	android:background="?android:attr/selectableItemBackground"
 	android:gravity="center_vertical"
 	android:orientation="horizontal"
 	android:paddingLeft="15dp">
@@ -37,6 +38,7 @@
 		android:id="@+id/lbl_drawer_item_title"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:layout_marginLeft="11dp"
 		android:fontFamily="sans-serif-medium"
 		android:textColor="@color/drawer_item_color_states"
 		android:textSize="16sp" />
