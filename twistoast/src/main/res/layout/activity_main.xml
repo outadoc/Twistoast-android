@@ -23,17 +23,24 @@
 	android:layout_height="match_parent"
 	android:orientation="vertical">
 
-	<include layout="@layout/toolbar" />
-
 	<android.support.v4.widget.DrawerLayout
 		android:id="@+id/drawer_layout"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent">
 
-		<FrameLayout
-			android:id="@+id/content_frame"
+		<LinearLayout
 			android:layout_width="match_parent"
-			android:layout_height="match_parent" />
+			android:layout_height="match_parent"
+			android:orientation="vertical">
+
+			<include layout="@layout/toolbar" />
+
+			<FrameLayout
+				android:id="@+id/content_frame"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent" />
+
+		</LinearLayout>
 
 		<ListView
 			android:id="@+id/left_drawer"
