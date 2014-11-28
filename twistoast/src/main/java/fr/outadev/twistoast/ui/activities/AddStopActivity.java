@@ -193,9 +193,9 @@ public class AddStopActivity extends ActionBarActivity {
 				// get the selected line
 				TimeoLine item = getCurrentLine();
 
-				if(item != null && item.getDetails().getId() != null) {
+				if(item != null && item.getId() != null) {
 					// set the line view
-					lbl_line.setText(item.getDetails().getId());
+					lbl_line.setText(item.getId());
 					view_line_id.setBackgroundColor(Color.parseColor(item.getColor()));
 
 					spinDirection.setEnabled(true);
@@ -243,7 +243,7 @@ public class AddStopActivity extends ActionBarActivity {
 				item_next.setEnabled(false);
 				spinStop.setEnabled(false);
 
-				if(getCurrentLine() != null && getCurrentDirection() != null && getCurrentLine().getDetails().getId() != null
+				if(getCurrentLine() != null && getCurrentDirection() != null && getCurrentLine().getId() != null
 						&& getCurrentDirection().getId() != null) {
 					lbl_direction.setText(getResources().getString(R.string.direction_name, getCurrentDirection().getName()));
 
@@ -408,7 +408,7 @@ public class AddStopActivity extends ActionBarActivity {
 
 					for(int i = filteredLineList.size() - 1; i >= 0; i--) {
 						//if the last line in the list is the same line (but with a different direction)
-						if(i > 0 && filteredLineList.get(i).getDetails().getId().equals(filteredLineList.get(i - 1).getDetails()
+						if(i > 0 && filteredLineList.get(i).getId().equals(filteredLineList.get(i - 1).getDetails()
 								.getId())) {
 							filteredLineList.remove(i);
 						}
@@ -475,7 +475,7 @@ public class AddStopActivity extends ActionBarActivity {
 		List<TimeoIDNameObject> directionsList = new ArrayList<TimeoIDNameObject>();
 
 		for(TimeoLine line : lineList) {
-			if(line.getDetails().getId().equals(getCurrentLine().getDetails().getId())) {
+			if(line.getId().equals(getCurrentLine().getId())) {
 				directionsList.add(line.getDirection());
 			}
 		}

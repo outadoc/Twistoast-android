@@ -1,5 +1,5 @@
 /*
- * Twistoast - TimeoIDNameObject
+ * Twistoast - ITimeoIDName
  * Copyright (C) 2013-2014  Baptiste Candellier
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,50 +19,16 @@
 package fr.outadev.android.timeo.model;
 
 /**
- * Associates an ID to a name. Used to associate a line ID with its name, for
- * example.
- *
- * @author outadoc
+ * Created by outadoc on 28/11/14.
  */
-public class TimeoIDNameObject implements ITimeoIDName {
+public interface ITimeoIDName {
 
-	private String id;
-	private String name;
+	public String getId();
 
-	/**
-	 * Creates an ID/name object.
-	 *
-	 * @param id   the id of the object
-	 * @param name the name of the object
-	 */
-	public TimeoIDNameObject(String id, String name) {
-		this.id = id;
-		this.name = name;
-	}
+	public void setId(String id);
 
-	public TimeoIDNameObject() {
+	public String getName();
 
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	@Override
-	public String toString() {
-		return id + " - " + name;
-	}
+	public void setName(String name);
 
 }

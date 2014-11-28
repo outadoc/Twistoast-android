@@ -112,7 +112,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 
 		// line
 		view_line_id.setBackgroundColor(Color.parseColor(currentItem.getLine().getColor()));
-		lbl_line.setText(currentItem.getLine().getDetails().getId());
+		lbl_line.setText(currentItem.getLine().getId());
 
 		if(lbl_line.getText().length() > 3) {
 			lbl_line.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);

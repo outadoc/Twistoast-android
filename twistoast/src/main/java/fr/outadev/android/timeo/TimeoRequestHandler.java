@@ -286,7 +286,7 @@ public abstract class TimeoRequestHandler {
 	@NonNull
 	public static List<TimeoStop> getStops(int networkCode, TimeoLine line) throws HttpRequestException, XmlPullParserException,
 			IOException, TimeoException {
-		String params = "xml=1&ligne=" + line.getDetails().getId() + "&sens=" + line.getDirection().getId();
+		String params = "xml=1&ligne=" + line.getId() + "&sens=" + line.getDirection().getId();
 		String result = requestWebPage(API_BASE_URL + getPageNameForNetworkCode(networkCode), params, true);
 
 		XmlPullParser parser = getParserForXMLString(result);
