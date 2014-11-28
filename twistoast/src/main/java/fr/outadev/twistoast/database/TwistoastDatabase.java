@@ -275,4 +275,30 @@ public class TwistoastDatabase {
 		db.close();
 	}
 
+	public void updateStopReference(TimeoStop stop, String newReference) {
+		SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
+
+		ContentValues updateClause = new ContentValues();
+		updateClause.put("stop_ref", newReference);
+
+		db.update("twi_stop", updateClause, "stop_id = ? AND line_id = ? AND dir_id = ?", new String[]{
+				stop.getId(),
+				stop.getLine().getDetails().getId(),
+				stop.getLine().getDetails().getId()
+		});
+
+		db.close();
+	}
+
+	public void beginTransaction() {
+		databaseOpenHelper.getWritableDatabase().beginTransaction();
+	}
+
+	public void commit() {
+		SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
+
+		db.setTransactionSuccessful();
+		db.endTransaction();
+	}
+
 }
