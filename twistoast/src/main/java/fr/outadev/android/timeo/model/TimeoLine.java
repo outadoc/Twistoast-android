@@ -25,7 +25,7 @@ import fr.outadev.android.timeo.TimeoRequestHandler;
  *
  * @author outadoc
  */
-public class TimeoLine implements ITimeoIDName {
+public class TimeoLine implements TimeoIDName {
 
 	private TimeoIDNameObject line;
 	private TimeoIDNameObject direction;

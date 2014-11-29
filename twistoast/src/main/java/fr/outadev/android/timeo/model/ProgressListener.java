@@ -21,7 +21,7 @@ package fr.outadev.android.timeo.model;
 /**
  * Created by outadoc on 29/11/14.
  */
-public interface IProgressListener {
+public interface ProgressListener {
 
 	public void onProgress(int current, int total);
 

@@ -47,7 +47,7 @@ import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.listeners.ActionClickListener;
 
 import fr.outadev.android.timeo.TimeoStopReferenceUpdater;
-import fr.outadev.android.timeo.model.IProgressListener;
+import fr.outadev.android.timeo.model.ProgressListener;
 import fr.outadev.android.timeo.model.TimeoStop;
 import fr.outadev.twistoast.IStopsListContainer;
 import fr.outadev.twistoast.R;
@@ -362,7 +362,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 		@Override
 		protected Exception doInBackground(Void... params) {
 			try {
-				referenceUpdater.updateAllStopReferences(new IProgressListener() {
+				referenceUpdater.updateAllStopReferences(new ProgressListener() {
 
 					@Override
 					public void onProgress(int current, int total) {

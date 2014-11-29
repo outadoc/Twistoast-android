@@ -21,7 +21,7 @@ package fr.outadev.android.timeo.model;
 /**
  * Created by outadoc on 28/11/14.
  */
-public interface ITimeoIDName {
+public interface TimeoIDName {
 
 	public String getId();
 

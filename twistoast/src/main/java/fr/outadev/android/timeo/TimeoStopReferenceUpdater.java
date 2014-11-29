@@ -26,7 +26,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.util.List;
 
-import fr.outadev.android.timeo.model.IProgressListener;
+import fr.outadev.android.timeo.model.ProgressListener;
 import fr.outadev.android.timeo.model.TimeoException;
 import fr.outadev.android.timeo.model.TimeoLine;
 import fr.outadev.android.timeo.model.TimeoStop;
@@ -44,7 +44,7 @@ public class TimeoStopReferenceUpdater {
 		this.db = new TwistoastDatabase(context);
 	}
 
-	public void updateAllStopReferences(IProgressListener progressListener) throws XmlPullParserException, IOException,
+	public void updateAllStopReferences(ProgressListener progressListener) throws XmlPullParserException, IOException,
 			TimeoException {
 		List<TimeoStop> stopList = db.getAllStops();
 		TimeoLine lastLine = null;
