@@ -40,6 +40,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.listeners.ActionClickListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,6 +81,7 @@ public class AddStopActivity extends ActionBarActivity {
 	private FrameLayout view_line_id;
 	private TextView lbl_stop;
 	private TextView lbl_direction;
+	private TextView lbl_schedule_direction;
 
 	private LinearLayout view_schedule_container;
 
@@ -315,52 +319,7 @@ public class AddStopActivity extends ActionBarActivity {
 
 				if(stop != null && stop.getId() != null) {
 					lbl_stop.setText(getResources().getString(R.string.stop_name, stop.getName()));
-
-					(new AsyncTask<Void, Void, TimeoStopSchedule>() {
-
-						@Override
-						protected void onPreExecute() {
-							setSupportProgressBarIndeterminateVisibility(true);
-						}
-
-						@Override
-						protected TimeoStopSchedule doInBackground(Void... voids) {
-							try {
-								return TimeoRequestHandler.getSingleSchedule(getCurrentStop());
-							} catch(Exception e) {
-								handleAsyncExceptions(e);
-							}
-
-							return null;
-						}
-
-						@Override
-						protected void onPostExecute(TimeoStopSchedule schedule) {
-							setSupportProgressBarIndeterminateVisibility(false);
-							LayoutInflater inflater = (LayoutInflater) AddStopActivity.this.getSystemService(Context
-									.LAYOUT_INFLATER_SERVICE);
-
-							if(schedule != null) {
-								List<TimeoSingleSchedule> schedList = schedule.getSchedules();
-
-								// set the schedule labels, if we need to
-								if(schedList != null) {
-									for(TimeoSingleSchedule currSched : schedList) {
-										View singleScheduleView = inflater.inflate(R.layout.single_schedule_label, null);
-										TextView label = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule);
-
-										label.setText(currSched.getFormattedTime(AddStopActivity.this));
-										view_schedule_container.addView(singleScheduleView);
-									}
-
-									if(schedList.size() > 0) {
-										view_schedule_container.setVisibility(View.VISIBLE);
-									}
-								}
-							}
-						}
-
-					}).execute();
+					updateSchedulePreview();
 				}
 			}
 
@@ -369,6 +328,59 @@ public class AddStopActivity extends ActionBarActivity {
 			}
 
 		});
+	}
+
+	public void updateSchedulePreview() {
+		(new AsyncTask<Void, Void, TimeoStopSchedule>() {
+
+			@Override
+			protected void onPreExecute() {
+				setSupportProgressBarIndeterminateVisibility(true);
+			}
+
+			@Override
+			protected TimeoStopSchedule doInBackground(Void... voids) {
+				try {
+					return TimeoRequestHandler.getSingleSchedule(getCurrentStop());
+				} catch(Exception e) {
+					handleAsyncExceptions(e);
+				}
+
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(TimeoStopSchedule schedule) {
+				setSupportProgressBarIndeterminateVisibility(false);
+				LayoutInflater inflater = (LayoutInflater) AddStopActivity.this.getSystemService(Context
+						.LAYOUT_INFLATER_SERVICE);
+
+				if(schedule != null) {
+					List<TimeoSingleSchedule> schedList = schedule.getSchedules();
+
+					// set the schedule labels, if we need to
+					if(schedList != null) {
+						for(TimeoSingleSchedule currSched : schedList) {
+							View singleScheduleView = inflater.inflate(R.layout.single_schedule_label, null);
+
+							TextView lbl_schedule = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule);
+							TextView lbl_schedule_direction = (TextView) singleScheduleView.findViewById(R.id
+									.lbl_schedule_direction);
+
+							lbl_schedule.setText(currSched.getFormattedTime(AddStopActivity.this));
+							lbl_schedule_direction.setText(" — " + currSched.getDirection());
+
+							view_schedule_container.addView(singleScheduleView);
+						}
+
+						if(schedList.size() > 0) {
+							view_schedule_container.setVisibility(View.VISIBLE);
+						}
+					}
+				}
+			}
+
+		}).execute();
 	}
 
 	/**
@@ -439,8 +451,19 @@ public class AddStopActivity extends ActionBarActivity {
 				if(e instanceof TimeoBlockingMessageException) {
 					((TimeoBlockingMessageException) e).getAlertMessage(AddStopActivity.this).show();
 				} else {
-					Toast.makeText(AddStopActivity.this, getResources().getString(R.string.loading_error),
-							Toast.LENGTH_LONG).show();
+					Snackbar.with(AddStopActivity.this)
+							.text(R.string.loading_error)
+							.actionLabel("Retry")
+							.actionColorResource(R.color.colorAccent)
+							.actionListener(new ActionClickListener() {
+
+								@Override
+								public void onActionClicked() {
+									getLinesFromAPI();
+								}
+
+							})
+							.show(AddStopActivity.this);
 				}
 			}
 
