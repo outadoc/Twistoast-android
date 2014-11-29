@@ -19,13 +19,11 @@
 
 <resources>
 
-	<string name="action_settings">Preferences</string>
 	<string name="lbl_line">Line</string>
 	<string name="lbl_direction">Direction</string>
 	<string name="lbl_stop">Stop</string>
 	<string name="lbl_preview">Stop Preview</string>
 	<string name="title_activity_add_stop">Add a stop</string>
-	<string name="action_add">Add a stop</string>
 	<string name="action_ok">Done</string>
 	<string name="action_delete">Delete</string>
 	<string name="action_refresh">Refresh</string>
