@@ -187,9 +187,9 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 		listView.setOnScrollListener(touchListener.makeScrollListener());
 
 		fab.attachToListView(listView);
-		fab.setColorNormal(getResources().getColor(R.color.colorAccent));
-		fab.setColorPressed(getResources().getColor(R.color.twisto_secondary));
-		fab.setColorRipple(getResources().getColor(R.color.twisto_secondary));
+		fab.setColorNormalResId(R.color.colorAccent);
+		fab.setColorPressedResId(R.color.twisto_secondary);
+		fab.setColorRippleResId(R.color.twisto_secondary);
 
 		fab.setOnClickListener(new View.OnClickListener() {
 
