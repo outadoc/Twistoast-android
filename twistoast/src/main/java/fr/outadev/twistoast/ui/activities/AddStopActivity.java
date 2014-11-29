@@ -21,6 +21,7 @@ package fr.outadev.twistoast.ui.activities;
 import android.content.Context;
 import android.database.sqlite.SQLiteConstraintException;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -111,11 +112,11 @@ public class AddStopActivity extends ActionBarActivity {
 		spinStop = (Spinner) findViewById(R.id.spin_stop);
 
 		//lists
-		lineList = new ArrayList<TimeoLine>();
-		directionList = new ArrayList<TimeoIDNameObject>();
-		stopList = new ArrayList<TimeoStop>();
+		lineList = new ArrayList<>();
+		directionList = new ArrayList<>();
+		stopList = new ArrayList<>();
 
-		filteredLineList = new ArrayList<TimeoLine>(lineList);
+		filteredLineList = new ArrayList<>(lineList);
 
 		// labels
 		lbl_line = (TextView) findViewById(R.id.lbl_line_id);
@@ -167,7 +168,7 @@ public class AddStopActivity extends ActionBarActivity {
 	 * Initialises, sets up the even listeners, and populates the line spinner.
 	 */
 	public void setupLineSpinner() {
-		lineAdapter = new ArrayAdapter<TimeoLine>(this, android.R.layout.simple_spinner_item, filteredLineList);
+		lineAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, filteredLineList);
 		lineAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinLine.setAdapter(lineAdapter);
 
@@ -196,7 +197,9 @@ public class AddStopActivity extends ActionBarActivity {
 				if(item != null && item.getId() != null) {
 					// set the line view
 					lbl_line.setText(item.getId());
-					view_line_id.setBackgroundColor(Color.parseColor(item.getColor()));
+
+					GradientDrawable lineDrawable = (GradientDrawable) view_line_id.getBackground();
+					lineDrawable.setColor(Color.parseColor(item.getColor()));
 
 					spinDirection.setEnabled(true);
 
@@ -226,7 +229,7 @@ public class AddStopActivity extends ActionBarActivity {
 	 * Initialises, sets up the even listeners, and populates the direction spinner.
 	 */
 	public void setupDirectionSpinner() {
-		directionAdapter = new ArrayAdapter<TimeoIDNameObject>(this, android.R.layout.simple_spinner_item, directionList);
+		directionAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, directionList);
 		directionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinDirection.setAdapter(directionAdapter);
 
@@ -294,7 +297,7 @@ public class AddStopActivity extends ActionBarActivity {
 	 * Initialises, sets up the even listeners, and populates the stop spinner.
 	 */
 	public void setupStopSpinner() {
-		stopAdapter = new ArrayAdapter<TimeoStop>(this, android.R.layout.simple_spinner_item, stopList);
+		stopAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, stopList);
 		stopAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinStop.setAdapter(stopAdapter);
 
@@ -346,7 +349,7 @@ public class AddStopActivity extends ActionBarActivity {
 										View singleScheduleView = inflater.inflate(R.layout.single_schedule_label, null);
 										TextView label = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule);
 
-										label.setText("- " + currSched.getFormattedTime(AddStopActivity.this));
+										label.setText(currSched.getFormattedTime(AddStopActivity.this));
 										view_schedule_container.addView(singleScheduleView);
 									}
 
