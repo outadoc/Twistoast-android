@@ -395,6 +395,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 		@Override
 		protected void onPostExecute(Exception e) {
 			dialog.hide();
+			refreshListFromDB(true);
 
 			if(e != null) {
 				Snackbar.with(getActivity())
