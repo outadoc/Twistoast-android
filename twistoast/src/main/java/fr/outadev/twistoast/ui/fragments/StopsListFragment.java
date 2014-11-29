@@ -328,10 +328,9 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 				isRefUpdateDialogVisible = true;
 
 				(new AlertDialog.Builder(getActivity()))
-						.setTitle("Outdated stops")
-						.setMessage("It looks like " + mismatch + " of the stops you added need(s) to be updated. Would you " +
-								"like to do this now? If you refuse, we won't ask you until next time you start the app.")
-						.setPositiveButton("Do it!", new DialogInterface.OnClickListener() {
+						.setTitle(R.string.stop_ref_update_message_title)
+						.setMessage(getActivity().getString(R.string.stop_ref_update_message_body, mismatch))
+						.setPositiveButton(R.string.stop_ref_update_message_positive, new DialogInterface.OnClickListener() {
 
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
@@ -341,7 +340,7 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 							}
 
 						})
-						.setNegativeButton("Later", new DialogInterface.OnClickListener() {
+						.setNegativeButton(R.string.stop_ref_update_message_negative, new DialogInterface.OnClickListener() {
 
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
@@ -391,7 +390,7 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 			referenceUpdater = new TimeoStopReferenceUpdater(getActivity());
 			dialog = new ProgressDialog(getActivity());
 
-			dialog.setTitle("Updating stop references...");
+			dialog.setTitle(R.string.stop_ref_update_progress_title);
 			dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 			dialog.setCancelable(false);
 			dialog.setIndeterminate(true);
@@ -405,8 +404,8 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 
 			if(e != null) {
 				Snackbar.with(getActivity())
-						.text("Error while updating the stops references.")
-						.actionLabel("Retry")
+						.text(R.string.stop_ref_update_error_text)
+						.actionLabel(R.string.error_retry)
 						.actionColorResource(R.color.colorAccent)
 						.attachToAbsListView(listView)
 						.actionListener(new ActionClickListener() {

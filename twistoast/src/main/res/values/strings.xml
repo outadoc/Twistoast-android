@@ -21,13 +21,11 @@
 
 	<string name="app_name" translatable="false">Twistoast</string>
 
-	<string name="action_settings">Préférences</string>
 	<string name="lbl_line">Ligne</string>
 	<string name="lbl_direction">Direction</string>
 	<string name="lbl_stop">Arrêt</string>
 	<string name="lbl_preview">Aperçu de l\'arrêt</string>
 	<string name="title_activity_add_stop">Ajouter un arrêt</string>
-	<string name="action_add">Ajouter un arrêt</string>
 	<string name="action_ok">Ajouter</string>
 	<string name="action_delete">Supprimer</string>
 	<string name="action_refresh">Rafraîchir</string>
@@ -37,7 +35,6 @@
 	<string name="confirm_delete_success">Succès de la suppression !</string>
 	<string name="cancel_stop_deletion">Annuler</string>
 	<string name="refreshed_stops">Horaires rafraîchis</string>
-	<string name="unknown_line_id" translatable="false">\?</string>
 	<string name="direction_name">→ Dir. %1$s</string>
 	<string name="stop_name">Arrêt %1$s</string>
 	<string name="error_toast">Erreur : %1$s</string>
@@ -62,5 +59,13 @@
 	<string name="drawer_item_news">Actualités</string>
 	<string name="drawer_item_pricing">Tarifs</string>
 	<string name="drawer_item_preferences">Paramètres</string>
+
+	<string name="stop_ref_update_message_title">Arrêts obsolètes</string>
+	<string name="stop_ref_update_message_body">On dirait que %1$s des arrêts que vous avez ajoutés doi(ven)t être mis à jour. Souhaitez-vous le faire maintenant ?\nSi vous refusez, on vous le redemandera la prochaine fois que vous lancerez Twistoast.</string>
+	<string name="stop_ref_update_message_positive">Mettre à jour</string>
+	<string name="stop_ref_update_message_negative">Plus tard</string>
+	<string name="stop_ref_update_progress_title">Mise à jour des références des arrêts...</string>
+	<string name="stop_ref_update_error_text">Erreur lors de la mise à jour.</string>
+	<string name="error_retry">Retry</string>
 
 </resources>

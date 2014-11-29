@@ -199,7 +199,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 							} else {
 								Snackbar.with(getContext())
 										.text(R.string.loading_error)
-										.actionLabel("Retry")
+										.actionLabel(R.string.error_retry)
 										.actionColorResource(R.color.colorAccent)
 										.actionListener(new ActionClickListener() {
 

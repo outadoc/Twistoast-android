@@ -187,7 +187,7 @@ public class AddStopActivity extends ActionBarActivity {
 			@Override
 			public void onItemSelected(AdapterView<?> parentView, View view, int position, long id) {
 				// set loading labels
-				lbl_line.setText(getResources().getString(R.string.unknown_line_id));
+				lbl_line.setText("");
 				lbl_direction.setText(getResources().getString(R.string.loading_data));
 				lbl_stop.setText(getResources().getString(R.string.loading_data));
 
@@ -458,7 +458,7 @@ public class AddStopActivity extends ActionBarActivity {
 				} else {
 					Snackbar.with(AddStopActivity.this)
 							.text(R.string.loading_error)
-							.actionLabel("Retry")
+							.actionLabel(R.string.error_retry)
 							.actionColorResource(R.color.colorAccent)
 							.actionListener(new ActionClickListener() {
 
