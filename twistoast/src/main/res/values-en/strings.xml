@@ -59,5 +59,12 @@
 	<string name="drawer_item_news">News</string>
 	<string name="drawer_item_pricing">Pricing</string>
 	<string name="drawer_item_preferences">Preferences</string>
+	<string name="stop_ref_update_message_title">Outdated stops</string>
+	<string name="stop_ref_update_message_body">It looks like %1$s of the stops you added need(s) to be updated. Would you like to do this now?\nIf you refuse, we won't ask you until the next time you start Twistoast.</string>
+	<string name="stop_ref_update_message_positive">Do it!</string>
+	<string name="stop_ref_update_message_negative">Later</string>
+	<string name="stop_ref_update_progress_title">Updating stop references...</string>
+	<string name="stop_ref_update_error_text">Error while updating the stops references.</string>
+	<string name="error_retry">Retry</string>
 
 </resources>
