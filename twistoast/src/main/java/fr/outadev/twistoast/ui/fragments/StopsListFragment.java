@@ -60,8 +60,8 @@ import fr.outadev.twistoast.ui.activities.MainActivity;
 
 public class StopsListFragment extends Fragment implements IStopsListContainer {
 
-	//Refresh automatically every 50 seconds. Should be enough to let the screen turn off by itself.
-	private final long REFRESH_INTERVAL = 50000L;
+	//Refresh automatically every 60 seconds.
+	private final long REFRESH_INTERVAL = 60000L;
 
 	private final Handler periodicRefreshHandler = new Handler();
 	private Runnable periodicRefreshRunnable;
