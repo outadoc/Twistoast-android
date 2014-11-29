@@ -55,7 +55,7 @@
 	<string name="drawer_item_map">Network Map</string>
 	<string name="drawer_item_traffic">Traffic Info</string>
 	<string name="drawer_item_news">News</string>
-	<string name="drawer_item_pricing">Pricing</string>+
+	<string name="drawer_item_pricing">Pricing</string>
 	<string name="drawer_item_preferences">Preferences</string>
 	<string name="stop_ref_update_message_title">Outdated stops</string>
 	<string name="stop_ref_update_message_body">It looks like %1$s of the stops you added need(s) to be updated. Would you like to do this now?\nIf you refuse, we won\'t ask you until the next time you start Twistoast.</string>
