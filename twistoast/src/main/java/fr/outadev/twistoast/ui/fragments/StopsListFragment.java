@@ -62,6 +62,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 	private final long REFRESH_INTERVAL = 60000L;
 	private final Handler periodicRefreshHandler = new Handler();
+	private Runnable periodicRefreshRunnable;
 
 	private ListView listView;
 	private SwipeRefreshLayout swipeRefreshLayout;
@@ -70,14 +71,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 	private TwistoastDatabase databaseHandler;
 	private StopsListArrayAdapter listAdapter;
 	private boolean autoRefresh;
-	private final Runnable periodicRefreshRunnable = new Runnable() {
-		@Override
-		public void run() {
-			if(autoRefresh) {
-				refreshListFromDB(false);
-			}
-		}
-	};
+
 	private boolean isRefreshing;
 	private boolean isInBackground;
 	private boolean wasRefUpdateDialogShow;
@@ -98,6 +92,15 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 		setHasOptionsMenu(true);
 
 		databaseHandler = new TwistoastDatabase(getActivity());
+
+		periodicRefreshRunnable = new Runnable() {
+			@Override
+			public void run() {
+				if(autoRefresh) {
+					refreshListFromDB(false);
+				}
+			}
+		};
 
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
 		autoRefresh = sharedPref.getBoolean("pref_auto_refresh", true);
