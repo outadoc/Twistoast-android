@@ -32,7 +32,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -62,18 +61,16 @@ import fr.outadev.twistoast.ui.activities.MainActivity;
 public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 	private final long REFRESH_INTERVAL = 60000L;
-	private final Handler handler = new Handler();
+	private final Handler periodicRefreshHandler = new Handler();
+
 	private ListView listView;
 	private SwipeRefreshLayout swipeRefreshLayout;
-	private MenuItem menuItemRefresh;
 	private View noContentView;
-	private FloatingActionButton fab;
 
 	private TwistoastDatabase databaseHandler;
 	private StopsListArrayAdapter listAdapter;
-
 	private boolean autoRefresh;
-	private final Runnable runnable = new Runnable() {
+	private final Runnable periodicRefreshRunnable = new Runnable() {
 		@Override
 		public void run() {
 			if(autoRefresh) {
@@ -81,9 +78,10 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 			}
 		}
 	};
-
 	private boolean isRefreshing;
 	private boolean isInBackground;
+	private boolean wasRefUpdateDialogShow;
+	private boolean isRefUpdateDialogVisible;
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -106,6 +104,12 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 		isRefreshing = false;
 		isInBackground = false;
+		wasRefUpdateDialogShow = false;
+		isRefUpdateDialogVisible = false;
+
+		if(savedInstanceState != null) {
+			wasRefUpdateDialogShow = savedInstanceState.getBoolean("shown_ref_update_dialog");
+		}
 	}
 
 	@Override
@@ -129,7 +133,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 		listView = (ListView) view.findViewById(R.id.stops_list);
 		noContentView = view.findViewById(R.id.view_no_content);
-		fab = (FloatingActionButton) view.findViewById(R.id.fab);
+		FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
 
 		SwipeDismissListViewTouchListener touchListener = new SwipeDismissListViewTouchListener(listView,
 				new SwipeDismissListViewTouchListener.DismissCallbacks() {
@@ -245,12 +249,18 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 	}
 
 	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putBoolean("shown_ref_update_dialog", wasRefUpdateDialogShow);
+	}
+
+	@Override
 	public void onPause() {
 		super.onPause();
 		// when the activity is pausing, stop refreshing automatically
 		Log.i(Utils.TAG, "stopping automatic refresh, app paused");
 		isInBackground = true;
-		handler.removeCallbacks(runnable);
+		periodicRefreshHandler.removeCallbacks(periodicRefreshRunnable);
 	}
 
 	public void refreshListFromDB(boolean resetList) {
@@ -264,10 +274,6 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 		// show the refresh animation
 		swipeRefreshLayout.setRefreshing(true);
-
-		if(menuItemRefresh != null) {
-			menuItemRefresh.setEnabled(false);
-		}
 
 		// we have to reset the adapter so it correctly loads the stops
 		// if we don't do that, bugs will appear when the database has been
@@ -288,18 +294,14 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 		isRefreshing = false;
 		swipeRefreshLayout.setRefreshing(false);
 
-		if(menuItemRefresh != null) {
-			menuItemRefresh.setEnabled(true);
-		}
-
 		noContentView.setVisibility((listAdapter.isEmpty()) ? View.VISIBLE : View.GONE);
 
 		// reset the timer loop, and start it again
 		// this ensures the list is refreshed automatically every 60 seconds
-		handler.removeCallbacks(runnable);
+		periodicRefreshHandler.removeCallbacks(periodicRefreshRunnable);
 
 		if(!isInBackground) {
-			handler.postDelayed(runnable, REFRESH_INTERVAL);
+			periodicRefreshHandler.postDelayed(periodicRefreshRunnable, REFRESH_INTERVAL);
 		}
 
 		if(success) {
@@ -311,7 +313,9 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 			int mismatch = listAdapter.checkSchedulesMismatchCount();
 
-			if(mismatch > 0) {
+			if(mismatch > 0 && !isRefUpdateDialogVisible && !wasRefUpdateDialogShow) {
+				isRefUpdateDialogVisible = true;
+
 				(new AlertDialog.Builder(getActivity()))
 						.setTitle("Outdated stops")
 						.setMessage("It looks like " + mismatch + " of the stops you added need(s) to be updated. Would you " +
@@ -321,11 +325,20 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
 								//update the stop references...
+								isRefUpdateDialogVisible = false;
 								(new ReferenceUpdateTask()).execute();
 							}
 
 						})
-						.setNegativeButton("Later", null)
+						.setNegativeButton("Later", new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								isRefUpdateDialogVisible = false;
+								wasRefUpdateDialogShow = true;
+							}
+
+						})
 						.create().show();
 			}
 		}
