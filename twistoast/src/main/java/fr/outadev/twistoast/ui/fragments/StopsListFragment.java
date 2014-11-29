@@ -150,8 +150,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 					@Override
 					public void onDismiss(ListView listView, int[] reverseSortedPositions) {
-						int position = reverseSortedPositions[0];
-
+						final int position = reverseSortedPositions[0];
 						final TimeoStop stopToDelete = listAdapter.getItem(position);
 
 						databaseHandler.deleteStop(stopToDelete);
@@ -174,7 +173,8 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 									public void onActionClicked() {
 										Log.i(Utils.TAG, "restoring stop " + stopToDelete);
 										databaseHandler.addStopToDatabase(stopToDelete);
-										refreshAllStopSchedules(true);
+										listAdapter.insert(stopToDelete, position);
+										listAdapter.notifyDataSetChanged();
 									}
 
 								})
