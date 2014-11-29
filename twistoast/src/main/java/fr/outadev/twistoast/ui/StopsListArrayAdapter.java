@@ -23,6 +23,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,6 +46,7 @@ import fr.outadev.android.timeo.model.TimeoStop;
 import fr.outadev.android.timeo.model.TimeoStopSchedule;
 import fr.outadev.twistoast.IStopsListContainer;
 import fr.outadev.twistoast.R;
+import fr.outadev.twistoast.Utils;
 import fr.outadev.twistoast.database.TwistoastDatabase;
 
 /**
@@ -70,7 +72,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 		this.activity = activity;
 		this.stops = stops;
 		this.stopsListContainer = stopsListContainer;
-		this.schedules = new HashMap<TimeoStop, TimeoStopSchedule>();
+		this.schedules = new HashMap<>();
 		this.networks = TimeoRequestHandler.getNetworksList();
 		this.networkCount = (new TwistoastDatabase(getContext())).getNetworksCount();
 	}
@@ -128,25 +130,30 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 		view_schedule_container.setVisibility(View.GONE);
 
 		//add the new schedules one by one
-		if(schedules.containsKey(currentItem) && schedules.get(currentItem) != null && schedules.get
-				(currentItem).getSchedules() != null) {
-			List<TimeoSingleSchedule> currScheds = schedules.get(currentItem).getSchedules();
+		if(schedules.containsKey(currentItem) && schedules.get(currentItem) != null) {
+			if(schedules.get(currentItem).getSchedules() != null) {
+				List<TimeoSingleSchedule> currScheds = schedules.get(currentItem).getSchedules();
 
-			for(TimeoSingleSchedule currSched : currScheds) {
-				View singleScheduleView = inflater.inflate(R.layout.single_schedule_label, null);
+				for(TimeoSingleSchedule currSched : currScheds) {
+					View singleScheduleView = inflater.inflate(R.layout.single_schedule_label, null);
 
-				TextView lbl_schedule_time = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule);
-				TextView lbl_schedule_direction = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule_direction);
+					TextView lbl_schedule_time = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule);
+					TextView lbl_schedule_direction = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule_direction);
 
-				lbl_schedule_time.setText(currSched.getFormattedTime(getContext()));
-				lbl_schedule_direction.setText(" — " + currSched.getDirection());
+					lbl_schedule_time.setText(currSched.getFormattedTime(getContext()));
+					lbl_schedule_direction.setText(" — " + currSched.getDirection());
 
-				view_schedule_container.addView(singleScheduleView);
+					view_schedule_container.addView(singleScheduleView);
+				}
+
+				if(currScheds.size() > 0) {
+					view_schedule_container.setVisibility(View.VISIBLE);
+				}
 			}
-
-			if(currScheds.size() > 0) {
-				view_schedule_container.setVisibility(View.VISIBLE);
-			}
+		} else {
+			//if we can't find the schedules we asked for in the hashmap, something went wrong. :c
+			Log.e(Utils.TAG, "missing stop schedule for " + currentItem + " (ref=" + currentItem.getReference() + "); ref " +
+					"outdated?");
 		}
 
 		view_traffic_message.setOnClickListener(new OnClickListener() {
