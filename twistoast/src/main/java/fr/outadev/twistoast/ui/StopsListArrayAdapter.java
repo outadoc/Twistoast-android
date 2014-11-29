@@ -21,9 +21,9 @@ package fr.outadev.twistoast.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.util.SparseArray;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -111,16 +111,10 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 		}*/
 
 		// line
-		view_line_id.setBackgroundColor(Color.parseColor(currentItem.getLine().getColor()));
-		lbl_line.setText(currentItem.getLine().getId());
+		GradientDrawable lineDrawable = (GradientDrawable) view_line_id.getBackground();
+		lineDrawable.setColor(Color.parseColor(currentItem.getLine().getColor()));
 
-		if(lbl_line.getText().length() > 3) {
-			lbl_line.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-		} else if(lbl_line.getText().length() > 2) {
-			lbl_line.setTextSize(TypedValue.COMPLEX_UNIT_SP, 23);
-		} else {
-			lbl_line.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
-		}
+		lbl_line.setText(currentItem.getLine().getId());
 
 		// stop
 		lbl_stop.setText(getContext().getResources().getString(R.string.stop_name, currentItem.getName()));
@@ -144,8 +138,8 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 				TextView lbl_schedule_time = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule);
 				TextView lbl_schedule_direction = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule_direction);
 
-				lbl_schedule_time.setText("- " + currSched.getFormattedTime(getContext()));
-				lbl_schedule_direction.setText(" → " + currSched.getDirection());
+				lbl_schedule_time.setText(currSched.getFormattedTime(getContext()));
+				lbl_schedule_direction.setText(" — " + currSched.getDirection());
 
 				view_schedule_container.addView(singleScheduleView);
 			}
