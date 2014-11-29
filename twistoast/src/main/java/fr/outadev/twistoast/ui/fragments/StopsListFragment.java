@@ -18,6 +18,7 @@
 
 package fr.outadev.twistoast.ui.fragments;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -286,14 +287,6 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 			menuItemRefresh.setEnabled(true);
 		}
 
-		if(success) {
-			Log.i(Utils.TAG, "refreshed, " + listAdapter.getCount() + " stops in db");
-
-			if(getActivity() != null && !listAdapter.isEmpty()) {
-				Toast.makeText(getActivity(), getResources().getString(R.string.refreshed_stops), Toast.LENGTH_SHORT).show();
-			}
-		}
-
 		noContentView.setVisibility((listAdapter.isEmpty()) ? View.VISIBLE : View.GONE);
 
 		// reset the timer loop, and start it again
@@ -302,6 +295,23 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 		if(!isInBackground) {
 			handler.postDelayed(runnable, REFRESH_INTERVAL);
+		}
+
+		if(success) {
+			Log.i(Utils.TAG, "refreshed, " + listAdapter.getCount() + " stops in db");
+
+			if(getActivity() != null && !listAdapter.isEmpty()) {
+				Toast.makeText(getActivity(), getResources().getString(R.string.refreshed_stops), Toast.LENGTH_SHORT).show();
+			}
+
+			int mismatch = listAdapter.checkSchedulesMismatchCount();
+
+			if(mismatch > 0) {
+				(new AlertDialog.Builder(getActivity()))
+						.setTitle("Error")
+						.setMessage("Woops, mismatch=" + mismatch)
+						.create().show();
+			}
 		}
 	}
 

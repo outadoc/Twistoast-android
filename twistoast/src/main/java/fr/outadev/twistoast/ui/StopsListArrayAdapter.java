@@ -223,5 +223,18 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 		}).execute();
 	}
 
+	/**
+	 * Check if there's a mismatch between the number of bus stops requested and the
+	 * number of schedules we got back from the API.
+	 *
+	 * @return 0 if everything is okay, otherwise the number of stops we didn't get back the data for.
+	 */
+	public int checkSchedulesMismatchCount() {
+		int delta = stops.size() - schedules.size();
+		if(delta < 0) {
+			throw new RuntimeException("Got more data back from the API than expected.");
+		}
+		return delta;
+	}
 
 }
