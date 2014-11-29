@@ -64,7 +64,7 @@ class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 					"line_id TEXT, " +
 					"dir_id TEXT, " +
 					"stop_name TEXT, " +
-					"stop_ref TEXT, " +
+					"stop_ref TEXT DEFAULT NULL, " +
 					"network_code INTEGER DEFAULT " + TimeoRequestHandler.DEFAULT_NETWORK_CODE + ", " +
 					"PRIMARY KEY(stop_id, line_id, dir_id, network_code), " +
 					"FOREIGN KEY(dir_id, line_id, network_code) REFERENCES twi_direction(dir_id, line_id, network_code));";
@@ -111,13 +111,11 @@ class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 
 		try {
 			db_upgrade = getV2UpgradeDatabase();
-
 			Cursor linesCur = db_upgrade.rawQuery("SELECT * FROM twi_v2_line", null);
-			Cursor stopsCur = db_upgrade.rawQuery("SELECT * FROM twi_v2_stop", null);
 
-			//upgrade tables
+			//upgrade tables by adding the required columns
 			db.execSQL("ALTER TABLE twi_line ADD COLUMN line_color TEXT");
-			db.execSQL("ALTER TABLE twi_stop ADD COLUMN stop_ref TEXT");
+			db.execSQL("ALTER TABLE twi_stop ADD COLUMN stop_ref TEXT DEFAULT NULL");
 
 			db.execSQL("ALTER TABLE twi_line ADD COLUMN network_code INTEGER DEFAULT " + TimeoRequestHandler
 					.DEFAULT_NETWORK_CODE);
@@ -127,7 +125,7 @@ class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 					.DEFAULT_NETWORK_CODE);
 
 
-			// while there's a stop available
+			//set the colour of the lines using the old database
 			while(linesCur.moveToNext()) {
 				db.execSQL("UPDATE twi_line SET line_color = ? WHERE line_id = ?",
 						new Object[]{linesCur.getString(linesCur.getColumnIndex("line_color")),
@@ -136,26 +134,20 @@ class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 
 			linesCur.close();
 
-			while(stopsCur.moveToNext()) {
-				db.execSQL("UPDATE twi_stop SET stop_ref = ? WHERE line_id = ? AND dir_id = ? AND stop_id = ?",
-						new Object[]{stopsCur.getString(stopsCur.getColumnIndex("stop_ref")),
-								stopsCur.getString(stopsCur.getColumnIndex("line_id")),
-								stopsCur.getString(stopsCur.getColumnIndex("dir_id")),
-								stopsCur.getString(stopsCur.getColumnIndex("stop_id"))});
-			}
-
-			stopsCur.close();
-
+			//move the old tables to old_*
 			db.execSQL("ALTER TABLE twi_stop RENAME TO old_twi_stop");
 			db.execSQL("ALTER TABLE twi_direction RENAME TO old_twi_direction");
 			db.execSQL("ALTER TABLE twi_line RENAME TO old_twi_line");
 
+			//create the new tables
 			onCreate(db);
 
+			//copy the data from the old tables to the new ones
 			db.execSQL("INSERT INTO twi_line SELECT * FROM old_twi_line");
 			db.execSQL("INSERT INTO twi_direction SELECT * FROM old_twi_direction");
 			db.execSQL("INSERT INTO twi_stop SELECT * FROM old_twi_stop");
 
+			//delete the old tables
 			db.execSQL("DROP TABLE old_twi_stop");
 			db.execSQL("DROP TABLE old_twi_direction");
 			db.execSQL("DROP TABLE old_twi_line");

@@ -388,7 +388,9 @@ public abstract class TimeoRequestHandler {
 		}
 
 		for(TimeoStop stop : stops) {
-			refs += stop.getReference() + ";";
+			if(stop.getReference() != null) {
+				refs += stop.getReference() + ";";
+			}
 		}
 
 		refs = refs.substring(0, refs.length() - 1);
