@@ -28,8 +28,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +39,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.melnykov.fab.FloatingActionButton;
 
 import fr.outadev.twistoast.IStopsListContainer;
 import fr.outadev.twistoast.R;
@@ -59,8 +58,11 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 	private SwipeRefreshLayout swipeRefreshLayout;
 	private MenuItem menuItemRefresh;
 	private View noContentView;
+	private FloatingActionButton fab;
+
 	private TwistoastDatabase databaseHandler;
 	private StopsListArrayAdapter listAdapter;
+
 	private boolean autoRefresh;
 	private final Runnable runnable = new Runnable() {
 		@Override
@@ -70,6 +72,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 			}
 		}
 	};
+
 	private boolean isRefreshing;
 	private boolean isInBackground;
 
@@ -117,6 +120,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 		listView = (ListView) view.findViewById(R.id.stops_list);
 		noContentView = view.findViewById(R.id.view_no_content);
+		fab = (FloatingActionButton) view.findViewById(R.id.fab);
 
 		SwipeDismissListViewTouchListener touchListener = new SwipeDismissListViewTouchListener(listView,
 				new SwipeDismissListViewTouchListener.DismissCallbacks() {
@@ -145,6 +149,18 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 		listView.setOnTouchListener(touchListener);
 		listView.setOnScrollListener(touchListener.makeScrollListener());
+
+		fab.attachToListView(listView);
+
+		fab.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getActivity(), AddStopActivity.class);
+				startActivityForResult(intent, 0);
+			}
+
+		});
 
 		return view;
 	}
@@ -177,8 +193,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 				if(hasGPS == ConnectionResult.SUCCESS) {
 					AdRequest adRequest = new AdRequest.Builder()
-							.addTestDevice("4A75A651AD45105DB97E1E0ECE162D0B")
-							.addTestDevice("29EBDB460C20FD273BADF028945C56E2").build();
+							.addTestDevice("1176AD77C8CCAB0BE044FA12ACD473B0").build();
 					adView.loadAd(adRequest);
 				}
 			} else {
@@ -206,33 +221,6 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 		Log.i(Utils.TAG, "stopping automatic refresh, app paused");
 		isInBackground = true;
 		handler.removeCallbacks(runnable);
-	}
-
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		inflater.inflate(R.menu.main, menu);
-		menuItemRefresh = menu.findItem(R.id.action_refresh);
-
-		super.onCreateOptionsMenu(menu, inflater);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle presses on the action bar items
-		switch(item.getItemId()) {
-			case R.id.action_add: {
-				Intent intent = new Intent(getActivity(), AddStopActivity.class);
-				startActivityForResult(intent, 0);
-				return true;
-			}
-			case R.id.action_refresh:
-				// refresh the list
-				refreshListFromDB(false);
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
-		}
 	}
 
 	public void refreshListFromDB(boolean resetList) {

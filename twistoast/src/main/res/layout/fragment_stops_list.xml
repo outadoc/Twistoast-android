@@ -21,6 +21,7 @@
 	android:id="@+id/main_lin_layout"
 	xmlns:ads="http://schemas.android.com/apk/res-auto"
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:fab="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:background="@color/main_background_color"
@@ -30,24 +31,42 @@
 
 	<include layout="@layout/no_content_view" />
 
-	<android.support.v4.widget.SwipeRefreshLayout
-		android:id="@+id/ptr_layout"
+	<RelativeLayout
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
 		android:layout_weight="1">
 
-		<ListView
-			android:id="@+id/stops_list"
+		<android.support.v4.widget.SwipeRefreshLayout
+			android:id="@+id/ptr_layout"
 			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:cacheColorHint="@android:color/transparent"
-			android:clipToPadding="false"
-			android:divider="@null"
-			android:listSelector="@android:color/transparent"
-			android:paddingBottom="5dp"
-			android:paddingTop="5dp" />
+			android:layout_height="match_parent">
 
-	</android.support.v4.widget.SwipeRefreshLayout>
+			<ListView
+				android:id="@+id/stops_list"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:cacheColorHint="@android:color/transparent"
+				android:clipToPadding="false"
+				android:divider="@null"
+				android:listSelector="@android:color/transparent"
+				android:paddingBottom="5dp"
+				android:paddingTop="5dp" />
+
+		</android.support.v4.widget.SwipeRefreshLayout>
+
+		<com.melnykov.fab.FloatingActionButton
+			android:id="@+id/fab"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentBottom="true"
+			android:layout_alignParentRight="true"
+			android:layout_margin="16dp"
+			android:src="@drawable/ic_action_new"
+			fab:fab_colorNormal="@color/primary"
+			fab:fab_colorPressed="@color/primary_pressed"
+			fab:fab_colorRipple="@color/ripple" />
+
+	</RelativeLayout>
 
 	<com.google.android.gms.ads.AdView
 		android:id="@+id/adView"
