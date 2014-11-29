@@ -40,7 +40,10 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.melnykov.fab.FloatingActionButton;
+import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.listeners.ActionClickListener;
 
+import fr.outadev.android.timeo.model.TimeoStop;
 import fr.outadev.twistoast.IStopsListContainer;
 import fr.outadev.twistoast.R;
 import fr.outadev.twistoast.Utils;
@@ -132,17 +135,35 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 					@Override
 					public void onDismiss(ListView listView, int[] reverseSortedPositions) {
-						for(int position : reverseSortedPositions) {
-							databaseHandler.deleteStop(listAdapter.getItem(position));
-							listAdapter.remove(listAdapter.getItem(position));
-						}
+						int position = reverseSortedPositions[0];
+
+						final TimeoStop stopToDelete = listAdapter.getItem(position);
+
+						databaseHandler.deleteStop(stopToDelete);
+						listAdapter.remove(stopToDelete);
 
 						if(listAdapter.isEmpty()) {
 							noContentView.setVisibility(View.VISIBLE);
 						}
 
 						listAdapter.notifyDataSetChanged();
-						Toast.makeText(getActivity(), R.string.confirm_delete_success, Toast.LENGTH_SHORT).show();
+
+						Snackbar.with(getActivity())
+								.text(R.string.confirm_delete_success)
+								.actionLabel(R.string.cancel_stop_deletion)
+								.actionColorResource(R.color.colorAccent)
+								.attachToAbsListView(listView)
+								.actionListener(new ActionClickListener() {
+
+									@Override
+									public void onActionClicked() {
+										Log.i(Utils.TAG, "restoring stop " + stopToDelete);
+										databaseHandler.addStopToDatabase(stopToDelete);
+										refreshListFromDB(true);
+									}
+
+								})
+								.show(getActivity());
 					}
 
 				});
