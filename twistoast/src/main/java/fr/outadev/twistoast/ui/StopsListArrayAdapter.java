@@ -46,8 +46,8 @@ import fr.outadev.android.timeo.model.TimeoBlockingMessageException;
 import fr.outadev.android.timeo.model.TimeoSingleSchedule;
 import fr.outadev.android.timeo.model.TimeoStop;
 import fr.outadev.android.timeo.model.TimeoStopSchedule;
-import fr.outadev.twistoast.IStopsListContainer;
 import fr.outadev.twistoast.R;
+import fr.outadev.twistoast.StopsListContainer;
 import fr.outadev.twistoast.Utils;
 import fr.outadev.twistoast.database.TwistoastDatabase;
 
@@ -58,7 +58,7 @@ import fr.outadev.twistoast.database.TwistoastDatabase;
  */
 public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 
-	private final IStopsListContainer stopsListContainer;
+	private final StopsListContainer stopsListContainer;
 	private final Activity activity;
 
 	private final List<TimeoStop> stops;
@@ -68,7 +68,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 	private int networkCount = 0;
 
 	public StopsListArrayAdapter(Activity activity, int resource, List<TimeoStop> stops,
-	                             IStopsListContainer stopsListContainer) {
+	                             StopsListContainer stopsListContainer) {
 		super(activity, resource, stops);
 
 		this.activity = activity;

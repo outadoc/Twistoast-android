@@ -43,8 +43,8 @@ import java.util.List;
 
 import fr.outadev.android.timeo.TimeoRequestHandler;
 import fr.outadev.android.timeo.model.TimeoTrafficAlert;
-import fr.outadev.twistoast.IStopsListContainer;
 import fr.outadev.twistoast.R;
+import fr.outadev.twistoast.StopsListContainer;
 import fr.outadev.twistoast.Utils;
 import fr.outadev.twistoast.ui.drawer.NavDrawerArrayAdapter;
 import fr.outadev.twistoast.ui.drawer.NavigationDrawerFragmentItem;
@@ -61,7 +61,7 @@ import fr.outadev.twistoast.ui.fragments.WebViewFragment;
  *
  * @author outadoc
  */
-public class MainActivity extends ActionBarActivity implements IStopsListContainer {
+public class MainActivity extends ActionBarActivity implements StopsListContainer {
 
 	private List<NavigationDrawerItem> drawerItems;
 	private DrawerLayout drawerLayout;

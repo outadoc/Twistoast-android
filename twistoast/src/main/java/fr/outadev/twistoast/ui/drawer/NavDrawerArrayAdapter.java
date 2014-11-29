@@ -31,8 +31,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import fr.outadev.twistoast.IStopsListContainer;
 import fr.outadev.twistoast.R;
+import fr.outadev.twistoast.StopsListContainer;
 
 /**
  * An array adapter for the navigation drawer.
@@ -44,10 +44,10 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<NavigationDrawerItem> {
 	private static final int TYPE_NORMAL = 0;
 	private static final int TYPE_SECONDARY = 1;
 	private static final int TYPE_SEPARATOR = 2;
-	private final IStopsListContainer container;
+	private final StopsListContainer container;
 	private int selectedItemIndex;
 
-	public NavDrawerArrayAdapter(Context context, IStopsListContainer container, int resource,
+	public NavDrawerArrayAdapter(Context context, StopsListContainer container, int resource,
 	                             List<NavigationDrawerItem> objects, int selectedItemIndex) {
 		super(context, resource, objects);
 		this.container = container;

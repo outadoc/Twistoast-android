@@ -49,8 +49,8 @@ import com.nispok.snackbar.listeners.ActionClickListener;
 import fr.outadev.android.timeo.TimeoStopReferenceUpdater;
 import fr.outadev.android.timeo.model.ProgressListener;
 import fr.outadev.android.timeo.model.TimeoStop;
-import fr.outadev.twistoast.IStopsListContainer;
 import fr.outadev.twistoast.R;
+import fr.outadev.twistoast.StopsListContainer;
 import fr.outadev.twistoast.Utils;
 import fr.outadev.twistoast.database.TwistoastDatabase;
 import fr.outadev.twistoast.ui.StopsListArrayAdapter;
@@ -58,7 +58,7 @@ import fr.outadev.twistoast.ui.SwipeDismissListViewTouchListener;
 import fr.outadev.twistoast.ui.activities.AddStopActivity;
 import fr.outadev.twistoast.ui.activities.MainActivity;
 
-public class StopsListFragment extends Fragment implements IStopsListContainer {
+public class StopsListFragment extends Fragment implements StopsListContainer {
 
 	//Refresh automatically every 60 seconds.
 	private final long REFRESH_INTERVAL = 60000L;

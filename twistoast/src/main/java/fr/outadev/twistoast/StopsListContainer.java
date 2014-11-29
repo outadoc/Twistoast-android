@@ -23,7 +23,7 @@ package fr.outadev.twistoast;
  *
  * @author outadoc
  */
-public interface IStopsListContainer {
+public interface StopsListContainer {
 
 	/**
 	 * Called when the list of bus stops is refreshed and the user should be notified.
