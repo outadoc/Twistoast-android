@@ -143,7 +143,7 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 		PebbleDictionary response = new PebbleDictionary();
 
 		response.addInt8(KEY_TWISTOAST_MESSAGE_TYPE, BUS_STOP_DATA_RESPONSE);
-		response.addString(KEY_BUS_LINE_NAME, processStringForPebble(schedule.getStop().getLine().getDetails().getName(), 10));
+		response.addString(KEY_BUS_LINE_NAME, processStringForPebble(schedule.getStop().getLine().getName(), 10));
 		response.addString(KEY_BUS_DIRECTION_NAME, processStringForPebble(schedule.getStop().getLine().getDirection().getName(),
 				15));
 		response.addString(KEY_BUS_STOP_NAME, processStringForPebble(schedule.getStop().getName(), 15));
@@ -155,8 +155,9 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 
 		Calendar scheduleCalendar = ScheduleTime.getNextDateForTime(schedule.getSchedules().get(0).getTime());
 
-		if(ScheduleTime.getTimeDisplayMode(scheduleCalendar) == ScheduleTime.TimeDisplayMode.ARRIVAL_IMMINENT
-				|| ScheduleTime.getTimeDisplayMode(scheduleCalendar) == ScheduleTime.TimeDisplayMode.CURRENTLY_AT_STOP) {
+		if(ScheduleTime.getTimeDisplayMode(scheduleCalendar, context) == ScheduleTime.TimeDisplayMode.ARRIVAL_IMMINENT
+				|| ScheduleTime.getTimeDisplayMode(scheduleCalendar, context) == ScheduleTime.TimeDisplayMode
+				.CURRENTLY_AT_STOP) {
 			response.addInt8(KEY_SHOULD_VIBRATE, (byte) 1);
 		}
 

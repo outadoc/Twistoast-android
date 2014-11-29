@@ -21,12 +21,12 @@
 
 	<color name="colorPrimary">#0171BB</color>
 	<color name="colorPrimaryDark">#ff015ba4</color>
-	<color name="colorAccent">#ff1f8cd3</color>
+	<color name="colorAccent">#00A885</color>
 
 	<color name="item_pressed_color">#e3e3e3</color>
 	<color name="twisto_primary">#00A885</color>
 	<color name="twisto_secondary">#FCB840</color>
-	<color name="main_background_color">#F0F0F0</color>
+	<color name="main_background_color">#FFFFFF</color>
 
 	<color name="traffic_alert_background">#F5A400</color>
 	<color name="traffic_alert_text_primary">#ffffeda9</color>

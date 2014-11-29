@@ -19,6 +19,8 @@
 package fr.outadev.twistoast.ui.drawer;
 
 import android.app.Fragment;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.StringRes;
 
 /**
  * An abstract navigation drawer item.
@@ -28,18 +30,24 @@ import android.app.Fragment;
 public abstract class NavigationDrawerItem {
 
 	private int titleResId;
+	private int iconResId;
 
 	/**
 	 * Creates a new NavigationDrawerItem.
 	 *
 	 * @param titleResId the id of the string resource for the title
 	 */
-	public NavigationDrawerItem(int titleResId) {
+	public NavigationDrawerItem(@DrawableRes int iconResId, @StringRes int titleResId) {
+		this.iconResId = iconResId;
 		this.titleResId = titleResId;
 	}
 
 	public int getTitleResId() {
 		return titleResId;
+	}
+
+	public int getIconResId() {
+		return iconResId;
 	}
 
 	/**

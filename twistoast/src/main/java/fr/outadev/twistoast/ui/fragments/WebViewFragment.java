@@ -34,6 +34,9 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import fr.outadev.twistoast.R;
 
 /**
@@ -45,6 +48,12 @@ public class WebViewFragment extends Fragment {
 	private WebView webView;
 	private MenuItem itemRefresh;
 	private MenuItem itemCancel;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -60,9 +69,9 @@ public class WebViewFragment extends Fragment {
 	}
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setHasOptionsMenu(true);
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putCharSequence("url", webView.getUrl());
 	}
 
 	@Override
@@ -93,12 +102,6 @@ public class WebViewFragment extends Fragment {
 			default:
 				return super.onOptionsItemSelected(item);
 		}
-	}
-
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putCharSequence("url", webView.getUrl());
 	}
 
 	public boolean canGoBack() {
@@ -154,6 +157,13 @@ public class WebViewFragment extends Fragment {
 			getSettings().setBuiltInZoomControls(true);
 			getSettings().setDisplayZoomControls(false);
 			getSettings().setJavaScriptEnabled(true);
+		}
+
+		@Override
+		public void loadUrl(String url) {
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("X-Requested-With", "com.actigraph.twisto.tabbarapp");
+			super.loadUrl(url, map);
 		}
 
 	}

@@ -25,7 +25,7 @@ import fr.outadev.android.timeo.TimeoRequestHandler;
  *
  * @author outadoc
  */
-public class TimeoLine {
+public class TimeoLine implements TimeoIDName {
 
 	private TimeoIDNameObject line;
 	private TimeoIDNameObject direction;
@@ -92,7 +92,55 @@ public class TimeoLine {
 	}
 
 	@Override
+	public String getId() {
+		return line.getId();
+	}
+
+	@Override
+	public void setId(String id) {
+		line.setId(id);
+	}
+
+	@Override
+	public String getName() {
+		return line.getName();
+	}
+
+	@Override
+	public void setName(String name) {
+		line.setName(name);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if(this == o) {
+			return true;
+		}
+
+		if(o == null || getClass() != o.getClass()) {
+			return false;
+		}
+
+		TimeoLine timeoLine = (TimeoLine) o;
+
+		if(networkCode != timeoLine.networkCode) {
+			return false;
+		}
+
+		if(direction != null ? !direction.equals(timeoLine.direction) : timeoLine.direction != null) {
+			return false;
+		}
+
+		if(line != null ? !line.equals(timeoLine.line) : timeoLine.line != null) {
+			return false;
+		}
+
+		return true;
+	}
+
+	@Override
 	public String toString() {
 		return line.getName();
 	}
+
 }

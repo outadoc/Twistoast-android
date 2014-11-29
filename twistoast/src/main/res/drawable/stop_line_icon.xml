@@ -1,5 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Twistoast - main.xml
+  ~ Twistoast - stop_line_icon.xml
   ~ Copyright (C) 2013-2014  Baptiste Candellier
   ~
   ~ This program is free software: you can redistribute it and/or modify
@@ -16,18 +17,11 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+<shape
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:shape="oval">
 
-	<item
-		android:id="@+id/action_refresh"
-		android:icon="@drawable/ic_action_refresh"
-		android:title="@string/action_refresh"
-		app:showAsAction="ifRoom" />
-	<item
-		android:id="@+id/action_add"
-		android:icon="@drawable/ic_action_new"
-		android:title="@string/action_add"
-		app:showAsAction="ifRoom" />
+	<solid
+		android:color="#ffbebab3" />
 
-</menu>
+</shape>

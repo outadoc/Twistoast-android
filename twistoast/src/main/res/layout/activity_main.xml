@@ -18,32 +18,40 @@
   -->
 
 <LinearLayout
-	android:orientation="vertical"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent">
-
-	<include layout="@layout/toolbar" />
+	android:layout_height="match_parent"
+	android:orientation="vertical">
 
 	<android.support.v4.widget.DrawerLayout
 		android:id="@+id/drawer_layout"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent">
 
-		<FrameLayout
-			android:id="@+id/content_frame"
+		<LinearLayout
 			android:layout_width="match_parent"
-			android:layout_height="match_parent" />
+			android:layout_height="match_parent"
+			android:orientation="vertical">
+
+			<include layout="@layout/toolbar" />
+
+			<FrameLayout
+				android:id="@+id/content_frame"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent" />
+
+		</LinearLayout>
 
 		<ListView
 			android:id="@+id/left_drawer"
-			android:layout_width="260dp"
+			android:layout_width="@dimen/material_drawer_width"
 			android:layout_height="match_parent"
 			android:layout_gravity="start"
-			android:background="#F7F7F7"
+			android:background="@android:color/white"
 			android:choiceMode="singleChoice"
 			android:divider="@android:color/transparent"
-			android:dividerHeight="0dp" />
+			android:dividerHeight="0dp"
+			android:paddingTop="10dp" />
 
 	</android.support.v4.widget.DrawerLayout>
 </LinearLayout>

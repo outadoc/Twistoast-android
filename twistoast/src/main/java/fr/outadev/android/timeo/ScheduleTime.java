@@ -19,6 +19,7 @@
 package fr.outadev.android.timeo;
 
 import android.content.Context;
+import android.preference.PreferenceManager;
 
 import java.util.Calendar;
 import java.util.TimeZone;
@@ -36,10 +37,6 @@ public abstract class ScheduleTime {
 	private final static int IMMINENT_THRESHOLD_MINUTES = 1;
 	private final static int COUNTDOWN_THRESHOLD_MINUTES = 45;
 
-	public enum TimeDisplayMode {
-		CURRENTLY_AT_STOP, ARRIVAL_IMMINENT, COUNTDOWN, FULL
-	}
-
 	/**
 	 * Formats a date into a more user-friendly fashion.
 	 * It converts the time parameter to a string that is either this time, a countdown to this time,
@@ -53,7 +50,7 @@ public abstract class ScheduleTime {
 	public static String formatDate(Context context, String time) {
 		Calendar schedule = getNextDateForTime(time);
 
-		switch(getTimeDisplayMode(schedule)) {
+		switch(getTimeDisplayMode(schedule, context)) {
 			case CURRENTLY_AT_STOP:
 				return context.getString(R.string.schedule_time_currently_at_stop);
 			case ARRIVAL_IMMINENT:
@@ -97,8 +94,12 @@ public abstract class ScheduleTime {
 	 * @param schedule the time at which the bus will arrive
 	 * @return a TimeDisplayMode constant to tell you the right mode
 	 */
-	public static TimeDisplayMode getTimeDisplayMode(Calendar schedule) {
+	public static TimeDisplayMode getTimeDisplayMode(Calendar schedule, Context context) {
 		long offset = getMinutesUntilBus(schedule);
+
+		if(!PreferenceManager.getDefaultSharedPreferences(context).getBoolean("pref_relative_time", true)) {
+			return TimeDisplayMode.FULL;
+		}
 
 		if(offset <= 0) {
 			return TimeDisplayMode.CURRENTLY_AT_STOP;
@@ -141,6 +142,10 @@ public abstract class ScheduleTime {
 
 	private static Calendar getCurrentTime() {
 		return Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
+	}
+
+	public enum TimeDisplayMode {
+		CURRENTLY_AT_STOP, ARRIVAL_IMMINENT, COUNTDOWN, FULL
 	}
 
 }

@@ -18,6 +18,8 @@
 
 package fr.outadev.twistoast.ui.drawer;
 
+import android.support.annotation.StringRes;
+
 /**
  * A secondary navigation drawer item.
  * Useful for pages like preferences or help.
@@ -32,8 +34,8 @@ public class NavigationDrawerSecondaryItem extends NavigationDrawerFragmentItem 
 	 * @param titleResId         the id of the string resource for the title
 	 * @param classToInstantiate the Class object of the Fragment to return with getFragment
 	 */
-	public NavigationDrawerSecondaryItem(int titleResId, Class classToInstantiate) {
-		super(titleResId, classToInstantiate);
+	public NavigationDrawerSecondaryItem(@StringRes int titleResId, Class classToInstantiate) {
+		super(-1, titleResId, classToInstantiate);
 	}
 
 }

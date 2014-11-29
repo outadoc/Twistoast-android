@@ -286,7 +286,7 @@ public abstract class TimeoRequestHandler {
 	@NonNull
 	public static List<TimeoStop> getStops(int networkCode, TimeoLine line) throws HttpRequestException, XmlPullParserException,
 			IOException, TimeoException {
-		String params = "xml=1&ligne=" + line.getDetails().getId() + "&sens=" + line.getDirection().getId();
+		String params = "xml=1&ligne=" + line.getId() + "&sens=" + line.getDirection().getId();
 		String result = requestWebPage(API_BASE_URL + getPageNameForNetworkCode(networkCode), params, true);
 
 		XmlPullParser parser = getParserForXMLString(result);
@@ -384,7 +384,7 @@ public abstract class TimeoRequestHandler {
 		String refs = "";
 
 		if(stops.isEmpty()) {
-			return new ArrayList<TimeoStopSchedule>();
+			return new ArrayList<>();
 		}
 
 		for(TimeoStop stop : stops) {
@@ -408,6 +408,9 @@ public abstract class TimeoRequestHandler {
 		TimeoSingleSchedule tmpSingleSchedule = null;
 		//temporary blocking exception, in case we meet a blocking network message
 		TimeoBlockingMessageException tmpBlockingException = null;
+
+		String tmpLineId = null;
+		String tmpStopId = null;
 
 		String text = null;
 
@@ -433,7 +436,26 @@ public abstract class TimeoRequestHandler {
 
 				case XmlPullParser.END_TAG:
 					if(tmpSchedule != null && tagname.equals("code")) {
-						tmpSchedule.setStop(stops.get(schedules.size()));
+						tmpStopId = text;
+					} else if(tmpSchedule != null && tagname.equals("ligne")) {
+						tmpLineId = text;
+					} else if(tmpSchedule != null && tagname.equals("sens")) {
+
+						//try to find the stop we're currently looking at in the list
+						for(TimeoStop i : stops) {
+							//if this one has got the right stop id, line id, and direction id, looks like we've found it
+							if(i.getId().equals(tmpStopId) && i.getLine().getId().equals(tmpLineId) && i.getLine().getDirection
+									().getId().equals(text)) {
+								//remember the stop
+								tmpSchedule.setStop(i);
+							}
+						}
+
+						//if we didn't find it, just set the schedule to null and carry on.
+						if(tmpSchedule.getStop() == null) {
+							tmpSchedule = null;
+						}
+
 					} else if(tmpSingleSchedule != null && tagname.equals("duree")) {
 						tmpSingleSchedule.setTime(text);
 					} else if(tmpSingleSchedule != null && tagname.equals("destination")) {

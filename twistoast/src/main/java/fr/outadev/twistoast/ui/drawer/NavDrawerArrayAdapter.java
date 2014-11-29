@@ -19,12 +19,14 @@
 package fr.outadev.twistoast.ui.drawer;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -39,6 +41,9 @@ import fr.outadev.twistoast.R;
  */
 public class NavDrawerArrayAdapter extends ArrayAdapter<NavigationDrawerItem> {
 
+	private static final int TYPE_NORMAL = 0;
+	private static final int TYPE_SECONDARY = 1;
+	private static final int TYPE_SEPARATOR = 2;
 	private final IStopsListContainer container;
 	private int selectedItemIndex;
 
@@ -51,29 +56,47 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<NavigationDrawerItem> {
 
 	@Override
 	public View getView(final int position, View convertView, final ViewGroup parent) {
+		int itemType = getItemViewType(position);
+
 		//convert the view if we haz to
 		if(convertView == null) {
 			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-			if(getItemViewType(position) == 1) {
-				// if it's a secondary row (ex: preferences)
-				convertView = inflater.inflate(R.layout.drawer_list_item_pref, parent, false);
+			if(itemType == TYPE_SEPARATOR) {
+				convertView = inflater.inflate(R.layout.drawer_list_separator, parent, false);
 			} else {
-				// if it's a normal row
 				convertView = inflater.inflate(R.layout.drawer_list_item, parent, false);
 			}
 		}
 
-		TextView rowTitle = (TextView) convertView.findViewById(R.id.textTitle);
-		rowTitle.setText(getContext().getResources().getString(getItem(position).getTitleResId()));
-
-		if(position == selectedItemIndex) {
-			rowTitle.setTypeface(null, Typeface.BOLD);
-		} else {
-			rowTitle.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
+		//if we're dealing with a separator, we only need to inflate it, nothing more
+		if(itemType == TYPE_SEPARATOR) {
+			return convertView;
 		}
 
-		rowTitle.setOnClickListener(new OnClickListener() {
+		TextView rowTitle = (TextView) convertView.findViewById(R.id.lbl_drawer_item_title);
+		ImageView rowIcon = (ImageView) convertView.findViewById(R.id.img_drawer_item_icon);
+
+		if(itemType == TYPE_SECONDARY || getItem(position).getIconResId() == -1) {
+			rowIcon.setVisibility(View.GONE);
+		} else {
+			rowIcon.setImageResource(getItem(position).getIconResId());
+		}
+
+		rowTitle.setText(getContext().getResources().getString(getItem(position).getTitleResId()));
+		rowTitle.setTypeface(null, Typeface.NORMAL);
+		rowTitle.setSelected(false);
+
+		rowIcon.setColorFilter(Color.rgb(100, 100, 100));
+
+		if(position == selectedItemIndex) {
+			rowTitle.setSelected(true);
+			rowTitle.setTypeface(null, Typeface.BOLD);
+
+			rowIcon.setColorFilter(getContext().getResources().getColor(R.color.colorPrimary));
+		}
+
+		convertView.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -99,12 +122,19 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<NavigationDrawerItem> {
 	@Override
 	public int getItemViewType(int position) {
 		// Define a way to determine which layout to use
-		return (getItem(position) instanceof NavigationDrawerSecondaryItem) ? 1 : 0;
+		if(getItem(position) instanceof NavigationDrawerSecondaryItem) {
+			return TYPE_SECONDARY;
+		}
+		if(getItem(position) instanceof NavigationDrawerSeparator) {
+			return TYPE_SEPARATOR;
+		}
+
+		return TYPE_NORMAL;
 	}
 
 	@Override
 	public int getViewTypeCount() {
-		return 2;
+		return 3;
 	}
 
 }

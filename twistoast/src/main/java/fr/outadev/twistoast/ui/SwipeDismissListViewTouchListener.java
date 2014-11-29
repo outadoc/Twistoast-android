@@ -166,7 +166,14 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
 
 				int x = (int) motionEvent.getRawX() - listViewCoords[0];
 				int y = (int) motionEvent.getRawY() - listViewCoords[1];
+				float density = mListView.getContext().getResources().getDisplayMetrics().density;
 				View child;
+
+				//if we're less than 50dp from the left edge of the screen, don't activate
+				//the swipe, since we could have been trying to open the nav drawer
+				if(x < density * 50) {
+					return false;
+				}
 
 				for(int i = 0; i < childCount; i++) {
 					child = mListView.getChildAt(i);
@@ -290,7 +297,7 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
 				float deltaX = motionEvent.getRawX() - mDownX;
 				float deltaY = motionEvent.getRawY() - mDownY;
 
-				if(Math.abs(deltaX) > mSlop && Math.abs(deltaY) < Math.abs(deltaX) / 2 && deltaX < 0) {
+				if(Math.abs(deltaX) > mSlop && Math.abs(deltaY) < Math.abs(deltaX) / 2) {
 					mSwiping = true;
 					mSwipingSlop = (deltaX > 0 ? mSlop : -mSlop);
 					mListView.requestDisallowInterceptTouchEvent(true);

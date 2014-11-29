@@ -28,7 +28,7 @@ public interface IStopsListContainer {
 	/**
 	 * Called when the list of bus stops is refreshed and the user should be notified.
 	 */
-	public void endRefresh();
+	public void endRefresh(boolean success);
 
 	/**
 	 * Load the fragment at the specified drawer index.

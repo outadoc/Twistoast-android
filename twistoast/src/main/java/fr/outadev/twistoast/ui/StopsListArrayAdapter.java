@@ -21,9 +21,10 @@ package fr.outadev.twistoast.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.util.SparseArray;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -32,7 +33,9 @@ import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.listeners.ActionClickListener;
 
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +48,7 @@ import fr.outadev.android.timeo.model.TimeoStop;
 import fr.outadev.android.timeo.model.TimeoStopSchedule;
 import fr.outadev.twistoast.IStopsListContainer;
 import fr.outadev.twistoast.R;
+import fr.outadev.twistoast.Utils;
 import fr.outadev.twistoast.database.TwistoastDatabase;
 
 /**
@@ -63,14 +67,14 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 
 	private int networkCount = 0;
 
-	public StopsListArrayAdapter(Context context, Activity activity, int resource, List<TimeoStop> stops,
+	public StopsListArrayAdapter(Activity activity, int resource, List<TimeoStop> stops,
 	                             IStopsListContainer stopsListContainer) {
-		super(context, resource, stops);
+		super(activity, resource, stops);
 
 		this.activity = activity;
 		this.stops = stops;
 		this.stopsListContainer = stopsListContainer;
-		this.schedules = new HashMap<TimeoStop, TimeoStopSchedule>();
+		this.schedules = new HashMap<>();
 		this.networks = TimeoRequestHandler.getNetworksList();
 		this.networkCount = (new TwistoastDatabase(getContext())).getNetworksCount();
 	}
@@ -86,15 +90,6 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 
 		// get all the stuff in it that we'll have to modify
 		FrameLayout view_line_id = (FrameLayout) convertView.findViewById(R.id.view_line_id);
-
-		TextView lbl_section_name = (TextView) convertView.findViewById(R.id.lbl_section_name);
-		lbl_section_name.setVisibility(View.GONE);
-
-		if(networkCount > 1 && (position == 0 ||
-				(position > 0 && getItem(position - 1).getLine().getNetworkCode() != currentItem.getLine().getNetworkCode()))) {
-			lbl_section_name.setText(networks.get(currentItem.getLine().getNetworkCode()));
-			lbl_section_name.setVisibility(View.VISIBLE);
-		}
 
 		TextView lbl_line = (TextView) convertView.findViewById(R.id.lbl_line_id);
 		TextView lbl_stop = (TextView) convertView.findViewById(R.id.lbl_stop_name);
@@ -120,16 +115,10 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 		}*/
 
 		// line
-		view_line_id.setBackgroundColor(Color.parseColor(currentItem.getLine().getColor()));
-		lbl_line.setText(currentItem.getLine().getDetails().getId());
+		GradientDrawable lineDrawable = (GradientDrawable) view_line_id.getBackground();
+		lineDrawable.setColor(Color.parseColor(currentItem.getLine().getColor()));
 
-		if(lbl_line.getText().length() > 3) {
-			lbl_line.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-		} else if(lbl_line.getText().length() > 2) {
-			lbl_line.setTextSize(TypedValue.COMPLEX_UNIT_SP, 23);
-		} else {
-			lbl_line.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
-		}
+		lbl_line.setText(currentItem.getLine().getId());
 
 		// stop
 		lbl_stop.setText(getContext().getResources().getString(R.string.stop_name, currentItem.getName()));
@@ -143,25 +132,30 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 		view_schedule_container.setVisibility(View.GONE);
 
 		//add the new schedules one by one
-		if(schedules.containsKey(currentItem) && schedules.get(currentItem) != null && schedules.get
-				(currentItem).getSchedules() != null) {
-			List<TimeoSingleSchedule> currScheds = schedules.get(currentItem).getSchedules();
+		if(schedules.containsKey(currentItem) && schedules.get(currentItem) != null) {
+			if(schedules.get(currentItem).getSchedules() != null) {
+				List<TimeoSingleSchedule> currScheds = schedules.get(currentItem).getSchedules();
 
-			for(TimeoSingleSchedule currSched : currScheds) {
-				View singleScheduleView = inflater.inflate(R.layout.single_schedule_label, null);
+				for(TimeoSingleSchedule currSched : currScheds) {
+					View singleScheduleView = inflater.inflate(R.layout.single_schedule_label, null);
 
-				TextView lbl_schedule_time = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule);
-				TextView lbl_schedule_direction = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule_direction);
+					TextView lbl_schedule_time = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule);
+					TextView lbl_schedule_direction = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule_direction);
 
-				lbl_schedule_time.setText("- " + currSched.getFormattedTime(getContext()));
-				lbl_schedule_direction.setText(" → " + currSched.getDirection());
+					lbl_schedule_time.setText(currSched.getFormattedTime(getContext()));
+					lbl_schedule_direction.setText(" — " + currSched.getDirection());
 
-				view_schedule_container.addView(singleScheduleView);
+					view_schedule_container.addView(singleScheduleView);
+				}
+
+				if(currScheds.size() > 0) {
+					view_schedule_container.setVisibility(View.VISIBLE);
+				}
 			}
-
-			if(currScheds.size() > 0) {
-				view_schedule_container.setVisibility(View.VISIBLE);
-			}
+		} else {
+			//if we can't find the schedules we asked for in the hashmap, something went wrong. :c
+			Log.e(Utils.TAG, "missing stop schedule for " + currentItem + " (ref=" + currentItem.getReference() + "); ref " +
+					"outdated?");
 		}
 
 		view_traffic_message.setOnClickListener(new OnClickListener() {
@@ -203,8 +197,19 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 							if(e instanceof TimeoBlockingMessageException) {
 								((TimeoBlockingMessageException) e).getAlertMessage(getContext()).show();
 							} else {
-								Toast.makeText(getContext(), activity.getResources().getString(R.string.loading_error) + " (" +
-										e.getMessage() + ")", Toast.LENGTH_LONG).show();
+								Snackbar.with(getContext())
+										.text(R.string.loading_error)
+										.actionLabel("Retry")
+										.actionColorResource(R.color.colorAccent)
+										.actionListener(new ActionClickListener() {
+
+											@Override
+											public void onActionClicked() {
+												updateScheduleData();
+											}
+
+										})
+										.show(activity);
 							}
 						}
 
@@ -225,11 +230,24 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 				networkCount = (new TwistoastDatabase(getContext())).getNetworksCount();
 
 				notifyDataSetChanged();
-				stopsListContainer.endRefresh();
+				stopsListContainer.endRefresh((scheduleMap != null));
 			}
 
 		}).execute();
 	}
 
+	/**
+	 * Check if there's a mismatch between the number of bus stops requested and the
+	 * number of schedules we got back from the API.
+	 *
+	 * @return 0 if everything is okay, otherwise the number of stops we didn't get back the data for.
+	 */
+	public int checkSchedulesMismatchCount() {
+		int delta = stops.size() - schedules.size();
+		if(delta < 0) {
+			throw new RuntimeException("Got more data back from the API than expected.");
+		}
+		return delta;
+	}
 
 }

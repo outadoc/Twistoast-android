@@ -18,9 +18,13 @@
 
 package fr.outadev.twistoast.ui.fragments;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -28,9 +32,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -41,7 +42,13 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.melnykov.fab.FloatingActionButton;
+import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.listeners.ActionClickListener;
 
+import fr.outadev.android.timeo.TimeoStopReferenceUpdater;
+import fr.outadev.android.timeo.model.ProgressListener;
+import fr.outadev.android.timeo.model.TimeoStop;
 import fr.outadev.twistoast.IStopsListContainer;
 import fr.outadev.twistoast.R;
 import fr.outadev.twistoast.Utils;
@@ -53,30 +60,62 @@ import fr.outadev.twistoast.ui.activities.MainActivity;
 
 public class StopsListFragment extends Fragment implements IStopsListContainer {
 
-	private ListView listView;
-	private SwipeRefreshLayout swipeRefreshLayout;
-
-	private MenuItem menuItemRefresh;
-	private View noContentView;
-
+	//Refresh automatically every 60 seconds.
 	private final long REFRESH_INTERVAL = 60000L;
 
-	private final Handler handler = new Handler();
-	private final Runnable runnable = new Runnable() {
-		@Override
-		public void run() {
-			if(autoRefresh) {
-				refreshListFromDB(false);
-			}
-		}
-	};
+	private final Handler periodicRefreshHandler = new Handler();
+	private Runnable periodicRefreshRunnable;
+
+	private ListView listView;
+	private SwipeRefreshLayout swipeRefreshLayout;
+	private View noContentView;
 
 	private TwistoastDatabase databaseHandler;
 	private StopsListArrayAdapter listAdapter;
-
 	private boolean autoRefresh;
+
 	private boolean isRefreshing;
 	private boolean isInBackground;
+	private boolean wasRefUpdateDialogShow;
+	private boolean isRefUpdateDialogVisible;
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if(requestCode == 0 && resultCode == AddStopActivity.STOP_ADDED) {
+			refreshAllStopSchedules(true);
+		}
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		// yes hello please, I'd like to be inflated?
+		setHasOptionsMenu(true);
+
+		databaseHandler = new TwistoastDatabase(getActivity());
+
+		periodicRefreshRunnable = new Runnable() {
+			@Override
+			public void run() {
+				if(autoRefresh) {
+					refreshAllStopSchedules(false);
+				}
+			}
+		};
+
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+		autoRefresh = sharedPref.getBoolean("pref_auto_refresh", true);
+
+		isRefreshing = false;
+		isInBackground = false;
+		wasRefUpdateDialogShow = false;
+		isRefUpdateDialogVisible = false;
+
+		if(savedInstanceState != null) {
+			wasRefUpdateDialogShow = savedInstanceState.getBoolean("shown_ref_update_dialog");
+		}
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -89,7 +128,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 			@Override
 			public void onRefresh() {
-				refreshListFromDB(false);
+				refreshAllStopSchedules(false);
 			}
 
 		});
@@ -99,6 +138,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 		listView = (ListView) view.findViewById(R.id.stops_list);
 		noContentView = view.findViewById(R.id.view_no_content);
+		FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
 
 		SwipeDismissListViewTouchListener touchListener = new SwipeDismissListViewTouchListener(listView,
 				new SwipeDismissListViewTouchListener.DismissCallbacks() {
@@ -110,17 +150,35 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 					@Override
 					public void onDismiss(ListView listView, int[] reverseSortedPositions) {
-						for(int position : reverseSortedPositions) {
-							databaseHandler.deleteStop(listAdapter.getItem(position));
-							listAdapter.remove(listAdapter.getItem(position));
-						}
+						final int position = reverseSortedPositions[0];
+						final TimeoStop stopToDelete = listAdapter.getItem(position);
+
+						databaseHandler.deleteStop(stopToDelete);
+						listAdapter.remove(stopToDelete);
 
 						if(listAdapter.isEmpty()) {
 							noContentView.setVisibility(View.VISIBLE);
 						}
 
 						listAdapter.notifyDataSetChanged();
-						Toast.makeText(getActivity(), R.string.confirm_delete_success, Toast.LENGTH_SHORT).show();
+
+						Snackbar.with(getActivity())
+								.text(R.string.confirm_delete_success)
+								.actionLabel(R.string.cancel_stop_deletion)
+								.actionColorResource(R.color.colorAccent)
+								.attachToAbsListView(listView)
+								.actionListener(new ActionClickListener() {
+
+									@Override
+									public void onActionClicked() {
+										Log.i(Utils.TAG, "restoring stop " + stopToDelete);
+										databaseHandler.addStopToDatabase(stopToDelete);
+										listAdapter.insert(stopToDelete, position);
+										listAdapter.notifyDataSetChanged();
+									}
+
+								})
+								.show(getActivity());
 					}
 
 				});
@@ -128,23 +186,22 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 		listView.setOnTouchListener(touchListener);
 		listView.setOnScrollListener(touchListener.makeScrollListener());
 
+		fab.attachToListView(listView);
+		fab.setColorNormalResId(R.color.colorAccent);
+		fab.setColorPressedResId(R.color.twisto_secondary);
+		fab.setColorRippleResId(R.color.twisto_secondary);
+
+		fab.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getActivity(), AddStopActivity.class);
+				startActivityForResult(intent, 0);
+			}
+
+		});
+
 		return view;
-	}
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		// yes hello please, I'd like to be inflated?
-		setHasOptionsMenu(true);
-
-		databaseHandler = new TwistoastDatabase(getActivity());
-
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-		autoRefresh = sharedPref.getBoolean("pref_auto_refresh", true);
-
-		isRefreshing = false;
-		isInBackground = false;
 	}
 
 	@Override
@@ -175,8 +232,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 				if(hasGPS == ConnectionResult.SUCCESS) {
 					AdRequest adRequest = new AdRequest.Builder()
-							.addTestDevice("4A75A651AD45105DB97E1E0ECE162D0B")
-							.addTestDevice("29EBDB460C20FD273BADF028945C56E2").build();
+							.addTestDevice("1176AD77C8CCAB0BE044FA12ACD473B0").build();
 					adView.loadAd(adRequest);
 				}
 			} else {
@@ -185,7 +241,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 			}
 		}
 
-		refreshListFromDB(true);
+		refreshAllStopSchedules(true);
 	}
 
 	@Override
@@ -194,7 +250,13 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 		isInBackground = false;
 		// when the activity is resuming, refresh
-		refreshListFromDB(false);
+		refreshAllStopSchedules(false);
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putBoolean("shown_ref_update_dialog", wasRefUpdateDialogShow);
 	}
 
 	@Override
@@ -203,44 +265,16 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 		// when the activity is pausing, stop refreshing automatically
 		Log.i(Utils.TAG, "stopping automatic refresh, app paused");
 		isInBackground = true;
-		handler.removeCallbacks(runnable);
+		periodicRefreshHandler.removeCallbacks(periodicRefreshRunnable);
 	}
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		inflater.inflate(R.menu.main, menu);
-		menuItemRefresh = menu.findItem(R.id.action_refresh);
-
-		super.onCreateOptionsMenu(menu, inflater);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle presses on the action bar items
-		switch(item.getItemId()) {
-			case R.id.action_add: {
-				Intent intent = new Intent(getActivity(), AddStopActivity.class);
-				startActivityForResult(intent, 0);
-				return true;
-			}
-			case R.id.action_refresh:
-				// refresh the list
-				refreshListFromDB(false);
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
-		}
-	}
-
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if(requestCode == 0) {
-			refreshListFromDB(true);
-		}
-	}
-
-	public void refreshListFromDB(boolean resetList) {
+	/**
+	 * Refreshes the list's schedules and displays them to the user.
+	 *
+	 * @param reloadFromDatabase true if we want to reload the stops completely, or false if we only want
+	 *                           to update the schedules
+	 */
+	public void refreshAllStopSchedules(boolean reloadFromDatabase) {
 		// we don't want to try to refresh if we're already refreshing (causes
 		// bugs)
 		if(isRefreshing) {
@@ -252,15 +286,11 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 		// show the refresh animation
 		swipeRefreshLayout.setRefreshing(true);
 
-		if(menuItemRefresh != null) {
-			menuItemRefresh.setEnabled(false);
-		}
-
 		// we have to reset the adapter so it correctly loads the stops
 		// if we don't do that, bugs will appear when the database has been
 		// modified
-		if(resetList) {
-			listAdapter = new StopsListArrayAdapter(getActivity(), getActivity(), android.R.layout.simple_list_item_1,
+		if(reloadFromDatabase) {
+			listAdapter = new StopsListArrayAdapter(getActivity(), android.R.layout.simple_list_item_1,
 					databaseHandler.getAllStops(), this);
 			listView.setAdapter(listAdapter);
 		}
@@ -270,35 +300,126 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 	}
 
 	@Override
-	public void endRefresh() {
+	public void endRefresh(boolean success) {
 		// notify the pull to refresh view that the refresh has finished
 		isRefreshing = false;
 		swipeRefreshLayout.setRefreshing(false);
-
-		if(menuItemRefresh != null) {
-			menuItemRefresh.setEnabled(true);
-		}
-
-		Log.i(Utils.TAG, "refreshed, " + listAdapter.getCount() + " stops in db");
-
-		if(getActivity() != null && !listAdapter.isEmpty()) {
-			Toast.makeText(getActivity(), getResources().getString(R.string.refreshed_stops), Toast.LENGTH_SHORT).show();
-		}
 
 		noContentView.setVisibility((listAdapter.isEmpty()) ? View.VISIBLE : View.GONE);
 
 		// reset the timer loop, and start it again
 		// this ensures the list is refreshed automatically every 60 seconds
-		handler.removeCallbacks(runnable);
+		periodicRefreshHandler.removeCallbacks(periodicRefreshRunnable);
 
 		if(!isInBackground) {
-			handler.postDelayed(runnable, REFRESH_INTERVAL);
+			periodicRefreshHandler.postDelayed(periodicRefreshRunnable, REFRESH_INTERVAL);
+		}
+
+		if(success) {
+			Log.i(Utils.TAG, "refreshed, " + listAdapter.getCount() + " stops in db");
+
+			if(getActivity() != null && !listAdapter.isEmpty()) {
+				Toast.makeText(getActivity(), getResources().getString(R.string.refreshed_stops), Toast.LENGTH_SHORT).show();
+			}
+
+			int mismatch = listAdapter.checkSchedulesMismatchCount();
+
+			if(mismatch > 0 && !isRefUpdateDialogVisible && !wasRefUpdateDialogShow) {
+				isRefUpdateDialogVisible = true;
+
+				(new AlertDialog.Builder(getActivity()))
+						.setTitle("Outdated stops")
+						.setMessage("It looks like " + mismatch + " of the stops you added need(s) to be updated. Would you " +
+								"like to do this now? If you refuse, we won't ask you until next time you start the app.")
+						.setPositiveButton("Do it!", new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								//update the stop references...
+								isRefUpdateDialogVisible = false;
+								(new ReferenceUpdateTask()).execute();
+							}
+
+						})
+						.setNegativeButton("Later", new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								isRefUpdateDialogVisible = false;
+								wasRefUpdateDialogShow = true;
+							}
+
+						})
+						.create().show();
+			}
 		}
 	}
 
 	@Override
 	public void loadFragmentFromDrawerPosition(int index) {
 		((MainActivity) getActivity()).loadFragmentFromDrawerPosition(index);
+	}
+
+	private class ReferenceUpdateTask extends AsyncTask<Void, Void, Exception> {
+
+		private ProgressDialog dialog;
+		private TimeoStopReferenceUpdater referenceUpdater;
+
+		@Override
+		protected Exception doInBackground(Void... params) {
+			try {
+				referenceUpdater.updateAllStopReferences(new ProgressListener() {
+
+					@Override
+					public void onProgress(int current, int total) {
+						dialog.setIndeterminate(false);
+						dialog.setMax(total);
+						dialog.setProgress(current);
+					}
+
+				});
+			} catch(Exception e) {
+				e.printStackTrace();
+				return e;
+			}
+
+			return null;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			referenceUpdater = new TimeoStopReferenceUpdater(getActivity());
+			dialog = new ProgressDialog(getActivity());
+
+			dialog.setTitle("Updating stop references...");
+			dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+			dialog.setCancelable(false);
+			dialog.setIndeterminate(true);
+			dialog.show();
+		}
+
+		@Override
+		protected void onPostExecute(Exception e) {
+			dialog.hide();
+			refreshAllStopSchedules(true);
+
+			if(e != null) {
+				Snackbar.with(getActivity())
+						.text("Error while updating the stops references.")
+						.actionLabel("Retry")
+						.actionColorResource(R.color.colorAccent)
+						.attachToAbsListView(listView)
+						.actionListener(new ActionClickListener() {
+
+							@Override
+							public void onActionClicked() {
+								(new ReferenceUpdateTask()).execute();
+							}
+
+						})
+						.show(getActivity());
+			}
+		}
 	}
 
 }

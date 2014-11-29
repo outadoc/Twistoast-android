@@ -21,6 +21,7 @@ package fr.outadev.twistoast.ui.activities;
 import android.content.Context;
 import android.database.sqlite.SQLiteConstraintException;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -38,6 +39,9 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.listeners.ActionClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +63,9 @@ import fr.outadev.twistoast.database.TwistoastDatabase;
  */
 public class AddStopActivity extends ActionBarActivity {
 
+	public static final int NO_STOP_ADDED = 0;
+	public static final int STOP_ADDED = 1;
+
 	private Spinner spinLine;
 	private Spinner spinDirection;
 	private Spinner spinStop;
@@ -77,6 +84,7 @@ public class AddStopActivity extends ActionBarActivity {
 	private FrameLayout view_line_id;
 	private TextView lbl_stop;
 	private TextView lbl_direction;
+	private TextView lbl_schedule_direction;
 
 	private LinearLayout view_schedule_container;
 
@@ -95,6 +103,8 @@ public class AddStopActivity extends ActionBarActivity {
 		// setup everything
 		setContentView(R.layout.activity_add_stop);
 
+		setResult(NO_STOP_ADDED);
+
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
 		setSupportActionBar(toolbar);
@@ -111,11 +121,11 @@ public class AddStopActivity extends ActionBarActivity {
 		spinStop = (Spinner) findViewById(R.id.spin_stop);
 
 		//lists
-		lineList = new ArrayList<TimeoLine>();
-		directionList = new ArrayList<TimeoIDNameObject>();
-		stopList = new ArrayList<TimeoStop>();
+		lineList = new ArrayList<>();
+		directionList = new ArrayList<>();
+		stopList = new ArrayList<>();
 
-		filteredLineList = new ArrayList<TimeoLine>(lineList);
+		filteredLineList = new ArrayList<>(lineList);
 
 		// labels
 		lbl_line = (TextView) findViewById(R.id.lbl_line_id);
@@ -167,7 +177,7 @@ public class AddStopActivity extends ActionBarActivity {
 	 * Initialises, sets up the even listeners, and populates the line spinner.
 	 */
 	public void setupLineSpinner() {
-		lineAdapter = new ArrayAdapter<TimeoLine>(this, android.R.layout.simple_spinner_item, filteredLineList);
+		lineAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, filteredLineList);
 		lineAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinLine.setAdapter(lineAdapter);
 
@@ -193,10 +203,12 @@ public class AddStopActivity extends ActionBarActivity {
 				// get the selected line
 				TimeoLine item = getCurrentLine();
 
-				if(item != null && item.getDetails().getId() != null) {
+				if(item != null && item.getId() != null) {
 					// set the line view
-					lbl_line.setText(item.getDetails().getId());
-					view_line_id.setBackgroundColor(Color.parseColor(item.getColor()));
+					lbl_line.setText(item.getId());
+
+					GradientDrawable lineDrawable = (GradientDrawable) view_line_id.getBackground();
+					lineDrawable.setColor(Color.parseColor(item.getColor()));
 
 					spinDirection.setEnabled(true);
 
@@ -226,7 +238,7 @@ public class AddStopActivity extends ActionBarActivity {
 	 * Initialises, sets up the even listeners, and populates the direction spinner.
 	 */
 	public void setupDirectionSpinner() {
-		directionAdapter = new ArrayAdapter<TimeoIDNameObject>(this, android.R.layout.simple_spinner_item, directionList);
+		directionAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, directionList);
 		directionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinDirection.setAdapter(directionAdapter);
 
@@ -243,7 +255,7 @@ public class AddStopActivity extends ActionBarActivity {
 				item_next.setEnabled(false);
 				spinStop.setEnabled(false);
 
-				if(getCurrentLine() != null && getCurrentDirection() != null && getCurrentLine().getDetails().getId() != null
+				if(getCurrentLine() != null && getCurrentDirection() != null && getCurrentLine().getId() != null
 						&& getCurrentDirection().getId() != null) {
 					lbl_direction.setText(getResources().getString(R.string.direction_name, getCurrentDirection().getName()));
 
@@ -294,7 +306,7 @@ public class AddStopActivity extends ActionBarActivity {
 	 * Initialises, sets up the even listeners, and populates the stop spinner.
 	 */
 	public void setupStopSpinner() {
-		stopAdapter = new ArrayAdapter<TimeoStop>(this, android.R.layout.simple_spinner_item, stopList);
+		stopAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, stopList);
 		stopAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinStop.setAdapter(stopAdapter);
 
@@ -312,52 +324,7 @@ public class AddStopActivity extends ActionBarActivity {
 
 				if(stop != null && stop.getId() != null) {
 					lbl_stop.setText(getResources().getString(R.string.stop_name, stop.getName()));
-
-					(new AsyncTask<Void, Void, TimeoStopSchedule>() {
-
-						@Override
-						protected void onPreExecute() {
-							setSupportProgressBarIndeterminateVisibility(true);
-						}
-
-						@Override
-						protected TimeoStopSchedule doInBackground(Void... voids) {
-							try {
-								return TimeoRequestHandler.getSingleSchedule(getCurrentStop());
-							} catch(Exception e) {
-								handleAsyncExceptions(e);
-							}
-
-							return null;
-						}
-
-						@Override
-						protected void onPostExecute(TimeoStopSchedule schedule) {
-							setSupportProgressBarIndeterminateVisibility(false);
-							LayoutInflater inflater = (LayoutInflater) AddStopActivity.this.getSystemService(Context
-									.LAYOUT_INFLATER_SERVICE);
-
-							if(schedule != null) {
-								List<TimeoSingleSchedule> schedList = schedule.getSchedules();
-
-								// set the schedule labels, if we need to
-								if(schedList != null) {
-									for(TimeoSingleSchedule currSched : schedList) {
-										View singleScheduleView = inflater.inflate(R.layout.single_schedule_label, null);
-										TextView label = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule);
-
-										label.setText("- " + currSched.getFormattedTime(AddStopActivity.this));
-										view_schedule_container.addView(singleScheduleView);
-									}
-
-									if(schedList.size() > 0) {
-										view_schedule_container.setVisibility(View.VISIBLE);
-									}
-								}
-							}
-						}
-
-					}).execute();
+					updateSchedulePreview();
 				}
 			}
 
@@ -366,6 +333,59 @@ public class AddStopActivity extends ActionBarActivity {
 			}
 
 		});
+	}
+
+	public void updateSchedulePreview() {
+		(new AsyncTask<Void, Void, TimeoStopSchedule>() {
+
+			@Override
+			protected void onPreExecute() {
+				setSupportProgressBarIndeterminateVisibility(true);
+			}
+
+			@Override
+			protected TimeoStopSchedule doInBackground(Void... voids) {
+				try {
+					return TimeoRequestHandler.getSingleSchedule(getCurrentStop());
+				} catch(Exception e) {
+					handleAsyncExceptions(e);
+				}
+
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(TimeoStopSchedule schedule) {
+				setSupportProgressBarIndeterminateVisibility(false);
+				LayoutInflater inflater = (LayoutInflater) AddStopActivity.this.getSystemService(Context
+						.LAYOUT_INFLATER_SERVICE);
+
+				if(schedule != null) {
+					List<TimeoSingleSchedule> schedList = schedule.getSchedules();
+
+					// set the schedule labels, if we need to
+					if(schedList != null) {
+						for(TimeoSingleSchedule currSched : schedList) {
+							View singleScheduleView = inflater.inflate(R.layout.single_schedule_label, null);
+
+							TextView lbl_schedule = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule);
+							TextView lbl_schedule_direction = (TextView) singleScheduleView.findViewById(R.id
+									.lbl_schedule_direction);
+
+							lbl_schedule.setText(currSched.getFormattedTime(AddStopActivity.this));
+							lbl_schedule_direction.setText(" — " + currSched.getDirection());
+
+							view_schedule_container.addView(singleScheduleView);
+						}
+
+						if(schedList.size() > 0) {
+							view_schedule_container.setVisibility(View.VISIBLE);
+						}
+					}
+				}
+			}
+
+		}).execute();
 	}
 
 	/**
@@ -408,7 +428,7 @@ public class AddStopActivity extends ActionBarActivity {
 
 					for(int i = filteredLineList.size() - 1; i >= 0; i--) {
 						//if the last line in the list is the same line (but with a different direction)
-						if(i > 0 && filteredLineList.get(i).getDetails().getId().equals(filteredLineList.get(i - 1).getDetails()
+						if(i > 0 && filteredLineList.get(i).getId().equals(filteredLineList.get(i - 1).getDetails()
 								.getId())) {
 							filteredLineList.remove(i);
 						}
@@ -436,7 +456,19 @@ public class AddStopActivity extends ActionBarActivity {
 				if(e instanceof TimeoBlockingMessageException) {
 					((TimeoBlockingMessageException) e).getAlertMessage(AddStopActivity.this).show();
 				} else {
-					Toast.makeText(AddStopActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+					Snackbar.with(AddStopActivity.this)
+							.text(R.string.loading_error)
+							.actionLabel("Retry")
+							.actionColorResource(R.color.colorAccent)
+							.actionListener(new ActionClickListener() {
+
+								@Override
+								public void onActionClicked() {
+									getLinesFromAPI();
+								}
+
+							})
+							.show(AddStopActivity.this);
 				}
 			}
 
@@ -451,8 +483,8 @@ public class AddStopActivity extends ActionBarActivity {
 
 		try {
 			databaseHandler.addStopToDatabase(stop);
-
 			Toast.makeText(this, getResources().getString(R.string.added_toast, stop.toString()), Toast.LENGTH_SHORT).show();
+			setResult(STOP_ADDED);
 			finish();
 		} catch(SQLiteConstraintException e) {
 			// stop already in database
@@ -474,7 +506,7 @@ public class AddStopActivity extends ActionBarActivity {
 		List<TimeoIDNameObject> directionsList = new ArrayList<TimeoIDNameObject>();
 
 		for(TimeoLine line : lineList) {
-			if(line.getDetails().getId().equals(getCurrentLine().getDetails().getId())) {
+			if(line.getId().equals(getCurrentLine().getId())) {
 				directionsList.add(line.getDirection());
 			}
 		}

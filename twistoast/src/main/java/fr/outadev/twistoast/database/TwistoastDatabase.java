@@ -41,7 +41,7 @@ public class TwistoastDatabase {
 	private final TwistoastDatabaseOpenHelper databaseOpenHelper;
 
 	public TwistoastDatabase(Context context) {
-		databaseOpenHelper = new TwistoastDatabaseOpenHelper(context);
+		databaseOpenHelper = TwistoastDatabaseOpenHelper.getInstance(context);
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class TwistoastDatabase {
 			ContentValues values = new ContentValues();
 
 			values.put("stop_id", stop.getId());
-			values.put("line_id", stop.getLine().getDetails().getId());
+			values.put("line_id", stop.getLine().getId());
 			values.put("dir_id", stop.getLine().getDirection().getId());
 			values.put("stop_name", stop.getName());
 			values.put("stop_ref", stop.getReference());
@@ -91,8 +91,8 @@ public class TwistoastDatabase {
 			SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
 			ContentValues values = new ContentValues();
 
-			values.put("line_id", line.getDetails().getId());
-			values.put("line_name", line.getDetails().getName());
+			values.put("line_id", line.getId());
+			values.put("line_name", line.getName());
 			values.put("line_color", line.getColor());
 			values.put("network_code", line.getNetworkCode());
 
@@ -114,7 +114,7 @@ public class TwistoastDatabase {
 			ContentValues values = new ContentValues();
 
 			values.put("dir_id", line.getDirection().getId());
-			values.put("line_id", line.getDetails().getId());
+			values.put("line_id", line.getId());
 			values.put("dir_name", line.getDirection().getName());
 			values.put("network_code", line.getNetworkCode());
 
@@ -266,9 +266,30 @@ public class TwistoastDatabase {
 
 		db.delete("twi_stop", "stop_id = ? AND line_id = ? AND dir_id = ? AND stop_ref = ? AND network_code = ?", new String[]{
 				stop.getId(),
-				stop.getLine().getDetails().getId(),
+				stop.getLine().getId(),
 				stop.getLine().getDirection().getId(),
 				stop.getReference(),
+				stop.getLine().getNetworkCode() + ""
+		});
+
+		db.close();
+	}
+
+	/**
+	 * Update the reference of a stop in the database.
+	 *
+	 * @param stop the bus stop whose reference is to be updated
+	 */
+	public void updateStopReference(TimeoStop stop) {
+		SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
+
+		ContentValues updateClause = new ContentValues();
+		updateClause.put("stop_ref", stop.getReference());
+
+		db.update("twi_stop", updateClause, "stop_id = ? AND line_id = ? AND dir_id = ? AND network_code = ?", new String[]{
+				stop.getId(),
+				stop.getLine().getId(),
+				stop.getLine().getDirection().getId(),
 				stop.getLine().getNetworkCode() + ""
 		});
 

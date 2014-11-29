@@ -24,7 +24,7 @@ package fr.outadev.android.timeo.model;
  *
  * @author outadoc
  */
-public class TimeoIDNameObject {
+public class TimeoIDNameObject implements TimeoIDName {
 
 	private String id;
 	private String name;
@@ -58,6 +58,21 @@ public class TimeoIDNameObject {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		if(object == this) {
+			return true;
+		}
+
+		if(object instanceof TimeoIDNameObject) {
+			if(((TimeoIDNameObject) object).getId().equals(this.getId())) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	@Override

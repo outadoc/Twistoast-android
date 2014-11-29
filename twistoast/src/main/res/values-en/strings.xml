@@ -31,8 +31,9 @@
 	<string name="action_refresh">Refresh</string>
 	<string name="action_cancel">Cancel</string>
 	<string name="loading_data">Loading&#8230;</string>
-	<string name="loading_error">Loading error</string>
-	<string name="confirm_delete_success">Deleted successfully</string>
+	<string name="loading_error">Error whilst loading data.</string>
+	<string name="confirm_delete_success">Deleted successfully!</string>
+	<string name="cancel_stop_deletion">Undo</string>
 	<string name="refreshed_stops">Schedules refreshed</string>
 	<string name="direction_name">→ Dir. %1$s</string>
 	<string name="stop_name">%1$s</string>

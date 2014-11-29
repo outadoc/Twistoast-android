@@ -50,6 +50,7 @@ import fr.outadev.twistoast.ui.drawer.NavDrawerArrayAdapter;
 import fr.outadev.twistoast.ui.drawer.NavigationDrawerFragmentItem;
 import fr.outadev.twistoast.ui.drawer.NavigationDrawerItem;
 import fr.outadev.twistoast.ui.drawer.NavigationDrawerSecondaryItem;
+import fr.outadev.twistoast.ui.drawer.NavigationDrawerSeparator;
 import fr.outadev.twistoast.ui.drawer.NavigationDrawerWebItem;
 import fr.outadev.twistoast.ui.fragments.PrefsFragment;
 import fr.outadev.twistoast.ui.fragments.StopsListFragment;
@@ -97,15 +98,15 @@ public class MainActivity extends ActionBarActivity implements IStopsListContain
 				R.string.action_delete) {
 
 			@Override
-			public void onDrawerClosed(View view) {
-				getSupportActionBar().setTitle(actionBarTitle);
-				super.onDrawerClosed(view);
-			}
-
-			@Override
 			public void onDrawerOpened(View drawerView) {
 				getSupportActionBar().setTitle(drawerTitle);
 				super.onDrawerOpened(drawerView);
+			}
+
+			@Override
+			public void onDrawerClosed(View view) {
+				getSupportActionBar().setTitle(actionBarTitle);
+				super.onDrawerClosed(view);
 			}
 		};
 
@@ -121,6 +122,7 @@ public class MainActivity extends ActionBarActivity implements IStopsListContain
 		if(savedInstanceState != null) {
 			currentFragmentIndex = savedInstanceState.getInt("key_current_frag");
 			trafficAlert = (TimeoTrafficAlert) savedInstanceState.get("key_traffic_alert");
+			checkDrawerItem(currentFragmentIndex);
 			displayGlobalTrafficInfo();
 		} else {
 			currentFragmentIndex = 0;
@@ -130,13 +132,27 @@ public class MainActivity extends ActionBarActivity implements IStopsListContain
 	}
 
 	@Override
-	protected void onStart() {
-		super.onStart();
-		displayGlobalTrafficInfo();
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		drawerToggle.onConfigurationChanged(newConfig);
 	}
 
 	@Override
-	public void endRefresh() {
+	public void onBackPressed() {
+		if(frags[currentFragmentIndex] instanceof WebViewFragment
+				&& ((WebViewFragment) frags[currentFragmentIndex]).canGoBack()) {
+			((WebViewFragment) frags[currentFragmentIndex]).goBack();
+		} else if(currentFragmentIndex == 0) {
+			super.onBackPressed();
+		} else if(!drawerLayout.isDrawerOpen(Gravity.START)) {
+			drawerLayout.openDrawer(Gravity.START);
+		} else {
+			loadFragmentFromDrawerPosition(0);
+		}
+	}
+
+	@Override
+	public void endRefresh(boolean success) {
 		// useless here, wat
 	}
 
@@ -163,20 +179,6 @@ public class MainActivity extends ActionBarActivity implements IStopsListContain
 		drawerLayout.closeDrawer(drawerList);
 	}
 
-	@Override
-	public void onBackPressed() {
-		if(frags[currentFragmentIndex] instanceof WebViewFragment
-				&& ((WebViewFragment) frags[currentFragmentIndex]).canGoBack()) {
-			((WebViewFragment) frags[currentFragmentIndex]).goBack();
-		} else if(currentFragmentIndex == 0) {
-			super.onBackPressed();
-		} else if(!drawerLayout.isDrawerOpen(Gravity.START)) {
-			drawerLayout.openDrawer(Gravity.START);
-		} else {
-			loadFragmentFromDrawerPosition(0);
-		}
-	}
-
 	public void checkDrawerItem(int position) {
 		refreshActionBarTitle();
 		drawerList.setItemChecked(position, true);
@@ -195,12 +197,6 @@ public class MainActivity extends ActionBarActivity implements IStopsListContain
 	}
 
 	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
-		drawerToggle.onConfigurationChanged(newConfig);
-	}
-
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		return drawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
 
@@ -211,6 +207,12 @@ public class MainActivity extends ActionBarActivity implements IStopsListContain
 		super.onSaveInstanceState(outState);
 		outState.putInt("key_current_frag", currentFragmentIndex);
 		outState.putSerializable("key_traffic_alert", trafficAlert);
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		displayGlobalTrafficInfo();
 	}
 
 	/**
@@ -276,16 +278,22 @@ public class MainActivity extends ActionBarActivity implements IStopsListContain
 	private List<NavigationDrawerItem> getDrawerItems() {
 		List<NavigationDrawerItem> list = new ArrayList<NavigationDrawerItem>();
 
-		list.add(new NavigationDrawerFragmentItem(R.string.drawer_item_realtime, StopsListFragment.class));
-		list.add(new NavigationDrawerWebItem(R.string.drawer_item_timetables,
+		list.add(new NavigationDrawerFragmentItem(R.drawable.ic_schedule, R.string.drawer_item_realtime,
+				StopsListFragment.class));
+		list.add(new NavigationDrawerWebItem(R.drawable.ic_directions_bus, R.string.drawer_item_timetables,
 				"http://dev.actigraph.fr/actipages/twisto/module/mobile/App/horairesalarret/?app=pivk-1.3-2014"));
-		list.add(new NavigationDrawerWebItem(R.string.drawer_item_routes,
-				"http://twisto.mobi/module/mobile/App/itineraire-android-4.x-dev/iti_formulaire.php"));
-		list.add(new NavigationDrawerWebItem(R.string.drawer_item_map,
+		list.add(new NavigationDrawerWebItem(R.drawable.ic_navigation, R.string.drawer_item_routes,
+				"http://twisto.fr/module/mobile/App2014/itineraire-android-4.x-dev/iti_formulaire.php"));
+		list.add(new NavigationDrawerWebItem(R.drawable.ic_map, R.string.drawer_item_map,
 				"http://twisto.fr/module/mobile/App2014/leaflet/?ios=true"));
-		list.add(new NavigationDrawerWebItem(R.string.drawer_item_traffic, "http://twisto.mobi/module/mobile/App/trafic/"));
-		list.add(new NavigationDrawerWebItem(R.string.drawer_item_news, "http://twisto.mobi/module/mobile/App/actus/"));
-		list.add(new NavigationDrawerWebItem(R.string.drawer_item_pricing, "http://twisto.fr/module/mobile/App2014/tarifs/"));
+		list.add(new NavigationDrawerSeparator());
+		list.add(new NavigationDrawerWebItem(R.drawable.traffic_cone, R.string.drawer_item_traffic,
+				"http://twisto.mobi/module/mobile/App/trafic/"));
+		list.add(new NavigationDrawerWebItem(R.drawable.ic_books, R.string.drawer_item_news,
+				"http://twisto.mobi/module/mobile/App/actus/"));
+		list.add(new NavigationDrawerWebItem(R.drawable.ic_payment, R.string.drawer_item_pricing,
+				"http://twisto.fr/module/mobile/App2014/tarifs/index.php?ios=true"));
+		list.add(new NavigationDrawerSeparator());
 		list.add(new NavigationDrawerSecondaryItem(R.string.drawer_item_preferences, PrefsFragment.class));
 
 		return list;
