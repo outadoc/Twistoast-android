@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast.ui.activities;
+package fr.outadev.twistoast;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteConstraintException;
@@ -46,15 +46,14 @@ import com.nispok.snackbar.listeners.ActionClickListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.outadev.android.timeo.TimeoBlockingMessageException;
+import fr.outadev.android.timeo.TimeoIDNameObject;
+import fr.outadev.android.timeo.TimeoLine;
 import fr.outadev.android.timeo.TimeoRequestHandler;
-import fr.outadev.android.timeo.model.TimeoBlockingMessageException;
-import fr.outadev.android.timeo.model.TimeoIDNameObject;
-import fr.outadev.android.timeo.model.TimeoLine;
-import fr.outadev.android.timeo.model.TimeoSingleSchedule;
-import fr.outadev.android.timeo.model.TimeoStop;
-import fr.outadev.android.timeo.model.TimeoStopSchedule;
-import fr.outadev.twistoast.R;
-import fr.outadev.twistoast.database.TwistoastDatabase;
+import fr.outadev.android.timeo.TimeoSingleSchedule;
+import fr.outadev.android.timeo.TimeoStop;
+import fr.outadev.android.timeo.TimeoStopSchedule;
+import fr.outadev.android.timeo.TwistoastDatabase;
 
 /**
  * Activity that allows the user to add a bus stop to the app.
@@ -111,7 +110,7 @@ public class AddStopActivity extends ActionBarActivity {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		setSupportProgressBarIndeterminateVisibility(false);
 
-		databaseHandler = new TwistoastDatabase(this);
+		databaseHandler = new TwistoastDatabase(TwistoastDatabaseOpenHelper.getInstance(this));
 
 		// get all the UI elements we'll need in the future
 

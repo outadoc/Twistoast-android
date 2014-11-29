@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.android.timeo.model;
-
-import fr.outadev.android.timeo.TimeoRequestHandler;
+package fr.outadev.android.timeo;
 
 /**
  * Stores a bus line and its direction.

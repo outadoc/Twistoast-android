@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package fr.outadev.twistoast.ui;
+package fr.outadev.twistoast;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

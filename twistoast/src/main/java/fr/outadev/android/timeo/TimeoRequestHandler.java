@@ -41,22 +41,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-import fr.outadev.android.timeo.model.TimeoBlockingMessageException;
-import fr.outadev.android.timeo.model.TimeoException;
-import fr.outadev.android.timeo.model.TimeoIDNameObject;
-import fr.outadev.android.timeo.model.TimeoLine;
-import fr.outadev.android.timeo.model.TimeoSingleSchedule;
-import fr.outadev.android.timeo.model.TimeoStop;
-import fr.outadev.android.timeo.model.TimeoStopSchedule;
-import fr.outadev.android.timeo.model.TimeoTrafficAlert;
-import fr.outadev.twistoast.Utils;
-
 /**
  * Handles all connections to the Twisto Realtime API.
  *
  * @author outadoc
  */
 public abstract class TimeoRequestHandler {
+
+	public final static String TAG = "Timeo";
 
 	public final static int DEFAULT_NETWORK_CODE = 147;
 	private final static int REQUEST_TIMEOUT = 10000;
@@ -75,7 +67,7 @@ public abstract class TimeoRequestHandler {
 	 */
 	private static String requestWebPage(String url, String params, boolean useCaches) throws HttpRequestException {
 		String finalUrl = url + "?" + params;
-		Log.i(Utils.TAG, "requesting " + finalUrl);
+		Log.i(TAG, "requesting " + finalUrl);
 
 		return HttpRequest.get(finalUrl)
 				.useCaches(useCaches)
@@ -175,7 +167,7 @@ public abstract class TimeoRequestHandler {
 			}
 		}
 
-		Log.i(Utils.TAG, networks.size() + " different bus networks to refresh");
+		Log.i(TAG, networks.size() + " different bus networks to refresh");
 
 		//for each network
 		for(Integer network : networks) {

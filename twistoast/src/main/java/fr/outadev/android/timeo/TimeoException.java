@@ -1,5 +1,5 @@
 /*
- * Twistoast - IProgressListener
+ * Twistoast - TimeoException
  * Copyright (C) 2013-2014  Baptiste Candellier
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,20 +16,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.android.timeo.model;
+package fr.outadev.android.timeo;
 
 /**
- * Defines a progress listener.
- * Current process and maximum progress will be updated at will.
+ * Thrown when an error was encountered while fetching data from the API.
+ *
+ * @author outadoc
  */
-public interface ProgressListener {
+public class TimeoException extends Exception {
 
-	/**
-	 * Updates the current progress.
-	 *
-	 * @param current current progress, can't be greater than total
-	 * @param total   maximum progress
-	 */
-	public void onProgress(int current, int total);
+	public TimeoException(String s) {
+		super(s);
+	}
 
+	public TimeoException() {
+
+	}
 }

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast.ui.activities;
+package fr.outadev.twistoast;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -42,19 +42,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.outadev.android.timeo.TimeoRequestHandler;
-import fr.outadev.android.timeo.model.TimeoTrafficAlert;
-import fr.outadev.twistoast.R;
-import fr.outadev.twistoast.StopsListContainer;
-import fr.outadev.twistoast.Utils;
-import fr.outadev.twistoast.ui.drawer.NavDrawerArrayAdapter;
-import fr.outadev.twistoast.ui.drawer.NavigationDrawerFragmentItem;
-import fr.outadev.twistoast.ui.drawer.NavigationDrawerItem;
-import fr.outadev.twistoast.ui.drawer.NavigationDrawerSecondaryItem;
-import fr.outadev.twistoast.ui.drawer.NavigationDrawerSeparator;
-import fr.outadev.twistoast.ui.drawer.NavigationDrawerWebItem;
-import fr.outadev.twistoast.ui.fragments.PrefsFragment;
-import fr.outadev.twistoast.ui.fragments.StopsListFragment;
-import fr.outadev.twistoast.ui.fragments.WebViewFragment;
+import fr.outadev.android.timeo.TimeoTrafficAlert;
+import fr.outadev.twistoast.drawer.NavigationDrawerFragmentItem;
+import fr.outadev.twistoast.drawer.NavigationDrawerItem;
+import fr.outadev.twistoast.drawer.NavigationDrawerSecondaryItem;
+import fr.outadev.twistoast.drawer.NavigationDrawerSeparator;
+import fr.outadev.twistoast.drawer.NavigationDrawerWebItem;
+import fr.outadev.twistoast.drawer.WebViewFragment;
 
 /**
  * The main activity of the app.
@@ -163,9 +157,7 @@ public class MainActivity extends ActionBarActivity implements StopsListContaine
 		if(frags[currentFragmentIndex] == null && drawerItems != null && drawerItems.size() > currentFragmentIndex) {
 			try {
 				frags[currentFragmentIndex] = drawerItems.get(currentFragmentIndex).getFragment();
-			} catch(IllegalAccessException e) {
-				e.printStackTrace();
-			} catch(InstantiationException e) {
+			} catch(IllegalAccessException | InstantiationException e) {
 				e.printStackTrace();
 			}
 		}

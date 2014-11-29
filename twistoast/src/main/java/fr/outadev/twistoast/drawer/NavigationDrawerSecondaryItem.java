@@ -1,5 +1,5 @@
 /*
- * Twistoast - TimeoException
+ * Twistoast - NavigationDrawerSecondaryItem
  * Copyright (C) 2013-2014  Baptiste Candellier
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,20 +16,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.android.timeo.model;
+package fr.outadev.twistoast.drawer;
+
+import android.support.annotation.StringRes;
 
 /**
- * Thrown when an error was encountered while fetching data from the API.
+ * A secondary navigation drawer item.
+ * Useful for pages like preferences or help.
  *
  * @author outadoc
  */
-public class TimeoException extends Exception {
+public class NavigationDrawerSecondaryItem extends NavigationDrawerFragmentItem {
 
-	public TimeoException(String s) {
-		super(s);
+	/**
+	 * Creates a new NavigationDrawerSecondaryItem.
+	 *
+	 * @param titleResId         the id of the string resource for the title
+	 * @param classToInstantiate the Class object of the Fragment to return with getFragment
+	 */
+	public NavigationDrawerSecondaryItem(@StringRes int titleResId, Class classToInstantiate) {
+		super(-1, titleResId, classToInstantiate);
 	}
 
-	public TimeoException() {
-
-	}
 }

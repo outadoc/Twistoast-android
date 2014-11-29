@@ -1,5 +1,5 @@
 /*
- * Twistoast - NavigationDrawerSecondaryItem
+ * Twistoast - NavigationDrawerFragmentItem
  * Copyright (C) 2013-2014  Baptiste Candellier
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,26 +16,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast.ui.drawer;
+package fr.outadev.twistoast.drawer;
 
+import android.app.Fragment;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 
 /**
- * A secondary navigation drawer item.
- * Useful for pages like preferences or help.
+ * A navigation drawer item designed to open a fragment when selected.
  *
  * @author outadoc
  */
-public class NavigationDrawerSecondaryItem extends NavigationDrawerFragmentItem {
+public class NavigationDrawerFragmentItem extends NavigationDrawerItem {
+
+	private Class classToInstantiate;
 
 	/**
-	 * Creates a new NavigationDrawerSecondaryItem.
+	 * Creates a new NavigationDrawerFragmentItem.
 	 *
 	 * @param titleResId         the id of the string resource for the title
 	 * @param classToInstantiate the Class object of the Fragment to return with getFragment
 	 */
-	public NavigationDrawerSecondaryItem(@StringRes int titleResId, Class classToInstantiate) {
-		super(-1, titleResId, classToInstantiate);
+	public NavigationDrawerFragmentItem(@DrawableRes int iconResId, @StringRes int titleResId, Class classToInstantiate) {
+		super(iconResId, titleResId);
+		this.classToInstantiate = classToInstantiate;
 	}
 
+	@Override
+	public Fragment getFragment() throws IllegalAccessException, InstantiationException {
+		return (Fragment) classToInstantiate.newInstance();
+	}
 }

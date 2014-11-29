@@ -47,7 +47,7 @@ public abstract class ScheduleTime {
 	 * @return if time is less than one minute in the future: "imminent arrival"-ish, if less than 45 minutes in the future: "in
 	 * xx minutes", if more than that: the untouched time parameter
 	 */
-	public static String formatDate(Context context, String time) {
+	public static String formatTime(Context context, String time) {
 		Calendar schedule = getNextDateForTime(time);
 
 		switch(getTimeDisplayMode(schedule, context)) {

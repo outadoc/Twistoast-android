@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.android.timeo;
+package fr.outadev.twistoast;
 
 import android.content.Context;
 import android.util.Log;
@@ -26,12 +26,12 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.util.List;
 
-import fr.outadev.android.timeo.model.ProgressListener;
-import fr.outadev.android.timeo.model.TimeoException;
-import fr.outadev.android.timeo.model.TimeoLine;
-import fr.outadev.android.timeo.model.TimeoStop;
-import fr.outadev.twistoast.Utils;
-import fr.outadev.twistoast.database.TwistoastDatabase;
+import fr.outadev.android.timeo.ProgressListener;
+import fr.outadev.android.timeo.TimeoException;
+import fr.outadev.android.timeo.TimeoLine;
+import fr.outadev.android.timeo.TimeoRequestHandler;
+import fr.outadev.android.timeo.TimeoStop;
+import fr.outadev.android.timeo.TwistoastDatabase;
 
 /**
  * Fetches and updates all the references of the stops saved in our database.
@@ -43,7 +43,7 @@ public class TimeoStopReferenceUpdater {
 	private TwistoastDatabase db;
 
 	public TimeoStopReferenceUpdater(Context context) {
-		this.db = new TwistoastDatabase(context);
+		this.db = new TwistoastDatabase(TwistoastDatabaseOpenHelper.getInstance(context));
 	}
 
 	/**
@@ -53,7 +53,7 @@ public class TimeoStopReferenceUpdater {
 	 * @param progressListener a progress listener that will be notified of the progress, line by line.
 	 * @throws XmlPullParserException
 	 * @throws IOException
-	 * @throws TimeoException
+	 * @throws fr.outadev.android.timeo.TimeoException
 	 */
 	public void updateAllStopReferences(ProgressListener progressListener) throws XmlPullParserException, IOException,
 			TimeoException {

@@ -16,12 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.android.timeo.model;
+package fr.outadev.android.timeo;
 
 import android.content.Context;
 import android.preference.PreferenceManager;
-
-import fr.outadev.android.timeo.ScheduleTime;
 
 /**
  * Stores a single schedule, containing a time and a direction.
@@ -69,12 +67,12 @@ public class TimeoSingleSchedule {
 	}
 
 	public String getFormattedTime(Context context) {
-		return (isRelative(context)) ? ScheduleTime.formatDate(context, getTime()) : getTime();
+		return (isRelative(context)) ? ScheduleTime.formatTime(context, getTime()) : getTime();
 	}
 
 	public String getShortFormattedTime(Context context) {
 		String dir = (getDirection() != null && getDirection().matches("(A|B) .+")) ? getDirection().charAt(0) + " : " : "";
-		return (isRelative(context)) ? dir + ScheduleTime.formatDate(context, getTime()) : dir + getTime();
+		return (isRelative(context)) ? dir + ScheduleTime.formatTime(context, getTime()) : dir + getTime();
 	}
 
 	private static boolean isRelative(Context context) {

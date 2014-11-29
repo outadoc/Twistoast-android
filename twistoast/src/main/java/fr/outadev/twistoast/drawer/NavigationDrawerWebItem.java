@@ -1,5 +1,5 @@
 /*
- * Twistoast - NavigationDrawerItem
+ * Twistoast - NavigationDrawerWebItem
  * Copyright (C) 2013-2014  Baptiste Candellier
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,46 +16,43 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast.ui.drawer;
+package fr.outadev.twistoast.drawer;
 
 import android.app.Fragment;
+import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 
 /**
- * An abstract navigation drawer item.
+ * A navigation drawer item designed to open a web page fragment when selected.
  *
  * @author outadoc
  */
-public abstract class NavigationDrawerItem {
+public class NavigationDrawerWebItem extends NavigationDrawerFragmentItem {
 
-	private int titleResId;
-	private int iconResId;
+	private String url;
 
 	/**
-	 * Creates a new NavigationDrawerItem.
+	 * Creates a new NavigationDrawerWebItem.
 	 *
 	 * @param titleResId the id of the string resource for the title
+	 * @param url        the URL of the page to open in the fragment
 	 */
-	public NavigationDrawerItem(@DrawableRes int iconResId, @StringRes int titleResId) {
-		this.iconResId = iconResId;
-		this.titleResId = titleResId;
+	public NavigationDrawerWebItem(@DrawableRes int iconResId, @StringRes int titleResId, String url) {
+		super(iconResId, titleResId, WebViewFragment.class);
+		this.url = url;
 	}
 
-	public int getTitleResId() {
-		return titleResId;
+	public String getUrl() {
+		return url;
 	}
 
-	public int getIconResId() {
-		return iconResId;
+	@Override
+	public Fragment getFragment() throws IllegalAccessException, InstantiationException {
+		Fragment frag = super.getFragment();
+		Bundle args = new Bundle();
+		args.putString("url", url);
+		frag.setArguments(args);
+		return frag;
 	}
-
-	/**
-	 * Gets a new fragment object for this item.
-	 *
-	 * @return a fragment corresponding to the view that should be displayed when this item is selected.
-	 * @throws IllegalAccessException if we couldn't instantiate the fragment
-	 * @throws InstantiationException if we couldn't instantiate the fragment
-	 */
-	public abstract Fragment getFragment() throws IllegalAccessException, InstantiationException;
 }

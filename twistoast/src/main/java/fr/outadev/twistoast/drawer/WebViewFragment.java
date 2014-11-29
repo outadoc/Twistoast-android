@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast.ui.fragments;
+package fr.outadev.twistoast.drawer;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;

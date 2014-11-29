@@ -16,20 +16,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast.database;
+package fr.outadev.android.timeo;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import fr.outadev.android.timeo.model.TimeoIDNameObject;
-import fr.outadev.android.timeo.model.TimeoLine;
-import fr.outadev.android.timeo.model.TimeoStop;
 
 /**
  * Database management class.
@@ -38,10 +34,10 @@ import fr.outadev.android.timeo.model.TimeoStop;
  */
 public class TwistoastDatabase {
 
-	private final TwistoastDatabaseOpenHelper databaseOpenHelper;
+	private final SQLiteOpenHelper databaseOpenHelper;
 
-	public TwistoastDatabase(Context context) {
-		databaseOpenHelper = TwistoastDatabaseOpenHelper.getInstance(context);
+	public TwistoastDatabase(SQLiteOpenHelper openHelper) {
+		databaseOpenHelper = openHelper;
 	}
 
 	/**

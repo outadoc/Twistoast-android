@@ -1,5 +1,5 @@
 /*
- * Twistoast - ITimeoIDName
+ * Twistoast - IProgressListener
  * Copyright (C) 2013-2014  Baptiste Candellier
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,19 +16,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.android.timeo.model;
+package fr.outadev.android.timeo;
 
 /**
- * Created by outadoc on 28/11/14.
+ * Defines a progress listener.
+ * Current process and maximum progress will be updated at will.
  */
-public interface TimeoIDName {
+public interface ProgressListener {
 
-	public String getId();
-
-	public void setId(String id);
-
-	public String getName();
-
-	public void setName(String name);
+	/**
+	 * Updates the current progress.
+	 *
+	 * @param current current progress, can't be greater than total
+	 * @param total   maximum progress
+	 */
+	public void onProgress(int current, int total);
 
 }

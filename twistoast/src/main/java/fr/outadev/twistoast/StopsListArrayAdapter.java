@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast.ui;
+package fr.outadev.twistoast;
 
 import android.app.Activity;
 import android.content.Context;
@@ -41,16 +41,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fr.outadev.android.timeo.TimeoBlockingMessageException;
+import fr.outadev.android.timeo.TimeoException;
 import fr.outadev.android.timeo.TimeoRequestHandler;
-import fr.outadev.android.timeo.model.TimeoBlockingMessageException;
-import fr.outadev.android.timeo.model.TimeoException;
-import fr.outadev.android.timeo.model.TimeoSingleSchedule;
-import fr.outadev.android.timeo.model.TimeoStop;
-import fr.outadev.android.timeo.model.TimeoStopSchedule;
-import fr.outadev.twistoast.R;
-import fr.outadev.twistoast.StopsListContainer;
-import fr.outadev.twistoast.Utils;
-import fr.outadev.twistoast.database.TwistoastDatabase;
+import fr.outadev.android.timeo.TimeoSingleSchedule;
+import fr.outadev.android.timeo.TimeoStop;
+import fr.outadev.android.timeo.TimeoStopSchedule;
+import fr.outadev.android.timeo.TwistoastDatabase;
 
 /**
  * An array adapter for the main list of bus stops.
@@ -61,6 +58,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 
 	private final StopsListContainer stopsListContainer;
 	private final Activity activity;
+	private final TwistoastDatabase db;
 
 	private final List<TimeoStop> stops;
 	private final Map<TimeoStop, TimeoStopSchedule> schedules;
@@ -77,7 +75,8 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 		this.stopsListContainer = stopsListContainer;
 		this.schedules = new HashMap<>();
 		this.networks = TimeoRequestHandler.getNetworksList();
-		this.networkCount = (new TwistoastDatabase(getContext())).getNetworksCount();
+		this.db = new TwistoastDatabase(TwistoastDatabaseOpenHelper.getInstance(getContext()));
+		this.networkCount = db.getNetworksCount();
 	}
 
 	@Override
@@ -236,7 +235,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 					schedules.putAll(scheduleMap);
 				}
 
-				networkCount = (new TwistoastDatabase(getContext())).getNetworksCount();
+				networkCount = db.getNetworksCount();
 
 				notifyDataSetChanged();
 				stopsListContainer.endRefresh((scheduleMap != null));

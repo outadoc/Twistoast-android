@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast.ui.drawer;
+package fr.outadev.twistoast;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -31,8 +31,9 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import fr.outadev.twistoast.R;
-import fr.outadev.twistoast.StopsListContainer;
+import fr.outadev.twistoast.drawer.NavigationDrawerItem;
+import fr.outadev.twistoast.drawer.NavigationDrawerSecondaryItem;
+import fr.outadev.twistoast.drawer.NavigationDrawerSeparator;
 
 /**
  * An array adapter for the navigation drawer.

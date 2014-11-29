@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.android.timeo.model;
+package fr.outadev.android.timeo;
 
 /**
  * A bus stop.

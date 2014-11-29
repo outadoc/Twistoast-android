@@ -32,9 +32,9 @@ import java.util.UUID;
 
 import fr.outadev.android.timeo.ScheduleTime;
 import fr.outadev.android.timeo.TimeoRequestHandler;
-import fr.outadev.android.timeo.model.TimeoStop;
-import fr.outadev.android.timeo.model.TimeoStopSchedule;
-import fr.outadev.twistoast.database.TwistoastDatabase;
+import fr.outadev.android.timeo.TimeoStop;
+import fr.outadev.android.timeo.TimeoStopSchedule;
+import fr.outadev.android.timeo.TwistoastDatabase;
 
 /**
  * Receives and handles the Twistoast Pebble app requests in the background.
@@ -72,7 +72,7 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 		Log.d("TwistoastPebbleReceiver", "received a message from pebble " + PEBBLE_UUID);
 
 		// open the database and count the stops
-		TwistoastDatabase databaseHandler = new TwistoastDatabase(context);
+		TwistoastDatabase databaseHandler = new TwistoastDatabase(TwistoastDatabaseOpenHelper.getInstance(context));
 		int stopsCount = databaseHandler.getStopsCount();
 
 		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

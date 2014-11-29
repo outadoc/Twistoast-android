@@ -1,5 +1,5 @@
 /*
- * Twistoast - NavigationDrawerSeparator
+ * Twistoast - ITimeoIDName
  * Copyright (C) 2013-2014  Baptiste Candellier
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,21 +16,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast.ui.drawer;
-
-import android.app.Fragment;
+package fr.outadev.android.timeo;
 
 /**
- * A navigation drawer separator.
+ * Created by outadoc on 28/11/14.
  */
-public class NavigationDrawerSeparator extends NavigationDrawerItem {
+public interface TimeoIDName {
 
-	public NavigationDrawerSeparator() {
-		super(-1, -1);
-	}
+	public String getId();
 
-	@Override
-	public Fragment getFragment() throws IllegalAccessException, InstantiationException {
-		return null;
-	}
+	public void setId(String id);
+
+	public String getName();
+
+	public void setName(String name);
+
 }

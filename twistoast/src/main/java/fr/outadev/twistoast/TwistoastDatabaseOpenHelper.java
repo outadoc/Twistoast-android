@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast.database;
+package fr.outadev.twistoast;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -30,14 +30,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import fr.outadev.android.timeo.TimeoRequestHandler;
-import fr.outadev.twistoast.Utils;
 
 /**
  * Opens, creates and manages database versions.
  *
  * @author outadoc
  */
-class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
+public class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 
 	private static final int DATABASE_VERSION = 2;
 

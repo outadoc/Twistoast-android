@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast.ui.fragments;
+package fr.outadev.twistoast;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -46,17 +46,9 @@ import com.melnykov.fab.FloatingActionButton;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.listeners.ActionClickListener;
 
-import fr.outadev.android.timeo.TimeoStopReferenceUpdater;
-import fr.outadev.android.timeo.model.ProgressListener;
-import fr.outadev.android.timeo.model.TimeoStop;
-import fr.outadev.twistoast.R;
-import fr.outadev.twistoast.StopsListContainer;
-import fr.outadev.twistoast.Utils;
-import fr.outadev.twistoast.database.TwistoastDatabase;
-import fr.outadev.twistoast.ui.StopsListArrayAdapter;
-import fr.outadev.twistoast.ui.SwipeDismissListViewTouchListener;
-import fr.outadev.twistoast.ui.activities.AddStopActivity;
-import fr.outadev.twistoast.ui.activities.MainActivity;
+import fr.outadev.android.timeo.ProgressListener;
+import fr.outadev.android.timeo.TimeoStop;
+import fr.outadev.android.timeo.TwistoastDatabase;
 
 public class StopsListFragment extends Fragment implements StopsListContainer {
 
@@ -93,7 +85,7 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 		// yes hello please, I'd like to be inflated?
 		setHasOptionsMenu(true);
 
-		databaseHandler = new TwistoastDatabase(getActivity());
+		databaseHandler = new TwistoastDatabase(TwistoastDatabaseOpenHelper.getInstance(getActivity()));
 
 		periodicRefreshRunnable = new Runnable() {
 			@Override
