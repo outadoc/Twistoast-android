@@ -61,6 +61,21 @@ public class TimeoIDNameObject implements ITimeoIDName {
 	}
 
 	@Override
+	public boolean equals(Object object) {
+		if(object == this) {
+			return true;
+		}
+
+		if(object instanceof TimeoIDNameObject) {
+			if(((TimeoIDNameObject) object).getId().equals(this.getId())) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	@Override
 	public String toString() {
 		return id + " - " + name;
 	}

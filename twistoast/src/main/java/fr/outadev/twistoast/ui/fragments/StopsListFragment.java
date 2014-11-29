@@ -20,8 +20,11 @@ package fr.outadev.twistoast.ui.fragments;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -44,6 +47,8 @@ import com.melnykov.fab.FloatingActionButton;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.listeners.ActionClickListener;
 
+import fr.outadev.android.timeo.TimeoStopReferenceUpdater;
+import fr.outadev.android.timeo.model.IProgressListener;
 import fr.outadev.android.timeo.model.TimeoStop;
 import fr.outadev.twistoast.IStopsListContainer;
 import fr.outadev.twistoast.R;
@@ -308,8 +313,19 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 			if(mismatch > 0) {
 				(new AlertDialog.Builder(getActivity()))
-						.setTitle("Error")
-						.setMessage("Woops, mismatch=" + mismatch)
+						.setTitle("Outdated stops")
+						.setMessage("It looks like " + mismatch + " of the stops you added need(s) to be updated. Would you " +
+								"like to do this now? If you refuse, we won't ask you until next time you start the app.")
+						.setPositiveButton("Do it!", new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								//update the stop references...
+								(new ReferenceUpdateTask()).execute();
+							}
+
+						})
+						.setNegativeButton("Later", null)
 						.create().show();
 			}
 		}
@@ -318,6 +334,67 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 	@Override
 	public void loadFragmentFromDrawerPosition(int index) {
 		((MainActivity) getActivity()).loadFragmentFromDrawerPosition(index);
+	}
+
+	private class ReferenceUpdateTask extends AsyncTask<Void, Void, Exception> {
+
+		private ProgressDialog dialog;
+		private TimeoStopReferenceUpdater referenceUpdater;
+
+		@Override
+		protected Exception doInBackground(Void... params) {
+			try {
+				referenceUpdater.updateAllStopReferences(new IProgressListener() {
+
+					@Override
+					public void onProgress(int current, int total) {
+						dialog.setIndeterminate(false);
+						dialog.setMax(total);
+						dialog.setProgress(current);
+					}
+
+				});
+			} catch(Exception e) {
+				e.printStackTrace();
+				return e;
+			}
+
+			return null;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			referenceUpdater = new TimeoStopReferenceUpdater(getActivity());
+			dialog = new ProgressDialog(getActivity());
+
+			dialog.setTitle("Updating stop references...");
+			dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+			dialog.setCancelable(false);
+			dialog.setIndeterminate(true);
+			dialog.show();
+		}
+
+		@Override
+		protected void onPostExecute(Exception e) {
+			dialog.hide();
+
+			if(e != null) {
+				Snackbar.with(getActivity())
+						.text("Error while updating the stops references.")
+						.actionLabel("Retry")
+						.actionColorResource(R.color.colorAccent)
+						.attachToAbsListView(listView)
+						.actionListener(new ActionClickListener() {
+
+							@Override
+							public void onActionClicked() {
+								(new ReferenceUpdateTask()).execute();
+							}
+
+						})
+						.show(getActivity());
+			}
+		}
 	}
 
 }

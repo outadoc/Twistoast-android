@@ -19,15 +19,18 @@
 package fr.outadev.android.timeo;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.util.List;
 
+import fr.outadev.android.timeo.model.IProgressListener;
 import fr.outadev.android.timeo.model.TimeoException;
 import fr.outadev.android.timeo.model.TimeoLine;
 import fr.outadev.android.timeo.model.TimeoStop;
+import fr.outadev.twistoast.Utils;
 import fr.outadev.twistoast.database.TwistoastDatabase;
 
 /**
@@ -36,33 +39,39 @@ import fr.outadev.twistoast.database.TwistoastDatabase;
 public class TimeoStopReferenceUpdater {
 
 	private TwistoastDatabase db;
-	private Context context;
 
 	public TimeoStopReferenceUpdater(Context context) {
-		this.context = context;
 		this.db = new TwistoastDatabase(context);
 	}
 
-	public void updateAllStopReferences() throws XmlPullParserException, IOException, TimeoException {
+	public void updateAllStopReferences(IProgressListener progressListener) throws XmlPullParserException, IOException,
+			TimeoException {
 		List<TimeoStop> stopList = db.getAllStops();
 		TimeoLine lastLine = null;
 
-		db.beginTransaction();
+		progressListener.onProgress(0, stopList.size());
+
+		int i = 0;
 
 		for(TimeoStop stop : stopList) {
-			if(stop.getLine() == lastLine) {
+			//we only want to load it for each line, so we skip any additional stops that we already processed
+			if(stop.getLine().equals(lastLine)) {
 				continue;
 			}
+
+			Log.d(Utils.TAG, "updating stops for line " + stop.getLine());
+			progressListener.onProgress(i, stopList.size());
 
 			lastLine = stop.getLine();
 			List<TimeoStop> newStops = TimeoRequestHandler.getStops(lastLine);
 
 			for(TimeoStop newStop : newStops) {
-				db.updateStopReference(stop, newStop.getReference());
+				db.updateStopReference(newStop);
 			}
-		}
 
-		db.commit();
+			i++;
+			}
+
 	}
 
 }

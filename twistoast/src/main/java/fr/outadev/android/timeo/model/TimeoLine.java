@@ -92,11 +92,6 @@ public class TimeoLine implements ITimeoIDName {
 	}
 
 	@Override
-	public String toString() {
-		return line.getName();
-	}
-
-	@Override
 	public String getId() {
 		return line.getId();
 	}
@@ -115,4 +110,37 @@ public class TimeoLine implements ITimeoIDName {
 	public void setName(String name) {
 		line.setName(name);
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if(this == o) {
+			return true;
+		}
+
+		if(o == null || getClass() != o.getClass()) {
+			return false;
+		}
+
+		TimeoLine timeoLine = (TimeoLine) o;
+
+		if(networkCode != timeoLine.networkCode) {
+			return false;
+		}
+
+		if(direction != null ? !direction.equals(timeoLine.direction) : timeoLine.direction != null) {
+			return false;
+		}
+
+		if(line != null ? !line.equals(timeoLine.line) : timeoLine.line != null) {
+			return false;
+		}
+
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return line.getName();
+	}
+
 }

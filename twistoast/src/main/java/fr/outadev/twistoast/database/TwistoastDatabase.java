@@ -41,7 +41,7 @@ public class TwistoastDatabase {
 	private final TwistoastDatabaseOpenHelper databaseOpenHelper;
 
 	public TwistoastDatabase(Context context) {
-		databaseOpenHelper = new TwistoastDatabaseOpenHelper(context);
+		databaseOpenHelper = TwistoastDatabaseOpenHelper.getInstance(context);
 	}
 
 	/**
@@ -275,30 +275,25 @@ public class TwistoastDatabase {
 		db.close();
 	}
 
-	public void updateStopReference(TimeoStop stop, String newReference) {
+	/**
+	 * Update the reference of a stop in the database.
+	 *
+	 * @param stop the bus stop whose reference is to be updated
+	 */
+	public void updateStopReference(TimeoStop stop) {
 		SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
 
 		ContentValues updateClause = new ContentValues();
-		updateClause.put("stop_ref", newReference);
+		updateClause.put("stop_ref", stop.getReference());
 
-		db.update("twi_stop", updateClause, "stop_id = ? AND line_id = ? AND dir_id = ?", new String[]{
+		db.update("twi_stop", updateClause, "stop_id = ? AND line_id = ? AND dir_id = ? AND network_code = ?", new String[]{
 				stop.getId(),
 				stop.getLine().getId(),
-				stop.getLine().getId()
+				stop.getLine().getDirection().getId(),
+				stop.getLine().getNetworkCode() + ""
 		});
 
 		db.close();
-	}
-
-	public void beginTransaction() {
-		databaseOpenHelper.getWritableDatabase().beginTransaction();
-	}
-
-	public void commit() {
-		SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
-
-		db.setTransactionSuccessful();
-		db.endTransaction();
 	}
 
 }

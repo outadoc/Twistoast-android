@@ -43,9 +43,6 @@ class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME = "twistoast.db";
 	private static final String DATABASE_V2_UPGRADE_NAME = "db_upgrade_v2.db";
-
-	private Context context;
-
 	private static final String LINES_TABLE_CREATE =
 			"CREATE TABLE twi_line(" +
 					"line_id TEXT, " +
@@ -53,7 +50,6 @@ class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 					"line_color TEXT, " +
 					"network_code INTEGER DEFAULT " + TimeoRequestHandler.DEFAULT_NETWORK_CODE + ", " +
 					"PRIMARY KEY (line_id, network_code));";
-
 	private static final String DIRECTIONS_TABLE_CREATE =
 			"CREATE TABLE twi_direction(" +
 					"dir_id TEXT, " +
@@ -62,7 +58,6 @@ class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 					"network_code INTEGER DEFAULT " + TimeoRequestHandler.DEFAULT_NETWORK_CODE + ", " +
 					"PRIMARY KEY(dir_id, line_id, network_code), " +
 					"FOREIGN KEY(line_id, network_code) REFERENCES twi_line(line_id, network_code));";
-
 	private static final String STOPS_TABLE_CREATE =
 			"CREATE TABLE twi_stop(" +
 					"stop_id INTEGER, " +
@@ -71,12 +66,22 @@ class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 					"stop_name TEXT, " +
 					"stop_ref TEXT, " +
 					"network_code INTEGER DEFAULT " + TimeoRequestHandler.DEFAULT_NETWORK_CODE + ", " +
-					"PRIMARY KEY(stop_id, line_id, dir_id, stop_ref, network_code), " +
+					"PRIMARY KEY(stop_id, line_id, dir_id, network_code), " +
 					"FOREIGN KEY(dir_id, line_id, network_code) REFERENCES twi_direction(dir_id, line_id, network_code));";
+	private static TwistoastDatabaseOpenHelper instance;
+	private Context context;
 
-	TwistoastDatabaseOpenHelper(Context context) {
+	private TwistoastDatabaseOpenHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		this.context = context;
+	}
+
+	public static TwistoastDatabaseOpenHelper getInstance(Context context) {
+		if(instance == null) {
+			instance = new TwistoastDatabaseOpenHelper(context);
+		}
+
+		return instance;
 	}
 
 	@Override
