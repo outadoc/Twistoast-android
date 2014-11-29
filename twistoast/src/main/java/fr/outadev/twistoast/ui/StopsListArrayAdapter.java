@@ -43,6 +43,7 @@ import java.util.Map;
 
 import fr.outadev.android.timeo.TimeoRequestHandler;
 import fr.outadev.android.timeo.model.TimeoBlockingMessageException;
+import fr.outadev.android.timeo.model.TimeoException;
 import fr.outadev.android.timeo.model.TimeoSingleSchedule;
 import fr.outadev.android.timeo.model.TimeoStop;
 import fr.outadev.android.timeo.model.TimeoStopSchedule;
@@ -197,8 +198,16 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 							if(e instanceof TimeoBlockingMessageException) {
 								((TimeoBlockingMessageException) e).getAlertMessage(getContext()).show();
 							} else {
+								String message;
+
+								if(e instanceof TimeoException) {
+									message = getContext().getString(R.string.error_toast, e.getMessage());
+								} else {
+									message = getContext().getString(R.string.loading_error);
+								}
+
 								Snackbar.with(getContext())
-										.text(R.string.loading_error)
+										.text(message)
 										.actionLabel(R.string.error_retry)
 										.actionColorResource(R.color.colorAccent)
 										.actionListener(new ActionClickListener() {
