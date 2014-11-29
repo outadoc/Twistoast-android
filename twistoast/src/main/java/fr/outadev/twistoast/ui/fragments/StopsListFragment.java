@@ -82,7 +82,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if(requestCode == 0) {
-			refreshListFromDB(true);
+			refreshAllStopSchedules(true);
 		}
 	}
 
@@ -99,7 +99,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 			@Override
 			public void run() {
 				if(autoRefresh) {
-					refreshListFromDB(false);
+					refreshAllStopSchedules(false);
 				}
 			}
 		};
@@ -128,7 +128,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 			@Override
 			public void onRefresh() {
-				refreshListFromDB(false);
+				refreshAllStopSchedules(false);
 			}
 
 		});
@@ -174,7 +174,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 									public void onActionClicked() {
 										Log.i(Utils.TAG, "restoring stop " + stopToDelete);
 										databaseHandler.addStopToDatabase(stopToDelete);
-										refreshListFromDB(true);
+										refreshAllStopSchedules(true);
 									}
 
 								})
@@ -241,7 +241,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 			}
 		}
 
-		refreshListFromDB(true);
+		refreshAllStopSchedules(true);
 	}
 
 	@Override
@@ -250,7 +250,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 		isInBackground = false;
 		// when the activity is resuming, refresh
-		refreshListFromDB(false);
+		refreshAllStopSchedules(false);
 	}
 
 	@Override
@@ -268,7 +268,13 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 		periodicRefreshHandler.removeCallbacks(periodicRefreshRunnable);
 	}
 
-	public void refreshListFromDB(boolean resetList) {
+	/**
+	 * Refreshes the list's schedules and displays them to the user.
+	 *
+	 * @param reloadFromDatabase true if we want to reload the stops completely, or false if we only want
+	 *                           to update the schedules
+	 */
+	public void refreshAllStopSchedules(boolean reloadFromDatabase) {
 		// we don't want to try to refresh if we're already refreshing (causes
 		// bugs)
 		if(isRefreshing) {
@@ -283,7 +289,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 		// we have to reset the adapter so it correctly loads the stops
 		// if we don't do that, bugs will appear when the database has been
 		// modified
-		if(resetList) {
+		if(reloadFromDatabase) {
 			listAdapter = new StopsListArrayAdapter(getActivity(), getActivity(), android.R.layout.simple_list_item_1,
 					databaseHandler.getAllStops(), this);
 			listView.setAdapter(listAdapter);
@@ -395,7 +401,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 		@Override
 		protected void onPostExecute(Exception e) {
 			dialog.hide();
-			refreshListFromDB(true);
+			refreshAllStopSchedules(true);
 
 			if(e != null) {
 				Snackbar.with(getActivity())
