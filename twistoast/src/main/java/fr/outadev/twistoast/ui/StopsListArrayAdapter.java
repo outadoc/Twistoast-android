@@ -33,7 +33,9 @@ import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.listeners.ActionClickListener;
 
 import java.util.HashMap;
 import java.util.List;
@@ -65,9 +67,9 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 
 	private int networkCount = 0;
 
-	public StopsListArrayAdapter(Context context, Activity activity, int resource, List<TimeoStop> stops,
+	public StopsListArrayAdapter(Activity activity, int resource, List<TimeoStop> stops,
 	                             IStopsListContainer stopsListContainer) {
-		super(context, resource, stops);
+		super(activity, resource, stops);
 
 		this.activity = activity;
 		this.stops = stops;
@@ -195,8 +197,19 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 							if(e instanceof TimeoBlockingMessageException) {
 								((TimeoBlockingMessageException) e).getAlertMessage(getContext()).show();
 							} else {
-								Toast.makeText(getContext(), activity.getResources().getString(R.string.loading_error),
-										Toast.LENGTH_LONG).show();
+								Snackbar.with(getContext())
+										.text(R.string.loading_error)
+										.actionLabel("Retry")
+										.actionColorResource(R.color.colorAccent)
+										.actionListener(new ActionClickListener() {
+
+											@Override
+											public void onActionClicked() {
+												updateScheduleData();
+											}
+
+										})
+										.show(activity);
 							}
 						}
 
