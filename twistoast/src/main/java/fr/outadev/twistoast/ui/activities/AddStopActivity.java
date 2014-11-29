@@ -63,6 +63,9 @@ import fr.outadev.twistoast.database.TwistoastDatabase;
  */
 public class AddStopActivity extends ActionBarActivity {
 
+	public static final int NO_STOP_ADDED = 0;
+	public static final int STOP_ADDED = 1;
+
 	private Spinner spinLine;
 	private Spinner spinDirection;
 	private Spinner spinStop;
@@ -99,6 +102,8 @@ public class AddStopActivity extends ActionBarActivity {
 
 		// setup everything
 		setContentView(R.layout.activity_add_stop);
+
+		setResult(NO_STOP_ADDED);
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
@@ -478,8 +483,8 @@ public class AddStopActivity extends ActionBarActivity {
 
 		try {
 			databaseHandler.addStopToDatabase(stop);
-
 			Toast.makeText(this, getResources().getString(R.string.added_toast, stop.toString()), Toast.LENGTH_SHORT).show();
+			setResult(STOP_ADDED);
 			finish();
 		} catch(SQLiteConstraintException e) {
 			// stop already in database
