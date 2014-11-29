@@ -25,4 +25,5 @@
 	android:layout_height="wrap_content"
 	android:layout_alignParentTop="true"
 	android:minHeight="?attr/actionBarSize"
+	app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
 	app:theme="@style/TwistoastActionBar" />
