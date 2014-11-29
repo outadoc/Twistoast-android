@@ -34,7 +34,9 @@ import fr.outadev.twistoast.Utils;
 import fr.outadev.twistoast.database.TwistoastDatabase;
 
 /**
- * Created by outadoc on 27/11/14.
+ * Fetches and updates all the references of the stops saved in our database.
+ * Useful since they periodically change, and this class should allow the user
+ * to update his list of stops without having to delete/re-add them.
  */
 public class TimeoStopReferenceUpdater {
 
@@ -44,6 +46,15 @@ public class TimeoStopReferenceUpdater {
 		this.db = new TwistoastDatabase(context);
 	}
 
+	/**
+	 * Updates all the references of the bus stops in the database.
+	 * Read the classe's Javadoc for some more context.
+	 *
+	 * @param progressListener a progress listener that will be notified of the progress, line by line.
+	 * @throws XmlPullParserException
+	 * @throws IOException
+	 * @throws TimeoException
+	 */
 	public void updateAllStopReferences(ProgressListener progressListener) throws XmlPullParserException, IOException,
 			TimeoException {
 		List<TimeoStop> stopList = db.getAllStops();
@@ -59,18 +70,22 @@ public class TimeoStopReferenceUpdater {
 				continue;
 			}
 
+			//update the progress
 			Log.d(Utils.TAG, "updating stops for line " + stop.getLine());
 			progressListener.onProgress(i, stopList.size());
 
+			//get the stops for the current line
 			lastLine = stop.getLine();
 			List<TimeoStop> newStops = TimeoRequestHandler.getStops(lastLine);
 
+			//update all the stops we received.
+			//obviously, only the ones existing in the database will be updated.
 			for(TimeoStop newStop : newStops) {
 				db.updateStopReference(newStop);
 			}
 
 			i++;
-			}
+		}
 
 	}
 

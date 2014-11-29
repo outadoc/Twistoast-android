@@ -19,10 +19,17 @@
 package fr.outadev.android.timeo.model;
 
 /**
- * Created by outadoc on 29/11/14.
+ * Defines a progress listener.
+ * Current process and maximum progress will be updated at will.
  */
 public interface ProgressListener {
 
+	/**
+	 * Updates the current progress.
+	 *
+	 * @param current current progress, can't be greater than total
+	 * @param total   maximum progress
+	 */
 	public void onProgress(int current, int total);
 
 }
