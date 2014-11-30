@@ -1,3 +1,8 @@
+/*
+ * Copyright Muhammad Wajeeh - 2013
+ * Source https://stackoverflow.com/questions/5033012/auto-scale-textview-text-to-fit-within-bounds/17782522#17782522
+ */
+
 package com.vj.widgets;
 
 import android.annotation.TargetApi;
@@ -14,6 +19,7 @@ import android.util.TypedValue;
 import android.widget.TextView;
 
 public class AutoResizeTextView extends TextView {
+
 	private static final int NO_LINE_LIMIT = -1;
 	private RectF mTextRect = new RectF();
 
@@ -71,6 +77,7 @@ public class AutoResizeTextView extends TextView {
 			}
 		}
 	};
+
 	private int mMaxLines;
 
 	private boolean mEnableSizeCache = true;
@@ -129,16 +136,16 @@ public class AutoResizeTextView extends TextView {
 	}
 
 	@Override
-	public void setText(final CharSequence text, BufferType type) {
-		super.setText(text, type);
-		adjustTextSize(text.toString());
-	}
-
-	@Override
 	public void setTextSize(float size) {
 		mMaxTextSize = size;
 		mTextCachedSizes.clear();
 		adjustTextSize(getText().toString());
+	}
+
+	@Override
+	public void setText(final CharSequence text, BufferType type) {
+		super.setText(text, type);
+		adjustTextSize(text.toString());
 	}
 
 	@Override
@@ -157,13 +164,6 @@ public class AutoResizeTextView extends TextView {
 		adjustTextSize(getText().toString());
 	}
 
-	@Override
-	public void setMaxLines(int maxlines) {
-		super.setMaxLines(maxlines);
-		mMaxLines = maxlines;
-		reAdjust();
-	}
-
 	/**
 	 * Set the lower text size limit and invalidate the view
 	 *
@@ -174,18 +174,14 @@ public class AutoResizeTextView extends TextView {
 		reAdjust();
 	}
 
-	public int getMaxLines() {
-		return mMaxLines;
-	}
-
 	private void reAdjust() {
 		adjustTextSize(getText().toString());
 	}
 
 	@Override
-	public void setSingleLine() {
-		super.setSingleLine();
-		mMaxLines = 1;
+	public void setMaxLines(int maxlines) {
+		super.setMaxLines(maxlines);
+		mMaxLines = maxlines;
 		reAdjust();
 	}
 
@@ -206,17 +202,6 @@ public class AutoResizeTextView extends TextView {
 						mSizeTester, mAvailableSpaceRect));
 	}
 
-	@Override
-	public void setSingleLine(boolean singleLine) {
-		super.setSingleLine(singleLine);
-		if(singleLine) {
-			mMaxLines = 1;
-		} else {
-			mMaxLines = NO_LINE_LIMIT;
-		}
-		reAdjust();
-	}
-
 	/**
 	 * Enables or disables size caching, enabling it will improve performance
 	 * where you are animating a value inside TextView. This stores the font
@@ -231,11 +216,8 @@ public class AutoResizeTextView extends TextView {
 		adjustTextSize(getText().toString());
 	}
 
-	@Override
-	public void setLines(int lines) {
-		super.setLines(lines);
-		mMaxLines = lines;
-		reAdjust();
+	public int getMaxLines() {
+		return mMaxLines;
 	}
 
 	private int efficientTextSizeSearch(int start, int end,
@@ -265,10 +247,10 @@ public class AutoResizeTextView extends TextView {
 	}
 
 	@Override
-	public void setLineSpacing(float add, float mult) {
-		super.setLineSpacing(add, mult);
-		mSpacingMult = mult;
-		mSpacingAdd = add;
+	public void setSingleLine() {
+		super.setSingleLine();
+		mMaxLines = 1;
+		reAdjust();
 	}
 
 	private interface SizeTester {
@@ -282,6 +264,30 @@ public class AutoResizeTextView extends TextView {
 		public int onTestSize(int suggestedSize, RectF availableSpace);
 	}
 
+	@Override
+	public void setSingleLine(boolean singleLine) {
+		super.setSingleLine(singleLine);
+		if(singleLine) {
+			mMaxLines = 1;
+		} else {
+			mMaxLines = NO_LINE_LIMIT;
+		}
+		reAdjust();
+	}
+
+	@Override
+	public void setLines(int lines) {
+		super.setLines(lines);
+		mMaxLines = lines;
+		reAdjust();
+	}
+
+	@Override
+	public void setLineSpacing(float add, float mult) {
+		super.setLineSpacing(add, mult);
+		mSpacingMult = mult;
+		mSpacingAdd = add;
+	}
 
 	@Override
 	protected void onTextChanged(final CharSequence text, final int start,
@@ -289,6 +295,5 @@ public class AutoResizeTextView extends TextView {
 		super.onTextChanged(text, start, before, after);
 		reAdjust();
 	}
-
 
 }
