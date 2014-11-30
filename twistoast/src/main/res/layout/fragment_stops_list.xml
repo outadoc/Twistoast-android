@@ -28,8 +28,6 @@
 
 	<include layout="@layout/traffic_alert" />
 
-	<include layout="@layout/no_content_view" />
-
 	<RelativeLayout
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
@@ -52,6 +50,8 @@
 				android:paddingTop="5dp" />
 
 		</android.support.v4.widget.SwipeRefreshLayout>
+
+		<include layout="@layout/no_content_view" />
 
 		<com.melnykov.fab.FloatingActionButton
 			android:id="@+id/fab"
