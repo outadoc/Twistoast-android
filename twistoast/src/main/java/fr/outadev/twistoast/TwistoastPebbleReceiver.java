@@ -111,13 +111,6 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 				@Override
 				protected void onPostExecute(TimeoStopSchedule schedule) {
 					if(schedule != null) {
-						// parse the schedule and set it for our
-						// TimeoScheduleObject, then refresh
-
-						if(schedule.getSchedules().size() == 0) {
-							schedule.getSchedules().get(0).setTime(context.getResources().getString(R.string.loading_error));
-						}
-
 						Log.d("TwistoastPebbleReceiver", "got data for stop: " + schedule);
 						craftAndSendSchedulePacket(context, schedule);
 					} else {
@@ -147,18 +140,29 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 		response.addString(KEY_BUS_DIRECTION_NAME, processStringForPebble(schedule.getStop().getLine().getDirection().getName(),
 				15));
 		response.addString(KEY_BUS_STOP_NAME, processStringForPebble(schedule.getStop().getName(), 15));
-		response.addString(KEY_BUS_NEXT_SCHEDULE, processStringForPebble(schedule.getSchedules().get(0).getShortFormattedTime
-				(context), 15));
-		response.addString(KEY_BUS_SECOND_SCHEDULE,
-				(schedule.getSchedules().size() > 1) ? processStringForPebble(schedule.getSchedules().get(1)
-						.getShortFormattedTime(context), 15) : "");
 
-		Calendar scheduleCalendar = ScheduleTime.getNextDateForTime(schedule.getSchedules().get(0).getTime());
+		if(!schedule.getSchedules().isEmpty()) {
+			response.addString(KEY_BUS_NEXT_SCHEDULE, processStringForPebble(schedule.getSchedules().get(0)
+					.getShortFormattedTime(context), 15));
+		} else {
+			response.addString(KEY_BUS_NEXT_SCHEDULE, context.getResources().getString(R.string.no_upcoming_stops));
+		}
 
-		if(ScheduleTime.getTimeDisplayMode(scheduleCalendar, context) == ScheduleTime.TimeDisplayMode.ARRIVAL_IMMINENT
-				|| ScheduleTime.getTimeDisplayMode(scheduleCalendar, context) == ScheduleTime.TimeDisplayMode
-				.CURRENTLY_AT_STOP) {
-			response.addInt8(KEY_SHOULD_VIBRATE, (byte) 1);
+		if(schedule.getSchedules().size() > 1) {
+			response.addString(KEY_BUS_SECOND_SCHEDULE, processStringForPebble(schedule.getSchedules().get(1)
+					.getShortFormattedTime(context), 15));
+		} else {
+			response.addString(KEY_BUS_SECOND_SCHEDULE, "");
+		}
+
+		if(!schedule.getSchedules().isEmpty()) {
+			Calendar scheduleCalendar = ScheduleTime.getNextDateForTime(schedule.getSchedules().get(0).getTime());
+			ScheduleTime.TimeDisplayMode displayMode = ScheduleTime.getTimeDisplayMode(scheduleCalendar, context);
+
+			if(displayMode == ScheduleTime.TimeDisplayMode.ARRIVAL_IMMINENT
+					|| displayMode == ScheduleTime.TimeDisplayMode.CURRENTLY_AT_STOP) {
+				response.addInt8(KEY_SHOULD_VIBRATE, (byte) 1);
+			}
 		}
 
 		Log.d("TwistoastPebbleReceiver", "sending back: " + response);

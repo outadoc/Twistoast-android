@@ -64,5 +64,6 @@
 	<string name="stop_ref_update_progress_title">Updating stop references…</string>
 	<string name="stop_ref_update_error_text">Error while updating the stops references.</string>
 	<string name="error_retry">Retry</string>
+	<string name="no_upcoming_stops">Nothing for now</string>
 
 </resources>
