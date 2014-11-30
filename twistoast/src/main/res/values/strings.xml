@@ -67,6 +67,6 @@
 	<string name="stop_ref_update_message_negative">Plus tard</string>
 	<string name="stop_ref_update_progress_title">Mise à jour des références des arrêts...</string>
 	<string name="stop_ref_update_error_text">Erreur lors de la mise à jour.</string>
-	<string name="error_retry">Retry</string>
+	<string name="error_retry">Réessayer</string>
 
 </resources>
