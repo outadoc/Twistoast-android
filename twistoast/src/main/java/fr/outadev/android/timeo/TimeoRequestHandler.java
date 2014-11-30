@@ -384,6 +384,10 @@ public abstract class TimeoRequestHandler {
 	@NonNull
 	public static List<TimeoStopSchedule> getMultipleSchedules(int networkCode, List<TimeoStop> stops)
 			throws HttpRequestException, TimeoException, XmlPullParserException, IOException {
+		//final schedules to return
+		List<TimeoStopSchedule> schedules = new ArrayList<>();
+
+		//the list of stop references we'll be sending to the api
 		String refs = "";
 
 		if(stops.isEmpty()) {
@@ -396,6 +400,10 @@ public abstract class TimeoRequestHandler {
 			}
 		}
 
+		if(refs.isEmpty()) {
+			return schedules;
+		}
+
 		refs = refs.substring(0, refs.length() - 1);
 
 		String params = "xml=3&refs=" + refs + "&ran=1";
@@ -403,9 +411,6 @@ public abstract class TimeoRequestHandler {
 
 		XmlPullParser parser = getParserForXMLString(result);
 		int eventType = parser.getEventType();
-
-		//final schedules to return
-		List<TimeoStopSchedule> schedules = new ArrayList<>();
 
 		//temporary schedule (associated with a stop and a few schedules)
 		TimeoStopSchedule tmpSchedule = null;
