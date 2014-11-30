@@ -73,9 +73,10 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:orientation="horizontal"
-		android:padding="3dp">
+		android:paddingTop="7dp"
+		android:paddingBottom="7dp">
 
-		<FrameLayout
+	<FrameLayout
 			android:id="@+id/view_line_id"
 			android:layout_width="60dp"
 			android:layout_height="60dp"
