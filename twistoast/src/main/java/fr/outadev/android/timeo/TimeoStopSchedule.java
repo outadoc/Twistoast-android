@@ -18,6 +18,7 @@
 
 package fr.outadev.android.timeo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,6 +41,10 @@ public class TimeoStopSchedule {
 	public TimeoStopSchedule(TimeoStop stop, List<TimeoSingleSchedule> schedules) {
 		this.stop = stop;
 		this.schedules = schedules;
+	}
+
+	public TimeoStopSchedule() {
+		this(null, new ArrayList<TimeoSingleSchedule>());
 	}
 
 	public TimeoStop getStop() {

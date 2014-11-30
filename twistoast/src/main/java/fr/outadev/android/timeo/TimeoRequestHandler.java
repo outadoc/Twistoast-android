@@ -210,11 +210,11 @@ public abstract class TimeoRequestHandler {
 		TimeoLine tmpLine = null;
 		TimeoIDNameObject tmpDirection;
 
-		String errorCode = null;
-
 		ArrayList<TimeoLine> lines = new ArrayList<>();
 
+		String errorCode = null;
 		String text = null;
+
 		boolean isInLineTag = false;
 
 		while(eventType != XmlPullParser.END_DOCUMENT) {
@@ -227,8 +227,10 @@ public abstract class TimeoRequestHandler {
 						isInLineTag = true;
 						tmpDirection = new TimeoIDNameObject();
 						tmpLine = new TimeoLine(new TimeoIDNameObject(), tmpDirection, networkCode);
+
 					} else if(tagname.equals("arret")) {
 						isInLineTag = false;
+
 					} else if(tagname.equals("erreur")) {
 						errorCode = parser.getAttributeValue(null, "code");
 					}
@@ -242,16 +244,22 @@ public abstract class TimeoRequestHandler {
 				case XmlPullParser.END_TAG:
 					if(tagname.equals("ligne")) {
 						lines.add(tmpLine);
+
 					} else if(tmpLine != null && tagname.equals("code") && isInLineTag) {
 						tmpLine.getDetails().setId(text);
+
 					} else if(tmpLine != null && tagname.equals("nom") && isInLineTag) {
 						tmpLine.getDetails().setName(smartCapitalize(text));
+
 					} else if(tmpLine != null && tagname.equals("sens") && isInLineTag) {
 						tmpLine.getDirection().setId(text);
+
 					} else if(tmpLine != null && tagname.equals("vers") && isInLineTag) {
 						tmpLine.getDirection().setName(smartCapitalize(text));
+
 					} else if(tmpLine != null && tagname.equals("couleur") && isInLineTag) {
 						tmpLine.setColor("#" + StringUtils.leftPad(Integer.toHexString(Integer.valueOf(text)), 6, '0'));
+
 					} else if(tagname.equals("erreur")) {
 						if((errorCode != null && !errorCode.equals("000")) || (text != null && !text.trim().isEmpty())) {
 							throw new TimeoException(errorCode + " - " + text);
@@ -295,6 +303,7 @@ public abstract class TimeoRequestHandler {
 
 		String errorCode = null;
 		String text = null;
+
 		boolean isInStopTag = true;
 
 		while(eventType != XmlPullParser.END_DOCUMENT) {
@@ -305,9 +314,11 @@ public abstract class TimeoRequestHandler {
 
 					if(tagname.equals("ligne")) {
 						isInStopTag = false;
+
 					} else if(tagname.equals("arret")) {
 						isInStopTag = true;
 						tmpStop = new TimeoStop(line);
+
 					} else if(tagname.equals("erreur")) {
 						errorCode = parser.getAttributeValue(null, "code");
 					}
@@ -321,12 +332,16 @@ public abstract class TimeoRequestHandler {
 				case XmlPullParser.END_TAG:
 					if(tagname.equals("als")) {
 						stops.add(tmpStop);
+
 					} else if(tmpStop != null && tagname.equals("code") && isInStopTag) {
 						tmpStop.setId(text);
+
 					} else if(tmpStop != null && tagname.equals("nom") && isInStopTag) {
 						tmpStop.setName(smartCapitalize(text));
+
 					} else if(tmpStop != null && tagname.equals("refs")) {
 						tmpStop.setReference(text);
+
 					} else if(tagname.equals("erreur")) {
 						if((errorCode != null && !errorCode.equals("000")) || (text != null && !text.trim().isEmpty())) {
 							throw new TimeoException(errorCode + " - " + text);
@@ -390,25 +405,25 @@ public abstract class TimeoRequestHandler {
 		//the list of stop references we'll be sending to the api
 		String refs = "";
 
-		if(stops.isEmpty()) {
-			return new ArrayList<>();
-		}
-
+		//append the stop references to the refs
 		for(TimeoStop stop : stops) {
 			if(stop.getReference() != null) {
 				refs += stop.getReference() + ";";
 			}
 		}
 
-		if(refs.isEmpty()) {
+		//if no stops are in the list or all refs are null
+		if(stops.isEmpty() || refs.isEmpty()) {
 			return schedules;
 		}
 
+		//don't keep the last semicolon
 		refs = refs.substring(0, refs.length() - 1);
 
 		String params = "xml=3&refs=" + refs + "&ran=1";
 		String result = requestWebPage(API_BASE_URL + getPageNameForNetworkCode(networkCode), params, false);
 
+		//create a new parser
 		XmlPullParser parser = getParserForXMLString(result);
 		int eventType = parser.getEventType();
 
@@ -423,8 +438,11 @@ public abstract class TimeoRequestHandler {
 		String tmpStopId = null;
 
 		String errorCode = null;
+
+		//text will contain the last text value we encountered during the parsing
 		String text = null;
 
+		//parse the whole document
 		while(eventType != XmlPullParser.END_DOCUMENT) {
 			String tagname = parser.getName();
 
@@ -432,12 +450,19 @@ public abstract class TimeoRequestHandler {
 				case XmlPullParser.START_TAG:
 
 					if(tagname.equals("horaire")) {
-						tmpSchedule = new TimeoStopSchedule(null, new ArrayList<TimeoSingleSchedule>());
+						//if this is the start of the stop schedule's list, instantiate it with empty values
+						tmpSchedule = new TimeoStopSchedule();
+
 					} else if(tagname.equals("passage")) {
+						//if this is a new schedule time
 						tmpSingleSchedule = new TimeoSingleSchedule();
+
 					} else if(tagname.equals("reseau")) {
+						//if this is a network-wide traffic message
 						tmpBlockingException = new TimeoBlockingMessageException();
+
 					} else if(tagname.equals("erreur")) {
+						//if this is an API error, remember the error code
 						errorCode = parser.getAttributeValue(null, "code");
 					}
 
@@ -450,15 +475,17 @@ public abstract class TimeoRequestHandler {
 				case XmlPullParser.END_TAG:
 					if(tmpSchedule != null && tagname.equals("code")) {
 						tmpStopId = text;
+
 					} else if(tmpSchedule != null && tagname.equals("ligne")) {
 						tmpLineId = text;
+
 					} else if(tmpSchedule != null && tagname.equals("sens")) {
 
 						//try to find the stop we're currently looking at in the list
 						for(TimeoStop i : stops) {
 							//if this one has got the right stop id, line id, and direction id, looks like we've found it
-							if(i.getId().equals(tmpStopId) && i.getLine().getId().equals(tmpLineId) && i.getLine().getDirection
-									().getId().equals(text)) {
+							if(i.getId().equals(tmpStopId) && i.getLine().getId().equals(tmpLineId)
+									&& i.getLine().getDirection().getId().equals(text)) {
 								//remember the stop
 								tmpSchedule.setStop(i);
 							}
@@ -471,21 +498,29 @@ public abstract class TimeoRequestHandler {
 
 					} else if(tmpSingleSchedule != null && tagname.equals("duree")) {
 						tmpSingleSchedule.setTime(text);
+
 					} else if(tmpSingleSchedule != null && tagname.equals("destination")) {
 						tmpSingleSchedule.setDirection(smartCapitalize(text));
+
 					} else if(tmpSingleSchedule != null && tmpSchedule != null && tagname.equals("passage")) {
 						tmpSchedule.getSchedules().add(tmpSingleSchedule);
+
 					} else if(tmpSchedule != null && tagname.equals("horaire")) {
 						schedules.add(tmpSchedule);
+
 					} else if(tagname.equals("erreur")) {
 						if((errorCode != null && !errorCode.equals("000")) || (text != null && !text.trim().isEmpty())) {
 							throw new TimeoException(errorCode + " - " + text);
 						}
+
 					} else if(tmpBlockingException != null && tagname.equals("titre") && !text.isEmpty()) {
 						tmpBlockingException.setMessageTitle(text);
+
 					} else if(tmpBlockingException != null && tagname.equals("texte") && !text.isEmpty()) {
 						tmpBlockingException.setMessageBody(text);
+
 					} else if(tmpBlockingException != null && tagname.equals("bloquant") && text.equals("true")) {
+						//if we met with a blocking network-wide traffic message
 						throw tmpBlockingException;
 					}
 
@@ -587,6 +622,11 @@ public abstract class TimeoRequestHandler {
 		return parser;
 	}
 
+	/**
+	 * Gets the list of the supported bus networks.
+	 *
+	 * @return an array containing the network names; the index is their code, and they're associated with their name
+	 */
 	public static SparseArray<String> getNetworksList() {
 		SparseArray<String> networks = new SparseArray<>();
 
@@ -610,6 +650,12 @@ public abstract class TimeoRequestHandler {
 		return networks;
 	}
 
+	/**
+	 * Returns the API endpoint for a given network code.
+	 *
+	 * @param networkCode the code for the city's bus network
+	 * @return the name of the page that has to be called for this specific network
+	 */
 	private static String getPageNameForNetworkCode(int networkCode) {
 		return networkCode + ".php";
 	}
