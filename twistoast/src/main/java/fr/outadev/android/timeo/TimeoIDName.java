@@ -19,16 +19,33 @@
 package fr.outadev.android.timeo;
 
 /**
- * Created by outadoc on 28/11/14.
+ * Defines an object that possesses a name and an identifier.
  */
 public interface TimeoIDName {
 
+	/**
+	 * Gets the identifier of this object.
+	 *
+	 * @return the id
+	 */
 	public String getId();
 
+	/**
+	 * Sets the identifier of this object.
+	 * @param id the id
+	 */
 	public void setId(String id);
 
+	/**
+	 * Gets the name of this object.
+	 * @return the name
+	 */
 	public String getName();
 
+	/**
+	 * Sets the name of this object.
+	 * @param name the name
+	 */
 	public void setName(String name);
 
 }
