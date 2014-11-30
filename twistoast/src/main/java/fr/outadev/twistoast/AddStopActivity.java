@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.outadev.android.timeo.TimeoBlockingMessageException;
+import fr.outadev.android.timeo.TimeoException;
 import fr.outadev.android.timeo.TimeoIDNameObject;
 import fr.outadev.android.timeo.TimeoLine;
 import fr.outadev.android.timeo.TimeoRequestHandler;
@@ -455,8 +456,16 @@ public class AddStopActivity extends ActionBarActivity {
 				if(e instanceof TimeoBlockingMessageException) {
 					((TimeoBlockingMessageException) e).getAlertMessage(AddStopActivity.this).show();
 				} else {
+					String message;
+
+					if(e instanceof TimeoException) {
+						message = getString(R.string.error_toast, e.getMessage());
+					} else {
+						message = getString(R.string.loading_error);
+					}
+
 					Snackbar.with(AddStopActivity.this)
-							.text(R.string.loading_error)
+							.text(message)
 							.actionLabel(R.string.error_retry)
 							.actionColorResource(R.color.colorAccent)
 							.actionListener(new ActionClickListener() {

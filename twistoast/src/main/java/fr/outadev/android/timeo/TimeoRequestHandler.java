@@ -210,7 +210,9 @@ public abstract class TimeoRequestHandler {
 		TimeoLine tmpLine = null;
 		TimeoIDNameObject tmpDirection;
 
-		ArrayList<TimeoLine> lines = new ArrayList<TimeoLine>();
+		String errorCode = null;
+
+		ArrayList<TimeoLine> lines = new ArrayList<>();
 
 		String text = null;
 		boolean isInLineTag = false;
@@ -227,6 +229,8 @@ public abstract class TimeoRequestHandler {
 						tmpLine = new TimeoLine(new TimeoIDNameObject(), tmpDirection, networkCode);
 					} else if(tagname.equals("arret")) {
 						isInLineTag = false;
+					} else if(tagname.equals("erreur")) {
+						errorCode = parser.getAttributeValue(null, "code");
 					}
 
 					break;
@@ -248,8 +252,10 @@ public abstract class TimeoRequestHandler {
 						tmpLine.getDirection().setName(smartCapitalize(text));
 					} else if(tmpLine != null && tagname.equals("couleur") && isInLineTag) {
 						tmpLine.setColor("#" + StringUtils.leftPad(Integer.toHexString(Integer.valueOf(text)), 6, '0'));
-					} else if(tagname.equals("erreur") && text != null && !text.trim().isEmpty()) {
-						throw new TimeoException(text);
+					} else if(tagname.equals("erreur")) {
+						if(errorCode != null || (text != null && !text.trim().isEmpty())) {
+							throw new TimeoException(errorCode + " - " + text);
+						}
 					}
 
 					break;
@@ -287,6 +293,7 @@ public abstract class TimeoRequestHandler {
 		TimeoStop tmpStop = null;
 		ArrayList<TimeoStop> stops = new ArrayList<TimeoStop>();
 
+		String errorCode = null;
 		String text = null;
 		boolean isInStopTag = true;
 
@@ -301,6 +308,8 @@ public abstract class TimeoRequestHandler {
 					} else if(tagname.equals("arret")) {
 						isInStopTag = true;
 						tmpStop = new TimeoStop(line);
+					} else if(tagname.equals("erreur")) {
+						errorCode = parser.getAttributeValue(null, "code");
 					}
 
 					break;
@@ -318,8 +327,10 @@ public abstract class TimeoRequestHandler {
 						tmpStop.setName(smartCapitalize(text));
 					} else if(tmpStop != null && tagname.equals("refs")) {
 						tmpStop.setReference(text);
-					} else if(tagname.equals("erreur") && text != null && !text.trim().isEmpty()) {
-						throw new TimeoException(text);
+					} else if(tagname.equals("erreur")) {
+						if(errorCode != null || (text != null && !text.trim().isEmpty())) {
+							throw new TimeoException(errorCode + " - " + text);
+						}
 					}
 
 					break;
@@ -348,7 +359,7 @@ public abstract class TimeoRequestHandler {
 	@NonNull
 	public static TimeoStopSchedule getSingleSchedule(int networkCode, TimeoStop stop) throws HttpRequestException,
 			TimeoException, IOException, XmlPullParserException {
-		List<TimeoStop> list = new ArrayList<TimeoStop>();
+		List<TimeoStop> list = new ArrayList<>();
 		list.add(stop);
 		List<TimeoStopSchedule> schedules = getMultipleSchedules(networkCode, list);
 
@@ -406,6 +417,7 @@ public abstract class TimeoRequestHandler {
 		String tmpLineId = null;
 		String tmpStopId = null;
 
+		String errorCode = null;
 		String text = null;
 
 		while(eventType != XmlPullParser.END_DOCUMENT) {
@@ -420,6 +432,8 @@ public abstract class TimeoRequestHandler {
 						tmpSingleSchedule = new TimeoSingleSchedule();
 					} else if(tagname.equals("reseau")) {
 						tmpBlockingException = new TimeoBlockingMessageException();
+					} else if(tagname.equals("erreur")) {
+						errorCode = parser.getAttributeValue(null, "code");
 					}
 
 					break;
@@ -458,8 +472,10 @@ public abstract class TimeoRequestHandler {
 						tmpSchedule.getSchedules().add(tmpSingleSchedule);
 					} else if(tmpSchedule != null && tagname.equals("horaire")) {
 						schedules.add(tmpSchedule);
-					} else if(tagname.equals("erreur") && text != null && !text.trim().isEmpty()) {
-						throw new TimeoException(text);
+					} else if(tagname.equals("erreur")) {
+						if(errorCode != null || (text != null && !text.trim().isEmpty())) {
+							throw new TimeoException(errorCode + " - " + text);
+						}
 					} else if(tmpBlockingException != null && tagname.equals("titre") && !text.isEmpty()) {
 						tmpBlockingException.setMessageTitle(text);
 					} else if(tmpBlockingException != null && tagname.equals("texte") && !text.isEmpty()) {
