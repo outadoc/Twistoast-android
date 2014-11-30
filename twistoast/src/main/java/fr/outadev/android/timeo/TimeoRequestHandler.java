@@ -253,7 +253,7 @@ public abstract class TimeoRequestHandler {
 					} else if(tmpLine != null && tagname.equals("couleur") && isInLineTag) {
 						tmpLine.setColor("#" + StringUtils.leftPad(Integer.toHexString(Integer.valueOf(text)), 6, '0'));
 					} else if(tagname.equals("erreur")) {
-						if(errorCode != null || (text != null && !text.trim().isEmpty())) {
+						if((errorCode != null && !errorCode.equals("000")) || (text != null && !text.trim().isEmpty())) {
 							throw new TimeoException(errorCode + " - " + text);
 						}
 					}
@@ -328,7 +328,7 @@ public abstract class TimeoRequestHandler {
 					} else if(tmpStop != null && tagname.equals("refs")) {
 						tmpStop.setReference(text);
 					} else if(tagname.equals("erreur")) {
-						if(errorCode != null || (text != null && !text.trim().isEmpty())) {
+						if((errorCode != null && !errorCode.equals("000")) || (text != null && !text.trim().isEmpty())) {
 							throw new TimeoException(errorCode + " - " + text);
 						}
 					}
@@ -473,7 +473,7 @@ public abstract class TimeoRequestHandler {
 					} else if(tmpSchedule != null && tagname.equals("horaire")) {
 						schedules.add(tmpSchedule);
 					} else if(tagname.equals("erreur")) {
-						if(errorCode != null || (text != null && !text.trim().isEmpty())) {
+						if((errorCode != null && !errorCode.equals("000")) || (text != null && !text.trim().isEmpty())) {
 							throw new TimeoException(errorCode + " - " + text);
 						}
 					} else if(tmpBlockingException != null && tagname.equals("titre") && !text.isEmpty()) {
