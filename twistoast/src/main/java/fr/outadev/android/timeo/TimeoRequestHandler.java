@@ -156,9 +156,9 @@ public abstract class TimeoRequestHandler {
 		//therefore, we'll have to separate them in different lists and request them individually.
 
 		//a list of all the different network codes we'll have to check
-		List<Integer> networks = new ArrayList<Integer>();
+		List<Integer> networks = new ArrayList<>();
 		//the final list that will contain all of our schedules
-		List<TimeoStopSchedule> finalScheduleList = new ArrayList<TimeoStopSchedule>();
+		List<TimeoStopSchedule> finalScheduleList = new ArrayList<>();
 
 		//list all the required network codes, and add them to the list
 		for(TimeoStop stop : stops) {
@@ -171,7 +171,7 @@ public abstract class TimeoRequestHandler {
 
 		//for each network
 		for(Integer network : networks) {
-			List<TimeoStop> stopsForThisNetwork = new ArrayList<TimeoStop>();
+			List<TimeoStop> stopsForThisNetwork = new ArrayList<>();
 
 			//get the list of stops we'll have to request
 			for(TimeoStop stop : stops) {
@@ -291,7 +291,7 @@ public abstract class TimeoRequestHandler {
 		int eventType = parser.getEventType();
 
 		TimeoStop tmpStop = null;
-		ArrayList<TimeoStop> stops = new ArrayList<TimeoStop>();
+		ArrayList<TimeoStop> stops = new ArrayList<>();
 
 		String errorCode = null;
 		String text = null;
@@ -405,7 +405,7 @@ public abstract class TimeoRequestHandler {
 		int eventType = parser.getEventType();
 
 		//final schedules to return
-		List<TimeoStopSchedule> schedules = new ArrayList<TimeoStopSchedule>();
+		List<TimeoStopSchedule> schedules = new ArrayList<>();
 
 		//temporary schedule (associated with a stop and a few schedules)
 		TimeoStopSchedule tmpSchedule = null;
@@ -583,7 +583,7 @@ public abstract class TimeoRequestHandler {
 	}
 
 	public static SparseArray<String> getNetworksList() {
-		SparseArray<String> networks = new SparseArray<String>();
+		SparseArray<String> networks = new SparseArray<>();
 
 		networks.put(105, "Le Mans");
 		networks.put(117, "Pau");

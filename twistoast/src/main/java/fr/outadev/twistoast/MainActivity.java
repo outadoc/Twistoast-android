@@ -268,7 +268,7 @@ public class MainActivity extends ActionBarActivity implements StopsListContaine
 	 * @return a list of NavigationDrawerItems
 	 */
 	private List<NavigationDrawerItem> getDrawerItems() {
-		List<NavigationDrawerItem> list = new ArrayList<NavigationDrawerItem>();
+		List<NavigationDrawerItem> list = new ArrayList<>();
 
 		list.add(new NavigationDrawerFragmentItem(R.drawable.ic_schedule, R.string.drawer_item_realtime,
 				StopsListFragment.class));

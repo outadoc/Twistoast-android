@@ -181,7 +181,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 			protected Map<TimeoStop, TimeoStopSchedule> doInBackground(Void... params) {
 				try {
 					List<TimeoStopSchedule> schedulesList = TimeoRequestHandler.getMultipleSchedules(stops);
-					Map<TimeoStop, TimeoStopSchedule> schedulesMap = new HashMap<TimeoStop, TimeoStopSchedule>();
+					Map<TimeoStop, TimeoStopSchedule> schedulesMap = new HashMap<>();
 
 					for(TimeoStopSchedule schedule : schedulesList) {
 						schedulesMap.put(schedule.getStop(), schedule);

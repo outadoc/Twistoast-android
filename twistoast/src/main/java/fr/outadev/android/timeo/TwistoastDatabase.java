@@ -137,7 +137,7 @@ public class TwistoastDatabase {
 								"ORDER BY network_code, CAST(line.line_id AS INTEGER), stop.stop_name, dir.dir_name",
 						null);
 
-		ArrayList<TimeoStop> stopsList = new ArrayList<TimeoStop>();
+		ArrayList<TimeoStop> stopsList = new ArrayList<>();
 
 		// while there's a stop available
 		while(results.moveToNext()) {

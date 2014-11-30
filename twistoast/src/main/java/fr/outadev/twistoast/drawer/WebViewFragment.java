@@ -161,7 +161,7 @@ public class WebViewFragment extends Fragment {
 
 		@Override
 		public void loadUrl(String url) {
-			Map<String, String> map = new HashMap<String, String>();
+			Map<String, String> map = new HashMap<>();
 			map.put("X-Requested-With", "com.actigraph.twisto.tabbarapp");
 			super.loadUrl(url, map);
 		}

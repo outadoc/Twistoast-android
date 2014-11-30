@@ -511,7 +511,7 @@ public class AddStopActivity extends ActionBarActivity {
 	 * @return a list of ID/name objects containing the id and name of the directions to display
 	 */
 	private List<TimeoIDNameObject> getDirectionsList() {
-		List<TimeoIDNameObject> directionsList = new ArrayList<TimeoIDNameObject>();
+		List<TimeoIDNameObject> directionsList = new ArrayList<>();
 
 		for(TimeoLine line : lineList) {
 			if(line.getId().equals(getCurrentLine().getId())) {
