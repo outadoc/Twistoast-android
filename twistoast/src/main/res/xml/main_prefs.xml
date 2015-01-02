@@ -17,10 +17,22 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-                  xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
 
 	<PreferenceCategory android:title="@string/pref_cat_stops">
+
+		<it.gmariotti.android.example.colorpicker.calendarstock.ColorPickerPreference
+			android:key="pref_app_theme"
+			android:title="@string/pref_app_theme_title"
+			android:summary="@string/pref_app_theme_sum"
+			android:defaultValue="@android:color/white"
+			android:negativeButtonText="@null"
+			android:positiveButtonText="@null"
+			app:numColumns="5"
+			app:itemLayout="@layout/dash_grid_item_color" />
+
 		<CheckBoxPreference
 			android:defaultValue="true"
 			android:key="pref_auto_refresh"
@@ -32,16 +44,6 @@
 			android:key="pref_relative_time"
 			android:summary="@string/pref_relative_time_sum"
 			android:title="@string/pref_relative_time_title" />
-
-		<it.gmariotti.android.example.colorpicker.calendarstock.ColorPickerPreference
-			android:key="dash_colorkey"
-			android:title="Thème de l'application"
-			android:summary="Relancez Twistoast pour appliquer."
-			android:defaultValue="@android:color/white"
-			android:negativeButtonText="@null"
-			android:positiveButtonText="@null"
-			app:numColumns="5"
-			app:itemLayout="@layout/dash_grid_item_color" />
 
 	</PreferenceCategory>
 	<PreferenceCategory android:title="@string/pref_cat_pebble">

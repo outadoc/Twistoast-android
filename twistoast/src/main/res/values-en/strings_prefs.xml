@@ -38,5 +38,7 @@
 	<string name="pref_license_title">License</string>
 	<string name="pref_links_title">Links</string>
 	<string name="pref_version_title">Version</string>
+	<string name="pref_app_theme_title">Application Theme</string>
+	<string name="pref_app_theme_sum">Restart Twistoast to apply.</string>
 
 </resources>
