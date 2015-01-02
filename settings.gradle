@@ -18,3 +18,4 @@
 
 include ':pebble_kit'
 include ':twistoast'
+include ':colorPicker'
