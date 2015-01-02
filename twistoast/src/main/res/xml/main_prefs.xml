@@ -27,7 +27,7 @@
 			android:key="pref_app_theme"
 			android:title="@string/pref_app_theme_title"
 			android:summary="@string/pref_app_theme_sum"
-			android:defaultValue="@android:color/white"
+			android:defaultValue="#0171BB"
 			android:negativeButtonText="@null"
 			android:positiveButtonText="@null"
 			app:numColumns="5"
