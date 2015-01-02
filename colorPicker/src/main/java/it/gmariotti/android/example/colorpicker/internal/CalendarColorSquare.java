@@ -13,12 +13,11 @@ package it.gmariotti.android.example.colorpicker.internal;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * You can find source code here:
  * https://android.googlesource.com/platform/packages/apps/Calendar/+/master/src/com/android/calendar/selectcalendars
  * /CalendarColorSquare.java
  */
-
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
