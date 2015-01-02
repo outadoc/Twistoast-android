@@ -18,6 +18,7 @@
 
 package fr.outadev.twistoast;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.PackageInfo;
@@ -63,7 +64,12 @@ public class PrefsFragment extends PreferenceFragment implements OnSharedPrefere
 
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-
+		// If we're changing the theme, automatically restart the app
+		if(key.equals("pref_app_theme")) {
+			Intent i = getActivity().getPackageManager().getLaunchIntentForPackage(getActivity().getPackageName());
+			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(i);
+		}
 	}
 
 }
