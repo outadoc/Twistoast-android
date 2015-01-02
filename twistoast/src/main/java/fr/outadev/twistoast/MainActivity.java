@@ -28,7 +28,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -55,7 +54,7 @@ import fr.outadev.twistoast.drawer.WebViewFragment;
  *
  * @author outadoc
  */
-public class MainActivity extends ActionBarActivity implements StopsListContainer {
+public class MainActivity extends ThemedActivity implements StopsListContainer {
 
 	private List<NavigationDrawerItem> drawerItems;
 	private DrawerLayout drawerLayout;

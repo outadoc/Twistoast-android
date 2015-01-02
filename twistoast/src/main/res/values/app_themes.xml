@@ -19,206 +19,206 @@
 
 <resources>
 
-	<style name="Theme_C41915" parent="AppBaseTheme">
-		<item name="colorPrimary">#C41915</item>
+	<style name="Theme_C41915" parent="AppTheme">
+	<item name="colorPrimary">#C41915</item>
 		<item name="colorPrimaryDark">#C41915</item>
 		<item name="colorAccent">#C41915</item>
 	</style>
 
-	<style name="Theme_CA4318" parent="AppBaseTheme">
-		<item name="colorPrimary">#CA4318</item>
+	<style name="Theme_CA4318" parent="AppTheme">
+	<item name="colorPrimary">#CA4318</item>
 		<item name="colorPrimaryDark">#CA4318</item>
 		<item name="colorAccent">#CA4318</item>
 	</style>
 
-	<style name="Theme_EC6C20" parent="AppBaseTheme">
-		<item name="colorPrimary">#EC6C20</item>
+	<style name="Theme_EC6C20" parent="AppTheme">
+	<item name="colorPrimary">#EC6C20</item>
 		<item name="colorPrimaryDark">#EC6C20</item>
 		<item name="colorAccent">#EC6C20</item>
 	</style>
 
-	<style name="Theme_FD8A26" parent="AppBaseTheme">
-		<item name="colorPrimary">#FD8A26</item>
+	<style name="Theme_FD8A26" parent="AppTheme">
+	<item name="colorPrimary">#FD8A26</item>
 		<item name="colorPrimaryDark">#FD8A26</item>
 		<item name="colorAccent">#FD8A26</item>
 	</style>
 
-	<style name="Theme_9ACA28" parent="AppBaseTheme">
-		<item name="colorPrimary">#9ACA28</item>
+	<style name="Theme_9ACA28" parent="AppTheme">
+	<item name="colorPrimary">#9ACA28</item>
 		<item name="colorPrimaryDark">#9ACA28</item>
 		<item name="colorAccent">#9ACA28</item>
 	</style>
 
-	<style name="Theme_C8B654" parent="AppBaseTheme">
-		<item name="colorPrimary">#C8B654</item>
+	<style name="Theme_C8B654" parent="AppTheme">
+	<item name="colorPrimary">#C8B654</item>
 		<item name="colorPrimaryDark">#C8B654</item>
 		<item name="colorAccent">#C8B654</item>
 	</style>
 
-	<style name="Theme_C79C38" parent="AppBaseTheme">
-		<item name="colorPrimary">#C79C38</item>
+	<style name="Theme_C79C38" parent="AppTheme">
+	<item name="colorPrimary">#C79C38</item>
 		<item name="colorPrimaryDark">#C79C38</item>
 		<item name="colorAccent">#C79C38</item>
 	</style>
 
-	<style name="Theme_CA7620" parent="AppBaseTheme">
-		<item name="colorPrimary">#CA7620</item>
+	<style name="Theme_CA7620" parent="AppTheme">
+	<item name="colorPrimary">#CA7620</item>
 		<item name="colorPrimaryDark">#CA7620</item>
 		<item name="colorAccent">#CA7620</item>
 	</style>
 
-	<style name="Theme_87B043" parent="AppBaseTheme">
-		<item name="colorPrimary">#87B043</item>
+	<style name="Theme_87B043" parent="AppTheme">
+	<item name="colorPrimary">#87B043</item>
 		<item name="colorPrimaryDark">#87B043</item>
 		<item name="colorAccent">#87B043</item>
 	</style>
 
-	<style name="Theme_53A527" parent="AppBaseTheme">
-		<item name="colorPrimary">#53A527</item>
+	<style name="Theme_53A527" parent="AppTheme">
+	<item name="colorPrimary">#53A527</item>
 		<item name="colorPrimaryDark">#53A527</item>
 		<item name="colorAccent">#53A527</item>
 	</style>
 
-	<style name="Theme_67971B" parent="AppBaseTheme">
-		<item name="colorPrimary">#67971B</item>
+	<style name="Theme_67971B" parent="AppTheme">
+	<item name="colorPrimary">#67971B</item>
 		<item name="colorPrimaryDark">#67971B</item>
 		<item name="colorAccent">#67971B</item>
 	</style>
 
-	<style name="Theme_13874B" parent="AppBaseTheme">
-		<item name="colorPrimary">#13874B</item>
+	<style name="Theme_13874B" parent="AppTheme">
+	<item name="colorPrimary">#13874B</item>
 		<item name="colorPrimaryDark">#13874B</item>
 		<item name="colorAccent">#13874B</item>
 	</style>
 
-	<style name="Theme_20AA66" parent="AppBaseTheme">
-		<item name="colorPrimary">#20AA66</item>
+	<style name="Theme_20AA66" parent="AppTheme">
+	<item name="colorPrimary">#20AA66</item>
 		<item name="colorPrimaryDark">#20AA66</item>
 		<item name="colorAccent">#20AA66</item>
 	</style>
 
-	<style name="Theme_66B393" parent="AppBaseTheme">
-		<item name="colorPrimary">#66B393</item>
+	<style name="Theme_66B393" parent="AppTheme">
+	<item name="colorPrimary">#66B393</item>
 		<item name="colorPrimaryDark">#66B393</item>
 		<item name="colorAccent">#66B393</item>
 	</style>
 
-	<style name="Theme_1897A6" parent="AppBaseTheme">
-		<item name="colorPrimary">#1897A6</item>
+	<style name="Theme_1897A6" parent="AppTheme">
+	<item name="colorPrimary">#1897A6</item>
 		<item name="colorPrimaryDark">#1897A6</item>
 		<item name="colorAccent">#1897A6</item>
 	</style>
 
-	<style name="Theme_70B3B8" parent="AppBaseTheme">
-		<item name="colorPrimary">#70B3B8</item>
+	<style name="Theme_70B3B8" parent="AppTheme">
+	<item name="colorPrimary">#70B3B8</item>
 		<item name="colorPrimaryDark">#70B3B8</item>
 		<item name="colorAccent">#70B3B8</item>
 	</style>
 
-	<style name="Theme_3CB6E3" parent="AppBaseTheme">
-		<item name="colorPrimary">#3CB6E3</item>
+	<style name="Theme_3CB6E3" parent="AppTheme">
+	<item name="colorPrimary">#3CB6E3</item>
 		<item name="colorPrimaryDark">#3CB6E3</item>
 		<item name="colorAccent">#3CB6E3</item>
 	</style>
 
-	<style name="Theme_199ACA" parent="AppBaseTheme">
-		<item name="colorPrimary">#199ACA</item>
+	<style name="Theme_199ACA" parent="AppTheme">
+	<item name="colorPrimary">#199ACA</item>
 		<item name="colorPrimaryDark">#199ACA</item>
 		<item name="colorAccent">#199ACA</item>
 	</style>
 
-	<style name="Theme_1993E7" parent="AppBaseTheme">
-		<item name="colorPrimary">#1993E7</item>
+	<style name="Theme_1993E7" parent="AppTheme">
+	<item name="colorPrimary">#1993E7</item>
 		<item name="colorPrimaryDark">#1993E7</item>
 		<item name="colorAccent">#1993E7</item>
 	</style>
 
-	<style name="Theme_1789CE" parent="AppBaseTheme">
-		<item name="colorPrimary">#1789CE</item>
+	<style name="Theme_1789CE" parent="AppTheme">
+	<item name="colorPrimary">#1789CE</item>
 		<item name="colorPrimaryDark">#1789CE</item>
 		<item name="colorAccent">#1789CE</item>
 	</style>
 
-	<style name="Theme_8266C9" parent="AppBaseTheme">
-		<item name="colorPrimary">#8266C9</item>
+	<style name="Theme_8266C9" parent="AppTheme">
+	<item name="colorPrimary">#8266C9</item>
 		<item name="colorPrimaryDark">#8266C9</item>
 		<item name="colorAccent">#8266C9</item>
 	</style>
 
-	<style name="Theme_754CB2" parent="AppBaseTheme">
-		<item name="colorPrimary">#754CB2</item>
+	<style name="Theme_754CB2" parent="AppTheme">
+	<item name="colorPrimary">#754CB2</item>
 		<item name="colorPrimaryDark">#754CB2</item>
 		<item name="colorAccent">#754CB2</item>
 	</style>
 
-	<style name="Theme_6568C9" parent="AppBaseTheme">
-		<item name="colorPrimary">#6568C9</item>
+	<style name="Theme_6568C9" parent="AppTheme">
+	<item name="colorPrimary">#6568C9</item>
 		<item name="colorPrimaryDark">#6568C9</item>
 		<item name="colorAccent">#6568C9</item>
 	</style>
 
-	<style name="Theme_1A57B6" parent="AppBaseTheme">
-		<item name="colorPrimary">#1A57B6</item>
+	<style name="Theme_1A57B6" parent="AppTheme">
+	<item name="colorPrimary">#1A57B6</item>
 		<item name="colorPrimaryDark">#1A57B6</item>
 		<item name="colorAccent">#1A57B6</item>
 	</style>
 
-	<style name="Theme_A969CA" parent="AppBaseTheme">
-		<item name="colorPrimary">#A969CA</item>
+	<style name="Theme_A969CA" parent="AppTheme">
+	<item name="colorPrimary">#A969CA</item>
 		<item name="colorPrimaryDark">#A969CA</item>
 		<item name="colorAccent">#A969CA</item>
 	</style>
 
-	<style name="Theme_983BCA" parent="AppBaseTheme">
-		<item name="colorPrimary">#983BCA</item>
+	<style name="Theme_983BCA" parent="AppTheme">
+	<item name="colorPrimary">#983BCA</item>
 		<item name="colorPrimaryDark">#983BCA</item>
 		<item name="colorAccent">#983BCA</item>
 	</style>
 
-	<style name="Theme_9D44B6" parent="AppBaseTheme">
-		<item name="colorPrimary">#9D44B6</item>
+	<style name="Theme_9D44B6" parent="AppTheme">
+	<item name="colorPrimary">#9D44B6</item>
 		<item name="colorPrimaryDark">#9D44B6</item>
 		<item name="colorAccent">#9D44B6</item>
 	</style>
 
-	<style name="Theme_FC464B" parent="AppBaseTheme">
-		<item name="colorPrimary">#FC464B</item>
+	<style name="Theme_FC464B" parent="AppTheme">
+	<item name="colorPrimary">#FC464B</item>
 		<item name="colorPrimaryDark">#FC464B</item>
 		<item name="colorAccent">#FC464B</item>
 	</style>
 
-	<style name="Theme_A29497" parent="AppBaseTheme">
-		<item name="colorPrimary">#A29497</item>
+	<style name="Theme_A29497" parent="AppTheme">
+	<item name="colorPrimary">#A29497</item>
 		<item name="colorPrimaryDark">#A29497</item>
 		<item name="colorAccent">#A29497</item>
 	</style>
 
-	<style name="Theme_A37C82" parent="AppBaseTheme">
-		<item name="colorPrimary">#A37C82</item>
+	<style name="Theme_A37C82" parent="AppTheme">
+	<item name="colorPrimary">#A37C82</item>
 		<item name="colorPrimaryDark">#A37C82</item>
 		<item name="colorAccent">#A37C82</item>
 	</style>
 
-	<style name="Theme_C35E7E" parent="AppBaseTheme">
-		<item name="colorPrimary">#C35E7E</item>
+	<style name="Theme_C35E7E" parent="AppTheme">
+	<item name="colorPrimary">#C35E7E</item>
 		<item name="colorPrimaryDark">#C35E7E</item>
 		<item name="colorAccent">#C35E7E</item>
 	</style>
 
-	<style name="Theme_424242" parent="AppBaseTheme">
-		<item name="colorPrimary">#424242</item>
+	<style name="Theme_424242" parent="AppTheme">
+	<item name="colorPrimary">#424242</item>
 		<item name="colorPrimaryDark">#424242</item>
 		<item name="colorAccent">#424242</item>
 	</style>
 
-	<style name="Theme_333333" parent="AppBaseTheme">
-		<item name="colorPrimary">#333333</item>
+	<style name="Theme_333333" parent="AppTheme">
+	<item name="colorPrimary">#333333</item>
 		<item name="colorPrimaryDark">#333333</item>
 		<item name="colorAccent">#333333</item>
 	</style>
 
-	<style name="Theme_0171BB" parent="AppBaseTheme">
-		<item name="colorPrimary">#0171BB</item>
+	<style name="Theme_0171BB" parent="AppTheme">
+	<item name="colorPrimary">#0171BB</item>
 		<item name="colorPrimaryDark">#0171BB</item>
 		<item name="colorAccent">#0171BB</item>
 	</style>

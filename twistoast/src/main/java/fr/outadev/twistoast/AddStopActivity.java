@@ -24,7 +24,6 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -61,7 +60,7 @@ import fr.outadev.android.timeo.TwistoastDatabase;
  *
  * @author outadoc
  */
-public class AddStopActivity extends ActionBarActivity {
+public class AddStopActivity extends ThemedActivity {
 
 	public static final int NO_STOP_ADDED = 0;
 	public static final int STOP_ADDED = 1;
