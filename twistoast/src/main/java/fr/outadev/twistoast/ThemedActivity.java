@@ -20,6 +20,7 @@ package fr.outadev.twistoast;
 
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
@@ -67,7 +68,6 @@ public class ThemedActivity extends ActionBarActivity {
 		themes.put(Color.parseColor("#C35E7E"), R.style.Theme_C35E7E);
 		themes.put(Color.parseColor("#424242"), R.style.Theme_424242);
 		themes.put(Color.parseColor("#333333"), R.style.Theme_333333);
-		themes.put(Color.parseColor("#0171BB"), R.style.Theme_0171BB);
 	}
 
 	@Override
@@ -80,6 +80,11 @@ public class ThemedActivity extends ActionBarActivity {
 		int themeRes = getThemeForColor(themeColor);
 
 		setTheme(themeRes);
+
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			getWindow().setStatusBarColor(Utils.getColorPrimaryDark(this));
+			getWindow().setNavigationBarColor(Utils.getColorPrimaryDark(this));
+		}
 	}
 
 	private int getThemeForColor(int themeColor) {
