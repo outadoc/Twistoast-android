@@ -87,14 +87,16 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<NavigationDrawerItem> {
 		rowTitle.setText(getContext().getResources().getString(getItem(position).getTitleResId()));
 		rowTitle.setTypeface(null, Typeface.NORMAL);
 		rowTitle.setSelected(false);
+		rowTitle.setTextColor(Color.BLACK);
 
 		rowIcon.setColorFilter(Color.rgb(100, 100, 100));
 
 		if(position == selectedItemIndex) {
 			rowTitle.setSelected(true);
 			rowTitle.setTypeface(null, Typeface.BOLD);
+			rowTitle.setTextColor(Utils.getColorPrimary(getContext()));
 
-			rowIcon.setColorFilter(getContext().getResources().getColor(R.color.colorPrimary));
+			rowIcon.setColorFilter(Utils.getColorPrimary(getContext()));
 		}
 
 		convertView.setOnClickListener(new OnClickListener() {

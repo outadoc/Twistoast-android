@@ -208,7 +208,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 								Snackbar.with(getContext())
 										.text(message)
 										.actionLabel(R.string.error_retry)
-										.actionColorResource(R.color.colorAccent)
+										.actionColor(Utils.getColorAccent(getContext()))
 										.actionListener(new ActionClickListener() {
 
 											@Override

@@ -467,7 +467,7 @@ public class AddStopActivity extends ActionBarActivity {
 					Snackbar.with(AddStopActivity.this)
 							.text(message)
 							.actionLabel(R.string.error_retry)
-							.actionColorResource(R.color.colorAccent)
+							.actionColor(Utils.getColorAccent(AddStopActivity.this))
 							.actionListener(new ActionClickListener() {
 
 								@Override
