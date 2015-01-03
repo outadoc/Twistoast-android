@@ -49,7 +49,6 @@ import com.nispok.snackbar.listeners.ActionClickListener;
 
 import fr.outadev.android.timeo.ProgressListener;
 import fr.outadev.android.timeo.TimeoStop;
-import fr.outadev.android.timeo.TwistoastDatabase;
 
 public class StopsListFragment extends Fragment implements StopsListContainer {
 

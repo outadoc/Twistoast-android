@@ -53,7 +53,6 @@ import fr.outadev.android.timeo.TimeoRequestHandler;
 import fr.outadev.android.timeo.TimeoSingleSchedule;
 import fr.outadev.android.timeo.TimeoStop;
 import fr.outadev.android.timeo.TimeoStopSchedule;
-import fr.outadev.android.timeo.TwistoastDatabase;
 
 /**
  * Activity that allows the user to add a bus stop to the app.

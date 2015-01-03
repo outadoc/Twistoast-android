@@ -34,7 +34,6 @@ import fr.outadev.android.timeo.ScheduleTime;
 import fr.outadev.android.timeo.TimeoRequestHandler;
 import fr.outadev.android.timeo.TimeoStop;
 import fr.outadev.android.timeo.TimeoStopSchedule;
-import fr.outadev.android.timeo.TwistoastDatabase;
 
 /**
  * Receives and handles the Twistoast Pebble app requests in the background.

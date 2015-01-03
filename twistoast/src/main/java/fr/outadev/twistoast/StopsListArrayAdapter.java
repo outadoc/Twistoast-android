@@ -47,7 +47,6 @@ import fr.outadev.android.timeo.TimeoRequestHandler;
 import fr.outadev.android.timeo.TimeoSingleSchedule;
 import fr.outadev.android.timeo.TimeoStop;
 import fr.outadev.android.timeo.TimeoStopSchedule;
-import fr.outadev.android.timeo.TwistoastDatabase;
 
 /**
  * An array adapter for the main list of bus stops.

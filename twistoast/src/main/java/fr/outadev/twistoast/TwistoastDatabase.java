@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.android.timeo;
+package fr.outadev.twistoast;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -26,6 +26,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import fr.outadev.android.timeo.TimeoIDNameObject;
+import fr.outadev.android.timeo.TimeoLine;
+import fr.outadev.android.timeo.TimeoStop;
 
 /**
  * Database management class.

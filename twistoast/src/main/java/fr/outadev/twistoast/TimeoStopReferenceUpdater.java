@@ -31,7 +31,6 @@ import fr.outadev.android.timeo.TimeoException;
 import fr.outadev.android.timeo.TimeoLine;
 import fr.outadev.android.timeo.TimeoRequestHandler;
 import fr.outadev.android.timeo.TimeoStop;
-import fr.outadev.android.timeo.TwistoastDatabase;
 
 /**
  * Fetches and updates all the references of the stops saved in our database.
