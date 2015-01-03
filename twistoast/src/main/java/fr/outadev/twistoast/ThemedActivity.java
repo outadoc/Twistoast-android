@@ -65,6 +65,7 @@ public class ThemedActivity extends ActionBarActivity {
 		themes.put(Color.parseColor("#FC464B"), R.style.Theme_FC464B);
 		themes.put(Color.parseColor("#A29497"), R.style.Theme_A29497);
 		themes.put(Color.parseColor("#A37C82"), R.style.Theme_A37C82);
+		themes.put(Color.parseColor("#E40068"), R.style.Theme_E40068);
 		themes.put(Color.parseColor("#C35E7E"), R.style.Theme_C35E7E);
 		themes.put(Color.parseColor("#424242"), R.style.Theme_424242);
 		themes.put(Color.parseColor("#333333"), R.style.Theme_333333);
