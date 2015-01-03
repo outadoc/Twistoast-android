@@ -74,7 +74,9 @@
 		android:layout_height="wrap_content"
 		android:orientation="horizontal"
 		android:paddingTop="7dp"
-		android:paddingBottom="7dp">
+		android:paddingBottom="7dp"
+		android:longClickable="true"
+		android:background="?android:attr/selectableItemBackground">
 
 	<FrameLayout
 			android:id="@+id/view_line_id"

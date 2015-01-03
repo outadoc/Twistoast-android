@@ -69,4 +69,8 @@
 	<string name="stop_ref_update_error_text">Erreur lors de la mise à jour.</string>
 	<string name="error_retry">Réessayer</string>
 
+	<string-array name="stop_actions">
+		<item>Supprimer</item>
+	</string-array>
+
 </resources>

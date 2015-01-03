@@ -34,6 +34,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -130,53 +131,59 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 
 		listView = (ListView) view.findViewById(R.id.stops_list);
 		noContentView = view.findViewById(R.id.view_no_content);
-		FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+		final FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
 
-		SwipeDismissListViewTouchListener touchListener = new SwipeDismissListViewTouchListener(listView,
-				new SwipeDismissListViewTouchListener.DismissCallbacks() {
+		listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
-					@Override
-					public boolean canDismiss(int position) {
-						return !isRefreshing;
-					}
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+				if(!isRefreshing) {
+					final TimeoStop stopToDelete = listAdapter.getItem(position);
 
-					@Override
-					public void onDismiss(ListView listView, int[] reverseSortedPositions) {
-						final int position = reverseSortedPositions[0];
-						final TimeoStop stopToDelete = listAdapter.getItem(position);
+					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+					builder.setItems(R.array.stop_actions, new DialogInterface.OnClickListener() {
 
-						databaseHandler.deleteStop(stopToDelete);
-						listAdapter.remove(stopToDelete);
+						public void onClick(DialogInterface dialog, int which) {
+							if(which == 0) {
+								databaseHandler.deleteStop(stopToDelete);
+								listAdapter.remove(stopToDelete);
 
-						if(listAdapter.isEmpty()) {
-							noContentView.setVisibility(View.VISIBLE);
+								if(listAdapter.isEmpty()) {
+									noContentView.setVisibility(View.VISIBLE);
+								}
+
+								listAdapter.notifyDataSetChanged();
+								fab.show(true);
+
+								Snackbar.with(getActivity())
+										.text(R.string.confirm_delete_success)
+										.actionLabel(R.string.cancel_stop_deletion)
+										.actionColor(Utils.getColorAccent(getActivity()))
+										.attachToAbsListView(listView)
+										.actionListener(new ActionClickListener() {
+
+											@Override
+											public void onActionClicked() {
+												Log.i(Utils.TAG, "restoring stop " + stopToDelete);
+												databaseHandler.addStopToDatabase(stopToDelete);
+												listAdapter.insert(stopToDelete, position);
+												listAdapter.notifyDataSetChanged();
+											}
+
+										})
+										.show(getActivity());
+							}
 						}
 
-						listAdapter.notifyDataSetChanged();
+					});
 
-						Snackbar.with(getActivity())
-								.text(R.string.confirm_delete_success)
-								.actionLabel(R.string.cancel_stop_deletion)
-								.actionColor(Utils.getColorAccent(getActivity()))
-								.attachToAbsListView(listView)
-								.actionListener(new ActionClickListener() {
+					builder.show();
+				}
 
-									@Override
-									public void onActionClicked() {
-										Log.i(Utils.TAG, "restoring stop " + stopToDelete);
-										databaseHandler.addStopToDatabase(stopToDelete);
-										listAdapter.insert(stopToDelete, position);
-										listAdapter.notifyDataSetChanged();
-									}
+				return true;
+			}
 
-								})
-								.show(getActivity());
-					}
-
-				});
-
-		listView.setOnTouchListener(touchListener);
-		listView.setOnScrollListener(touchListener.makeScrollListener());
+		});
 
 		fab.attachToListView(listView);
 		fab.setColorNormal(Utils.getColorAccent(getActivity()));
