@@ -131,14 +131,13 @@ public class TwistoastDatabase {
 	public List<TimeoStop> getAllStops() {
 		SQLiteDatabase db = databaseOpenHelper.getReadableDatabase();
 
-		// that's a nice query you got tthhhere
 		Cursor results = db
 				.rawQuery(
 						"SELECT stop.stop_id, stop.stop_name, stop.stop_ref, line.line_id, line.line_name, " +
 								"line.line_color, dir.dir_id, dir.dir_name, line.network_code FROM twi_stop stop " +
-								"JOIN twi_direction dir USING(dir_id, line_id, network_code) " +
-								"JOIN twi_line line USING(line_id, network_code) " +
-								"ORDER BY network_code, CAST(line.line_id AS INTEGER), stop.stop_name, dir.dir_name",
+								"INNER JOIN twi_direction dir USING(dir_id, line_id, network_code) " +
+								"INNER JOIN twi_line line USING(line_id, network_code) " +
+								"ORDER BY line.network_code, CAST(line.line_id AS INTEGER), stop.stop_name, dir.dir_name",
 						null);
 
 		ArrayList<TimeoStop> stopsList = new ArrayList<>();
@@ -182,7 +181,6 @@ public class TwistoastDatabase {
 		SQLiteDatabase db = databaseOpenHelper.getReadableDatabase();
 		String indexStr = String.valueOf(index);
 
-		// that's a nice query you got tthhhere
 		Cursor results = db
 				.rawQuery(
 						"SELECT stop.stop_id, stop.stop_name, stop.stop_ref, line.line_id, line.line_name, line.line_color, " +
@@ -190,8 +188,8 @@ public class TwistoastDatabase {
 								"JOIN twi_direction dir USING(dir_id, line_id, network_code) " +
 								"JOIN twi_line line USING(line_id, network_code) " +
 								"ORDER BY CAST(line.line_id AS INTEGER), stop.stop_name, dir.dir_name " +
-								"LIMIT ? OFFSET ?",
-						new String[]{"1", indexStr});
+								"LIMIT 1 OFFSET ?",
+						new String[]{indexStr});
 
 		if(results.getCount() > 0) {
 			results.moveToFirst();
