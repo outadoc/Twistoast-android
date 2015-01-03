@@ -158,7 +158,7 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 								Snackbar.with(getActivity())
 										.text(R.string.confirm_delete_success)
 										.actionLabel(R.string.cancel_stop_deletion)
-										.actionColor(Utils.getColorAccent(getActivity()))
+										.actionColor(Colors.getColorAccent(getActivity()))
 										.attachToAbsListView(listView)
 										.actionListener(new ActionClickListener() {
 
@@ -186,7 +186,7 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 		});
 
 		fab.attachToListView(listView);
-		fab.setColorNormal(Utils.getColorAccent(getActivity()));
+		fab.setColorNormal(Colors.getColorAccent(getActivity()));
 		fab.setColorPressedResId(R.color.twisto_secondary);
 		fab.setColorRippleResId(R.color.twisto_secondary);
 
@@ -405,7 +405,7 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 				Snackbar.with(getActivity())
 						.text(R.string.stop_ref_update_error_text)
 						.actionLabel(R.string.error_retry)
-						.actionColor(Utils.getColorAccent(getActivity()))
+						.actionColor(Colors.getColorAccent(getActivity()))
 						.attachToAbsListView(listView)
 						.actionListener(new ActionClickListener() {
 

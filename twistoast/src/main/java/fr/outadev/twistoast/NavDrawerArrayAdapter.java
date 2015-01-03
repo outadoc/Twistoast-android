@@ -94,9 +94,9 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<NavigationDrawerItem> {
 		if(position == selectedItemIndex) {
 			rowTitle.setSelected(true);
 			rowTitle.setTypeface(null, Typeface.BOLD);
-			rowTitle.setTextColor(Utils.getColorPrimary(getContext()));
+			rowTitle.setTextColor(Colors.getColorPrimary(getContext()));
 
-			rowIcon.setColorFilter(Utils.getColorPrimary(getContext()));
+			rowIcon.setColorFilter(Colors.getColorPrimary(getContext()));
 		}
 
 		convertView.setOnClickListener(new OnClickListener() {

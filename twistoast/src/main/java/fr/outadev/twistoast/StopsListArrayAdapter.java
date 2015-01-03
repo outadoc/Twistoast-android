@@ -116,7 +116,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 
 		// line
 		GradientDrawable lineDrawable = (GradientDrawable) view_line_id.getBackground();
-		lineDrawable.setColor(Utils.getBrighterColor(Color.parseColor(currentItem.getLine().getColor())));
+		lineDrawable.setColor(Colors.getBrighterColor(Color.parseColor(currentItem.getLine().getColor())));
 
 		lbl_line.setText(currentItem.getLine().getId());
 
@@ -208,7 +208,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 								Snackbar.with(getContext())
 										.text(message)
 										.actionLabel(R.string.error_retry)
-										.actionColor(Utils.getColorAccent(getContext()))
+										.actionColor(Colors.getColorAccent(getContext()))
 										.actionListener(new ActionClickListener() {
 
 											@Override

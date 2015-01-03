@@ -83,8 +83,8 @@ public class ThemedActivity extends ActionBarActivity {
 		setTheme(themeRes);
 
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			getWindow().setStatusBarColor(Utils.getColorPrimaryDark(this));
-			getWindow().setNavigationBarColor(Utils.getColorPrimaryDark(this));
+			getWindow().setStatusBarColor(Colors.getColorPrimaryDark(this));
+			getWindow().setNavigationBarColor(Colors.getColorPrimaryDark(this));
 		}
 	}
 

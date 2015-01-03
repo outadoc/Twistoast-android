@@ -207,7 +207,7 @@ public class AddStopActivity extends ThemedActivity {
 					lbl_line.setText(item.getId());
 
 					GradientDrawable lineDrawable = (GradientDrawable) view_line_id.getBackground();
-					lineDrawable.setColor(Utils.getBrighterColor(Color.parseColor(item.getColor())));
+					lineDrawable.setColor(Colors.getBrighterColor(Color.parseColor(item.getColor())));
 
 					spinDirection.setEnabled(true);
 
@@ -466,7 +466,7 @@ public class AddStopActivity extends ThemedActivity {
 					Snackbar.with(AddStopActivity.this)
 							.text(message)
 							.actionLabel(R.string.error_retry)
-							.actionColor(Utils.getColorAccent(AddStopActivity.this))
+							.actionColor(Colors.getColorAccent(AddStopActivity.this))
 							.actionListener(new ActionClickListener() {
 
 								@Override
