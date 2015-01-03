@@ -66,4 +66,8 @@
 	<string name="error_retry">Retry</string>
 	<string name="no_upcoming_stops">Nothing for now</string>
 
+	<string-array name="stop_actions">
+		<item>Delete</item>
+	</string-array>
+
 </resources>
