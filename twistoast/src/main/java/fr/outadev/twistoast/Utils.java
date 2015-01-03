@@ -19,6 +19,7 @@
 package fr.outadev.twistoast;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.AttrRes;
 import android.util.TypedValue;
 
@@ -52,6 +53,22 @@ public abstract class Utils {
 		}
 
 		throw new RuntimeException("Attribute is not a color.");
+	}
+
+	public static int getBrighterColor(int color) {
+		int newColor;
+		float[] hsv = new float[3];
+
+		if(color == Color.BLACK) {
+			color = Color.parseColor("#404040");
+		}
+
+		Color.colorToHSV(color, hsv);
+		hsv[0] -= 35;
+		hsv[2] *= 1.8;
+		newColor = Color.HSVToColor(hsv);
+
+		return newColor;
 	}
 
 }

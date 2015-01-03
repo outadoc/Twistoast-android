@@ -207,7 +207,7 @@ public class AddStopActivity extends ThemedActivity {
 					lbl_line.setText(item.getId());
 
 					GradientDrawable lineDrawable = (GradientDrawable) view_line_id.getBackground();
-					lineDrawable.setColor(Color.parseColor(item.getColor()));
+					lineDrawable.setColor(Utils.getBrighterColor(Color.parseColor(item.getColor())));
 
 					spinDirection.setEnabled(true);
 

@@ -116,7 +116,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 
 		// line
 		GradientDrawable lineDrawable = (GradientDrawable) view_line_id.getBackground();
-		lineDrawable.setColor(Color.parseColor(currentItem.getLine().getColor()));
+		lineDrawable.setColor(Utils.getBrighterColor(Color.parseColor(currentItem.getLine().getColor())));
 
 		lbl_line.setText(currentItem.getLine().getId());
 
