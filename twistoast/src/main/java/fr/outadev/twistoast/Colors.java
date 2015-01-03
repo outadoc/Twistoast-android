@@ -24,7 +24,7 @@ import android.support.annotation.AttrRes;
 import android.util.TypedValue;
 
 /**
- * Miscellaneous methods.
+ * Miscellaneous methods used to manipulate colours.
  *
  * @author outadoc
  */
