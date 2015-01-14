@@ -68,8 +68,6 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 
 	private boolean isRefreshing;
 	private boolean isInBackground;
-	private boolean wasRefUpdateDialogShow;
-	private boolean isRefUpdateDialogVisible;
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -101,12 +99,6 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 
 		isRefreshing = false;
 		isInBackground = false;
-		wasRefUpdateDialogShow = false;
-		isRefUpdateDialogVisible = false;
-
-		if(savedInstanceState != null) {
-			wasRefUpdateDialogShow = savedInstanceState.getBoolean("shown_ref_update_dialog");
-		}
 	}
 
 	@Override
@@ -252,12 +244,6 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 	}
 
 	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putBoolean("shown_ref_update_dialog", wasRefUpdateDialogShow);
-	}
-
-	@Override
 	public void onPause() {
 		super.onPause();
 		// when the activity is pausing, stop refreshing automatically
@@ -322,32 +308,22 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 
 			int mismatch = listAdapter.checkSchedulesMismatchCount();
 
-			if(mismatch > 0 && !isRefUpdateDialogVisible && !wasRefUpdateDialogShow) {
-				isRefUpdateDialogVisible = true;
-
-				(new AlertDialog.Builder(getActivity()))
-						.setTitle(R.string.stop_ref_update_message_title)
-						.setMessage(getActivity().getString(R.string.stop_ref_update_message_body, mismatch))
-						.setPositiveButton(R.string.stop_ref_update_message_positive, new DialogInterface.OnClickListener() {
+			if(mismatch > 0) {
+				Snackbar.with(getActivity())
+						.text(R.string.stop_ref_update_message_title)
+						.actionLabel(R.string.stop_ref_update_message_action)
+						.actionColor(Colors.getColorAccent(getActivity()))
+						.actionListener(new ActionClickListener() {
 
 							@Override
-							public void onClick(DialogInterface dialog, int which) {
-								//update the stop references...
-								isRefUpdateDialogVisible = false;
+							public void onActionClicked() {
 								(new ReferenceUpdateTask()).execute();
 							}
 
 						})
-						.setNegativeButton(R.string.stop_ref_update_message_negative, new DialogInterface.OnClickListener() {
-
-							@Override
-							public void onClick(DialogInterface dialog, int which) {
-								isRefUpdateDialogVisible = false;
-								wasRefUpdateDialogShow = true;
-							}
-
-						})
-						.create().show();
+						.duration(7000)
+						.swipeToDismiss(true)
+						.show(getActivity());
 			}
 		}
 	}

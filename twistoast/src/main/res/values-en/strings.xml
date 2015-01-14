@@ -30,6 +30,7 @@
 	<string name="action_cancel">Cancel</string>
 	<string name="loading_data">Loading&#8230;</string>
 	<string name="loading_error">Error whilst loading data.</string>
+	<string name="no_upcoming_stops">Nothing for now</string>
 	<string name="confirm_delete_success">Deleted successfully!</string>
 	<string name="cancel_stop_deletion">Undo</string>
 	<string name="refreshed_stops">Schedules refreshed</string>
@@ -37,6 +38,7 @@
 	<string name="stop_name">%1$s</string>
 	<string name="error_toast">Error : %1$s</string>
 	<string name="added_toast">Added : %1$s</string>
+	<string name="error_retry">Retry</string>
 	<string name="add_error_duplicate">This stop is already in your list.</string>
 	<string name="add_error_illegal_argument">Something\'s wrong, check the values of the line, direction and stop.</string>
 	<string name="action_open_website">Open in Browser</string>
@@ -57,14 +59,11 @@
 	<string name="drawer_item_news">News</string>
 	<string name="drawer_item_pricing">Pricing</string>
 	<string name="drawer_item_preferences">Preferences</string>
-	<string name="stop_ref_update_message_title">Outdated stops</string>
-	<string name="stop_ref_update_message_body">It looks like %1$s of the stops you added need(s) to be updated. Would you like to do this now?\nIf you refuse, we won\'t ask you until the next time you start Twistoast.</string>
-	<string name="stop_ref_update_message_positive">Do it!</string>
-	<string name="stop_ref_update_message_negative">Later</string>
+
+	<string name="stop_ref_update_message_title">Some bus stops are outdated!</string>
+	<string name="stop_ref_update_message_action">Update</string>
 	<string name="stop_ref_update_progress_title">Updating stop references…</string>
 	<string name="stop_ref_update_error_text">Error while updating the stops references.</string>
-	<string name="error_retry">Retry</string>
-	<string name="no_upcoming_stops">Nothing for now</string>
 
 	<string-array name="stop_actions">
 		<item>Delete</item>
