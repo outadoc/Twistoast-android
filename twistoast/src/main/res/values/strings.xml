@@ -62,7 +62,7 @@
 	<string name="drawer_item_preferences">Paramètres</string>
 
 	<string name="stop_ref_update_message_title">Certains arrêts sont obsolètes !</string>
-	<string name="stop_ref_update_message_action">Mise à jour</string>
+	<string name="stop_ref_update_message_action">MàJ</string>
 	<string name="stop_ref_update_progress_title">Mise à jour des références des arrêts…</string>
 	<string name="stop_ref_update_error_text">Erreur lors de la mise à jour.</string>
 
