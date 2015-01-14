@@ -64,6 +64,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 	private final SparseArray<String> networks;
 
 	private int networkCount = 0;
+	private int nbOutdatedStops = 0;
 
 	public StopsListArrayAdapter(Activity activity, int resource, List<TimeoStop> stops,
 	                             StopsListContainer stopsListContainer) {
@@ -150,11 +151,15 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 				if(currScheds.size() > 0) {
 					view_schedule_container.setVisibility(View.VISIBLE);
 				}
+
+				convertView.setAlpha(1.0F);
 			}
+
 		} else {
 			//if we can't find the schedules we asked for in the hashmap, something went wrong. :c
 			Log.e(Utils.TAG, "missing stop schedule for " + currentItem + " (ref=" + currentItem.getReference() + "); ref " +
 					"outdated?");
+			convertView.setAlpha(0.4F);
 		}
 
 		view_traffic_message.setOnClickListener(new OnClickListener() {
@@ -186,7 +191,9 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 						schedulesMap.put(schedule.getStop(), schedule);
 					}
 
+					nbOutdatedStops = TimeoRequestHandler.checkForOutdatedStops(stops, schedulesList);
 					return schedulesMap;
+
 				} catch(final Exception e) {
 					e.printStackTrace();
 					activity.runOnUiThread(new Runnable() {
@@ -250,11 +257,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 	 * @return 0 if everything is okay, otherwise the number of stops we didn't get back the data for.
 	 */
 	public int checkSchedulesMismatchCount() {
-		int delta = stops.size() - schedules.size();
-		if(delta < 0) {
-			throw new RuntimeException("Got more data back from the API than expected.");
-		}
-		return delta;
+		return nbOutdatedStops;
 	}
 
 }

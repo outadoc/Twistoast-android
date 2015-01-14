@@ -27,6 +27,7 @@ public class TimeoStop extends TimeoIDNameObject {
 
 	private String ref;
 	private TimeoLine line;
+	private boolean isOutdated;
 
 	/**
 	 * Creates a stop.
@@ -64,5 +65,13 @@ public class TimeoStop extends TimeoIDNameObject {
 	@Override
 	public String toString() {
 		return getName();
+	}
+
+	public boolean isOutdated() {
+		return isOutdated;
+	}
+
+	public void setOutdated(boolean isOutdated) {
+		this.isOutdated = isOutdated;
 	}
 }

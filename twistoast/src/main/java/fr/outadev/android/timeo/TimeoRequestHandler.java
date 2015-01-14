@@ -536,6 +536,35 @@ public abstract class TimeoRequestHandler {
 		return schedules;
 	}
 
+	public static int checkForOutdatedStops(List<TimeoStop> stops, List<TimeoStopSchedule> schedules) throws
+			TimeoException {
+		if(stops == null || schedules == null) {
+			throw new TimeoException();
+		}
+
+		if(stops.size() == schedules.size()) {
+			return 0;
+		}
+
+		int count = 0;
+
+		for(TimeoStop stop : stops) {
+			boolean outdated = true;
+
+			for(TimeoStopSchedule schedule : schedules) {
+				if(schedule.getStop() == stop) {
+					outdated = false;
+					count++;
+					break;
+				}
+			}
+
+			stop.setOutdated(outdated);
+		}
+
+		return count;
+	}
+
 	/**
 	 * Fetches the current global traffic alert message. Might or might not be null.
 	 *
