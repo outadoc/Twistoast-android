@@ -88,12 +88,11 @@
     <orderEntry type="library" exported="" name="support-annotations-21.0.2" level="project" />
     <orderEntry type="library" exported="" name="http-request-5.6" level="project" />
     <orderEntry type="library" exported="" name="support-v4-21.0.2" level="project" />
+    <orderEntry type="library" exported="" name="pebblekit-2.6.0" level="project" />
     <orderEntry type="library" exported="" name="recyclerview-v7-21.0.2" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-21.0.2" level="project" />
     <orderEntry type="library" exported="" name="play-services-6.1.71" level="project" />
     <orderEntry type="library" exported="" name="commons-lang3-3.3.2" level="project" />
-    <orderEntry type="library" exported="" name="guava-18.0" level="project" />
-    <orderEntry type="module" module-name="pebbleKit" exported="" />
     <orderEntry type="module" module-name="colorPicker" exported="" />
   </component>
 </module>
