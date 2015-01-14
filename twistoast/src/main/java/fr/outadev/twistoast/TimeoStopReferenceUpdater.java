@@ -65,7 +65,7 @@ public class TimeoStopReferenceUpdater {
 
 		for(TimeoStop stop : stopList) {
 			//we only want to load it for each line, so we skip any additional stops that we already processed
-			if(stop.getLine().equals(lastLine)) {
+			if(stop.isOutdated() && !stop.getLine().equals(lastLine)) {
 				continue;
 			}
 
