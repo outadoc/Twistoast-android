@@ -36,7 +36,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdListener;
@@ -125,7 +124,7 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 		swipeRefreshLayout.setColorSchemeResources(R.color.twisto_primary, R.color.twisto_secondary,
 				R.color.twisto_primary, R.color.twisto_secondary);
 
-		stopsListView = (ListView) view.findViewById(R.id.stops_list);
+		stopsListView = (AbsListView) view.findViewById(R.id.stops_list);
 		noContentView = view.findViewById(R.id.view_no_content);
 		final FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
 
