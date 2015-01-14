@@ -54,24 +54,24 @@ public class TimeoStopReferenceUpdater {
 	 * @throws IOException
 	 * @throws fr.outadev.android.timeo.TimeoException
 	 */
-	public void updateAllStopReferences(ProgressListener progressListener) throws XmlPullParserException, IOException,
+	public void updateAllStopReferences(List<TimeoStop> stops, ProgressListener progressListener) throws XmlPullParserException,
+			IOException,
 			TimeoException {
-		List<TimeoStop> stopList = db.getAllStops();
 		TimeoLine lastLine = null;
 
-		progressListener.onProgress(0, stopList.size());
+		progressListener.onProgress(0, stops.size());
 
 		int i = 0;
 
-		for(TimeoStop stop : stopList) {
+		for(TimeoStop stop : stops) {
 			//we only want to load it for each line, so we skip any additional stops that we already processed
-			if(stop.isOutdated() && !stop.getLine().equals(lastLine)) {
+			if(!stop.isOutdated() || stop.getLine().equals(lastLine)) {
 				continue;
 			}
 
 			//update the progress
 			Log.d(Utils.TAG, "updating stops for line " + stop.getLine());
-			progressListener.onProgress(i, stopList.size());
+			progressListener.onProgress(i, stops.size());
 
 			//get the stops for the current line
 			lastLine = stop.getLine();

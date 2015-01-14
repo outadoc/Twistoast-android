@@ -47,6 +47,8 @@ import com.melnykov.fab.FloatingActionButton;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.listeners.ActionClickListener;
 
+import java.util.List;
+
 import fr.outadev.android.timeo.ProgressListener;
 import fr.outadev.android.timeo.TimeoStop;
 
@@ -61,6 +63,8 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 	private ListView listView;
 	private SwipeRefreshLayout swipeRefreshLayout;
 	private View noContentView;
+
+	List<TimeoStop> stops;
 
 	private TwistoastDatabase databaseHandler;
 	private StopsListArrayAdapter listAdapter;
@@ -274,8 +278,8 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 		// if we don't do that, bugs will appear when the database has been
 		// modified
 		if(reloadFromDatabase) {
-			listAdapter = new StopsListArrayAdapter(getActivity(), android.R.layout.simple_list_item_1,
-					databaseHandler.getAllStops(), this);
+			stops = databaseHandler.getAllStops();
+			listAdapter = new StopsListArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, stops, this);
 			listView.setAdapter(listAdapter);
 		}
 
@@ -341,7 +345,7 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 		@Override
 		protected Exception doInBackground(Void... params) {
 			try {
-				referenceUpdater.updateAllStopReferences(new ProgressListener() {
+				referenceUpdater.updateAllStopReferences(stops, new ProgressListener() {
 
 					@Override
 					public void onProgress(int current, int total) {
