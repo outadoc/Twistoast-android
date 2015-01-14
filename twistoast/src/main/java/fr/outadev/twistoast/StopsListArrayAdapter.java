@@ -80,23 +80,23 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 	}
 
 	@Override
-	public View getView(final int position, View convertView, final ViewGroup parent) {
-		TimeoStop currentItem = getItem(position);
+	public View getView(final int position, View containerView, final ViewGroup parent) {
+		TimeoStop currentStop = getItem(position);
 		LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		if(convertView == null) {
-			convertView = inflater.inflate(R.layout.schedule_row, parent, false);
+		if(containerView == null) {
+			containerView = inflater.inflate(R.layout.schedule_row, parent, false);
 		}
 
 		// get all the stuff in it that we'll have to modify
-		FrameLayout view_line_id = (FrameLayout) convertView.findViewById(R.id.view_line_id);
+		FrameLayout view_line_id = (FrameLayout) containerView.findViewById(R.id.view_line_id);
 
-		TextView lbl_line = (TextView) convertView.findViewById(R.id.lbl_line_id);
-		TextView lbl_stop = (TextView) convertView.findViewById(R.id.lbl_stop_name);
-		TextView lbl_direction = (TextView) convertView.findViewById(R.id.lbl_direction_name);
+		TextView lbl_line = (TextView) containerView.findViewById(R.id.lbl_line_id);
+		TextView lbl_stop = (TextView) containerView.findViewById(R.id.lbl_stop_name);
+		TextView lbl_direction = (TextView) containerView.findViewById(R.id.lbl_direction_name);
 
-		LinearLayout view_schedule_container = (LinearLayout) convertView.findViewById(R.id.view_schedule_labels_container);
-		LinearLayout view_traffic_message = (LinearLayout) convertView.findViewById(R.id.view_traffic_message);
+		LinearLayout view_schedule_container = (LinearLayout) containerView.findViewById(R.id.view_schedule_labels_container);
+		LinearLayout view_traffic_message = (LinearLayout) containerView.findViewById(R.id.view_traffic_message);
 
 		/*
 		TextView lbl_message_title = (TextView) convertView.findViewById(R.id.lbl_message_title);
@@ -116,24 +116,24 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 
 		// line
 		GradientDrawable lineDrawable = (GradientDrawable) view_line_id.getBackground();
-		lineDrawable.setColor(Colors.getBrighterColor(Color.parseColor(currentItem.getLine().getColor())));
+		lineDrawable.setColor(Colors.getBrighterColor(Color.parseColor(currentStop.getLine().getColor())));
 
-		lbl_line.setText(currentItem.getLine().getId());
+		lbl_line.setText(currentStop.getLine().getId());
 
 		// stop
-		lbl_stop.setText(getContext().getResources().getString(R.string.stop_name, currentItem.getName()));
+		lbl_stop.setText(getContext().getResources().getString(R.string.stop_name, currentStop.getName()));
 
 		// direction
 		lbl_direction.setText(getContext().getResources()
-				.getString(R.string.direction_name, currentItem.getLine().getDirection().getName()));
+				.getString(R.string.direction_name, currentStop.getLine().getDirection().getName()));
 
 		//remove all existing schedules in that view
 		view_schedule_container.removeAllViewsInLayout();
 
 		//add the new schedules one by one
-		if(schedules.containsKey(currentItem) && schedules.get(currentItem) != null) {
-			if(schedules.get(currentItem).getSchedules() != null) {
-				List<TimeoSingleSchedule> currScheds = schedules.get(currentItem).getSchedules();
+		if(schedules.containsKey(currentStop) && schedules.get(currentStop) != null) {
+			if(schedules.get(currentStop).getSchedules() != null) {
+				List<TimeoSingleSchedule> currScheds = schedules.get(currentStop).getSchedules();
 
 				for(TimeoSingleSchedule currSched : currScheds) {
 					View singleScheduleView = inflater.inflate(R.layout.single_schedule_label, null);
@@ -151,16 +151,16 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 					view_schedule_container.addView(getEmptyScheduleLabel(inflater));
 				}
 
-				convertView.setAlpha(1.0F);
+				containerView.setAlpha(1.0F);
 			}
 
 		} else {
 			//if we can't find the schedules we asked for in the hashmap, something went wrong. :c
-			Log.e(Utils.TAG, "missing stop schedule for " + currentItem +
-					" (ref=" + currentItem.getReference() + "); ref outdated?");
+			Log.e(Utils.TAG, "missing stop schedule for " + currentStop +
+					" (ref=" + currentStop.getReference() + "); ref outdated?");
 
 			view_schedule_container.addView(getEmptyScheduleLabel(inflater));
-			convertView.setAlpha(0.4F);
+			containerView.setAlpha(0.4F);
 		}
 
 		view_traffic_message.setOnClickListener(new OnClickListener() {
@@ -172,7 +172,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 
 		});
 
-		return convertView;
+		return containerView;
 	}
 
 	private View getEmptyScheduleLabel(LayoutInflater inflater) {

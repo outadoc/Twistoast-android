@@ -34,6 +34,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -55,16 +56,16 @@ import fr.outadev.android.timeo.TimeoStop;
 public class StopsListFragment extends Fragment implements StopsListContainer {
 
 	//Refresh automatically every 60 seconds.
-	private final long REFRESH_INTERVAL = 60000L;
+	private static final long REFRESH_INTERVAL = 60000L;
 
 	private final Handler periodicRefreshHandler = new Handler();
 	private Runnable periodicRefreshRunnable;
 
-	private ListView listView;
+	private AbsListView stopsListView;
 	private SwipeRefreshLayout swipeRefreshLayout;
 	private View noContentView;
 
-	List<TimeoStop> stops;
+	private List<TimeoStop> stops;
 
 	private TwistoastDatabase databaseHandler;
 	private StopsListArrayAdapter listAdapter;
@@ -124,11 +125,11 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 		swipeRefreshLayout.setColorSchemeResources(R.color.twisto_primary, R.color.twisto_secondary,
 				R.color.twisto_primary, R.color.twisto_secondary);
 
-		listView = (ListView) view.findViewById(R.id.stops_list);
+		stopsListView = (ListView) view.findViewById(R.id.stops_list);
 		noContentView = view.findViewById(R.id.view_no_content);
 		final FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
 
-		listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+		stopsListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
@@ -154,7 +155,7 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 										.text(R.string.confirm_delete_success)
 										.actionLabel(R.string.cancel_stop_deletion)
 										.actionColor(Colors.getColorAccent(getActivity()))
-										.attachToAbsListView(listView)
+										.attachToAbsListView(stopsListView)
 										.actionListener(new ActionClickListener() {
 
 											@Override
@@ -180,7 +181,7 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 
 		});
 
-		fab.attachToListView(listView);
+		fab.attachToListView(stopsListView);
 		fab.setColorNormal(Colors.getColorAccent(getActivity()));
 		fab.setColorPressedResId(R.color.twisto_secondary);
 		fab.setColorRippleResId(R.color.twisto_secondary);
@@ -280,7 +281,7 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 		if(reloadFromDatabase) {
 			stops = databaseHandler.getAllStops();
 			listAdapter = new StopsListArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, stops, this);
-			listView.setAdapter(listAdapter);
+			stopsListView.setAdapter(listAdapter);
 		}
 
 		// finally, get the schedule
@@ -385,7 +386,7 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 						.text(R.string.stop_ref_update_error_text)
 						.actionLabel(R.string.error_retry)
 						.actionColor(Colors.getColorAccent(getActivity()))
-						.attachToAbsListView(listView)
+						.attachToAbsListView(stopsListView)
 						.actionListener(new ActionClickListener() {
 
 							@Override

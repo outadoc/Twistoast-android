@@ -536,6 +536,17 @@ public abstract class TimeoRequestHandler {
 		return schedules;
 	}
 
+	/**
+	 * Checks if there are outdated stops amongst those in the database,
+	 * by comparing them to a list of schedules returned by the API.
+	 * <p/>
+	 * The isOutdated property of the bus stops will be set accordingly.
+	 *
+	 * @param stops     a list of bus stops to check. their isOutdated property may be modified
+	 * @param schedules a list of schedules returned by the API and corresponding to the stops
+	 * @return the number of outdated stops that have been found
+	 * @throws TimeoException if stops or schedules is null
+	 */
 	public static int checkForOutdatedStops(List<TimeoStop> stops, List<TimeoStopSchedule> schedules) throws
 			TimeoException {
 		if(stops == null || schedules == null) {
