@@ -32,7 +32,7 @@
 	<string name="action_cancel">Annuler</string>
 	<string name="loading_data">Chargement&#8230;</string>
 	<string name="loading_error">Erreur lors du chargement des données.</string>
-	<string name="no_upcoming_stops">Pas d\'arrêts</string>
+	<string name="no_upcoming_stops">Pas d\'arrêts prévus.</string>
 	<string name="confirm_delete_success">Succès de la suppression !</string>
 	<string name="cancel_stop_deletion">Annuler</string>
 	<string name="refreshed_stops">Horaires rafraîchis</string>

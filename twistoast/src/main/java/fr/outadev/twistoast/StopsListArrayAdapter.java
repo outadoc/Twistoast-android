@@ -129,7 +129,6 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 
 		//remove all existing schedules in that view
 		view_schedule_container.removeAllViewsInLayout();
-		view_schedule_container.setVisibility(View.GONE);
 
 		//add the new schedules one by one
 		if(schedules.containsKey(currentItem) && schedules.get(currentItem) != null) {
@@ -148,8 +147,8 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 					view_schedule_container.addView(singleScheduleView);
 				}
 
-				if(currScheds.size() > 0) {
-					view_schedule_container.setVisibility(View.VISIBLE);
+				if(currScheds.isEmpty()) {
+					view_schedule_container.addView(getEmptyScheduleLabel(inflater));
 				}
 
 				convertView.setAlpha(1.0F);
@@ -157,8 +156,10 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 
 		} else {
 			//if we can't find the schedules we asked for in the hashmap, something went wrong. :c
-			Log.e(Utils.TAG, "missing stop schedule for " + currentItem + " (ref=" + currentItem.getReference() + "); ref " +
-					"outdated?");
+			Log.e(Utils.TAG, "missing stop schedule for " + currentItem +
+					" (ref=" + currentItem.getReference() + "); ref outdated?");
+
+			view_schedule_container.addView(getEmptyScheduleLabel(inflater));
 			convertView.setAlpha(0.4F);
 		}
 
@@ -172,6 +173,13 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 		});
 
 		return convertView;
+	}
+
+	private View getEmptyScheduleLabel(LayoutInflater inflater) {
+		View singleScheduleView = inflater.inflate(R.layout.single_schedule_label, null);
+		TextView lbl_schedule_time = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule);
+		lbl_schedule_time.setText(R.string.no_upcoming_stops);
+		return singleScheduleView;
 	}
 
 	/**

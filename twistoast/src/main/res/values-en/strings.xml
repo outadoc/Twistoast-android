@@ -30,7 +30,7 @@
 	<string name="action_cancel">Cancel</string>
 	<string name="loading_data">Loading&#8230;</string>
 	<string name="loading_error">Error whilst loading data.</string>
-	<string name="no_upcoming_stops">Nothing for now</string>
+	<string name="no_upcoming_stops">No upcoming stops.</string>
 	<string name="confirm_delete_success">Deleted successfully!</string>
 	<string name="cancel_stop_deletion">Undo</string>
 	<string name="refreshed_stops">Schedules refreshed</string>
