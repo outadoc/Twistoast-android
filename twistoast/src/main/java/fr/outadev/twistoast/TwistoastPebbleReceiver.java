@@ -42,6 +42,7 @@ import fr.outadev.android.timeo.TimeoStopSchedule;
  */
 public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 
+	private static final String TAG = "TwistoastPebbleReceiver";
 	private static final UUID PEBBLE_UUID = UUID.fromString("020f9398-c407-454b-996c-6ac341337281");
 
 	// message type key
@@ -63,12 +64,12 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 
 	public TwistoastPebbleReceiver() {
 		super(PEBBLE_UUID);
-		Log.d("TwistoastPebbleReceiver", "initialized pebble listener");
+		Log.d(TAG, "initialized pebble listener");
 	}
 
 	@Override
 	public void receiveData(final Context context, final int transactionId, PebbleDictionary data) {
-		Log.d("TwistoastPebbleReceiver", "received a message from pebble " + PEBBLE_UUID);
+		Log.d(TAG, "received a message from pebble " + PEBBLE_UUID);
 
 		// open the database and count the stops
 		TwistoastDatabase databaseHandler = new TwistoastDatabase(TwistoastDatabaseOpenHelper.getInstance(context));
@@ -79,7 +80,7 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 		// if we want a schedule and we have buses in the database
 		if(data.getInteger(KEY_TWISTOAST_MESSAGE_TYPE) == BUS_STOP_REQUEST && stopsCount > 0 && cm.getActiveNetworkInfo() != null
 				&& cm.getActiveNetworkInfo().isConnected()) {
-			Log.d("TwistoastPebbleReceiver", "pebble request acknowledged");
+			Log.d(TAG, "pebble request acknowledged");
 			PebbleKit.sendAckToPebble(context, transactionId);
 
 			// get the bus index (modulo the number of stops there is in the db)
@@ -88,7 +89,7 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 			// get the stop that interests us
 			final TimeoStop stop = databaseHandler.getStopAtIndex(busIndex);
 
-			Log.d("TwistoastPebbleReceiver", "loading data for stop #" + busIndex + "...");
+			Log.d(TAG, "loading data for stop #" + busIndex + "...");
 
 			// fetch schedule
 			new AsyncTask<TimeoStop, Void, TimeoStopSchedule>() {
@@ -110,7 +111,7 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 				@Override
 				protected void onPostExecute(TimeoStopSchedule schedule) {
 					if(schedule != null) {
-						Log.d("TwistoastPebbleReceiver", "got data for stop: " + schedule);
+						Log.d(TAG, "got data for stop: " + schedule);
 						craftAndSendSchedulePacket(context, schedule);
 					} else {
 						PebbleKit.sendNackToPebble(context, transactionId);
@@ -164,7 +165,7 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 			}
 		}
 
-		Log.d("TwistoastPebbleReceiver", "sending back: " + response);
+		Log.d(TAG, "sending back: " + response);
 		PebbleKit.sendDataToPebble(context, PEBBLE_UUID, response);
 	}
 

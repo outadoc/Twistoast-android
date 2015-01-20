@@ -215,7 +215,7 @@ public class MainActivity extends ThemedActivity implements StopsListContainer {
 			@Override
 			protected TimeoTrafficAlert doInBackground(Void... voids) {
 				try {
-					return TimeoRequestHandler.getGlobalTrafficAlert();
+					return TimeoRequestHandler.getGlobalTrafficAlert(getString(R.string.url_pre_home_info));
 				} catch(Exception e) {
 					e.printStackTrace();
 				}
@@ -272,18 +272,17 @@ public class MainActivity extends ThemedActivity implements StopsListContainer {
 		list.add(new NavigationDrawerFragmentItem(R.drawable.ic_schedule, R.string.drawer_item_realtime,
 				StopsListFragment.class));
 		list.add(new NavigationDrawerWebItem(R.drawable.ic_directions_bus, R.string.drawer_item_timetables,
-				"http://dev.actigraph.fr/actipages/twisto/module/mobile/App/horairesalarret/?app=pivk-1.3-2014"));
+				getString(R.string.url_drawer_directions)));
 		list.add(new NavigationDrawerWebItem(R.drawable.ic_navigation, R.string.drawer_item_routes,
-				"http://twisto.fr/module/mobile/App2014/itineraire-android-4.x-dev/iti_formulaire.php"));
-		list.add(new NavigationDrawerWebItem(R.drawable.ic_map, R.string.drawer_item_map,
-				"http://twisto.fr/module/mobile/App2014/leaflet/?ios=true"));
+				getString(R.string.url_drawer_navigation)));
+		list.add(new NavigationDrawerWebItem(R.drawable.ic_map, R.string.drawer_item_map, getString(R.string.url_drawer_map)));
 		list.add(new NavigationDrawerSeparator());
 		list.add(new NavigationDrawerWebItem(R.drawable.traffic_cone, R.string.drawer_item_traffic,
-				"http://twisto.mobi/module/mobile/App/trafic/"));
+				getString(R.string.url_drawer_traffic)));
 		list.add(new NavigationDrawerWebItem(R.drawable.ic_books, R.string.drawer_item_news,
-				"http://twisto.mobi/module/mobile/App/actus/"));
+				getString(R.string.url_drawer_news)));
 		list.add(new NavigationDrawerWebItem(R.drawable.ic_payment, R.string.drawer_item_pricing,
-				"http://twisto.fr/module/mobile/App2014/tarifs/index.php?ios=true"));
+				getString(R.string.url_drawer_pricing)));
 		list.add(new NavigationDrawerSeparator());
 		list.add(new NavigationDrawerSecondaryItem(R.string.drawer_item_preferences, PrefsFragment.class));
 

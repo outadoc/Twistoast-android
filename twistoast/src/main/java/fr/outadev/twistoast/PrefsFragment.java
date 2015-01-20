@@ -49,7 +49,7 @@ public class PrefsFragment extends PreferenceFragment implements OnSharedPrefere
 
 		try {
 			PackageInfo info = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
-			findPreference("version").setSummary("Twistoast v" + info.versionName);
+			findPreference("version").setSummary(getString(R.string.app_name) + " v" + info.versionName);
 		} catch(NameNotFoundException e1) {
 			e1.printStackTrace();
 		}
