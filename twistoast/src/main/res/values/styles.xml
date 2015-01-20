@@ -30,6 +30,8 @@
 
 	<style name="AppTheme" parent="AppBaseTheme" />
 
-	<style name="AddActivityTheme" parent="AppBaseTheme" />
+	<style name="AddActivityTheme" parent="Theme.AppCompat.DialogWhenLarge">
+		<item name="windowActionBar">false</item>
+	</style>
 
 </resources>

@@ -37,6 +37,7 @@
 		android:background="@color/main_background_color">
 
 		<LinearLayout
+			android:id="@+id/add_stop_container"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:orientation="vertical">
