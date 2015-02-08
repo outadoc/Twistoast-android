@@ -38,17 +38,19 @@ import fr.outadev.android.timeo.TimeoRequestHandler;
  */
 public class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 
-	private static final int DATABASE_VERSION = 2;
+	private static final int DATABASE_VERSION = 3;
 
 	private static final String DATABASE_NAME = "twistoast.db";
 	private static final String DATABASE_V2_UPGRADE_NAME = "db_upgrade_v2.db";
+
 	private static final String LINES_TABLE_CREATE =
 			"CREATE TABLE twi_line(" +
 					"line_id TEXT, " +
 					"line_name TEXT, " +
 					"line_color TEXT, " +
 					"network_code INTEGER DEFAULT " + TimeoRequestHandler.DEFAULT_NETWORK_CODE + ", " +
-					"PRIMARY KEY (line_id, network_code));";
+					"PRIMARY KEY (line_id, network_code))";
+
 	private static final String DIRECTIONS_TABLE_CREATE =
 			"CREATE TABLE twi_direction(" +
 					"dir_id TEXT, " +
@@ -56,7 +58,8 @@ public class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 					"dir_name TEXT, " +
 					"network_code INTEGER DEFAULT " + TimeoRequestHandler.DEFAULT_NETWORK_CODE + ", " +
 					"PRIMARY KEY(dir_id, line_id, network_code), " +
-					"FOREIGN KEY(line_id, network_code) REFERENCES twi_line(line_id, network_code));";
+					"FOREIGN KEY(line_id, network_code) REFERENCES twi_line(line_id, network_code))";
+
 	private static final String STOPS_TABLE_CREATE =
 			"CREATE TABLE twi_stop(" +
 					"stop_id INTEGER, " +
@@ -66,7 +69,20 @@ public class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 					"stop_ref TEXT DEFAULT NULL, " +
 					"network_code INTEGER DEFAULT " + TimeoRequestHandler.DEFAULT_NETWORK_CODE + ", " +
 					"PRIMARY KEY(stop_id, line_id, dir_id, network_code), " +
-					"FOREIGN KEY(dir_id, line_id, network_code) REFERENCES twi_direction(dir_id, line_id, network_code));";
+					"FOREIGN KEY(dir_id, line_id, network_code) REFERENCES twi_direction(dir_id, line_id, network_code))";
+
+	private static final String NOTIFICATIONS_TABLE_CREATE =
+			"CREATE TABLE twi_notification(" +
+					"stop_id INTEGER," +
+					"line_id TEXT," +
+					"dir_id TEXT," +
+					"network_code INTEGER DEFAULT " + TimeoRequestHandler.DEFAULT_NETWORK_CODE + ", " +
+					"notif_creation_time DATE," +
+					"notif_active INTEGER, " +
+					"PRIMARY KEY(stop_id, line_id, dir_id, network_code, notif_active), " +
+					"FOREIGN KEY(stop_id, line_id, dir_id, network_code) " +
+					"REFERENCES twi_stop(stop_id, line_id, dir_id, network_code))";
+
 	private static TwistoastDatabaseOpenHelper instance;
 	private Context context;
 
@@ -88,16 +104,21 @@ public class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 		db.execSQL(LINES_TABLE_CREATE);
 		db.execSQL(DIRECTIONS_TABLE_CREATE);
 		db.execSQL(STOPS_TABLE_CREATE);
+		db.execSQL(NOTIFICATIONS_TABLE_CREATE);
 	}
 
 	@Override
 	public void onUpgrade(final SQLiteDatabase db, int oldVersion, int newVersion) {
-		switch(newVersion) {
-			case 2:
-				Log.i(Utils.TAG, "upgrading database to v" + newVersion + ", was v" + oldVersion);
+		Log.i(Utils.TAG, "upgrading database to v" + newVersion + ", was v" + oldVersion);
+
+		switch(oldVersion) {
+			case 1:
 				upgradeToV2(db);
-				Log.i(Utils.TAG, "successful database upgrade!");
+			case 2:
+				upgradeToV3(db);
 		}
+
+		Log.i(Utils.TAG, "successful database upgrade!");
 	}
 
 	/**
@@ -194,14 +215,29 @@ public class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 		return context.openOrCreateDatabase(DATABASE_V2_UPGRADE_NAME, Context.MODE_PRIVATE, null);
 	}
 
+	private void upgradeToV3(SQLiteDatabase db) {
+		try {
+			db.execSQL(NOTIFICATIONS_TABLE_CREATE);
+		} catch(Exception e) {
+			e.printStackTrace();
+
+			deleteAllData(db);
+			onCreate(db);
+		}
+	}
+
 	/**
 	 * Deletes all the tables in the database.
 	 *
 	 * @param db the database to clean up
 	 */
 	private void deleteAllData(SQLiteDatabase db) {
-		db.execSQL("DROP TABLE twi_stop");
-		db.execSQL("DROP TABLE twi_direction");
-		db.execSQL("DROP TABLE twi_line");
+		try {
+			db.execSQL("DROP TABLE twi_stop");
+			db.execSQL("DROP TABLE twi_direction");
+			db.execSQL("DROP TABLE twi_line");
+			db.execSQL("DROP TABLE twi_notifications");
+		} catch(Exception ignored) {
+		}
 	}
 }
