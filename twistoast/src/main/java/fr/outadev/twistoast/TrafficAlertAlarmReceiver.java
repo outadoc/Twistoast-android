@@ -54,8 +54,7 @@ public class TrafficAlertAlarmReceiver extends BroadcastReceiver {
 							.setSubText("Hello World!")
 							.setCategory(NotificationCompat.CATEGORY_TRANSPORT)
 							.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-							.addAction(android.R.drawable.ic_menu_delete, "Ignorer", null)
-							.addAction(android.R.drawable.ic_dialog_info, "Plus d'infos", null)
+							.addAction(R.drawable.ic_action_web_site_small, "Plus d'infos", null)
 							.setOnlyAlertOnce(true);
 
 			manager.notify(newTrafficId, mBuilder.build());
