@@ -43,12 +43,12 @@ public class TrafficAlertAlarmReceiver extends BroadcastReceiver {
 		NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
 		int lastTrafficId = prefs.getInt("last_traffic_notif_id", -1);
-		int newTrafficId = 0;
+		int newTrafficId = -1;
 
 		if(lastTrafficId != newTrafficId) {
 			NotificationCompat.Builder mBuilder =
 					new NotificationCompat.Builder(context)
-							.setSmallIcon(R.drawable.ic_launcher)
+							.setSmallIcon(R.drawable.ic_stat_notify_twistoast)
 							.setContentTitle("Alerte trafic")
 							.setContentText("Titre random")
 							.setSubText("Hello World!")
