@@ -20,28 +20,36 @@ package fr.outadev.twistoast;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.SystemClock;
 import android.util.Log;
 
-public class NextStopAlarmReceiver extends NotificationReceiver {
+public class NextStopAlarmReceiver extends BroadcastReceiver {
+
+	private static final int ALARM_TYPE = AlarmManager.ELAPSED_REALTIME_WAKEUP;
+	private static final int ALARM_FREQUENCY = 60 * 1000;
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		Log.e(Utils.TAG, "checking bookmarked stops");
 	}
 
+	public static void enable(Context context) {
+		AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+		alarmMgr.setInexactRepeating(ALARM_TYPE,
+				SystemClock.elapsedRealtime() + 60 * 1000, ALARM_FREQUENCY, getBroadcast(context));
+	}
+
+	public static void disable(Context context) {
+		AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+		alarmMgr.cancel(getBroadcast(context));
+	}
+
 	public static PendingIntent getBroadcast(Context context) {
 		Intent intent = new Intent(context, NextStopAlarmReceiver.class);
 		return PendingIntent.getBroadcast(context, 0, intent, 0);
-	}
-
-	protected static int getRepeatFrequency() {
-		return 60 * 1000;
-	}
-
-	protected static int getAlarmType() {
-		return AlarmManager.ELAPSED_REALTIME_WAKEUP;
 	}
 
 }
