@@ -25,10 +25,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+
+import java.util.Random;
 
 public class TrafficAlertAlarmReceiver extends BroadcastReceiver {
 
@@ -43,9 +46,12 @@ public class TrafficAlertAlarmReceiver extends BroadcastReceiver {
 		NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
 		int lastTrafficId = prefs.getInt("last_traffic_notif_id", -1);
-		int newTrafficId = -1;
+		int newTrafficId = (new Random()).nextInt();
 
 		if(lastTrafficId != newTrafficId) {
+			Intent notificationIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
+			PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
+
 			NotificationCompat.Builder mBuilder =
 					new NotificationCompat.Builder(context)
 							.setSmallIcon(R.drawable.ic_stat_notify_twistoast)
@@ -54,8 +60,9 @@ public class TrafficAlertAlarmReceiver extends BroadcastReceiver {
 							.setSubText("Hello World!")
 							.setCategory(NotificationCompat.CATEGORY_TRANSPORT)
 							.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-							.addAction(R.drawable.ic_action_web_site_small, "Plus d'infos", null)
+							.addAction(R.drawable.ic_action_web_site_small, "Plus d'infos", contentIntent)
 							.setOnlyAlertOnce(true);
+
 
 			manager.notify(newTrafficId, mBuilder.build());
 			prefs.edit().putInt("last_traffic_notif_id", newTrafficId).apply();
