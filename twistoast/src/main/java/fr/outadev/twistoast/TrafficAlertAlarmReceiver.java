@@ -26,12 +26,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import java.util.Random;
+import fr.outadev.android.timeo.TimeoRequestHandler;
+import fr.outadev.android.timeo.TimeoTrafficAlert;
 
 public class TrafficAlertAlarmReceiver extends BroadcastReceiver {
 
@@ -39,34 +41,62 @@ public class TrafficAlertAlarmReceiver extends BroadcastReceiver {
 	private static final int ALARM_FREQUENCY = 60 * 1000;
 
 	@Override
-	public void onReceive(Context context, Intent intent) {
-		Log.e(Utils.TAG, "checking traffic alert");
+	public void onReceive(final Context context, Intent intent) {
 
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-		NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+		(new AsyncTask<Void, Void, TimeoTrafficAlert>() {
 
-		int lastTrafficId = prefs.getInt("last_traffic_notif_id", -1);
-		int newTrafficId = (new Random()).nextInt();
+			private int lastTrafficId;
 
-		if(lastTrafficId != newTrafficId) {
-			Intent notificationIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
-			PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
+			private SharedPreferences prefs;
+			private NotificationManager notificationManager;
 
-			NotificationCompat.Builder mBuilder =
-					new NotificationCompat.Builder(context)
-							.setSmallIcon(R.drawable.ic_stat_notify_twistoast)
-							.setContentTitle("Alerte trafic")
-							.setContentText("Titre random")
-							.setSubText("Hello World!")
-							.setCategory(NotificationCompat.CATEGORY_TRANSPORT)
-							.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-							.addAction(R.drawable.ic_action_web_site_small, "Plus d'infos", contentIntent)
-							.setOnlyAlertOnce(true);
+			@Override
+			protected void onPreExecute() {
+				prefs = PreferenceManager.getDefaultSharedPreferences(context);
+				notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+				lastTrafficId = prefs.getInt("last_traffic_notif_id", -1);
+
+				Log.d(Utils.TAG, "checking traffic alert");
+			}
+
+			@Override
+			protected TimeoTrafficAlert doInBackground(Void... params) {
+				return TimeoRequestHandler.getGlobalTrafficAlert(context.getString(R.string.url_pre_home_info));
+			}
+
+			@Override
+			protected void onPostExecute(TimeoTrafficAlert trafficAlert) {
+				if(trafficAlert != null) {
+					Log.d(Utils.TAG, "found traffic alert #" + trafficAlert.getId());
+
+					if(lastTrafficId != trafficAlert.getId()) {
+						Intent notificationIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(trafficAlert.getUrl()));
+						PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
+
+						NotificationCompat.Builder mBuilder =
+								new NotificationCompat.Builder(context)
+										.setSmallIcon(R.drawable.ic_stat_notify_twistoast)
+										.setContentTitle("Alerte trafic Twisto")
+										.setContentText(trafficAlert.getLabel())
+										.setCategory(NotificationCompat.CATEGORY_TRANSPORT)
+										.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+										.addAction(R.drawable.ic_action_web_site, "Plus d'infos", contentIntent)
+										.setOnlyAlertOnce(true);
 
 
-			manager.notify(newTrafficId, mBuilder.build());
-			prefs.edit().putInt("last_traffic_notif_id", newTrafficId).apply();
-		}
+						notificationManager.notify(trafficAlert.getId(), mBuilder.build());
+						prefs.edit().putInt("last_traffic_notif_id", trafficAlert.getId()).apply();
+
+						return;
+					}
+				}
+
+				Log.d(Utils.TAG, "checked traffic: nothing new!");
+			}
+
+		}).execute();
+
 	}
 
 	public static void enable(Context context) {
