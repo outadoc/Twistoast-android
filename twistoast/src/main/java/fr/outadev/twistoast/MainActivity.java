@@ -122,6 +122,8 @@ public class MainActivity extends ThemedActivity implements StopsListContainer {
 			loadFragmentFromDrawerPosition(currentFragmentIndex);
 			checkForGlobalTrafficInfo();
 		}
+
+		TrafficAlertAlarmReceiver.enable(getApplicationContext());
 	}
 
 	@Override

@@ -1,5 +1,5 @@
 /*
- * Twistoast - NextStopAlarmReceiver
+ * Twistoast - NotificationReceiver
  * Copyright (C) 2013-2015  Baptiste Candellier
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,20 +20,28 @@ package fr.outadev.twistoast;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
+import android.os.SystemClock;
 
-public class NextStopAlarmReceiver extends NotificationReceiver {
+/**
+ * Created by outadoc on 09/02/15.
+ */
+public abstract class NotificationReceiver extends BroadcastReceiver {
 
-	@Override
-	public void onReceive(Context context, Intent intent) {
-		Log.e(Utils.TAG, "checking bookmarked stops");
+	public static void enable(Context context) {
+		AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+		alarmMgr.setInexactRepeating(getAlarmType(),
+				SystemClock.elapsedRealtime() + 60 * 1000, getRepeatFrequency(), getBroadcast(context));
+	}
+
+	public static void disable(Context context) {
+		AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+		alarmMgr.cancel(getBroadcast(context));
 	}
 
 	public static PendingIntent getBroadcast(Context context) {
-		Intent intent = new Intent(context, NextStopAlarmReceiver.class);
-		return PendingIntent.getBroadcast(context, 0, intent, 0);
+		return null;
 	}
 
 	protected static int getRepeatFrequency() {
@@ -41,7 +49,7 @@ public class NextStopAlarmReceiver extends NotificationReceiver {
 	}
 
 	protected static int getAlarmType() {
-		return AlarmManager.ELAPSED_REALTIME_WAKEUP;
+		return AlarmManager.ELAPSED_REALTIME;
 	}
 
 }

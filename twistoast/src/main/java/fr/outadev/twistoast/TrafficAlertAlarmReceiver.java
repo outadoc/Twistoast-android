@@ -18,18 +18,30 @@
 
 package fr.outadev.twistoast;
 
-import android.content.BroadcastReceiver;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
-public class TrafficAlertAlarmReceiver extends BroadcastReceiver {
-	public TrafficAlertAlarmReceiver() {
-	}
+public class TrafficAlertAlarmReceiver extends NotificationReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		// TODO: This method is called when the BroadcastReceiver is receiving
-		// an Intent broadcast.
-		throw new UnsupportedOperationException("Not yet implemented");
+		Log.e(Utils.TAG, "checking traffic alert");
 	}
+
+	public static PendingIntent getBroadcast(Context context) {
+		Intent intent = new Intent(context, TrafficAlertAlarmReceiver.class);
+		return PendingIntent.getBroadcast(context, 0, intent, 0);
+	}
+
+	protected static int getRepeatFrequency() {
+		return 60 * 1000;
+	}
+
+	protected static int getAlarmType() {
+		return AlarmManager.ELAPSED_REALTIME;
+	}
+
 }
