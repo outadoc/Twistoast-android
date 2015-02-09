@@ -79,7 +79,7 @@ public class TrafficAlertAlarmReceiver extends BroadcastReceiver {
 										.setSmallIcon(R.drawable.ic_stat_notify_twistoast)
 										.setContentTitle(context.getString(R.string.notifs_traffic_title))
 										.setContentText(trafficAlert.getLabel())
-										.setCategory(NotificationCompat.CATEGORY_TRANSPORT)
+										.setCategory(NotificationCompat.CATEGORY_MESSAGE)
 										.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
 										.setContentIntent(contentIntent)
 										.setAutoCancel(true)
