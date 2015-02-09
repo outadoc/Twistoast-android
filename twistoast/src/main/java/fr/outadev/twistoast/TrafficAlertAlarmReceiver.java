@@ -77,17 +77,16 @@ public class TrafficAlertAlarmReceiver extends BroadcastReceiver {
 						NotificationCompat.Builder mBuilder =
 								new NotificationCompat.Builder(context)
 										.setSmallIcon(R.drawable.ic_stat_notify_twistoast)
-										.setContentTitle("Alerte trafic Twisto")
+										.setContentTitle(context.getString(R.string.notifs_traffic_title))
 										.setContentText(trafficAlert.getLabel())
 										.setCategory(NotificationCompat.CATEGORY_TRANSPORT)
 										.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-										.addAction(R.drawable.ic_action_web_site, "Plus d'infos", contentIntent)
+										.setContentIntent(contentIntent)
+										.setAutoCancel(true)
 										.setOnlyAlertOnce(true);
-
 
 						notificationManager.notify(trafficAlert.getId(), mBuilder.build());
 						prefs.edit().putInt("last_traffic_notif_id", trafficAlert.getId()).apply();
-
 						return;
 					}
 				}
