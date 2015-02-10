@@ -242,7 +242,7 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 								listAdapter.notifyDataSetChanged();
 
 								Snackbar.with(getActivity())
-										.text("Notifications activées pour " + currentStop.getName())
+										.text(getString(R.string.notifs_enable_toast, currentStop.getName()))
 										.actionLabel(R.string.cancel_stop_deletion)
 										.actionColor(Colors.getColorAccent(getActivity()))
 										.attachToAbsListView(stopsListView)
@@ -250,7 +250,6 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 
 											@Override
 											public void onActionClicked() {
-												Log.i(Utils.TAG, "canceling tracking for " + currentStop);
 												databaseHandler.stopWatchingStop(currentStop);
 												currentStop.setWatched(false);
 												listAdapter.notifyDataSetChanged();
@@ -266,7 +265,7 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 								listAdapter.notifyDataSetChanged();
 
 								Snackbar.with(getActivity())
-										.text("Notifications désactivées pour " + currentStop.getName())
+										.text(getString(R.string.notifs_disable_toast, currentStop.getName()))
 										.attachToAbsListView(stopsListView)
 										.show(getActivity());
 							}

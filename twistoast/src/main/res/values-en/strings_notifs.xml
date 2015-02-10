@@ -20,5 +20,7 @@
 <resources>
 
 	<string name="notifs_traffic_title">Twisto traffic alert</string>
+	<string name="notifs_enable_toast">Enabled notifications for %1$s</string>
+	<string name="notifs_disable_toast">Disabled notifications for %1$s</string>
 
 </resources>
