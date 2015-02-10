@@ -82,7 +82,7 @@ public class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 					"network_code INTEGER DEFAULT " + TimeoRequestHandler.DEFAULT_NETWORK_CODE + ", " +
 					"notif_creation_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
 					"notif_active INTEGER DEFAULT 1, " +
-					"PRIMARY KEY(stop_id, line_id, dir_id, network_code, notif_active), " +
+					"PRIMARY KEY(stop_id, line_id, dir_id, network_code, notif_active, notif_creation_time), " +
 					"FOREIGN KEY(stop_id, line_id, dir_id, network_code) " +
 					"REFERENCES twi_stop(stop_id, line_id, dir_id, network_code))";
 

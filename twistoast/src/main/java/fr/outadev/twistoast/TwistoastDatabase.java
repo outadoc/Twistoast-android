@@ -141,7 +141,9 @@ public class TwistoastDatabase {
 								"FROM twi_stop stop " +
 								"INNER JOIN twi_direction dir USING(dir_id, line_id, network_code) " +
 								"INNER JOIN twi_line line USING(line_id, network_code) " +
-								"LEFT JOIN twi_notification notif USING (stop_id, line_id, dir_id, network_code) " +
+								"LEFT JOIN twi_notification notif ON (notif.stop_id = stop.stop_id " +
+								"AND notif.line_id = line.line_id AND notif.dir_id = dir.dir_id " +
+								"AND notif.network_code = line.network_code AND notif.notif_active = 1) " +
 								"ORDER BY line.network_code, CAST(line.line_id AS INTEGER), stop.stop_name, dir.dir_name",
 						null);
 

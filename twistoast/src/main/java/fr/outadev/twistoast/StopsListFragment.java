@@ -192,7 +192,7 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 					// Menu items
 					String contextualMenuItems[] = new String[]{
 							getString(R.string.stop_action_delete),
-							getString(R.string.stop_action_watch)
+							getString((!currentStop.isWatched()) ? R.string.stop_action_watch : R.string.stop_action_unwatch)
 					};
 
 					// Build the long click contextual menu
@@ -200,63 +200,72 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 					builder.setItems(contextualMenuItems, new DialogInterface.OnClickListener() {
 
 						public void onClick(DialogInterface dialog, int which) {
-							switch(which) {
-								// We wish to delete the selected bus stop
-								case 0:
-									// Remove from the database and the interface
-									databaseHandler.deleteStop(currentStop);
-									listAdapter.remove(currentStop);
 
-									if(listAdapter.isEmpty()) {
-										noContentView.setVisibility(View.VISIBLE);
-									}
+							if(which == 0) {
+								// Remove from the database and the interface
+								databaseHandler.deleteStop(currentStop);
+								listAdapter.remove(currentStop);
 
-									listAdapter.notifyDataSetChanged();
+								if(listAdapter.isEmpty()) {
+									noContentView.setVisibility(View.VISIBLE);
+								}
 
-									// Workaround for the FAB not reappearing after the stop is deleted
-									// even if that means the scrollview isn't scrollable anymore
-									fab.show(true);
+								listAdapter.notifyDataSetChanged();
 
-									Snackbar.with(getActivity())
-											.text(R.string.confirm_delete_success)
-											.actionLabel(R.string.cancel_stop_deletion)
-											.actionColor(Colors.getColorAccent(getActivity()))
-											.attachToAbsListView(stopsListView)
-											.actionListener(new ActionClickListener() {
+								// Workaround for the FAB not reappearing after the stop is deleted
+								// even if that means the scrollview isn't scrollable anymore
+								fab.show(true);
 
-												@Override
-												public void onActionClicked() {
-													Log.i(Utils.TAG, "restoring stop " + currentStop);
+								Snackbar.with(getActivity())
+										.text(R.string.confirm_delete_success)
+										.actionLabel(R.string.cancel_stop_deletion)
+										.actionColor(Colors.getColorAccent(getActivity()))
+										.attachToAbsListView(stopsListView)
+										.actionListener(new ActionClickListener() {
 
-													databaseHandler.addStopToDatabase(currentStop);
-													listAdapter.insert(currentStop, position);
-													listAdapter.notifyDataSetChanged();
-												}
+											@Override
+											public void onActionClicked() {
+												Log.i(Utils.TAG, "restoring stop " + currentStop);
 
-											})
-											.show(getActivity());
-									break;
+												databaseHandler.addStopToDatabase(currentStop);
+												listAdapter.insert(currentStop, position);
+												listAdapter.notifyDataSetChanged();
+											}
 
+										})
+										.show(getActivity());
+
+							} else if(which == 1 && !currentStop.isWatched()) {
 								// We wish to get notifications about this upcoming stop
-								case 1:
-									databaseHandler.addToWatchedStops(currentStop);
+								databaseHandler.addToWatchedStops(currentStop);
+								currentStop.setWatched(true);
 
-									Snackbar.with(getActivity())
-											.text("Notifications activées")
-											.actionLabel(R.string.cancel_stop_deletion)
-											.actionColor(Colors.getColorAccent(getActivity()))
-											.attachToAbsListView(stopsListView)
-											.actionListener(new ActionClickListener() {
+								Snackbar.with(getActivity())
+										.text("Notifications activées pour " + currentStop.getName())
+										.actionLabel(R.string.cancel_stop_deletion)
+										.actionColor(Colors.getColorAccent(getActivity()))
+										.attachToAbsListView(stopsListView)
+										.actionListener(new ActionClickListener() {
 
-												@Override
-												public void onActionClicked() {
-													Log.i(Utils.TAG, "canceling tracking for " + currentStop);
-													databaseHandler.stopWatchingStop(currentStop);
-												}
+											@Override
+											public void onActionClicked() {
+												Log.i(Utils.TAG, "canceling tracking for " + currentStop);
+												databaseHandler.stopWatchingStop(currentStop);
+												currentStop.setWatched(false);
+											}
 
-											})
-											.show(getActivity());
-									break;
+										})
+										.show(getActivity());
+
+							} else if(which == 1) {
+								// JUST STOP THESE NOTIFICATIONS ALREADY GHGHGHBLBLBL
+								databaseHandler.stopWatchingStop(currentStop);
+								currentStop.setWatched(false);
+
+								Snackbar.with(getActivity())
+										.text("Notifications désactivées pour " + currentStop.getName())
+										.attachToAbsListView(stopsListView)
+										.show(getActivity());
 							}
 						}
 
