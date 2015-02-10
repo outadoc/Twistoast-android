@@ -88,7 +88,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 			containerView = inflater.inflate(R.layout.schedule_row, parent, false);
 		}
 
-		// get all the stuff in it that we'll have to modify
+		// Get references to the views
 		FrameLayout view_line_id = (FrameLayout) containerView.findViewById(R.id.view_line_id);
 
 		TextView lbl_line = (TextView) containerView.findViewById(R.id.lbl_line_id);
@@ -98,44 +98,32 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 		LinearLayout view_schedule_container = (LinearLayout) containerView.findViewById(R.id.view_schedule_labels_container);
 		LinearLayout view_traffic_message = (LinearLayout) containerView.findViewById(R.id.view_traffic_message);
 
-		/*
-		TextView lbl_message_title = (TextView) convertView.findViewById(R.id.lbl_message_title);
-		TextView lbl_message_body = (TextView) convertView.findViewById(R.id.lbl_message_body);
-
-
-		// set and make the message labels visible if necessary
-		if(currentItem.getMessageTitle() != null && currentItem.getMessageBody() != null
-				&& !currentItem.getMessageBody().isEmpty() && !currentItem.getMessageTitle().isEmpty()) {
-			lbl_message_title.setText(currentItem.getMessageTitle());
-			lbl_message_body.setText(currentItem.getMessageBody());
-
-			view_traffic_message.setVisibility(View.VISIBLE);
-		} else {
-			view_traffic_message.setVisibility(View.GONE);
-		}*/
-
-		// line
+		// Set line drawable. We have to set the colour on the background
 		GradientDrawable lineDrawable = (GradientDrawable) view_line_id.getBackground();
 		lineDrawable.setColor(Colors.getBrighterColor(Color.parseColor(currentStop.getLine().getColor())));
 
 		lbl_line.setText(currentStop.getLine().getId());
 
-		// stop
+		// Set stop text
 		lbl_stop.setText(getContext().getResources().getString(R.string.stop_name, currentStop.getName()));
 
-		// direction
+		// Set direction text
 		lbl_direction.setText(getContext().getResources()
 				.getString(R.string.direction_name, currentStop.getLine().getDirection().getName()));
 
-		//remove all existing schedules in that view
+		// Remove all existing schedules in that view
 		view_schedule_container.removeAllViewsInLayout();
 
-		//add the new schedules one by one
+		// Add the new schedules one by one
 		if(schedules.containsKey(currentStop) && schedules.get(currentStop) != null) {
+
+			// If there are schedules
 			if(schedules.get(currentStop).getSchedules() != null) {
+				// Get the schedules for this stop
 				List<TimeoSingleSchedule> currScheds = schedules.get(currentStop).getSchedules();
 
 				for(TimeoSingleSchedule currSched : currScheds) {
+					// Display the current schedule
 					View singleScheduleView = inflater.inflate(R.layout.single_schedule_label, null);
 
 					TextView lbl_schedule_time = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule);
@@ -148,6 +136,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 				}
 
 				if(currScheds.isEmpty()) {
+					// If no schedules are available, add a fake one to inform the user
 					view_schedule_container.addView(getEmptyScheduleLabel(inflater));
 				}
 
@@ -155,14 +144,17 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 			}
 
 		} else {
-			//if we can't find the schedules we asked for in the hashmap, something went wrong. :c
+			// If we can't find the schedules we asked for in the hashmap, something went wrong. :c
+			// It should be noted that it normally happens the first time the list is loaded, since no data was downloaded yet.
 			Log.e(Utils.TAG, "missing stop schedule for " + currentStop +
 					" (ref=" + currentStop.getReference() + "); ref outdated?");
 
+			// Make the row look a bit translucent to make it stand out
 			view_schedule_container.addView(getEmptyScheduleLabel(inflater));
 			containerView.setAlpha(0.4F);
 		}
 
+		// Load the traffic view if we want to see it
 		view_traffic_message.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -175,10 +167,15 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 		return containerView;
 	}
 
+	/**
+	 * Instanciates and returns a view containing a label that says no stops are scheduled.
+	 * Supposed to be used as a placeholder for an actual schedule time row.
+	 */
 	private View getEmptyScheduleLabel(LayoutInflater inflater) {
 		View singleScheduleView = inflater.inflate(R.layout.single_schedule_label, null);
 		TextView lbl_schedule_time = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule);
 		lbl_schedule_time.setText(R.string.no_upcoming_stops);
+
 		return singleScheduleView;
 	}
 

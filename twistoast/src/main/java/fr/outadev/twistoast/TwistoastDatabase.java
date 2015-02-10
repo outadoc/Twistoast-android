@@ -129,14 +129,19 @@ public class TwistoastDatabase {
 	 * @return a list of all the stops
 	 */
 	public List<TimeoStop> getAllStops() {
+		// Clean notification flags that have timed out so they don't interfere
+		cleanOutdatedTrackedStops();
+
 		SQLiteDatabase db = databaseOpenHelper.getReadableDatabase();
 
 		Cursor results = db
 				.rawQuery(
-						"SELECT stop.stop_id, stop.stop_name, stop.stop_ref, line.line_id, line.line_name, " +
-								"line.line_color, dir.dir_id, dir.dir_name, line.network_code FROM twi_stop stop " +
+						"SELECT stop.stop_id, stop.stop_name, stop.stop_ref, line.line_id, line.line_name, line.line_color, " +
+								"dir.dir_id, dir.dir_name, line.network_code, ifnull(notif_active, 0) as notif " +
+								"FROM twi_stop stop " +
 								"INNER JOIN twi_direction dir USING(dir_id, line_id, network_code) " +
 								"INNER JOIN twi_line line USING(line_id, network_code) " +
+								"LEFT JOIN twi_notification notif USING (stop_id, line_id, dir_id, network_code) " +
 								"ORDER BY line.network_code, CAST(line.line_id AS INTEGER), stop.stop_name, dir.dir_name",
 						null);
 
@@ -158,7 +163,8 @@ public class TwistoastDatabase {
 					results.getString(results.getColumnIndex("stop_id")),
 					results.getString(results.getColumnIndex("stop_name")),
 					results.getString(results.getColumnIndex("stop_ref")),
-					line);
+					line,
+					(results.getInt(results.getColumnIndex("notif")) == 1));
 
 			// add it to the list
 			stopsList.add(stop);
@@ -272,6 +278,7 @@ public class TwistoastDatabase {
 	}
 
 	public List<TimeoStop> getWatchedStops() {
+		// Clean notification flags that have timed out so they don't interfere
 		cleanOutdatedTrackedStops();
 
 		SQLiteDatabase db = databaseOpenHelper.getReadableDatabase();
