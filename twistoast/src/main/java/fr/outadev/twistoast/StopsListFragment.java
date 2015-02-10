@@ -239,6 +239,7 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 								// We wish to get notifications about this upcoming stop
 								databaseHandler.addToWatchedStops(currentStop);
 								currentStop.setWatched(true);
+								listAdapter.notifyDataSetChanged();
 
 								Snackbar.with(getActivity())
 										.text("Notifications activées pour " + currentStop.getName())
@@ -252,6 +253,7 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 												Log.i(Utils.TAG, "canceling tracking for " + currentStop);
 												databaseHandler.stopWatchingStop(currentStop);
 												currentStop.setWatched(false);
+												listAdapter.notifyDataSetChanged();
 											}
 
 										})
@@ -261,6 +263,7 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 								// JUST STOP THESE NOTIFICATIONS ALREADY GHGHGHBLBLBL
 								databaseHandler.stopWatchingStop(currentStop);
 								currentStop.setWatched(false);
+								listAdapter.notifyDataSetChanged();
 
 								Snackbar.with(getActivity())
 										.text("Notifications désactivées pour " + currentStop.getName())

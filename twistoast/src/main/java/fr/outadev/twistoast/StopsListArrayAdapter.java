@@ -31,6 +31,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -97,6 +98,10 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 
 		LinearLayout view_schedule_container = (LinearLayout) containerView.findViewById(R.id.view_schedule_labels_container);
 		LinearLayout view_traffic_message = (LinearLayout) containerView.findViewById(R.id.view_traffic_message);
+
+		ImageView img_stop_watched = (ImageView) containerView.findViewById(R.id.img_stop_watched);
+
+		img_stop_watched.setVisibility((currentStop.isWatched()) ? View.VISIBLE : View.GONE);
 
 		// Set line drawable. We have to set the colour on the background
 		GradientDrawable lineDrawable = (GradientDrawable) view_line_id.getBackground();
