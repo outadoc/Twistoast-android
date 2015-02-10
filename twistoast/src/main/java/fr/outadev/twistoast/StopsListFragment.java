@@ -36,7 +36,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.Toast;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -349,13 +348,9 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 		}
 
 		if(success) {
-			Log.i(Utils.TAG, "refreshed, " + listAdapter.getCount() + " stops in db");
-
-			if(getActivity() != null && !listAdapter.isEmpty()) {
-				Toast.makeText(getActivity(), getResources().getString(R.string.refreshed_stops), Toast.LENGTH_SHORT).show();
-			}
-
 			int mismatch = listAdapter.checkSchedulesMismatchCount();
+
+			Log.i(Utils.TAG, "refreshed, " + listAdapter.getCount() + " stops in db");
 
 			if(mismatch > 0) {
 				Snackbar.with(getActivity())
