@@ -271,7 +271,7 @@ public class TwistoastDatabase {
 		db.close();
 	}
 
-	public List<TimeoStop> getTrackedStops() {
+	public List<TimeoStop> getWatchedStops() {
 		cleanOutdatedTrackedStops();
 
 		SQLiteDatabase db = databaseOpenHelper.getReadableDatabase();
@@ -318,7 +318,7 @@ public class TwistoastDatabase {
 		return stopsList;
 	}
 
-	public void addToTrackedStops(TimeoStop stop) {
+	public void addToWatchedStops(TimeoStop stop) {
 		SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
 		ContentValues values = new ContentValues();
 
@@ -330,7 +330,7 @@ public class TwistoastDatabase {
 		db.insert("twi_notification", null, values);
 	}
 
-	public void disableStopTracking(TimeoStop stop) {
+	public void stopWatchingStop(TimeoStop stop) {
 		SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
 
 		ContentValues updateClause = new ContentValues();

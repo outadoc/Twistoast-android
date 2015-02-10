@@ -181,6 +181,8 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 	}
 
 	private void setupListeners() {
+		// Set up a long click listener for the main stops list that offers actions
+		// to be realised on a single item
 		stopsListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
 			@Override
@@ -188,12 +190,21 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 				if(!isRefreshing) {
 					final TimeoStop currentStop = listAdapter.getItem(position);
 
+					// Menu items
+					String contextualMenuItems[] = new String[]{
+							getString(R.string.stop_action_delete),
+							getString(R.string.stop_action_watch)
+					};
+
+					// Build the long click contextual menu
 					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-					builder.setItems(R.array.stop_actions, new DialogInterface.OnClickListener() {
+					builder.setItems(contextualMenuItems, new DialogInterface.OnClickListener() {
 
 						public void onClick(DialogInterface dialog, int which) {
 							switch(which) {
+								// We wish to delete the selected bus stop
 								case 0:
+									// Remove from the database and the interface
 									databaseHandler.deleteStop(currentStop);
 									listAdapter.remove(currentStop);
 
@@ -202,6 +213,9 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 									}
 
 									listAdapter.notifyDataSetChanged();
+
+									// Workaround for the FAB not reappearing after the stop is deleted
+									// even if that means the scrollview isn't scrollable anymore
 									fab.show(true);
 
 									Snackbar.with(getActivity())
@@ -214,6 +228,7 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 												@Override
 												public void onActionClicked() {
 													Log.i(Utils.TAG, "restoring stop " + currentStop);
+
 													databaseHandler.addStopToDatabase(currentStop);
 													listAdapter.insert(currentStop, position);
 													listAdapter.notifyDataSetChanged();
@@ -222,8 +237,10 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 											})
 											.show(getActivity());
 									break;
+
+								// We wish to get notifications about this upcoming stop
 								case 1:
-									databaseHandler.addToTrackedStops(currentStop);
+									databaseHandler.addToWatchedStops(currentStop);
 
 									Snackbar.with(getActivity())
 											.text("Notifications activées")
@@ -235,7 +252,7 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 												@Override
 												public void onActionClicked() {
 													Log.i(Utils.TAG, "canceling tracking for " + currentStop);
-													databaseHandler.disableStopTracking(currentStop);
+													databaseHandler.stopWatchingStop(currentStop);
 												}
 
 											})
