@@ -70,6 +70,7 @@
 
 	<string-array name="stop_actions">
 		<item>Supprimer</item>
+		<item>M\'alerter du prochain passage</item>
 	</string-array>
 
 </resources>

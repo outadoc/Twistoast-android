@@ -178,46 +178,13 @@ public class TwistoastDatabase {
 	 * @return the corresponding stop object
 	 */
 	public TimeoStop getStopAtIndex(int index) {
-		SQLiteDatabase db = databaseOpenHelper.getReadableDatabase();
-		String indexStr = String.valueOf(index);
+		List<TimeoStop> stopsList = getAllStops();
 
-		Cursor results = db
-				.rawQuery(
-						"SELECT stop.stop_id, stop.stop_name, stop.stop_ref, line.line_id, line.line_name, line.line_color, " +
-								"dir.dir_id, dir.dir_name, line.network_code FROM twi_stop stop " +
-								"JOIN twi_direction dir USING(dir_id, line_id, network_code) " +
-								"JOIN twi_line line USING(line_id, network_code) " +
-								"ORDER BY CAST(line.line_id AS INTEGER), stop.stop_name, dir.dir_name " +
-								"LIMIT 1 OFFSET ?",
-						new String[]{indexStr});
-
-		if(results.getCount() > 0) {
-			results.moveToFirst();
-
-			TimeoLine line = new TimeoLine(
-					new TimeoIDNameObject(
-							results.getString(results.getColumnIndex("line_id")),
-							results.getString(results.getColumnIndex("line_name"))),
-					new TimeoIDNameObject(
-							results.getString(results.getColumnIndex("dir_id")),
-							results.getString(results.getColumnIndex("dir_name"))),
-					results.getString(results.getColumnIndex("line_color")),
-					results.getInt(results.getColumnIndex("network_code")));
-
-			TimeoStop stop = new TimeoStop(
-					results.getString(results.getColumnIndex("stop_id")),
-					results.getString(results.getColumnIndex("stop_name")),
-					results.getString(results.getColumnIndex("stop_ref")),
-					line);
-
-			// close the cursor and the database
-			results.close();
-			db.close();
-
-			return stop;
-		} else {
-			return null;
+		if(stopsList != null && stopsList.size() >= index + 1) {
+			return stopsList.get(index);
 		}
+
+		return null;
 	}
 
 	/**
@@ -290,6 +257,92 @@ public class TwistoastDatabase {
 				stop.getLine().getDirection().getId(),
 				stop.getLine().getNetworkCode() + ""
 		});
+
+		db.close();
+	}
+
+	private void cleanOutdatedTrackedStops() {
+		SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
+
+		ContentValues updateClause = new ContentValues();
+		updateClause.put("notif_active", 0);
+
+		db.update("twi_notification", updateClause, "date('now','-3 hours') > notif_creation_time", null);
+		db.close();
+	}
+
+	public List<TimeoStop> getTrackedStops() {
+		cleanOutdatedTrackedStops();
+
+		SQLiteDatabase db = databaseOpenHelper.getReadableDatabase();
+
+		Cursor results = db
+				.rawQuery(
+						"SELECT stop.stop_id, stop.stop_name, stop.stop_ref, line.line_id, line.line_name, " +
+								"line.line_color, dir.dir_id, dir.dir_name, line.network_code FROM twi_stop stop " +
+								"INNER JOIN twi_direction dir USING(dir_id, line_id, network_code) " +
+								"INNER JOIN twi_line line USING(line_id, network_code) " +
+								"INNER JOIN twi_notification notif USING (stop_id, line_id, dir_id, network_code) " +
+								"WHERE notif_active = 1 " +
+								"ORDER BY line.network_code, CAST(line.line_id AS INTEGER), stop.stop_name, dir.dir_name",
+						null);
+
+		ArrayList<TimeoStop> stopsList = new ArrayList<>();
+
+		// while there's a stop available
+		while(results.moveToNext()) {
+			TimeoLine line = new TimeoLine(
+					new TimeoIDNameObject(
+							results.getString(results.getColumnIndex("line_id")),
+							results.getString(results.getColumnIndex("line_name"))),
+					new TimeoIDNameObject(
+							results.getString(results.getColumnIndex("dir_id")),
+							results.getString(results.getColumnIndex("dir_name"))),
+					results.getString(results.getColumnIndex("line_color")),
+					results.getInt(results.getColumnIndex("network_code")));
+
+			TimeoStop stop = new TimeoStop(
+					results.getString(results.getColumnIndex("stop_id")),
+					results.getString(results.getColumnIndex("stop_name")),
+					results.getString(results.getColumnIndex("stop_ref")),
+					line);
+
+			// add it to the list
+			stopsList.add(stop);
+		}
+
+		// close the cursor and the database
+		results.close();
+		db.close();
+
+		return stopsList;
+	}
+
+	public void addToTrackedStops(TimeoStop stop) {
+		SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
+		ContentValues values = new ContentValues();
+
+		values.put("stop_id", stop.getId());
+		values.put("line_id", stop.getLine().getId());
+		values.put("dir_id", stop.getLine().getDirection().getId());
+		values.put("network_code", stop.getLine().getNetworkCode());
+
+		db.insert("twi_notification", null, values);
+	}
+
+	public void disableStopTracking(TimeoStop stop) {
+		SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
+
+		ContentValues updateClause = new ContentValues();
+		updateClause.put("notif_active", 0);
+
+		db.update("twi_notification", updateClause,
+				"stop_id = ? AND line_id = ? AND dir_id = ? AND network_code = ?", new String[]{
+						stop.getId(),
+						stop.getLine().getId(),
+						stop.getLine().getDirection().getId(),
+						stop.getLine().getNetworkCode() + ""
+				});
 
 		db.close();
 	}

@@ -67,6 +67,7 @@
 
 	<string-array name="stop_actions">
 		<item>Delete</item>
+		<item>Notify me of the next bus</item>
 	</string-array>
 
 </resources>

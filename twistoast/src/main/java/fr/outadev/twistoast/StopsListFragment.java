@@ -63,6 +63,7 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 	private AbsListView stopsListView;
 	private SwipeRefreshLayout swipeRefreshLayout;
 	private View noContentView;
+	private FloatingActionButton fab;
 
 	private List<TimeoStop> stops;
 
@@ -126,74 +127,15 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 
 		stopsListView = (AbsListView) view.findViewById(R.id.stops_list);
 		noContentView = view.findViewById(R.id.view_no_content);
-		final FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
 
-		stopsListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-
-			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-				if(!isRefreshing) {
-					final TimeoStop stopToDelete = listAdapter.getItem(position);
-
-					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-					builder.setItems(R.array.stop_actions, new DialogInterface.OnClickListener() {
-
-						public void onClick(DialogInterface dialog, int which) {
-							if(which == 0) {
-								databaseHandler.deleteStop(stopToDelete);
-								listAdapter.remove(stopToDelete);
-
-								if(listAdapter.isEmpty()) {
-									noContentView.setVisibility(View.VISIBLE);
-								}
-
-								listAdapter.notifyDataSetChanged();
-								fab.show(true);
-
-								Snackbar.with(getActivity())
-										.text(R.string.confirm_delete_success)
-										.actionLabel(R.string.cancel_stop_deletion)
-										.actionColor(Colors.getColorAccent(getActivity()))
-										.attachToAbsListView(stopsListView)
-										.actionListener(new ActionClickListener() {
-
-											@Override
-											public void onActionClicked() {
-												Log.i(Utils.TAG, "restoring stop " + stopToDelete);
-												databaseHandler.addStopToDatabase(stopToDelete);
-												listAdapter.insert(stopToDelete, position);
-												listAdapter.notifyDataSetChanged();
-											}
-
-										})
-										.show(getActivity());
-							}
-						}
-
-					});
-
-					builder.show();
-				}
-
-				return true;
-			}
-
-		});
+		fab = (FloatingActionButton) view.findViewById(R.id.fab);
 
 		fab.attachToListView(stopsListView);
 		fab.setColorNormal(Colors.getColorAccent(getActivity()));
 		fab.setColorPressedResId(R.color.twisto_secondary);
 		fab.setColorRippleResId(R.color.twisto_secondary);
 
-		fab.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(getActivity(), AddStopActivity.class);
-				startActivityForResult(intent, 0);
-			}
-
-		});
+		setupListeners();
 
 		return view;
 	}
@@ -236,6 +178,92 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 		}
 
 		refreshAllStopSchedules(true);
+	}
+
+	private void setupListeners() {
+		stopsListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+				if(!isRefreshing) {
+					final TimeoStop currentStop = listAdapter.getItem(position);
+
+					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+					builder.setItems(R.array.stop_actions, new DialogInterface.OnClickListener() {
+
+						public void onClick(DialogInterface dialog, int which) {
+							switch(which) {
+								case 0:
+									databaseHandler.deleteStop(currentStop);
+									listAdapter.remove(currentStop);
+
+									if(listAdapter.isEmpty()) {
+										noContentView.setVisibility(View.VISIBLE);
+									}
+
+									listAdapter.notifyDataSetChanged();
+									fab.show(true);
+
+									Snackbar.with(getActivity())
+											.text(R.string.confirm_delete_success)
+											.actionLabel(R.string.cancel_stop_deletion)
+											.actionColor(Colors.getColorAccent(getActivity()))
+											.attachToAbsListView(stopsListView)
+											.actionListener(new ActionClickListener() {
+
+												@Override
+												public void onActionClicked() {
+													Log.i(Utils.TAG, "restoring stop " + currentStop);
+													databaseHandler.addStopToDatabase(currentStop);
+													listAdapter.insert(currentStop, position);
+													listAdapter.notifyDataSetChanged();
+												}
+
+											})
+											.show(getActivity());
+									break;
+								case 1:
+									databaseHandler.addToTrackedStops(currentStop);
+
+									Snackbar.with(getActivity())
+											.text("Notifications activées")
+											.actionLabel(R.string.cancel_stop_deletion)
+											.actionColor(Colors.getColorAccent(getActivity()))
+											.attachToAbsListView(stopsListView)
+											.actionListener(new ActionClickListener() {
+
+												@Override
+												public void onActionClicked() {
+													Log.i(Utils.TAG, "canceling tracking for " + currentStop);
+													databaseHandler.disableStopTracking(currentStop);
+												}
+
+											})
+											.show(getActivity());
+									break;
+							}
+						}
+
+					});
+
+					builder.show();
+				}
+
+				return true;
+			}
+
+		});
+
+		fab.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getActivity(), AddStopActivity.class);
+				startActivityForResult(intent, 0);
+			}
+
+		});
+
 	}
 
 	@Override
