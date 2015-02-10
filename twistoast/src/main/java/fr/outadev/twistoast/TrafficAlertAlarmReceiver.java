@@ -38,7 +38,7 @@ import fr.outadev.android.timeo.TimeoTrafficAlert;
 public class TrafficAlertAlarmReceiver extends BroadcastReceiver {
 
 	private static final int ALARM_TYPE = AlarmManager.ELAPSED_REALTIME;
-	private static final int ALARM_FREQUENCY = 60 * 1000;
+	private static final long ALARM_FREQUENCY = AlarmManager.INTERVAL_HALF_HOUR;
 
 	@Override
 	public void onReceive(final Context context, Intent intent) {
