@@ -38,10 +38,12 @@ import android.widget.TextView;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.listeners.ActionClickListener;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fr.outadev.android.timeo.ScheduleTime;
 import fr.outadev.android.timeo.TimeoBlockingMessageException;
 import fr.outadev.android.timeo.TimeoException;
 import fr.outadev.android.timeo.TimeoRequestHandler;
@@ -101,7 +103,6 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 
 		ImageView img_stop_watched = (ImageView) containerView.findViewById(R.id.img_stop_watched);
 
-		img_stop_watched.setVisibility((currentStop.isWatched()) ? View.VISIBLE : View.GONE);
 
 		// Set line drawable. We have to set the colour on the background
 		GradientDrawable lineDrawable = (GradientDrawable) view_line_id.getBackground();
@@ -128,6 +129,11 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 				List<TimeoSingleSchedule> currScheds = schedules.get(currentStop).getSchedules();
 
 				for(TimeoSingleSchedule currSched : currScheds) {
+					if(Calendar.getInstance().getTimeInMillis()
+							> ScheduleTime.getNextDateForTime(currSched.getTime()).getTimeInMillis()) {
+						currentStop.setWatched(false);
+					}
+
 					// Display the current schedule
 					View singleScheduleView = inflater.inflate(R.layout.single_schedule_label, null);
 
@@ -158,6 +164,8 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 			view_schedule_container.addView(getEmptyScheduleLabel(inflater));
 			containerView.setAlpha(0.4F);
 		}
+
+		img_stop_watched.setVisibility((currentStop.isWatched()) ? View.VISIBLE : View.GONE);
 
 		// Load the traffic view if we want to see it
 		view_traffic_message.setOnClickListener(new OnClickListener() {
