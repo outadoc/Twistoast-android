@@ -21,10 +21,12 @@ package fr.outadev.twistoast;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -126,9 +128,17 @@ public class MainActivity extends ThemedActivity implements StopsListContainer {
 			checkForGlobalTrafficInfo();
 		}
 
-		// Enable broadcast receivers if needed
-		TrafficAlertAlarmReceiver.enable(getApplicationContext());
-		NextStopAlarmReceiver.enable(getApplicationContext());
+		// Turn the notifications back off if necessary
+		TwistoastDatabase db = new TwistoastDatabase(TwistoastDatabaseOpenHelper.getInstance(this));
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+		if(db.getWatchedStopsCount() > 0) {
+			TrafficAlertAlarmReceiver.enable(getApplicationContext());
+		}
+
+		if(prefs.getBoolean("pref_enable_notif_traffic", true)) {
+			NextStopAlarmReceiver.enable(getApplicationContext());
+		}
 	}
 
 	@Override

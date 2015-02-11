@@ -376,4 +376,18 @@ public class TwistoastDatabase {
 		db.close();
 	}
 
+	public int getWatchedStopsCount() {
+		SQLiteDatabase db = databaseOpenHelper.getReadableDatabase();
+
+		Cursor results = db.rawQuery("SELECT COUNT(*) FROM twi_notification WHERE notif_active = 1", null);
+		results.moveToFirst();
+
+		int count = results.getCount();
+
+		results.close();
+		db.close();
+
+		return count;
+	}
+
 }

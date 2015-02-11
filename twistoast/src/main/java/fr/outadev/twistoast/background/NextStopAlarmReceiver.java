@@ -93,8 +93,12 @@ public class NextStopAlarmReceiver extends BroadcastReceiver {
 							// THE BUS IS COMIIIING
 							if(Calendar.getInstance().getTimeInMillis() + 2 * 60 * 1000 > busTime.getTimeInMillis()) {
 								// Remove from database, and send a notification
-								db.stopWatchingStop(schedule.getStop());
 								notifyForBusStop(schedule);
+								db.stopWatchingStop(schedule.getStop());
+
+								if(db.getWatchedStopsCount() == 0) {
+									NextStopAlarmReceiver.disable(context.getApplicationContext());
+								}
 
 								Log.d(Utils.TAG, "less than two minutes till " + busTime.toString() + ": " + schedule.getStop());
 							} else if(schedule.getStop().getLastETA() != -1) {
@@ -105,8 +109,12 @@ public class NextStopAlarmReceiver extends BroadcastReceiver {
 								// we have to make assumptions instead.
 								if(busTime.getTimeInMillis() - schedule.getStop().getLastETA() > 5 * 60 * 1000) {
 									// Remove from database, and send a notification
-									db.stopWatchingStop(schedule.getStop());
 									notifyForBusStop(schedule);
+									db.stopWatchingStop(schedule.getStop());
+
+									if(db.getWatchedStopsCount() == 0) {
+										NextStopAlarmReceiver.disable(context.getApplicationContext());
+									}
 
 									Log.d(Utils.TAG, "last time we saw " + schedule.getStop() + " the bus was scheduled for " +
 											schedule.getStop().getLastETA() + ", but now the ETA is "

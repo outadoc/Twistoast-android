@@ -50,6 +50,7 @@ import java.util.List;
 
 import fr.outadev.android.timeo.ProgressListener;
 import fr.outadev.android.timeo.TimeoStop;
+import fr.outadev.twistoast.background.TrafficAlertAlarmReceiver;
 
 public class StopsListFragment extends Fragment implements StopsListContainer {
 
@@ -241,6 +242,9 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 								currentStop.setWatched(true);
 								listAdapter.notifyDataSetChanged();
 
+								// Turn the notifications on
+								TrafficAlertAlarmReceiver.enable(getActivity().getApplicationContext());
+
 								Snackbar.with(getActivity())
 										.text(getString(R.string.notifs_enable_toast, currentStop.getName()))
 										.actionLabel(R.string.cancel_stop_deletion)
@@ -253,6 +257,11 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 												databaseHandler.stopWatchingStop(currentStop);
 												currentStop.setWatched(false);
 												listAdapter.notifyDataSetChanged();
+
+												// Turn the notifications back off if necessary
+												if(databaseHandler.getWatchedStopsCount() == 0) {
+													TrafficAlertAlarmReceiver.disable(getActivity().getApplicationContext());
+												}
 											}
 
 										})
@@ -263,6 +272,11 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 								databaseHandler.stopWatchingStop(currentStop);
 								currentStop.setWatched(false);
 								listAdapter.notifyDataSetChanged();
+
+								// Turn the notifications back off if necessary
+								if(databaseHandler.getWatchedStopsCount() == 0) {
+									TrafficAlertAlarmReceiver.disable(getActivity().getApplicationContext());
+								}
 
 								Snackbar.with(getActivity())
 										.text(getString(R.string.notifs_disable_toast, currentStop.getName()))

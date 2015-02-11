@@ -21,14 +21,29 @@ package fr.outadev.twistoast.background;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
+import fr.outadev.twistoast.TwistoastDatabase;
+import fr.outadev.twistoast.TwistoastDatabaseOpenHelper;
 
 public class TwistoastBootReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		if(intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
-			NextStopAlarmReceiver.enable(context.getApplicationContext());
-			TrafficAlertAlarmReceiver.enable(context.getApplicationContext());
+			// Turn the notifications back off if necessary
+			TwistoastDatabase db = new TwistoastDatabase(TwistoastDatabaseOpenHelper.getInstance(context));
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+			if(db.getWatchedStopsCount() > 0) {
+				TrafficAlertAlarmReceiver.enable(context.getApplicationContext());
+			}
+
+			if(prefs.getBoolean("pref_enable_notif_traffic", true)) {
+				NextStopAlarmReceiver.enable(context.getApplicationContext());
+			}
+
 		}
 	}
 
