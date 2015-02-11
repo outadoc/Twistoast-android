@@ -148,7 +148,7 @@ public class NextStopAlarmReceiver extends BroadcastReceiver {
 								.setSummaryText("Prévu pour " + time))
 						.setCategory(NotificationCompat.CATEGORY_MESSAGE)
 						.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-						.setPriority(NotificationCompat.PRIORITY_HIGH)
+						.setPriority(NotificationCompat.PRIORITY_MAX)
 						.setContentIntent(contentIntent)
 						.setAutoCancel(true)
 						.setOnlyAlertOnce(true);
