@@ -124,7 +124,8 @@
 					android:layout_gravity="center"
 					android:src="@drawable/ic_notifications"
 					android:layout_marginRight="5dp"
-					android:tint="#333333" />
+					android:tint="#333333"
+					android:visibility="gone" />
 
 				<TextView
 					android:id="@+id/lbl_stop_name"
