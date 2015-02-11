@@ -96,12 +96,30 @@ public class NextStopAlarmReceiver extends BroadcastReceiver {
 							Calendar busTime = ScheduleTime.getNextDateForTime(schedule.getSchedules().get(0).getTime());
 
 							// THE BUS IS COMIIIING
-							if(Calendar.getInstance().getTimeInMillis() + 120 * 1000 > busTime.getTimeInMillis()) {
+							if(Calendar.getInstance().getTimeInMillis() + 2 * 60 * 1000 > busTime.getTimeInMillis()) {
 								// Remove from database, and send a notification
 								db.stopWatchingStop(schedule.getStop());
 								notifyForBusStop(schedule);
 
-								Log.w(Utils.TAG, "less than two minutes till " + busTime.toString() + ": " + schedule.getStop());
+								Log.d(Utils.TAG, "less than two minutes till " + busTime.toString() + ": " + schedule.getStop());
+							} else if(schedule.getStop().getLastETA() != -1) {
+								// Check if there's more than five minutes of difference between the last estimation and the new
+								// one. If that's the case, send the notification anyways; it may already be too late!
+
+								// This is to work around the fact that we actually can't know if a bus has passed already,
+								// we have to make assumptions instead.
+								if(busTime.getTimeInMillis() - schedule.getStop().getLastETA() > 5 * 60 * 1000) {
+									// Remove from database, and send a notification
+									db.stopWatchingStop(schedule.getStop());
+									notifyForBusStop(schedule);
+
+									Log.d(Utils.TAG, "last time we saw " + schedule.getStop() + " the bus was scheduled for " +
+											schedule.getStop().getLastETA() + ", but now the ETA is "
+											+ busTime.getTimeInMillis() + ", so we're notifying");
+								}
+
+							} else {
+								db.updateWatchedStopETA(schedule.getStop(), busTime.getTimeInMillis());
 							}
 						}
 					}
@@ -128,7 +146,7 @@ public class NextStopAlarmReceiver extends BroadcastReceiver {
 				new NotificationCompat.Builder(context)
 						.setSmallIcon(R.drawable.ic_stat_notify_twistoast)
 						.setContentTitle("Passage " + lineName + " imminent")
-						.setContentText("Arrêt " + stop + " vers" + direction)
+						.setContentText(stop + " vers " + direction)
 						.setStyle(new NotificationCompat.InboxStyle()
 								.addLine("Direction " + direction)
 								.addLine("Arrêt " + stop)

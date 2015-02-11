@@ -40,7 +40,7 @@ public class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 
 	private static TwistoastDatabaseOpenHelper instance;
 	private Context context;
-	
+
 	private static final int DATABASE_VERSION = 3;
 
 	private static final String DATABASE_NAME = "twistoast.db";
@@ -82,6 +82,7 @@ public class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 					"network_code INTEGER DEFAULT " + TimeoRequestHandler.DEFAULT_NETWORK_CODE + ", " +
 					"notif_creation_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
 					"notif_active INTEGER DEFAULT 1, " +
+					"notif_last_estim INTEGER DEFAULT -1, " +
 					"PRIMARY KEY(stop_id, line_id, dir_id, network_code, notif_active, notif_creation_time), " +
 					"FOREIGN KEY(stop_id, line_id, dir_id, network_code) " +
 					"REFERENCES twi_stop(stop_id, line_id, dir_id, network_code))";

@@ -288,7 +288,8 @@ public class TwistoastDatabase {
 		Cursor results = db
 				.rawQuery(
 						"SELECT stop.stop_id, stop.stop_name, stop.stop_ref, line.line_id, line.line_name, " +
-								"line.line_color, dir.dir_id, dir.dir_name, line.network_code FROM twi_stop stop " +
+								"line.line_color, dir.dir_id, dir.dir_name, line.network_code, notif.notif_last_estim " +
+								"FROM twi_stop stop " +
 								"INNER JOIN twi_direction dir USING(dir_id, line_id, network_code) " +
 								"INNER JOIN twi_line line USING(line_id, network_code) " +
 								"INNER JOIN twi_notification notif USING (stop_id, line_id, dir_id, network_code) " +
@@ -314,7 +315,9 @@ public class TwistoastDatabase {
 					results.getString(results.getColumnIndex("stop_id")),
 					results.getString(results.getColumnIndex("stop_name")),
 					results.getString(results.getColumnIndex("stop_ref")),
-					line);
+					line,
+					true,
+					results.getLong(results.getColumnIndex("notif_last_estim")));
 
 			// add it to the list
 			stopsList.add(stop);
@@ -344,6 +347,23 @@ public class TwistoastDatabase {
 
 		ContentValues updateClause = new ContentValues();
 		updateClause.put("notif_active", 0);
+
+		db.update("twi_notification", updateClause,
+				"stop_id = ? AND line_id = ? AND dir_id = ? AND network_code = ?", new String[]{
+						stop.getId(),
+						stop.getLine().getId(),
+						stop.getLine().getDirection().getId(),
+						stop.getLine().getNetworkCode() + ""
+				});
+
+		db.close();
+	}
+
+	public void updateWatchedStopETA(TimeoStop stop, long lastETA) {
+		SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
+
+		ContentValues updateClause = new ContentValues();
+		updateClause.put("notif_last_estim", lastETA);
 
 		db.update("twi_notification", updateClause,
 				"stop_id = ? AND line_id = ? AND dir_id = ? AND network_code = ?", new String[]{
