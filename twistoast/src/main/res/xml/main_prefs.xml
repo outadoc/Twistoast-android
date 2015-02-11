@@ -46,43 +46,67 @@
 			android:title="@string/pref_relative_time_title" />
 
 	</PreferenceCategory>
+	<PreferenceCategory android:title="@string/pref_cat_notification">
+
+		<CheckBoxPreference
+			android:defaultValue="true"
+			android:key="pref_enable_notif_traffic"
+			android:summary="@string/pref_enable_notif_traffic_sum"
+			android:title="@string/pref_enable_notif_traffic_title" />
+
+	</PreferenceCategory>
 	<PreferenceCategory android:title="@string/pref_cat_pebble">
-		<Preference
+
+	<Preference
 			android:summary="@string/pref_pebble_dl_sum"
 			android:title="@string/pref_pebble_dl_title">
 			<intent
 				android:action="android.intent.action.VIEW"
 				android:data="pebble://appstore/53088e81ab1ae2f12900034e" />
 		</Preference>
-	</PreferenceCategory>
-	<PreferenceCategory android:title="@string/pref_links_title">
-		<Preference
-			android:summary="@string/pref_outadev_website_sum"
-			android:title="@string/pref_outadev_website_title">
-			<intent
-				android:action="android.intent.action.VIEW"
-				android:data="http://dev.outadoc.fr" />
-		</Preference>
-		<Preference
-			android:summary="@string/pref_twisto_website_sum"
-			android:title="@string/pref_twisto_website_title">
-			<intent
-				android:action="android.intent.action.VIEW"
-				android:data="http://twisto.mobi" />
-		</Preference>
-	</PreferenceCategory>
-	<PreferenceCategory android:title="@string/pref_legal_title">
-		<Preference
-			android:summary="@string/pref_legal_sum"
-			android:title="@string/pref_legal_title" />
-		<Preference
-			android:summary="@string/pref_license_sum"
-			android:title="@string/pref_license_title" />
-	</PreferenceCategory>
-	<PreferenceCategory android:title="@string/pref_about_title">
-		<Preference
-			android:key="version"
-			android:title="@string/pref_version_title" />
-	</PreferenceCategory>
 
+	</PreferenceCategory>
+	<PreferenceCategory android:title="@string/pref_cat_other">
+
+		<PreferenceScreen
+			android:key="pref_screen_about"
+			android:title="@string/pref_screen_about">
+
+			<PreferenceCategory android:title="@string/pref_links_title">
+
+				<Preference
+					android:summary="@string/pref_outadev_website_sum"
+					android:title="@string/pref_outadev_website_title">
+					<intent
+						android:action="android.intent.action.VIEW"
+						android:data="http://dev.outadoc.fr" />
+				</Preference>
+				<Preference
+					android:summary="@string/pref_twisto_website_sum"
+					android:title="@string/pref_twisto_website_title">
+					<intent
+						android:action="android.intent.action.VIEW"
+						android:data="http://twisto.mobi" />
+				</Preference>
+
+			</PreferenceCategory>
+			<PreferenceCategory android:title="@string/pref_legal_title">
+
+				<Preference
+					android:summary="@string/pref_legal_sum"
+					android:title="@string/pref_legal_title" />
+				<Preference
+					android:summary="@string/pref_license_sum"
+					android:title="@string/pref_license_title" />
+
+			</PreferenceCategory>
+			<PreferenceCategory android:title="@string/pref_about_title">
+
+				<Preference
+					android:key="version"
+					android:title="@string/pref_version_title" />
+
+			</PreferenceCategory>
+		</PreferenceScreen>
+	</PreferenceCategory>
 </PreferenceScreen>

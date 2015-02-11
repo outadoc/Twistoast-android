@@ -26,7 +26,7 @@
 	<string name="pref_auto_refresh_sum">Permet de rafraîchir automatiquement les horaires toutes les minutes quand l\'app est au premier plan.</string>
 	<string name="pref_cat_stops">Liste des arrêts</string>
 	<string name="pref_legal_title">Mentions légales</string>
-	<string name="pref_legal_sum">Twistoast est une application développée par Baptiste Candellier. &#169; outa[dev] - 2014.\n\nTwisto est une marque de Keolis Caen.\n\nCette application repose sur l\'API Open-Data de Keolis et outa[dev] décline donc toute responsabilité en cas de données erronées.</string>
+	<string name="pref_legal_sum">Twistoast est une application développée par Baptiste Candellier. &#169; outa[dev] - 2014-2015.\n\nTwisto et le logo Twisto sont des marques déposées de Keolis Caen.\n\nCette application repose sur l\'API Open-Data de Keolis et outa[dev] décline donc toute responsabilité en cas de données erronées.</string>
 	<string name="pref_outadev_website_sum">Rendez-vous sur dev.outadoc.fr pour plus d\'applications pratiques !</string>
 	<string name="pref_outadev_website_title">Plus d\'applications</string>
 	<string name="pref_twisto_website_sum">Visitez twisto.mobi, le site mobile du réseau Twisto.</string>
@@ -40,5 +40,10 @@
 	<string name="pref_links_title">Liens</string>
 	<string name="pref_app_theme_title">Thème de l\'application</string>
 	<string name="pref_app_theme_sum">Relancez Twistoast pour l\'appliquer.</string>
+	<string name="pref_screen_about">À propos</string>
+	<string name="pref_cat_other">Autres</string>
+	<string name="pref_enable_notif_traffic_sum">Restez informé de l\'état du réseau Twisto sans avoir à ouvrir l\'application.</string>
+	<string name="pref_enable_notif_traffic_title">Notifications trafic réseau</string>
+	<string name="pref_cat_notification">Notifications</string>
 
 </resources>
