@@ -24,10 +24,8 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.SystemClock;
-import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -61,15 +59,12 @@ public class NextStopAlarmReceiver extends BroadcastReceiver {
 
 		(new AsyncTask<Void, Void, List<TimeoStopSchedule>>() {
 
-			private SharedPreferences prefs;
 			private TwistoastDatabase db;
 
 			@Override
 			protected void onPreExecute() {
-				prefs = PreferenceManager.getDefaultSharedPreferences(context);
 				db = new TwistoastDatabase(TwistoastDatabaseOpenHelper.getInstance(context));
-
-				Log.d(Utils.TAG, "checking traffic alert");
+				Log.d(Utils.TAG, "checking stop schedules for notifications");
 			}
 
 			@Override
