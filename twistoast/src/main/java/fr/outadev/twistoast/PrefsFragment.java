@@ -26,6 +26,8 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 
+import fr.outadev.twistoast.background.TrafficAlertAlarmReceiver;
+
 /**
  * A preferences fragment for the preferences of the app.
  *
@@ -65,10 +67,19 @@ public class PrefsFragment extends PreferenceFragment implements OnSharedPrefere
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		// If we're changing the theme, automatically restart the app
-		if(key.equals("pref_app_theme")) {
-			Intent i = getActivity().getPackageManager().getLaunchIntentForPackage(getActivity().getPackageName());
-			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(i);
+		switch(key) {
+			case "pref_app_theme":
+				Intent i = getActivity().getPackageManager().getLaunchIntentForPackage(getActivity().getPackageName());
+				i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(i);
+				break;
+			case "pref_enable_notif_traffic":
+				if(sharedPreferences.getBoolean("pref_enable_notif_traffic", true)) {
+					TrafficAlertAlarmReceiver.enable(getActivity().getApplicationContext());
+				} else {
+					TrafficAlertAlarmReceiver.disable(getActivity().getApplicationContext());
+				}
+				break;
 		}
 	}
 

@@ -101,12 +101,16 @@ public class TrafficAlertAlarmReceiver extends BroadcastReceiver {
 	}
 
 	public static void enable(Context context) {
+		Log.d(Utils.TAG, "enabling " + TrafficAlertAlarmReceiver.class.getSimpleName());
+
 		AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 		alarmMgr.setInexactRepeating(ALARM_TYPE,
 				SystemClock.elapsedRealtime() + 60 * 1000, ALARM_FREQUENCY, getBroadcast(context));
 	}
 
 	public static void disable(Context context) {
+		Log.d(Utils.TAG, "disabling " + TrafficAlertAlarmReceiver.class.getSimpleName());
+
 		AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 		alarmMgr.cancel(getBroadcast(context));
 	}
