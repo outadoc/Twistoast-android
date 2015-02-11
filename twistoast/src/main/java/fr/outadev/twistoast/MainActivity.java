@@ -42,6 +42,7 @@ import java.util.List;
 
 import fr.outadev.android.timeo.TimeoRequestHandler;
 import fr.outadev.android.timeo.TimeoTrafficAlert;
+import fr.outadev.twistoast.background.NextStopAlarmReceiver;
 import fr.outadev.twistoast.background.TrafficAlertAlarmReceiver;
 import fr.outadev.twistoast.drawer.NavigationDrawerFragmentItem;
 import fr.outadev.twistoast.drawer.NavigationDrawerItem;
@@ -125,6 +126,7 @@ public class MainActivity extends ThemedActivity implements StopsListContainer {
 		}
 
 		TrafficAlertAlarmReceiver.enable(getApplicationContext());
+		NextStopAlarmReceiver.enable(getApplicationContext());
 	}
 
 	@Override
