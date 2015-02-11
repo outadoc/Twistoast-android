@@ -52,6 +52,7 @@ public class NextStopAlarmReceiver extends BroadcastReceiver {
 
 	private static final int ALARM_TYPE = AlarmManager.ELAPSED_REALTIME_WAKEUP;
 	private static final int ALARM_FREQUENCY = 60 * 1000;
+
 	private Context context;
 
 	@Override
@@ -96,6 +97,7 @@ public class NextStopAlarmReceiver extends BroadcastReceiver {
 
 							// THE BUS IS COMIIIING
 							if(Calendar.getInstance().getTimeInMillis() + 120 * 1000 > busTime.getTimeInMillis()) {
+								// Remove from database, and send a notification
 								db.stopWatchingStop(schedule.getStop());
 								notifyForBusStop(schedule);
 
@@ -115,11 +117,13 @@ public class NextStopAlarmReceiver extends BroadcastReceiver {
 		Intent notificationIntent = new Intent(context, MainActivity.class);
 		PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
 
+		// Get the data we need for the notification
 		String stop = schedule.getStop().getName();
 		String direction = schedule.getStop().getLine().getDirection().getName();
 		String lineName = schedule.getStop().getLine().getName();
 		String time = schedule.getSchedules().get(0).getTime();
 
+		// Make a nice notification to inform the user of the bus's imminence
 		NotificationCompat.Builder builder =
 				new NotificationCompat.Builder(context)
 						.setSmallIcon(R.drawable.ic_stat_notify_twistoast)
@@ -131,6 +135,7 @@ public class NextStopAlarmReceiver extends BroadcastReceiver {
 								.setSummaryText("Prévu pour " + time))
 						.setCategory(NotificationCompat.CATEGORY_MESSAGE)
 						.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+						.setPriority(NotificationCompat.PRIORITY_HIGH)
 						.setContentIntent(contentIntent)
 						.setAutoCancel(true)
 						.setOnlyAlertOnce(true);
