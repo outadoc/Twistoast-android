@@ -26,7 +26,7 @@ public class TwistoastBootReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		if(intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
+		if(intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
 			NextStopAlarmReceiver.enable(context.getApplicationContext());
 			TrafficAlertAlarmReceiver.enable(context.getApplicationContext());
 		}
