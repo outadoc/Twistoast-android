@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast;
+package fr.outadev.twistoast.background;
 
 import android.app.AlarmManager;
 import android.app.NotificationManager;
@@ -34,6 +34,8 @@ import android.util.Log;
 
 import fr.outadev.android.timeo.TimeoRequestHandler;
 import fr.outadev.android.timeo.TimeoTrafficAlert;
+import fr.outadev.twistoast.R;
+import fr.outadev.twistoast.Utils;
 
 public class TrafficAlertAlarmReceiver extends BroadcastReceiver {
 

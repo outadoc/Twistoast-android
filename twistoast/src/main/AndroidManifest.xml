@@ -52,7 +52,7 @@
 		</activity>
 
 		<receiver
-			android:name=".TwistoastPebbleReceiver"
+			android:name=".background.TwistoastPebbleReceiver"
 			android:enabled="true"
 			android:exported="true">
 			<intent-filter>
@@ -60,7 +60,7 @@
 			</intent-filter>
 		</receiver>
 		<receiver
-			android:name=".TwistoastBootReceiver"
+			android:name=".background.TwistoastBootReceiver"
 			android:enabled="true"
 			android:exported="true">
 			<intent-filter>
@@ -68,12 +68,12 @@
 			</intent-filter>
 		</receiver>
 		<receiver
-			android:name=".NextStopAlarmReceiver"
+			android:name=".background.NextStopAlarmReceiver"
 			android:enabled="true"
 			android:exported="false">
 		</receiver>
 		<receiver
-			android:name=".TrafficAlertAlarmReceiver"
+			android:name=".background.TrafficAlertAlarmReceiver"
 			android:enabled="true"
 			android:exported="false">
 		</receiver>

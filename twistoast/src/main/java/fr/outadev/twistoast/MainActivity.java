@@ -42,6 +42,7 @@ import java.util.List;
 
 import fr.outadev.android.timeo.TimeoRequestHandler;
 import fr.outadev.android.timeo.TimeoTrafficAlert;
+import fr.outadev.twistoast.background.TrafficAlertAlarmReceiver;
 import fr.outadev.twistoast.drawer.NavigationDrawerFragmentItem;
 import fr.outadev.twistoast.drawer.NavigationDrawerItem;
 import fr.outadev.twistoast.drawer.NavigationDrawerSecondaryItem;

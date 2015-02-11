@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast;
+package fr.outadev.twistoast.background;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -25,6 +25,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.SystemClock;
 import android.util.Log;
+
+import fr.outadev.twistoast.Utils;
 
 public class NextStopAlarmReceiver extends BroadcastReceiver {
 

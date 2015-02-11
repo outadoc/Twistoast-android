@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast;
+package fr.outadev.twistoast.background;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -34,6 +34,9 @@ import fr.outadev.android.timeo.ScheduleTime;
 import fr.outadev.android.timeo.TimeoRequestHandler;
 import fr.outadev.android.timeo.TimeoStop;
 import fr.outadev.android.timeo.TimeoStopSchedule;
+import fr.outadev.twistoast.R;
+import fr.outadev.twistoast.TwistoastDatabase;
+import fr.outadev.twistoast.TwistoastDatabaseOpenHelper;
 
 /**
  * Receives and handles the Twistoast Pebble app requests in the background.
