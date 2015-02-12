@@ -366,7 +366,7 @@ public class TwistoastDatabase {
 		updateClause.put("notif_last_estim", lastETA);
 
 		db.update("twi_notification", updateClause,
-				"stop_id = ? AND line_id = ? AND dir_id = ? AND network_code = ?", new String[]{
+				"stop_id = ? AND line_id = ? AND dir_id = ? AND network_code = ? AND notif_active = 1", new String[]{
 						stop.getId(),
 						stop.getLine().getId(),
 						stop.getLine().getDirection().getId(),
