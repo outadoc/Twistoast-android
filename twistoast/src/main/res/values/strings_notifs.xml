@@ -22,5 +22,10 @@
 	<string name="notifs_traffic_title">Alerte trafic Twisto</string>
 	<string name="notifs_enable_toast">Notifications activées pour %1$s</string>
 	<string name="notifs_disable_toast">Notifications désactivées pour %1$s</string>
+	<string name="notif_watched_content_title">Passage %1$s imminent</string>
+	<string name="notif_watched_content_text">%1$s vers %2$s</string>
+	<string name="notif_watched_line_direction">Direction %1$s</string>
+	<string name="notif_watched_line_stop">Arrêt %1$s</string>
+	<string name="notif_watched_summary_text">Prévu pour %1$s</string>
 
 </resources>
