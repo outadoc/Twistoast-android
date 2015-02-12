@@ -21,7 +21,7 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto">
 
-	<PreferenceCategory android:title="Global">
+	<PreferenceCategory android:title="@string/prefs_cat_global">
 
 		<it.gmariotti.android.example.colorpicker.calendarstock.ColorPickerPreference
 			android:key="pref_app_theme"
@@ -37,7 +37,7 @@
 			android:key="pref_screen_notifications"
 			android:title="@string/pref_cat_notification">
 
-			<PreferenceCategory android:title="État du trafic sur le réseau Twisto">
+			<PreferenceCategory android:title="@string/pref_cat_notif_traffic">
 
 				<CheckBoxPreference
 					android:defaultValue="true"
@@ -48,29 +48,29 @@
 				<CheckBoxPreference
 					android:defaultValue="false"
 					android:key="pref_notif_traffic_ring"
-					android:summary="Émettre un son lors de la réception d'alertes trafic."
-					android:title="Sonnerie" />
+					android:summary="@string/pref_notif_traffic_ring_sum"
+					android:title="@string/pref_ringer_title" />
 
 				<CheckBoxPreference
 					android:defaultValue="true"
 					android:key="pref_notif_traffic_vibrate"
-					android:summary="Vibrer lors de la réception d'alertes trafic."
-					android:title="Vibreur" />
+					android:summary="@string/pref_notif_traffic_vibrate_sum"
+					android:title="@string/pref_vibrate_title" />
 
 			</PreferenceCategory>
-			<PreferenceCategory android:title="Notification des bus suivis">
+			<PreferenceCategory android:title="@string/pref_cat_notif_watched">
 
 				<CheckBoxPreference
 					android:defaultValue="true"
 					android:key="pref_notif_watched_ring"
-					android:summary="Émettre un son lors de l'approche d'un bus suivi."
-					android:title="Sonnerie" />
+					android:summary="@string/pref_notif_watched_ring_sum"
+					android:title="@string/pref_ringer_title" />
 
 				<CheckBoxPreference
 					android:defaultValue="true"
 					android:key="pref_notif_watched_vibrate"
-					android:summary="Vibrer lors de l'approche d'un bus suivi."
-					android:title="Vibreur" />
+					android:summary="@string/pref_notif_watched_vibrate_sum"
+					android:title="@string/pref_vibrate_title" />
 
 			</PreferenceCategory>
 		</PreferenceScreen>
