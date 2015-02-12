@@ -96,10 +96,6 @@ public class NextStopAlarmReceiver extends BroadcastReceiver {
 								notifyForBusStop(schedule);
 								db.stopWatchingStop(schedule.getStop());
 
-								if(db.getWatchedStopsCount() == 0) {
-									NextStopAlarmReceiver.disable(context.getApplicationContext());
-								}
-
 								Log.d(Utils.TAG, "less than two minutes till " + busTime.toString() + ": " + schedule.getStop());
 							} else if(schedule.getStop().getLastETA() != -1) {
 								// Check if there's more than five minutes of difference between the last estimation and the new
@@ -112,10 +108,6 @@ public class NextStopAlarmReceiver extends BroadcastReceiver {
 									notifyForBusStop(schedule);
 									db.stopWatchingStop(schedule.getStop());
 
-									if(db.getWatchedStopsCount() == 0) {
-										NextStopAlarmReceiver.disable(context.getApplicationContext());
-									}
-
 									Log.d(Utils.TAG, "last time we saw " + schedule.getStop() + " the bus was scheduled for " +
 											schedule.getStop().getLastETA() + ", but now the ETA is "
 											+ busTime.getTimeInMillis() + ", so we're notifying");
@@ -126,6 +118,10 @@ public class NextStopAlarmReceiver extends BroadcastReceiver {
 							}
 						}
 					}
+				}
+
+				if(db.getWatchedStopsCount() == 0) {
+					NextStopAlarmReceiver.disable(context.getApplicationContext());
 				}
 			}
 
