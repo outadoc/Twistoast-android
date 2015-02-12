@@ -379,10 +379,10 @@ public class TwistoastDatabase {
 	public int getWatchedStopsCount() {
 		SQLiteDatabase db = databaseOpenHelper.getReadableDatabase();
 
-		Cursor results = db.rawQuery("SELECT COUNT(*) FROM twi_notification WHERE notif_active = 1", null);
+		Cursor results = db.rawQuery("SELECT COUNT(*) as nb_watched FROM twi_notification WHERE notif_active = 1", null);
 		results.moveToFirst();
 
-		int count = results.getCount();
+		int count = results.getInt(results.getColumnIndex("nb_watched"));
 
 		results.close();
 		db.close();
