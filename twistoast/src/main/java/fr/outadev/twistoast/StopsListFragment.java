@@ -50,7 +50,7 @@ import java.util.List;
 
 import fr.outadev.android.timeo.ProgressListener;
 import fr.outadev.android.timeo.TimeoStop;
-import fr.outadev.twistoast.background.TrafficAlertAlarmReceiver;
+import fr.outadev.twistoast.background.NextStopAlarmReceiver;
 
 public class StopsListFragment extends Fragment implements StopsListContainer {
 
@@ -207,6 +207,11 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 								databaseHandler.deleteStop(currentStop);
 								listAdapter.remove(currentStop);
 
+								if(currentStop.isWatched()) {
+									databaseHandler.stopWatchingStop(currentStop);
+									currentStop.setWatched(false);
+								}
+
 								if(listAdapter.isEmpty()) {
 									noContentView.setVisibility(View.VISIBLE);
 								}
@@ -243,7 +248,7 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 								listAdapter.notifyDataSetChanged();
 
 								// Turn the notifications on
-								TrafficAlertAlarmReceiver.enable(getActivity().getApplicationContext());
+								NextStopAlarmReceiver.enable(getActivity().getApplicationContext());
 
 								Snackbar.with(getActivity())
 										.text(getString(R.string.notifs_enable_toast, currentStop.getName()))
@@ -260,7 +265,7 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 
 												// Turn the notifications back off if necessary
 												if(databaseHandler.getWatchedStopsCount() == 0) {
-													TrafficAlertAlarmReceiver.disable(getActivity().getApplicationContext());
+													NextStopAlarmReceiver.disable(getActivity().getApplicationContext());
 												}
 											}
 
@@ -275,7 +280,7 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 
 								// Turn the notifications back off if necessary
 								if(databaseHandler.getWatchedStopsCount() == 0) {
-									TrafficAlertAlarmReceiver.disable(getActivity().getApplicationContext());
+									NextStopAlarmReceiver.disable(getActivity().getApplicationContext());
 								}
 
 								Snackbar.with(getActivity())

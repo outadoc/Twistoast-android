@@ -95,6 +95,7 @@ public class NextStopAlarmReceiver extends BroadcastReceiver {
 								// Remove from database, and send a notification
 								notifyForBusStop(schedule);
 								db.stopWatchingStop(schedule.getStop());
+								schedule.getStop().setWatched(false);
 
 								Log.d(Utils.TAG, "less than two minutes till " + busTime.toString() + ": " + schedule.getStop());
 							} else if(schedule.getStop().getLastETA() != -1) {
@@ -107,6 +108,7 @@ public class NextStopAlarmReceiver extends BroadcastReceiver {
 									// Remove from database, and send a notification
 									notifyForBusStop(schedule);
 									db.stopWatchingStop(schedule.getStop());
+									schedule.getStop().setWatched(false);
 
 									Log.d(Utils.TAG, "last time we saw " + schedule.getStop() + " the bus was scheduled for " +
 											schedule.getStop().getLastETA() + ", but now the ETA is "
