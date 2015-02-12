@@ -68,5 +68,19 @@
 	<string name="stop_action_delete">Delete</string>
 	<string name="stop_action_watch">Notify me when this bus arrives</string>
 	<string name="stop_action_unwatch">Stop notifications for this stop</string>
+	<string name="notif_watched_content_text">%1$s to %2$s</string>
+	<string name="notif_watched_content_title">%1$s incoming</string>
+	<string name="notif_watched_line_direction">Direction: %1$s</string>
+	<string name="notif_watched_line_stop">Stop: %1$s</string>
+	<string name="notif_watched_summary_text">Scheduled for %1$s</string>
+	<string name="pref_cat_notif_traffic">Traffic alerts for the Twisto network</string>
+	<string name="pref_cat_notif_watched">Notifications for watched buses</string>
+	<string name="pref_notif_traffic_ring_sum">Play a notification sound when getting a traffic alert.</string>
+	<string name="pref_notif_traffic_vibrate_sum">Make the phone vibrate when getting a traffic alert.</string>
+	<string name="pref_notif_watched_ring_sum">Play a notification sound when a watched bus is incoming.</string>
+	<string name="pref_notif_watched_vibrate_sum">Make the phone vibrate when a watched bus is incoming.</string>
+	<string name="pref_ringer_title">Sound</string>
+	<string name="pref_vibrate_title">Vibrate</string>
+	<string name="prefs_cat_global">Global</string>
 
 </resources>
