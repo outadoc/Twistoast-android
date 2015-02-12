@@ -67,7 +67,6 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 
 	public TwistoastPebbleReceiver() {
 		super(PEBBLE_UUID);
-		Log.d(TAG, "initialized pebble listener");
 	}
 
 	@Override

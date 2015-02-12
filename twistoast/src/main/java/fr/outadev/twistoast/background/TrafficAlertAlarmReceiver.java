@@ -21,7 +21,6 @@ package fr.outadev.twistoast.background;
 import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -37,7 +36,7 @@ import fr.outadev.android.timeo.TimeoTrafficAlert;
 import fr.outadev.twistoast.R;
 import fr.outadev.twistoast.Utils;
 
-public class TrafficAlertAlarmReceiver extends BroadcastReceiver {
+public class TrafficAlertAlarmReceiver extends CommonAlarmReceiver {
 
 	private static final int ALARM_TYPE = AlarmManager.ELAPSED_REALTIME;
 	private static final long ALARM_FREQUENCY = AlarmManager.INTERVAL_HALF_HOUR;
@@ -91,7 +90,8 @@ public class TrafficAlertAlarmReceiver extends BroadcastReceiver {
 										.setPriority(NotificationCompat.PRIORITY_DEFAULT)
 										.setContentIntent(contentIntent)
 										.setAutoCancel(true)
-										.setOnlyAlertOnce(true);
+										.setOnlyAlertOnce(true)
+										.setDefaults(getNotificationDefaults(context));
 
 						notificationManager.notify(trafficAlert.getId(), mBuilder.build());
 						prefs.edit().putInt("last_traffic_notif_id", trafficAlert.getId()).apply();
@@ -104,6 +104,11 @@ public class TrafficAlertAlarmReceiver extends BroadcastReceiver {
 
 		}).execute();
 
+	}
+
+	@Override
+	protected String getPreferencesKeyPrefix() {
+		return "traffic";
 	}
 
 	public static void enable(Context context) {

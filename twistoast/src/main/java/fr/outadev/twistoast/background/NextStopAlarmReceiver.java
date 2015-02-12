@@ -21,7 +21,6 @@ package fr.outadev.twistoast.background;
 import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -42,7 +41,7 @@ import fr.outadev.twistoast.TwistoastDatabase;
 import fr.outadev.twistoast.TwistoastDatabaseOpenHelper;
 import fr.outadev.twistoast.Utils;
 
-public class NextStopAlarmReceiver extends BroadcastReceiver {
+public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 
 	private static final int ALARM_TYPE = AlarmManager.ELAPSED_REALTIME_WAKEUP;
 	private static final int ALARM_FREQUENCY = 60 * 1000;
@@ -152,9 +151,15 @@ public class NextStopAlarmReceiver extends BroadcastReceiver {
 						.setPriority(NotificationCompat.PRIORITY_MAX)
 						.setContentIntent(contentIntent)
 						.setAutoCancel(true)
-						.setOnlyAlertOnce(true);
+						.setOnlyAlertOnce(true)
+						.setDefaults(getNotificationDefaults(context));
 
 		notificationManager.notify(Integer.valueOf(schedule.getStop().getId()), builder.build());
+	}
+
+	@Override
+	protected String getPreferencesKeyPrefix() {
+		return "watched";
 	}
 
 	public static void enable(Context context) {

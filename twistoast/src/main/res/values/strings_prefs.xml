@@ -43,7 +43,7 @@
 	<string name="pref_screen_about">À propos</string>
 	<string name="pref_cat_other">Autres</string>
 	<string name="pref_enable_notif_traffic_sum">Restez informé de l\'état du réseau Twisto sans avoir à ouvrir l\'application.</string>
-	<string name="pref_enable_notif_traffic_title">Notifications trafic réseau</string>
+	<string name="pref_enable_notif_traffic_title">Notifications relatives au trafic</string>
 	<string name="pref_cat_notification">Notifications</string>
 
 </resources>

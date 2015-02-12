@@ -21,7 +21,7 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto">
 
-	<PreferenceCategory android:title="@string/pref_cat_stops">
+	<PreferenceCategory android:title="Global">
 
 		<it.gmariotti.android.example.colorpicker.calendarstock.ColorPickerPreference
 			android:key="pref_app_theme"
@@ -33,7 +33,52 @@
 			app:numColumns="5"
 			app:itemLayout="@layout/dash_grid_item_color" />
 
-		<CheckBoxPreference
+		<PreferenceScreen
+			android:key="pref_screen_notifications"
+			android:title="@string/pref_cat_notification">
+
+			<PreferenceCategory android:title="État du trafic sur le réseau Twisto">
+
+				<CheckBoxPreference
+					android:defaultValue="true"
+					android:key="pref_enable_notif_traffic"
+					android:summary="@string/pref_enable_notif_traffic_sum"
+					android:title="@string/pref_enable_notif_traffic_title" />
+
+				<CheckBoxPreference
+					android:defaultValue="false"
+					android:key="pref_notif_traffic_ring"
+					android:summary="Émettre un son lors de la réception d'alertes trafic."
+					android:title="Sonnerie" />
+
+				<CheckBoxPreference
+					android:defaultValue="true"
+					android:key="pref_notif_traffic_vibrate"
+					android:summary="Vibrer lors de la réception d'alertes trafic."
+					android:title="Vibreur" />
+
+			</PreferenceCategory>
+			<PreferenceCategory android:title="Notification des bus suivis">
+
+				<CheckBoxPreference
+					android:defaultValue="true"
+					android:key="pref_notif_watched_ring"
+					android:summary="Émettre un son lors de l'approche d'un bus suivi."
+					android:title="Sonnerie" />
+
+				<CheckBoxPreference
+					android:defaultValue="true"
+					android:key="pref_notif_watched_vibrate"
+					android:summary="Vibrer lors de l'approche d'un bus suivi."
+					android:title="Vibreur" />
+
+			</PreferenceCategory>
+		</PreferenceScreen>
+	</PreferenceCategory>
+
+	<PreferenceCategory android:title="@string/pref_cat_stops">
+
+	<CheckBoxPreference
 			android:defaultValue="true"
 			android:key="pref_auto_refresh"
 			android:summary="@string/pref_auto_refresh_sum"
@@ -46,27 +91,15 @@
 			android:title="@string/pref_relative_time_title" />
 
 	</PreferenceCategory>
-	<PreferenceCategory android:title="@string/pref_cat_notification">
+	<PreferenceCategory android:title="@string/pref_cat_other">
 
-		<CheckBoxPreference
-			android:defaultValue="true"
-			android:key="pref_enable_notif_traffic"
-			android:summary="@string/pref_enable_notif_traffic_sum"
-			android:title="@string/pref_enable_notif_traffic_title" />
-
-	</PreferenceCategory>
-	<PreferenceCategory android:title="@string/pref_cat_pebble">
-
-	<Preference
+		<Preference
 			android:summary="@string/pref_pebble_dl_sum"
 			android:title="@string/pref_pebble_dl_title">
 			<intent
 				android:action="android.intent.action.VIEW"
 				android:data="pebble://appstore/53088e81ab1ae2f12900034e" />
 		</Preference>
-
-	</PreferenceCategory>
-	<PreferenceCategory android:title="@string/pref_cat_other">
 
 		<PreferenceScreen
 			android:key="pref_screen_about"
