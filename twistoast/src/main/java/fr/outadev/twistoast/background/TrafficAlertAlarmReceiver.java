@@ -88,7 +88,7 @@ public class TrafficAlertAlarmReceiver extends BroadcastReceiver {
 										.setContentText(trafficAlert.getLabel())
 										.setCategory(NotificationCompat.CATEGORY_MESSAGE)
 										.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-										.setPriority(NotificationCompat.PRIORITY_HIGH)
+										.setPriority(NotificationCompat.PRIORITY_DEFAULT)
 										.setContentIntent(contentIntent)
 										.setAutoCancel(true)
 										.setOnlyAlertOnce(true);
