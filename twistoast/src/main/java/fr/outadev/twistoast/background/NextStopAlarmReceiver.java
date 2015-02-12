@@ -29,14 +29,10 @@ import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
 
 import fr.outadev.android.timeo.ScheduleTime;
-import fr.outadev.android.timeo.TimeoException;
 import fr.outadev.android.timeo.TimeoRequestHandler;
 import fr.outadev.android.timeo.TimeoStop;
 import fr.outadev.android.timeo.TimeoStopSchedule;
@@ -72,11 +68,10 @@ public class NextStopAlarmReceiver extends BroadcastReceiver {
 				try {
 					List<TimeoStop> stops = db.getWatchedStops();
 					return TimeoRequestHandler.getMultipleSchedules(stops);
-				} catch(TimeoException | XmlPullParserException | IOException e) {
+				} catch(Exception e) {
 					e.printStackTrace();
+					return null;
 				}
-
-				return null;
 			}
 
 			@Override

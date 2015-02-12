@@ -64,7 +64,12 @@ public class TrafficAlertAlarmReceiver extends BroadcastReceiver {
 
 			@Override
 			protected TimeoTrafficAlert doInBackground(Void... params) {
-				return TimeoRequestHandler.getGlobalTrafficAlert(context.getString(R.string.url_pre_home_info));
+				try {
+					return TimeoRequestHandler.getGlobalTrafficAlert(context.getString(R.string.url_pre_home_info));
+				} catch(Exception e) {
+					e.printStackTrace();
+					return null;
+				}
 			}
 
 			@Override
