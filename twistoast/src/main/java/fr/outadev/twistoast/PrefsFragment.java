@@ -49,6 +49,8 @@ public class PrefsFragment extends PreferenceFragment implements OnSharedPrefere
 		// Set up a listener whenever a key changes
 		getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
+		updateDependentSwitchesState();
+
 		try {
 			PackageInfo info = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
 			findPreference("version").setSummary(getString(R.string.app_name) + " v" + info.versionName);
@@ -79,8 +81,17 @@ public class PrefsFragment extends PreferenceFragment implements OnSharedPrefere
 				} else {
 					TrafficAlertAlarmReceiver.disable(getActivity().getApplicationContext());
 				}
+
+				updateDependentSwitchesState();
 				break;
 		}
+	}
+
+	private void updateDependentSwitchesState() {
+		boolean enabled = getPreferenceScreen().getSharedPreferences().getBoolean("pref_enable_notif_traffic", true);
+
+		findPreference("pref_notif_traffic_ring").setEnabled(enabled);
+		findPreference("pref_notif_traffic_vibrate").setEnabled(enabled);
 	}
 
 }
