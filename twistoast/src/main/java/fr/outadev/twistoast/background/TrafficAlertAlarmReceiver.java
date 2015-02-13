@@ -36,6 +36,10 @@ import fr.outadev.android.timeo.TimeoTrafficAlert;
 import fr.outadev.twistoast.R;
 import fr.outadev.twistoast.Utils;
 
+/**
+ * A broadcast receiver called at regular intervals to check
+ * if there are traffic problems and the user should be notified.
+ */
 public class TrafficAlertAlarmReceiver extends CommonAlarmReceiver {
 
 	private static final int ALARM_TYPE = AlarmManager.ELAPSED_REALTIME;
@@ -111,6 +115,12 @@ public class TrafficAlertAlarmReceiver extends CommonAlarmReceiver {
 		return "traffic";
 	}
 
+	/**
+	 * Enables the regular checks performed every X minutes by this receiver.
+	 * They should be disabled once not needed anymore, as they can be battery and network hungry.
+	 *
+	 * @param context a context
+	 */
 	public static void enable(Context context) {
 		Log.d(Utils.TAG, "enabling " + TrafficAlertAlarmReceiver.class.getSimpleName());
 
@@ -119,6 +129,11 @@ public class TrafficAlertAlarmReceiver extends CommonAlarmReceiver {
 				SystemClock.elapsedRealtime() + 60 * 1000, ALARM_FREQUENCY, getBroadcast(context));
 	}
 
+	/**
+	 * Disables the regular checks performed every X minutes by this receiver.
+	 *
+	 * @param context a context
+	 */
 	public static void disable(Context context) {
 		Log.d(Utils.TAG, "disabling " + TrafficAlertAlarmReceiver.class.getSimpleName());
 
@@ -126,6 +141,12 @@ public class TrafficAlertAlarmReceiver extends CommonAlarmReceiver {
 		alarmMgr.cancel(getBroadcast(context));
 	}
 
+	/**
+	 * Returns the PendingIntent that will be called by the alarm every X minutes.
+	 *
+	 * @param context a context
+	 * @return the PendingIntent corresponding to this class
+	 */
 	protected static PendingIntent getBroadcast(Context context) {
 		Intent intent = new Intent(context, TrafficAlertAlarmReceiver.class);
 		return PendingIntent.getBroadcast(context, 0, intent, 0);

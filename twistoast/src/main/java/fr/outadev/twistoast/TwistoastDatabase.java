@@ -130,7 +130,7 @@ public class TwistoastDatabase {
 	 */
 	public List<TimeoStop> getAllStops() {
 		// Clean notification flags that have timed out so they don't interfere
-		cleanOutdatedTrackedStops();
+		cleanOutdatedWatchedStops();
 
 		SQLiteDatabase db = databaseOpenHelper.getReadableDatabase();
 
@@ -269,7 +269,11 @@ public class TwistoastDatabase {
 		db.close();
 	}
 
-	private void cleanOutdatedTrackedStops() {
+	/**
+	 * Removes outdated watched stops from the database.
+	 * If a stop notification request was added more than three hours ago, it will be deleted.
+	 */
+	private void cleanOutdatedWatchedStops() {
 		SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
 
 		ContentValues updateClause = new ContentValues();
@@ -279,9 +283,14 @@ public class TwistoastDatabase {
 		db.close();
 	}
 
+	/**
+	 * Fetches the list of stops that we are currently watching (that is to say, we wanted to be notified when they're incoming).
+	 *
+	 * @return a list containing the stops to process
+	 */
 	public List<TimeoStop> getWatchedStops() {
 		// Clean notification flags that have timed out so they don't interfere
-		cleanOutdatedTrackedStops();
+		cleanOutdatedWatchedStops();
 
 		SQLiteDatabase db = databaseOpenHelper.getReadableDatabase();
 
@@ -330,6 +339,11 @@ public class TwistoastDatabase {
 		return stopsList;
 	}
 
+	/**
+	 * Registers a stop to be watched for notifications.
+	 *
+	 * @param stop the bus stop to add to the list
+	 */
 	public void addToWatchedStops(TimeoStop stop) {
 		SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
 		ContentValues values = new ContentValues();
@@ -342,6 +356,12 @@ public class TwistoastDatabase {
 		db.insert("twi_notification", null, values);
 	}
 
+	/**
+	 * Unregisters a stop from the list of watched stops.
+	 * No notifications should be sent for this stop anymore, until it's been added back in.
+	 *
+	 * @param stop the bus stop that we should stop watching
+	 */
 	public void stopWatchingStop(TimeoStop stop) {
 		SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
 
@@ -359,6 +379,12 @@ public class TwistoastDatabase {
 		db.close();
 	}
 
+	/**
+	 * Updated the last time of arrival returned by the API for this bus.
+	 *
+	 * @param stop    the bus stop we want to update
+	 * @param lastETA a UNIX timestamp for the last know ETA for this bus
+	 */
 	public void updateWatchedStopETA(TimeoStop stop, long lastETA) {
 		SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
 
@@ -376,6 +402,11 @@ public class TwistoastDatabase {
 		db.close();
 	}
 
+	/**
+	 * Counts the number of bus stops we are currently watching.
+	 *
+	 * @return the number of watched stops in the database
+	 */
 	public int getWatchedStopsCount() {
 		SQLiteDatabase db = databaseOpenHelper.getReadableDatabase();
 

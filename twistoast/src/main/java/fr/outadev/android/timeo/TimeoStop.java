@@ -125,6 +125,11 @@ public class TimeoStop extends TimeoIDNameObject {
 		this.isWatched = isWatched;
 	}
 
+	/**
+	 * Gets the last estimated time of arrival for this bus stop.
+	 *
+	 * @return a timestamp of an approximation of the arrival of the next bus
+	 */
 	public long getLastETA() {
 		return lastETA;
 	}

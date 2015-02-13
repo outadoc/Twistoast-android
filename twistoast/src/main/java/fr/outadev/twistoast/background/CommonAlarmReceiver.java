@@ -25,10 +25,17 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 
 /**
- * Created by outadoc on 12/02/15.
+ * An abstract alarm receiver that implements a few common methods to be used by its children.
  */
 public abstract class CommonAlarmReceiver extends BroadcastReceiver {
 
+	/**
+	 * Gets suitable notification defaults for the notifications of this receiver.
+	 * Use them with NotificationCompat.Builder.setDefaults().
+	 *
+	 * @param context a context
+	 * @return an integer to pass to the builder
+	 */
 	protected int getNotificationDefaults(Context context) {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -48,7 +55,13 @@ public abstract class CommonAlarmReceiver extends BroadcastReceiver {
 		return defaults;
 	}
 
-
+	/**
+	 * The prefix used by this receiver for its preference keys.
+	 *
+	 * @return the format of the preference keys must be of the form
+	 * "pref_notif_<prefix>_vibrate" and "pref_notif_<prefix>_ring",
+	 * where prefix is the value returned by this method
+	 */
 	protected abstract String getPreferencesKeyPrefix();
 
 }

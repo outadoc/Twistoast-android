@@ -27,6 +27,9 @@ import android.preference.PreferenceManager;
 import fr.outadev.twistoast.TwistoastDatabase;
 import fr.outadev.twistoast.TwistoastDatabaseOpenHelper;
 
+/**
+ * The boot receiver of the application. It enables the notification receivers if needed.
+ */
 public class TwistoastBootReceiver extends BroadcastReceiver {
 
 	@Override

@@ -41,6 +41,10 @@ import fr.outadev.twistoast.TwistoastDatabase;
 import fr.outadev.twistoast.TwistoastDatabaseOpenHelper;
 import fr.outadev.twistoast.Utils;
 
+/**
+ * A broadcast receiver called at regular intervals to check
+ * if watched buses are incoming and the user should be notified.
+ */
 public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 
 	private static final int ALARM_TYPE = AlarmManager.ELAPSED_REALTIME_WAKEUP;
@@ -124,6 +128,11 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 		}).execute();
 	}
 
+	/**
+	 * Sends a notification to the user, informing them that their bus is incoming.
+	 *
+	 * @param schedule the schedule to notify about
+	 */
 	private void notifyForBusStop(TimeoStopSchedule schedule) {
 		NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -162,6 +171,12 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 		return "watched";
 	}
 
+	/**
+	 * Enables the regular checks performed every minute by this receiver.
+	 * They should be disabled once not needed anymore, as they can be battery and network hungry.
+	 *
+	 * @param context a context
+	 */
 	public static void enable(Context context) {
 		Log.d(Utils.TAG, "enabling " + TrafficAlertAlarmReceiver.class.getSimpleName());
 
@@ -170,6 +185,11 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 				SystemClock.elapsedRealtime() + 60 * 1000, ALARM_FREQUENCY, getBroadcast(context));
 	}
 
+	/**
+	 * Disables the regular checks performed every minute by this receiver.
+	 *
+	 * @param context a context
+	 */
 	public static void disable(Context context) {
 		Log.d(Utils.TAG, "disabling " + TrafficAlertAlarmReceiver.class.getSimpleName());
 
@@ -177,6 +197,12 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 		alarmMgr.cancel(getBroadcast(context));
 	}
 
+	/**
+	 * Returns the PendingIntent that will be called by the alarm every minute.
+	 *
+	 * @param context a context
+	 * @return the PendingIntent corresponding to this class
+	 */
 	public static PendingIntent getBroadcast(Context context) {
 		Intent intent = new Intent(context, NextStopAlarmReceiver.class);
 		return PendingIntent.getBroadcast(context, 0, intent, 0);

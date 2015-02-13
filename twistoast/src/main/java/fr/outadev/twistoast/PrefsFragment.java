@@ -87,6 +87,10 @@ public class PrefsFragment extends PreferenceFragment implements OnSharedPrefere
 		}
 	}
 
+	/**
+	 * Updates the state of preferences that rely on other preferences.
+	 * For example, this will disable "ring" and "vibrate" options for traffic notifications if the latter are disabled.
+	 */
 	private void updateDependentSwitchesState() {
 		boolean enabled = getPreferenceScreen().getSharedPreferences().getBoolean("pref_enable_notif_traffic", true);
 
