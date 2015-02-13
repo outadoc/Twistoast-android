@@ -593,7 +593,8 @@ public abstract class TimeoRequestHandler {
 					return new TimeoTrafficAlert(alert.getInt("id_alerte"), alert.getString("libelle_alerte"),
 							alert.getString("url_alerte"));
 				}
-			} catch(JSONException e) {
+
+			} catch(JSONException | ClassCastException e) {
 				return null;
 			}
 		}

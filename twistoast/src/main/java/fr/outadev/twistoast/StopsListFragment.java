@@ -36,7 +36,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.Toast;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -51,6 +50,7 @@ import java.util.List;
 
 import fr.outadev.android.timeo.ProgressListener;
 import fr.outadev.android.timeo.TimeoStop;
+import fr.outadev.twistoast.background.NextStopAlarmReceiver;
 
 public class StopsListFragment extends Fragment implements StopsListContainer {
 
@@ -63,6 +63,7 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 	private AbsListView stopsListView;
 	private SwipeRefreshLayout swipeRefreshLayout;
 	private View noContentView;
+	private FloatingActionButton fab;
 
 	private List<TimeoStop> stops;
 
@@ -126,74 +127,15 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 
 		stopsListView = (AbsListView) view.findViewById(R.id.stops_list);
 		noContentView = view.findViewById(R.id.view_no_content);
-		final FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
 
-		stopsListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-
-			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-				if(!isRefreshing) {
-					final TimeoStop stopToDelete = listAdapter.getItem(position);
-
-					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-					builder.setItems(R.array.stop_actions, new DialogInterface.OnClickListener() {
-
-						public void onClick(DialogInterface dialog, int which) {
-							if(which == 0) {
-								databaseHandler.deleteStop(stopToDelete);
-								listAdapter.remove(stopToDelete);
-
-								if(listAdapter.isEmpty()) {
-									noContentView.setVisibility(View.VISIBLE);
-								}
-
-								listAdapter.notifyDataSetChanged();
-								fab.show(true);
-
-								Snackbar.with(getActivity())
-										.text(R.string.confirm_delete_success)
-										.actionLabel(R.string.cancel_stop_deletion)
-										.actionColor(Colors.getColorAccent(getActivity()))
-										.attachToAbsListView(stopsListView)
-										.actionListener(new ActionClickListener() {
-
-											@Override
-											public void onActionClicked() {
-												Log.i(Utils.TAG, "restoring stop " + stopToDelete);
-												databaseHandler.addStopToDatabase(stopToDelete);
-												listAdapter.insert(stopToDelete, position);
-												listAdapter.notifyDataSetChanged();
-											}
-
-										})
-										.show(getActivity());
-							}
-						}
-
-					});
-
-					builder.show();
-				}
-
-				return true;
-			}
-
-		});
+		fab = (FloatingActionButton) view.findViewById(R.id.fab);
 
 		fab.attachToListView(stopsListView);
 		fab.setColorNormal(Colors.getColorAccent(getActivity()));
 		fab.setColorPressedResId(R.color.twisto_secondary);
 		fab.setColorRippleResId(R.color.twisto_secondary);
 
-		fab.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(getActivity(), AddStopActivity.class);
-				startActivityForResult(intent, 0);
-			}
-
-		});
+		setupListeners();
 
 		return view;
 	}
@@ -236,6 +178,138 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 		}
 
 		refreshAllStopSchedules(true);
+	}
+
+	private void setupListeners() {
+		// Set up a long click listener for the main stops list that offers actions
+		// to be realised on a single item
+		stopsListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+				if(!isRefreshing) {
+					final TimeoStop currentStop = listAdapter.getItem(position);
+
+					// Menu items
+					String contextualMenuItems[] = new String[]{
+							getString(R.string.stop_action_delete),
+							getString((!currentStop.isWatched()) ? R.string.stop_action_watch : R.string.stop_action_unwatch)
+					};
+
+					// Build the long click contextual menu
+					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+					builder.setItems(contextualMenuItems, new DialogInterface.OnClickListener() {
+
+						public void onClick(DialogInterface dialog, int which) {
+
+							if(which == 0) {
+								// Remove from the database and the interface
+								databaseHandler.deleteStop(currentStop);
+								listAdapter.remove(currentStop);
+
+								if(currentStop.isWatched()) {
+									databaseHandler.stopWatchingStop(currentStop);
+									currentStop.setWatched(false);
+								}
+
+								if(listAdapter.isEmpty()) {
+									noContentView.setVisibility(View.VISIBLE);
+								}
+
+								listAdapter.notifyDataSetChanged();
+
+								// Workaround for the FAB not reappearing after the stop is deleted
+								// even if that means the scrollview isn't scrollable anymore
+								fab.show(true);
+
+								Snackbar.with(getActivity())
+										.text(R.string.confirm_delete_success)
+										.actionLabel(R.string.cancel_stop_deletion)
+										.actionColor(Colors.getColorAccent(getActivity()))
+										.attachToAbsListView(stopsListView)
+										.actionListener(new ActionClickListener() {
+
+											@Override
+											public void onActionClicked() {
+												Log.i(Utils.TAG, "restoring stop " + currentStop);
+
+												databaseHandler.addStopToDatabase(currentStop);
+												listAdapter.insert(currentStop, position);
+												listAdapter.notifyDataSetChanged();
+											}
+
+										})
+										.show(getActivity());
+
+							} else if(which == 1 && !currentStop.isWatched()) {
+								// We wish to get notifications about this upcoming stop
+								databaseHandler.addToWatchedStops(currentStop);
+								currentStop.setWatched(true);
+								listAdapter.notifyDataSetChanged();
+
+								// Turn the notifications on
+								NextStopAlarmReceiver.enable(getActivity().getApplicationContext());
+
+								Snackbar.with(getActivity())
+										.text(getString(R.string.notifs_enable_toast, currentStop.getName()))
+										.actionLabel(R.string.cancel_stop_deletion)
+										.actionColor(Colors.getColorAccent(getActivity()))
+										.attachToAbsListView(stopsListView)
+										.actionListener(new ActionClickListener() {
+
+											@Override
+											public void onActionClicked() {
+												databaseHandler.stopWatchingStop(currentStop);
+												currentStop.setWatched(false);
+												listAdapter.notifyDataSetChanged();
+
+												// Turn the notifications back off if necessary
+												if(databaseHandler.getWatchedStopsCount() == 0) {
+													NextStopAlarmReceiver.disable(getActivity().getApplicationContext());
+												}
+											}
+
+										})
+										.show(getActivity());
+
+							} else if(which == 1) {
+								// JUST STOP THESE NOTIFICATIONS ALREADY GHGHGHBLBLBL
+								databaseHandler.stopWatchingStop(currentStop);
+								currentStop.setWatched(false);
+								listAdapter.notifyDataSetChanged();
+
+								// Turn the notifications back off if necessary
+								if(databaseHandler.getWatchedStopsCount() == 0) {
+									NextStopAlarmReceiver.disable(getActivity().getApplicationContext());
+								}
+
+								Snackbar.with(getActivity())
+										.text(getString(R.string.notifs_disable_toast, currentStop.getName()))
+										.attachToAbsListView(stopsListView)
+										.show(getActivity());
+							}
+						}
+
+					});
+
+					builder.show();
+				}
+
+				return true;
+			}
+
+		});
+
+		fab.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getActivity(), AddStopActivity.class);
+				startActivityForResult(intent, 0);
+			}
+
+		});
+
 	}
 
 	@Override
@@ -304,13 +378,9 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 		}
 
 		if(success) {
-			Log.i(Utils.TAG, "refreshed, " + listAdapter.getCount() + " stops in db");
-
-			if(getActivity() != null && !listAdapter.isEmpty()) {
-				Toast.makeText(getActivity(), getResources().getString(R.string.refreshed_stops), Toast.LENGTH_SHORT).show();
-			}
-
 			int mismatch = listAdapter.checkSchedulesMismatchCount();
+
+			Log.i(Utils.TAG, "refreshed, " + listAdapter.getCount() + " stops in db");
 
 			if(mismatch > 0) {
 				Snackbar.with(getActivity())

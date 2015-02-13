@@ -27,7 +27,11 @@ public class TimeoStop extends TimeoIDNameObject {
 
 	private String ref;
 	private TimeoLine line;
+
 	private boolean isOutdated;
+	private boolean isWatched;
+
+	private long lastETA;
 
 	/**
 	 * Creates a stop.
@@ -38,8 +42,38 @@ public class TimeoStop extends TimeoIDNameObject {
 	 */
 	public TimeoStop(String id, String name, String ref, TimeoLine line) {
 		super(id, name);
+
 		this.ref = ref;
 		this.line = line;
+		this.isWatched = false;
+		this.isOutdated = false;
+		this.lastETA = -1;
+	}
+
+	/**
+	 * Creates a stop, specifying if its notifications are active or not.
+	 *
+	 * @param id        the id of the stop
+	 * @param name      the name of the stop
+	 * @param ref       the reference of the stop
+	 * @param isWatched true if notifications are enabled for this stop, otherwise false
+	 */
+	public TimeoStop(String id, String name, String ref, TimeoLine line, boolean isWatched) {
+		this(id, name, ref, line);
+		this.isWatched = isWatched;
+	}
+
+	/**
+	 * Creates a stop, specifying if its notifications are active or not.
+	 *
+	 * @param id        the id of the stop
+	 * @param name      the name of the stop
+	 * @param ref       the reference of the stop
+	 * @param isWatched true if notifications are enabled for this stop, otherwise false
+	 */
+	public TimeoStop(String id, String name, String ref, TimeoLine line, boolean isWatched, long lastETA) {
+		this(id, name, ref, line, isWatched);
+		this.lastETA = lastETA;
 	}
 
 	public TimeoStop(TimeoLine line) {
@@ -67,11 +101,40 @@ public class TimeoStop extends TimeoIDNameObject {
 		return getName();
 	}
 
+	/**
+	 * Checks if this stop is outdated and its reference needs to be updated.
+	 *
+	 * @return true if it needs to be updated, otherwise false
+	 */
 	public boolean isOutdated() {
 		return isOutdated;
 	}
 
 	public void setOutdated(boolean isOutdated) {
 		this.isOutdated = isOutdated;
+	}
+
+	/**
+	 * Checks if notifications are currently active for this bus stop.
+	 */
+	public boolean isWatched() {
+		return isWatched;
+	}
+
+	public void setWatched(boolean isWatched) {
+		this.isWatched = isWatched;
+	}
+
+	/**
+	 * Gets the last estimated time of arrival for this bus stop.
+	 *
+	 * @return a timestamp of an approximation of the arrival of the next bus
+	 */
+	public long getLastETA() {
+		return lastETA;
+	}
+
+	public void setLastETA(long lastETA) {
+		this.lastETA = lastETA;
 	}
 }

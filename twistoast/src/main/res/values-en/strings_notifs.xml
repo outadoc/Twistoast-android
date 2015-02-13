@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Twistoast - strings.xml
-  ~ Copyright (C) 2013-2014  Baptiste Candellier
+  ~ Twistoast - strings_notifs.xml
+  ~ Copyright (C) 2013-2015  Baptiste Candellier
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -18,5 +18,9 @@
   -->
 
 <resources>
-	<string name="app_name">PEBBLE_SPORTS_SDK</string>
+
+	<string name="notifs_traffic_title">Twisto traffic alert</string>
+	<string name="notifs_enable_toast">Enabled notifications for %1$s</string>
+	<string name="notifs_disable_toast">Disabled notifications for %1$s</string>
+
 </resources>

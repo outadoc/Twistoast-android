@@ -1,2 +1,6 @@
 -keep public class TwistoastPebbleReceiver
+-keep public class NextStopAlarmReceiver
+-keep public class TrafficAlertAlarmReceiver
+-keep public class TwistoastBootReceiver
+
 -dontwarn com.google.common.**

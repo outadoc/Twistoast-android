@@ -68,8 +68,8 @@
 
 	<string name="error_retry">Réessayer</string>
 
-	<string-array name="stop_actions">
-		<item>Supprimer</item>
-	</string-array>
+	<string name="stop_action_delete">Supprimer</string>
+	<string name="stop_action_watch">M\'alerter de l\'arrivée du prochain bus</string>
+	<string name="stop_action_unwatch">Désactiver les notifications</string>
 
 </resources>

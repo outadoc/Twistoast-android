@@ -129,14 +129,21 @@ public class TwistoastDatabase {
 	 * @return a list of all the stops
 	 */
 	public List<TimeoStop> getAllStops() {
+		// Clean notification flags that have timed out so they don't interfere
+		cleanOutdatedWatchedStops();
+
 		SQLiteDatabase db = databaseOpenHelper.getReadableDatabase();
 
 		Cursor results = db
 				.rawQuery(
-						"SELECT stop.stop_id, stop.stop_name, stop.stop_ref, line.line_id, line.line_name, " +
-								"line.line_color, dir.dir_id, dir.dir_name, line.network_code FROM twi_stop stop " +
+						"SELECT stop.stop_id, stop.stop_name, stop.stop_ref, line.line_id, line.line_name, line.line_color, " +
+								"dir.dir_id, dir.dir_name, line.network_code, ifnull(notif_active, 0) as notif " +
+								"FROM twi_stop stop " +
 								"INNER JOIN twi_direction dir USING(dir_id, line_id, network_code) " +
 								"INNER JOIN twi_line line USING(line_id, network_code) " +
+								"LEFT JOIN twi_notification notif ON (notif.stop_id = stop.stop_id " +
+								"AND notif.line_id = line.line_id AND notif.dir_id = dir.dir_id " +
+								"AND notif.network_code = line.network_code AND notif.notif_active = 1) " +
 								"ORDER BY line.network_code, CAST(line.line_id AS INTEGER), stop.stop_name, dir.dir_name",
 						null);
 
@@ -158,7 +165,8 @@ public class TwistoastDatabase {
 					results.getString(results.getColumnIndex("stop_id")),
 					results.getString(results.getColumnIndex("stop_name")),
 					results.getString(results.getColumnIndex("stop_ref")),
-					line);
+					line,
+					(results.getInt(results.getColumnIndex("notif")) == 1));
 
 			// add it to the list
 			stopsList.add(stop);
@@ -178,46 +186,13 @@ public class TwistoastDatabase {
 	 * @return the corresponding stop object
 	 */
 	public TimeoStop getStopAtIndex(int index) {
-		SQLiteDatabase db = databaseOpenHelper.getReadableDatabase();
-		String indexStr = String.valueOf(index);
+		List<TimeoStop> stopsList = getAllStops();
 
-		Cursor results = db
-				.rawQuery(
-						"SELECT stop.stop_id, stop.stop_name, stop.stop_ref, line.line_id, line.line_name, line.line_color, " +
-								"dir.dir_id, dir.dir_name, line.network_code FROM twi_stop stop " +
-								"JOIN twi_direction dir USING(dir_id, line_id, network_code) " +
-								"JOIN twi_line line USING(line_id, network_code) " +
-								"ORDER BY CAST(line.line_id AS INTEGER), stop.stop_name, dir.dir_name " +
-								"LIMIT 1 OFFSET ?",
-						new String[]{indexStr});
-
-		if(results.getCount() > 0) {
-			results.moveToFirst();
-
-			TimeoLine line = new TimeoLine(
-					new TimeoIDNameObject(
-							results.getString(results.getColumnIndex("line_id")),
-							results.getString(results.getColumnIndex("line_name"))),
-					new TimeoIDNameObject(
-							results.getString(results.getColumnIndex("dir_id")),
-							results.getString(results.getColumnIndex("dir_name"))),
-					results.getString(results.getColumnIndex("line_color")),
-					results.getInt(results.getColumnIndex("network_code")));
-
-			TimeoStop stop = new TimeoStop(
-					results.getString(results.getColumnIndex("stop_id")),
-					results.getString(results.getColumnIndex("stop_name")),
-					results.getString(results.getColumnIndex("stop_ref")),
-					line);
-
-			// close the cursor and the database
-			results.close();
-			db.close();
-
-			return stop;
-		} else {
-			return null;
+		if(stopsList != null && stopsList.size() >= index + 1) {
+			return stopsList.get(index);
 		}
+
+		return null;
 	}
 
 	/**
@@ -292,6 +267,158 @@ public class TwistoastDatabase {
 		});
 
 		db.close();
+	}
+
+	/**
+	 * Removes outdated watched stops from the database.
+	 * If a stop notification request was added more than three hours ago, it will be deleted.
+	 */
+	private void cleanOutdatedWatchedStops() {
+		SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
+
+		ContentValues updateClause = new ContentValues();
+		updateClause.put("notif_active", 0);
+
+		db.update("twi_notification", updateClause, "date('now','-3 hours') > notif_creation_time", null);
+		db.close();
+	}
+
+	/**
+	 * Fetches the list of stops that we are currently watching (that is to say, we wanted to be notified when they're incoming).
+	 *
+	 * @return a list containing the stops to process
+	 */
+	public List<TimeoStop> getWatchedStops() {
+		// Clean notification flags that have timed out so they don't interfere
+		cleanOutdatedWatchedStops();
+
+		SQLiteDatabase db = databaseOpenHelper.getReadableDatabase();
+
+		Cursor results = db
+				.rawQuery(
+						"SELECT stop.stop_id, stop.stop_name, stop.stop_ref, line.line_id, line.line_name, " +
+								"line.line_color, dir.dir_id, dir.dir_name, line.network_code, notif.notif_last_estim " +
+								"FROM twi_stop stop " +
+								"INNER JOIN twi_direction dir USING(dir_id, line_id, network_code) " +
+								"INNER JOIN twi_line line USING(line_id, network_code) " +
+								"INNER JOIN twi_notification notif USING (stop_id, line_id, dir_id, network_code) " +
+								"WHERE notif_active = 1 " +
+								"ORDER BY line.network_code, CAST(line.line_id AS INTEGER), stop.stop_name, dir.dir_name",
+						null);
+
+		ArrayList<TimeoStop> stopsList = new ArrayList<>();
+
+		// while there's a stop available
+		while(results.moveToNext()) {
+			TimeoLine line = new TimeoLine(
+					new TimeoIDNameObject(
+							results.getString(results.getColumnIndex("line_id")),
+							results.getString(results.getColumnIndex("line_name"))),
+					new TimeoIDNameObject(
+							results.getString(results.getColumnIndex("dir_id")),
+							results.getString(results.getColumnIndex("dir_name"))),
+					results.getString(results.getColumnIndex("line_color")),
+					results.getInt(results.getColumnIndex("network_code")));
+
+			TimeoStop stop = new TimeoStop(
+					results.getString(results.getColumnIndex("stop_id")),
+					results.getString(results.getColumnIndex("stop_name")),
+					results.getString(results.getColumnIndex("stop_ref")),
+					line,
+					true,
+					results.getLong(results.getColumnIndex("notif_last_estim")));
+
+			// add it to the list
+			stopsList.add(stop);
+		}
+
+		// close the cursor and the database
+		results.close();
+		db.close();
+
+		return stopsList;
+	}
+
+	/**
+	 * Registers a stop to be watched for notifications.
+	 *
+	 * @param stop the bus stop to add to the list
+	 */
+	public void addToWatchedStops(TimeoStop stop) {
+		SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
+		ContentValues values = new ContentValues();
+
+		values.put("stop_id", stop.getId());
+		values.put("line_id", stop.getLine().getId());
+		values.put("dir_id", stop.getLine().getDirection().getId());
+		values.put("network_code", stop.getLine().getNetworkCode());
+
+		db.insert("twi_notification", null, values);
+	}
+
+	/**
+	 * Unregisters a stop from the list of watched stops.
+	 * No notifications should be sent for this stop anymore, until it's been added back in.
+	 *
+	 * @param stop the bus stop that we should stop watching
+	 */
+	public void stopWatchingStop(TimeoStop stop) {
+		SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
+
+		ContentValues updateClause = new ContentValues();
+		updateClause.put("notif_active", 0);
+
+		db.update("twi_notification", updateClause,
+				"stop_id = ? AND line_id = ? AND dir_id = ? AND network_code = ?", new String[]{
+						stop.getId(),
+						stop.getLine().getId(),
+						stop.getLine().getDirection().getId(),
+						stop.getLine().getNetworkCode() + ""
+				});
+
+		db.close();
+	}
+
+	/**
+	 * Updated the last time of arrival returned by the API for this bus.
+	 *
+	 * @param stop    the bus stop we want to update
+	 * @param lastETA a UNIX timestamp for the last know ETA for this bus
+	 */
+	public void updateWatchedStopETA(TimeoStop stop, long lastETA) {
+		SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
+
+		ContentValues updateClause = new ContentValues();
+		updateClause.put("notif_last_estim", lastETA);
+
+		db.update("twi_notification", updateClause,
+				"stop_id = ? AND line_id = ? AND dir_id = ? AND network_code = ? AND notif_active = 1", new String[]{
+						stop.getId(),
+						stop.getLine().getId(),
+						stop.getLine().getDirection().getId(),
+						stop.getLine().getNetworkCode() + ""
+				});
+
+		db.close();
+	}
+
+	/**
+	 * Counts the number of bus stops we are currently watching.
+	 *
+	 * @return the number of watched stops in the database
+	 */
+	public int getWatchedStopsCount() {
+		SQLiteDatabase db = databaseOpenHelper.getReadableDatabase();
+
+		Cursor results = db.rawQuery("SELECT COUNT(*) as nb_watched FROM twi_notification WHERE notif_active = 1", null);
+		results.moveToFirst();
+
+		int count = results.getInt(results.getColumnIndex("nb_watched"));
+
+		results.close();
+		db.close();
+
+		return count;
 	}
 
 }

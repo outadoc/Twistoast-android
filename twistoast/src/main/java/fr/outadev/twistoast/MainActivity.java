@@ -21,10 +21,12 @@ package fr.outadev.twistoast;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -42,6 +44,8 @@ import java.util.List;
 
 import fr.outadev.android.timeo.TimeoRequestHandler;
 import fr.outadev.android.timeo.TimeoTrafficAlert;
+import fr.outadev.twistoast.background.NextStopAlarmReceiver;
+import fr.outadev.twistoast.background.TrafficAlertAlarmReceiver;
 import fr.outadev.twistoast.drawer.NavigationDrawerFragmentItem;
 import fr.outadev.twistoast.drawer.NavigationDrawerItem;
 import fr.outadev.twistoast.drawer.NavigationDrawerSecondaryItem;
@@ -74,18 +78,19 @@ public class MainActivity extends ThemedActivity implements StopsListContainer {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		// Toolbar
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setHomeButtonEnabled(true);
 
+		// Drawer config
 		drawerItems = getDrawerItems();
+		frags = new Fragment[drawerItems.size()];
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		drawerList = (ListView) findViewById(R.id.left_drawer);
 		drawerTitle = getTitle();
-
-		frags = new Fragment[drawerItems.size()];
 
 		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.action_ok,
 				R.string.action_delete) {
@@ -105,13 +110,13 @@ public class MainActivity extends ThemedActivity implements StopsListContainer {
 
 		drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 		drawerLayout.setDrawerListener(drawerToggle);
-
-		drawerList.setAdapter(new NavDrawerArrayAdapter(this, this, R.layout.drawer_list_item, drawerItems,
-				currentFragmentIndex));
+		drawerList.setAdapter(
+				new NavDrawerArrayAdapter(this, this, R.layout.drawer_list_item, drawerItems, currentFragmentIndex));
 		drawerList.setItemChecked(currentFragmentIndex, true);
 
 		refreshActionBarTitle();
 
+		// Handle saved variables and check traffic info if needed
 		if(savedInstanceState != null) {
 			currentFragmentIndex = savedInstanceState.getInt("key_current_frag");
 			trafficAlert = (TimeoTrafficAlert) savedInstanceState.get("key_traffic_alert");
@@ -122,6 +127,30 @@ public class MainActivity extends ThemedActivity implements StopsListContainer {
 			loadFragmentFromDrawerPosition(currentFragmentIndex);
 			checkForGlobalTrafficInfo();
 		}
+
+		// Turn the notifications back off if necessary
+		TwistoastDatabase db = new TwistoastDatabase(TwistoastDatabaseOpenHelper.getInstance(this));
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+		if(db.getWatchedStopsCount() > 0) {
+			TrafficAlertAlarmReceiver.enable(getApplicationContext());
+		}
+
+		if(prefs.getBoolean("pref_enable_notif_traffic", true)) {
+			NextStopAlarmReceiver.enable(getApplicationContext());
+		}
+	}
+
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+		drawerToggle.syncState();
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		displayGlobalTrafficInfo();
 	}
 
 	@Override
@@ -134,14 +163,31 @@ public class MainActivity extends ThemedActivity implements StopsListContainer {
 	public void onBackPressed() {
 		if(frags[currentFragmentIndex] instanceof WebViewFragment
 				&& ((WebViewFragment) frags[currentFragmentIndex]).canGoBack()) {
+			// If we can move back of a page in the browser, do it
 			((WebViewFragment) frags[currentFragmentIndex]).goBack();
 		} else if(currentFragmentIndex == 0) {
+			// If we're on the main screen, just exit
 			super.onBackPressed();
 		} else if(!drawerLayout.isDrawerOpen(Gravity.START)) {
+			// If the drawer isn't opened, open it
 			drawerLayout.openDrawer(Gravity.START);
 		} else {
+			// Otherwise, go back to the main screen
 			loadFragmentFromDrawerPosition(0);
 		}
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		return drawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+
+	}
+
+	@Override
+	protected void onSaveInstanceState(@NonNull Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putInt("key_current_frag", currentFragmentIndex);
+		outState.putSerializable("key_traffic_alert", trafficAlert);
 	}
 
 	@Override
@@ -179,31 +225,6 @@ public class MainActivity extends ThemedActivity implements StopsListContainer {
 	public void refreshActionBarTitle() {
 		actionBarTitle = getString(drawerItems.get(currentFragmentIndex).getTitleResId());
 		getSupportActionBar().setTitle(actionBarTitle);
-	}
-
-	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
-		super.onPostCreate(savedInstanceState);
-		drawerToggle.syncState();
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		return drawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
-
-	}
-
-	@Override
-	protected void onSaveInstanceState(@NonNull Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putInt("key_current_frag", currentFragmentIndex);
-		outState.putSerializable("key_traffic_alert", trafficAlert);
-	}
-
-	@Override
-	protected void onStart() {
-		super.onStart();
-		displayGlobalTrafficInfo();
 	}
 
 	/**
