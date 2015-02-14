@@ -166,7 +166,7 @@ public class MainActivity extends ThemedActivity implements StopsListContainer {
 				&& ((WebViewFragment) frags[currentFragmentIndex]).canGoBack()) {
 			// If we can move back of a page in the browser, do it
 			((WebViewFragment) frags[currentFragmentIndex]).goBack();
-		} else if(currentFragmentIndex == 0) {
+		} else if(currentFragmentIndex == 1) {
 			// If we're on the main screen, just exit
 			super.onBackPressed();
 		} else if(!drawerLayout.isDrawerOpen(Gravity.START)) {
@@ -174,7 +174,7 @@ public class MainActivity extends ThemedActivity implements StopsListContainer {
 			drawerLayout.openDrawer(Gravity.START);
 		} else {
 			// Otherwise, go back to the main screen
-			loadFragmentFromDrawerPosition(0);
+			loadFragmentFromDrawerPosition(1);
 		}
 	}
 
