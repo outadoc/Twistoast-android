@@ -78,7 +78,7 @@
 
 	<PreferenceCategory android:title="@string/pref_cat_stops">
 
-	<CheckBoxPreference
+		<CheckBoxPreference
 			android:defaultValue="true"
 			android:key="pref_auto_refresh"
 			android:summary="@string/pref_auto_refresh_sum"
@@ -130,7 +130,11 @@
 					android:title="@string/pref_legal_title" />
 				<Preference
 					android:summary="@string/pref_license_sum"
-					android:title="@string/pref_license_title" />
+					android:title="@string/pref_license_title">
+					<intent
+						android:action="android.intent.action.VIEW"
+						android:data="https://github.com/outadoc/Twistoast-android" />
+				</Preference>
 
 			</PreferenceCategory>
 			<PreferenceCategory android:title="@string/pref_about_title">
