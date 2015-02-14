@@ -1,6 +1,6 @@
 /*
- * Twistoast - NavigationDrawerSeparator
- * Copyright (C) 2013-2014  Baptiste Candellier
+ * Twistoast - NavigationDrawerHeader
+ * Copyright (C) 2013-2015  Baptiste Candellier
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,11 +19,13 @@
 package fr.outadev.twistoast.drawer;
 
 /**
- * A navigation drawer separator.
+ * A navigation drawer header
+ *
+ * @author outadoc
  */
-public class NavigationDrawerSeparator extends NavigationDrawerItem {
+public class NavigationDrawerHeader extends NavigationDrawerItem {
 
-	public NavigationDrawerSeparator() {
+	public NavigationDrawerHeader() {
 		super(-1, -1);
 	}
 

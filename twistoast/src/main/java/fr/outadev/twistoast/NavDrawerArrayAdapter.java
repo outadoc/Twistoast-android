@@ -31,6 +31,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import fr.outadev.twistoast.drawer.NavigationDrawerHeader;
 import fr.outadev.twistoast.drawer.NavigationDrawerItem;
 import fr.outadev.twistoast.drawer.NavigationDrawerSecondaryItem;
 import fr.outadev.twistoast.drawer.NavigationDrawerSeparator;
@@ -45,6 +46,8 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<NavigationDrawerItem> {
 	private static final int TYPE_NORMAL = 0;
 	private static final int TYPE_SECONDARY = 1;
 	private static final int TYPE_SEPARATOR = 2;
+	private static final int TYPE_HEADER = 3;
+
 	private final StopsListContainer container;
 	private int selectedItemIndex;
 
@@ -65,13 +68,15 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<NavigationDrawerItem> {
 
 			if(itemType == TYPE_SEPARATOR) {
 				convertView = inflater.inflate(R.layout.drawer_list_separator, parent, false);
+			} else if(itemType == TYPE_HEADER) {
+				convertView = inflater.inflate(R.layout.drawer_list_header, parent, false);
 			} else {
 				convertView = inflater.inflate(R.layout.drawer_list_item, parent, false);
 			}
 		}
 
 		//if we're dealing with a separator, we only need to inflate it, nothing more
-		if(itemType == TYPE_SEPARATOR) {
+		if(itemType == TYPE_SEPARATOR || itemType == TYPE_HEADER) {
 			return convertView;
 		}
 
@@ -84,7 +89,10 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<NavigationDrawerItem> {
 			rowIcon.setImageResource(getItem(position).getIconResId());
 		}
 
-		rowTitle.setText(getContext().getResources().getString(getItem(position).getTitleResId()));
+		if(getItem(position).getTitleResId() != -1) {
+			rowTitle.setText(getContext().getResources().getString(getItem(position).getTitleResId()));
+		}
+
 		rowTitle.setTypeface(null, Typeface.NORMAL);
 		rowTitle.setSelected(false);
 		rowTitle.setTextColor(Color.BLACK);
@@ -127,9 +135,10 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<NavigationDrawerItem> {
 		// Define a way to determine which layout to use
 		if(getItem(position) instanceof NavigationDrawerSecondaryItem) {
 			return TYPE_SECONDARY;
-		}
-		if(getItem(position) instanceof NavigationDrawerSeparator) {
+		} else if(getItem(position) instanceof NavigationDrawerSeparator) {
 			return TYPE_SEPARATOR;
+		} else if(getItem(position) instanceof NavigationDrawerHeader) {
+			return TYPE_HEADER;
 		}
 
 		return TYPE_NORMAL;
@@ -137,7 +146,7 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<NavigationDrawerItem> {
 
 	@Override
 	public int getViewTypeCount() {
-		return 3;
+		return 4;
 	}
 
 }

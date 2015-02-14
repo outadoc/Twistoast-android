@@ -18,7 +18,6 @@
 
 package fr.outadev.twistoast.drawer;
 
-import android.app.Fragment;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 
@@ -50,12 +49,4 @@ public abstract class NavigationDrawerItem {
 		return iconResId;
 	}
 
-	/**
-	 * Gets a new fragment object for this item.
-	 *
-	 * @return a fragment corresponding to the view that should be displayed when this item is selected.
-	 * @throws IllegalAccessException if we couldn't instantiate the fragment
-	 * @throws InstantiationException if we couldn't instantiate the fragment
-	 */
-	public abstract Fragment getFragment() throws IllegalAccessException, InstantiationException;
 }

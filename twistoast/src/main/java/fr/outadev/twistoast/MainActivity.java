@@ -47,6 +47,7 @@ import fr.outadev.android.timeo.TimeoTrafficAlert;
 import fr.outadev.twistoast.background.NextStopAlarmReceiver;
 import fr.outadev.twistoast.background.TrafficAlertAlarmReceiver;
 import fr.outadev.twistoast.drawer.NavigationDrawerFragmentItem;
+import fr.outadev.twistoast.drawer.NavigationDrawerHeader;
 import fr.outadev.twistoast.drawer.NavigationDrawerItem;
 import fr.outadev.twistoast.drawer.NavigationDrawerSecondaryItem;
 import fr.outadev.twistoast.drawer.NavigationDrawerSeparator;
@@ -123,7 +124,7 @@ public class MainActivity extends ThemedActivity implements StopsListContainer {
 			checkDrawerItem(currentFragmentIndex);
 			displayGlobalTrafficInfo();
 		} else {
-			currentFragmentIndex = 0;
+			currentFragmentIndex = 1;
 			loadFragmentFromDrawerPosition(currentFragmentIndex);
 			checkForGlobalTrafficInfo();
 		}
@@ -199,9 +200,14 @@ public class MainActivity extends ThemedActivity implements StopsListContainer {
 	public void loadFragmentFromDrawerPosition(int position) {
 		currentFragmentIndex = position;
 
+		if(!(drawerItems.get(currentFragmentIndex) instanceof NavigationDrawerFragmentItem)) {
+			return;
+		}
+
 		if(frags[currentFragmentIndex] == null && drawerItems != null && drawerItems.size() > currentFragmentIndex) {
 			try {
-				frags[currentFragmentIndex] = drawerItems.get(currentFragmentIndex).getFragment();
+				frags[currentFragmentIndex] = ((NavigationDrawerFragmentItem) drawerItems.get(currentFragmentIndex))
+						.getFragment();
 			} catch(IllegalAccessException | InstantiationException e) {
 				e.printStackTrace();
 			}
@@ -223,8 +229,12 @@ public class MainActivity extends ThemedActivity implements StopsListContainer {
 	}
 
 	public void refreshActionBarTitle() {
-		actionBarTitle = getString(drawerItems.get(currentFragmentIndex).getTitleResId());
-		getSupportActionBar().setTitle(actionBarTitle);
+		NavigationDrawerItem item = drawerItems.get(currentFragmentIndex);
+
+		if(item.getTitleResId() != -1) {
+			actionBarTitle = getString(item.getTitleResId());
+			getSupportActionBar().setTitle(actionBarTitle);
+		}
 	}
 
 	/**
@@ -290,6 +300,7 @@ public class MainActivity extends ThemedActivity implements StopsListContainer {
 	private List<NavigationDrawerItem> getDrawerItems() {
 		List<NavigationDrawerItem> list = new ArrayList<>();
 
+		list.add(new NavigationDrawerHeader());
 		list.add(new NavigationDrawerFragmentItem(R.drawable.ic_schedule, R.string.drawer_item_realtime,
 				StopsListFragment.class));
 		list.add(new NavigationDrawerWebItem(R.drawable.ic_directions_bus, R.string.drawer_item_timetables,

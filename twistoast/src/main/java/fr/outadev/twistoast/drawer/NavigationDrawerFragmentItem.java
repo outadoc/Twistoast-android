@@ -42,7 +42,13 @@ public class NavigationDrawerFragmentItem extends NavigationDrawerItem {
 		this.classToInstantiate = classToInstantiate;
 	}
 
-	@Override
+	/**
+	 * Gets a new fragment object for this item.
+	 *
+	 * @return a fragment corresponding to the view that should be displayed when this item is selected.
+	 * @throws IllegalAccessException if we couldn't instantiate the fragment
+	 * @throws InstantiationException if we couldn't instantiate the fragment
+	 */
 	public Fragment getFragment() throws IllegalAccessException, InstantiationException {
 		return (Fragment) classToInstantiate.newInstance();
 	}

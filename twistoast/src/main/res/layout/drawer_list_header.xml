@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Twistoast - styles.xml
-  ~ Copyright (C) 2013-2014  Baptiste Candellier
+  ~ Twistoast - drawer_list_header.xml
+  ~ Copyright (C) 2013-2015  Baptiste Candellier
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -17,15 +17,9 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<resources>
-
-	<style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
-		<item name="colorPrimary">#0171BB</item>
-		<item name="colorPrimaryDark">#015ba4</item>
-		<item name="colorAccent">#00A885</item>
-		<item name="android:navigationBarColor">?attr/colorPrimaryDark</item>
-		<item name="android:statusBarColor">?attr/colorPrimaryDark</item>
-		<item name="android:windowTranslucentStatus">true</item>
-	</style>
-
-</resources>
+<ImageView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:src="@drawable/banner"
+	android:paddingBottom="10dp" />
