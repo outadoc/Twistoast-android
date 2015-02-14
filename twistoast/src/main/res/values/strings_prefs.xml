@@ -21,7 +21,7 @@
 
 	<string name="pref_cat_other">Autres</string>
 	<string name="pref_pebble_dl_title">Télécharger la watchapp Pebble</string>
-	<string name="pref_pebble_dl_sum">Vous pouvez télécharger l\'app Twistoast pour Pebble depuis le Pebble appstore.</string>
+	<string name="pref_pebble_dl_sum">Vous pouvez télécharger l\'app Twistoast pour votre montre Pebble depuis le Pebble appstore.</string>
 
 	<string name="pref_screen_about">À propos</string>
 
@@ -50,16 +50,13 @@
 	<string name="pref_relative_time_sum">Afficher les horaires de façon relative. (ex: dans 3 minutes)</string>
 	<string name="pref_relative_time_title">Horaires relatives</string>
 
-	<string name="pref_cat_notification">Notifications</string>
-
 	<string name="pref_ringer_title">Sonnerie</string>
 	<string name="pref_vibrate_title">Vibreur</string>
 
-	<string name="pref_cat_notif_watched">Notification des bus suivis</string>
+	<string name="pref_cat_notif_watched">Notifications des bus suivis</string>
 	<string name="pref_notif_watched_ring_sum">Émettre un son lors de l\'approche d\'un bus suivi.</string>
 	<string name="pref_notif_watched_vibrate_sum">Vibrer lors de l\'approche d\'un bus suivi.</string>
 
-	<string name="pref_cat_notif_traffic">État du trafic sur le réseau Twisto</string>
 	<string name="pref_enable_notif_traffic_sum">Restez informé de l\'état du réseau Twisto sans avoir à ouvrir l\'application.</string>
 	<string name="pref_enable_notif_traffic_title">Notifications relatives au trafic</string>
 	<string name="pref_notif_traffic_ring_sum">Émettre un son lors de la réception d\'alertes trafic.</string>

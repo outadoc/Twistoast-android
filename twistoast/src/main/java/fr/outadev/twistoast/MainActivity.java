@@ -316,7 +316,8 @@ public class MainActivity extends ThemedActivity implements StopsListContainer {
 		list.add(new NavigationDrawerWebItem(R.drawable.ic_payment, R.string.drawer_item_pricing,
 				getString(R.string.url_drawer_pricing)));
 		list.add(new NavigationDrawerSeparator());
-		list.add(new NavigationDrawerSecondaryItem(R.string.drawer_item_preferences, PrefsFragment.class));
+		list.add(new NavigationDrawerSecondaryItem(R.string.drawer_item_preferences, TwistoastPreferencesFragment.class));
+		list.add(new NavigationDrawerSecondaryItem(R.string.drawer_item_about, TwistoastAboutFragment.class));
 
 		return list;
 	}

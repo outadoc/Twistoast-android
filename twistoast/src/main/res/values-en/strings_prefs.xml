@@ -42,7 +42,15 @@
 	<string name="pref_screen_about">About</string>
 	<string name="pref_cat_other">Other</string>
 	<string name="pref_enable_notif_traffic_sum">Stay informed of the traffic on the Twisto network without having to open the app.</string>
-	<string name="pref_enable_notif_traffic_title">Network traffic notifications</string>
-	<string name="pref_cat_notification">Notifications</string>
+	<string name="pref_enable_notif_traffic_title">Enable traffic notifications</string>
+	<string name="pref_cat_notif_traffic">Traffic info notifications</string>
+	<string name="pref_cat_notif_watched">Watched buses notifications</string>
+	<string name="pref_notif_traffic_ring_sum">Play a notification sound when getting a traffic alert.</string>
+	<string name="pref_notif_traffic_vibrate_sum">Make the phone vibrate when getting a traffic alert.</string>
+	<string name="pref_notif_watched_ring_sum">Play a notification sound when a watched bus is incoming.</string>
+	<string name="pref_notif_watched_vibrate_sum">Make the phone vibrate when a watched bus is incoming.</string>
+	<string name="pref_ringer_title">Sound</string>
+	<string name="pref_vibrate_title">Vibrate</string>
+	<string name="prefs_cat_global">Global</string>
 
 </resources>

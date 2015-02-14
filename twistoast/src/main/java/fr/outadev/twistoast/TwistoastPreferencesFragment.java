@@ -21,8 +21,6 @@ package fr.outadev.twistoast;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 
@@ -33,7 +31,7 @@ import fr.outadev.twistoast.background.TrafficAlertAlarmReceiver;
  *
  * @author outadoc
  */
-public class PrefsFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
+public class TwistoastPreferencesFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -50,13 +48,6 @@ public class PrefsFragment extends PreferenceFragment implements OnSharedPrefere
 		getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
 		updateDependentSwitchesState();
-
-		try {
-			PackageInfo info = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
-			findPreference("version").setSummary(getString(R.string.app_name) + " v" + info.versionName);
-		} catch(NameNotFoundException e1) {
-			e1.printStackTrace();
-		}
 	}
 
 	@Override

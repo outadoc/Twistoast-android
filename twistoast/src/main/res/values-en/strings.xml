@@ -59,6 +59,7 @@
 	<string name="drawer_item_news">News</string>
 	<string name="drawer_item_pricing">Pricing</string>
 	<string name="drawer_item_preferences">Preferences</string>
+	<string name="drawer_item_about">About</string>
 
 	<string name="stop_ref_update_message_title">Some bus stops are outdated!</string>
 	<string name="stop_ref_update_message_action">Update</string>
@@ -73,14 +74,5 @@
 	<string name="notif_watched_line_direction">Direction: %1$s</string>
 	<string name="notif_watched_line_stop">Stop: %1$s</string>
 	<string name="notif_watched_summary_text">Scheduled for %1$s</string>
-	<string name="pref_cat_notif_traffic">Traffic alerts for the Twisto network</string>
-	<string name="pref_cat_notif_watched">Notifications for watched buses</string>
-	<string name="pref_notif_traffic_ring_sum">Play a notification sound when getting a traffic alert.</string>
-	<string name="pref_notif_traffic_vibrate_sum">Make the phone vibrate when getting a traffic alert.</string>
-	<string name="pref_notif_watched_ring_sum">Play a notification sound when a watched bus is incoming.</string>
-	<string name="pref_notif_watched_vibrate_sum">Make the phone vibrate when a watched bus is incoming.</string>
-	<string name="pref_ringer_title">Sound</string>
-	<string name="pref_vibrate_title">Vibrate</string>
-	<string name="prefs_cat_global">Global</string>
 
 </resources>
