@@ -51,7 +51,8 @@
 			android:layout_alignParentBottom="true"
 			android:layout_alignParentRight="true"
 			android:layout_margin="16dp"
-			android:src="@drawable/ic_action_new" />
+			android:src="@drawable/ic_action_new"
+			android:contentDescription="@string/fab_add_stop_description" />
 
 	</RelativeLayout>
 

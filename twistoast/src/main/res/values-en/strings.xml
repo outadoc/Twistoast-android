@@ -74,5 +74,6 @@
 	<string name="notif_watched_line_direction">Direction: %1$s</string>
 	<string name="notif_watched_line_stop">Stop: %1$s</string>
 	<string name="notif_watched_summary_text">Scheduled for %1$s</string>
+	<string name="fab_add_stop_description">Add a stop</string>
 
 </resources>
