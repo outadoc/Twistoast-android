@@ -25,11 +25,22 @@ package fr.outadev.android.timeo;
  */
 public class TimeoException extends Exception {
 
-	public TimeoException(String s) {
-		super(s);
-	}
+	private String errorCode;
 
 	public TimeoException() {
+		this("");
+	}
 
+	public TimeoException(String s) {
+		super(s);
+		this.errorCode = "";
+	}
+
+	public TimeoException(String errorCode, String message) {
+		this.errorCode = errorCode;
+	}
+
+	public String getErrorCode() {
+		return errorCode;
 	}
 }

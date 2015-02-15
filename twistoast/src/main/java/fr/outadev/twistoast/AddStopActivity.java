@@ -457,7 +457,7 @@ public class AddStopActivity extends ThemedActivity {
 					String message;
 
 					if(e instanceof TimeoException) {
-						message = getString(R.string.error_toast, e.getMessage());
+						message = getString(R.string.error_toast_twisto, ((TimeoException) e).getErrorCode());
 					} else {
 						message = getString(R.string.loading_error);
 					}

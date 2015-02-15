@@ -261,7 +261,7 @@ public abstract class TimeoRequestHandler {
 
 					} else if(tagname.equals("erreur")) {
 						if((errorCode != null && !errorCode.equals("000")) || (text != null && !text.trim().isEmpty())) {
-							throw new TimeoException(errorCode + " - " + text);
+							throw new TimeoException(errorCode, text);
 						}
 					}
 
@@ -343,7 +343,7 @@ public abstract class TimeoRequestHandler {
 
 					} else if(tagname.equals("erreur")) {
 						if((errorCode != null && !errorCode.equals("000")) || (text != null && !text.trim().isEmpty())) {
-							throw new TimeoException(errorCode + " - " + text);
+							throw new TimeoException(errorCode, text);
 						}
 					}
 
@@ -509,7 +509,7 @@ public abstract class TimeoRequestHandler {
 
 					} else if(tagname.equals("erreur")) {
 						if((errorCode != null && !errorCode.equals("000")) || (text != null && !text.trim().isEmpty())) {
-							throw new TimeoException(errorCode + " - " + text);
+							throw new TimeoException(errorCode, text);
 						}
 
 					} else if(tmpBlockingException != null && tagname.equals("titre") && !text.isEmpty()) {

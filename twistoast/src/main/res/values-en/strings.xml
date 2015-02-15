@@ -75,5 +75,6 @@
 	<string name="notif_watched_line_stop">Stop: %1$s</string>
 	<string name="notif_watched_summary_text">Scheduled for %1$s</string>
 	<string name="fab_add_stop_description">Add a stop</string>
+	<string name="error_toast_twisto">Twisto error %1$s. Try again later.</string>
 
 </resources>

@@ -228,7 +228,8 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 								String message;
 
 								if(e instanceof TimeoException) {
-									message = getContext().getString(R.string.error_toast, e.getMessage());
+									message = getContext().getString(R.string.error_toast_twisto, ((TimeoException) e)
+											.getErrorCode());
 								} else {
 									message = getContext().getString(R.string.loading_error);
 								}
