@@ -33,6 +33,7 @@ import java.util.List;
 
 import fr.outadev.android.timeo.ScheduleTime;
 import fr.outadev.android.timeo.TimeoRequestHandler;
+import fr.outadev.android.timeo.TimeoSingleSchedule;
 import fr.outadev.android.timeo.TimeoStop;
 import fr.outadev.android.timeo.TimeoStopSchedule;
 import fr.outadev.twistoast.MainActivity;
@@ -88,10 +89,12 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 						if(schedule.getSchedules() != null && !schedule.getSchedules().isEmpty()) {
 							Calendar busTime = ScheduleTime.getNextDateForTime(schedule.getSchedules().get(0).getTime());
 
+							updateStopTimeNotification(schedule);
+
 							// THE BUS IS COMIIIING
 							if(Calendar.getInstance().getTimeInMillis() + 2 * 60 * 1000 > busTime.getTimeInMillis()) {
 								// Remove from database, and send a notification
-								notifyForBusStop(schedule);
+								notifyForIncomingBus(schedule);
 								db.stopWatchingStop(schedule.getStop());
 								schedule.getStop().setWatched(false);
 
@@ -104,7 +107,7 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 								// we have to make assumptions instead.
 								if(busTime.getTimeInMillis() - schedule.getStop().getLastETA() > 5 * 60 * 1000) {
 									// Remove from database, and send a notification
-									notifyForBusStop(schedule);
+									notifyForIncomingBus(schedule);
 									db.stopWatchingStop(schedule.getStop());
 									schedule.getStop().setWatched(false);
 
@@ -133,7 +136,7 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 	 *
 	 * @param schedule the schedule to notify about
 	 */
-	private void notifyForBusStop(TimeoStopSchedule schedule) {
+	private void notifyForIncomingBus(TimeoStopSchedule schedule) {
 		NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
 		Intent notificationIntent = new Intent(context, MainActivity.class);
@@ -155,13 +158,47 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 								.addLine(context.getString(R.string.notif_watched_line_direction, direction))
 								.addLine(context.getString(R.string.notif_watched_line_stop, stop))
 								.setSummaryText(context.getString(R.string.notif_watched_summary_text, time)))
-						.setCategory(NotificationCompat.CATEGORY_MESSAGE)
+						.setCategory(NotificationCompat.CATEGORY_EVENT)
 						.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
 						.setPriority(NotificationCompat.PRIORITY_MAX)
 						.setContentIntent(contentIntent)
 						.setAutoCancel(true)
 						.setOnlyAlertOnce(true)
 						.setDefaults(getNotificationDefaults(context));
+
+		notificationManager.notify(Integer.valueOf(schedule.getStop().getId()), builder.build());
+	}
+
+	private void updateStopTimeNotification(TimeoStopSchedule schedule) {
+		NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+		Intent notificationIntent = new Intent(context, MainActivity.class);
+		PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
+
+		// Get the data we need for the notification
+		String stop = schedule.getStop().getName();
+		String direction = schedule.getStop().getLine().getDirection().getName();
+		String lineName = schedule.getStop().getLine().getName();
+
+		NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle()
+				.setSummaryText(lineName + " vers " + direction)
+				.setBigContentTitle("Arrêt " + stop);
+
+		for(TimeoSingleSchedule singleSchedule : schedule.getSchedules()) {
+			inboxStyle.addLine(singleSchedule.getFormattedTime(context) + " - " + singleSchedule.getDirection());
+		}
+
+		// Make a nice notification to inform the user of the bus's imminence
+		NotificationCompat.Builder builder =
+				new NotificationCompat.Builder(context)
+						.setSmallIcon(R.drawable.ic_stat_notify_twistoast)
+						.setContentTitle("Arrêt " + stop + " - " + lineName)
+						.setContentText("Prochain passage : " + schedule.getSchedules().get(0).getFormattedTime(context))
+						.setStyle(inboxStyle)
+						.setCategory(NotificationCompat.CATEGORY_EVENT)
+						.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+						.setContentIntent(contentIntent)
+						.setOngoing(true);
 
 		notificationManager.notify(Integer.valueOf(schedule.getStop().getId()), builder.build());
 	}
@@ -178,11 +215,11 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 	 * @param context a context
 	 */
 	public static void enable(Context context) {
-		Log.d(Utils.TAG, "enabling " + TrafficAlertAlarmReceiver.class.getSimpleName());
+		Log.d(Utils.TAG, "enabling " + NextStopAlarmReceiver.class.getSimpleName());
 
 		AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 		alarmMgr.setInexactRepeating(ALARM_TYPE,
-				SystemClock.elapsedRealtime() + 60 * 1000, ALARM_FREQUENCY, getBroadcast(context));
+				SystemClock.elapsedRealtime() + 10000, ALARM_FREQUENCY, getBroadcast(context));
 	}
 
 	/**
@@ -191,7 +228,7 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 	 * @param context a context
 	 */
 	public static void disable(Context context) {
-		Log.d(Utils.TAG, "disabling " + TrafficAlertAlarmReceiver.class.getSimpleName());
+		Log.d(Utils.TAG, "disabling " + NextStopAlarmReceiver.class.getSimpleName());
 
 		AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 		alarmMgr.cancel(getBroadcast(context));

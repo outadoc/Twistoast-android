@@ -134,11 +134,11 @@ public class MainActivity extends ThemedActivity implements StopsListContainer {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		if(db.getWatchedStopsCount() > 0) {
-			TrafficAlertAlarmReceiver.enable(getApplicationContext());
+			NextStopAlarmReceiver.enable(getApplicationContext());
 		}
 
 		if(prefs.getBoolean("pref_enable_notif_traffic", true)) {
-			NextStopAlarmReceiver.enable(getApplicationContext());
+			TrafficAlertAlarmReceiver.enable(getApplicationContext());
 		}
 	}
 

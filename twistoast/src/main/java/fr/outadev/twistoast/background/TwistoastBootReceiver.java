@@ -40,11 +40,11 @@ public class TwistoastBootReceiver extends BroadcastReceiver {
 			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
 			if(db.getWatchedStopsCount() > 0) {
-				TrafficAlertAlarmReceiver.enable(context.getApplicationContext());
+				NextStopAlarmReceiver.enable(context.getApplicationContext());
 			}
 
 			if(prefs.getBoolean("pref_enable_notif_traffic", true)) {
-				NextStopAlarmReceiver.enable(context.getApplicationContext());
+				TrafficAlertAlarmReceiver.enable(context.getApplicationContext());
 			}
 
 		}
