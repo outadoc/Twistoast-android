@@ -51,6 +51,9 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 	private static final int ALARM_TYPE = AlarmManager.ELAPSED_REALTIME_WAKEUP;
 	private static final int ALARM_FREQUENCY = 60 * 1000;
 
+	public static final int ALARM_TIME_THRESHOLD_MS = 2 * 60 * 1000;
+	private static final int NOTIFICATION_ID_ERROR = 42;
+
 	private Context context;
 
 	@Override
@@ -60,6 +63,7 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 		(new AsyncTask<Void, Void, List<TimeoStopSchedule>>() {
 
 			private TwistoastDatabase db;
+			private List<TimeoStop> stopsToCheck;
 
 			@Override
 			protected void onPreExecute() {
@@ -70,8 +74,8 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 			@Override
 			protected List<TimeoStopSchedule> doInBackground(Void... params) {
 				try {
-					List<TimeoStop> stops = db.getWatchedStops();
-					return TimeoRequestHandler.getMultipleSchedules(stops);
+					stopsToCheck = db.getWatchedStops();
+					return TimeoRequestHandler.getMultipleSchedules(stopsToCheck);
 				} catch(Exception e) {
 					e.printStackTrace();
 					return null;
@@ -92,7 +96,7 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 							updateStopTimeNotification(schedule);
 
 							// THE BUS IS COMIIIING
-							if(Calendar.getInstance().getTimeInMillis() + 2 * 60 * 1000 > busTime.getTimeInMillis()) {
+							if(Calendar.getInstance().getTimeInMillis() + ALARM_TIME_THRESHOLD_MS > busTime.getTimeInMillis()) {
 								// Remove from database, and send a notification
 								notifyForIncomingBus(schedule);
 								db.stopWatchingStop(schedule.getStop());
@@ -121,6 +125,16 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 							}
 						}
 					}
+				} else {
+					// A network error occurred, or something ;-;
+					NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context
+							.NOTIFICATION_SERVICE);
+
+					for(TimeoStop stop : stopsToCheck) {
+						notificationManager.cancel(Integer.valueOf(stop.getId()));
+					}
+
+					notifyNetworkError();
 				}
 
 				if(db.getWatchedStopsCount() == 0) {
@@ -132,7 +146,7 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 	}
 
 	/**
-	 * Sends a notification to the user, informing them that their bus is incoming.
+	 * Sends a notification to the user informing them that their bus is incoming.
 	 *
 	 * @param schedule the schedule to notify about
 	 */
@@ -169,6 +183,11 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 		notificationManager.notify(Integer.valueOf(schedule.getStop().getId()), builder.build());
 	}
 
+	/**
+	 * Sends a notification to the user and keeps it updated with the latest bus schedules.
+	 *
+	 * @param schedule the bus schedule that will be included in the notification
+	 */
 	private void updateStopTimeNotification(TimeoStopSchedule schedule) {
 		NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -201,6 +220,29 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 						.setOngoing(true);
 
 		notificationManager.notify(Integer.valueOf(schedule.getStop().getId()), builder.build());
+	}
+
+	/**
+	 * Updates the schedule notification to the user, informing him that there's something wrong with the network.
+	 */
+	private void notifyNetworkError() {
+		NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+		Intent notificationIntent = new Intent(context, MainActivity.class);
+		PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
+
+		// Make a nice notification to inform the user of an error
+		NotificationCompat.Builder builder =
+				new NotificationCompat.Builder(context)
+						.setSmallIcon(R.drawable.ic_stat_notify_twistoast)
+						.setContentTitle("Erreur réseau")
+						.setContentText("Mise à jour des arrêts indisponible")
+						.setCategory(NotificationCompat.CATEGORY_ERROR)
+						.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+						.setContentIntent(contentIntent)
+						.setAutoCancel(true);
+
+		notificationManager.notify(NOTIFICATION_ID_ERROR, builder.build());
 	}
 
 	@Override
