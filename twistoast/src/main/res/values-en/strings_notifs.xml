@@ -22,5 +22,14 @@
 	<string name="notifs_traffic_title">Twisto traffic alert</string>
 	<string name="notifs_enable_toast">Enabled notifications for %1$s</string>
 	<string name="notifs_disable_toast">Disabled notifications for %1$s</string>
+	<string name="notif_watched_content_text">%1$s to %2$s</string>
+	<string name="notif_watched_content_title">%1$s incoming</string>
+	<string name="notif_watched_line_direction">Direction: %1$s</string>
+	<string name="notif_watched_line_stop">Stop: %1$s</string>
+	<string name="notif_watched_summary_text">Scheduled for %1$s</string>
+	<string name="notif_ongoing_content_title">Stop %1$s - %2$s</string>
+	<string name="notif_ongoing_content_text">Next bus: %1$s</string>
+	<string name="notif_error_content_title">Network Error</string>
+	<string name="notif_error_content_text">Couldn't update the bus schedules</string>
 
 </resources>

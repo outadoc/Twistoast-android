@@ -27,5 +27,9 @@
 	<string name="notif_watched_line_direction">Direction %1$s</string>
 	<string name="notif_watched_line_stop">Arrêt %1$s</string>
 	<string name="notif_watched_summary_text">Prévu pour %1$s</string>
+	<string name="notif_ongoing_content_title">Arrêt %1$s - %2$s</string>
+	<string name="notif_ongoing_content_text">Prochain passage : %1$s</string>
+	<string name="notif_error_content_title">Erreur réseau</string>
+	<string name="notif_error_content_text">Mise à jour des arrêts indisponible</string>
 
 </resources>

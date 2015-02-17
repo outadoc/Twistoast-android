@@ -200,8 +200,8 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 		String lineName = schedule.getStop().getLine().getName();
 
 		NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle()
-				.setSummaryText(lineName + " vers " + direction)
-				.setBigContentTitle("Arrêt " + stop);
+				.setSummaryText(context.getString(R.string.notif_watched_content_text, lineName, direction))
+				.setBigContentTitle(context.getString(R.string.stop_name, stop));
 
 		for(TimeoSingleSchedule singleSchedule : schedule.getSchedules()) {
 			inboxStyle.addLine(singleSchedule.getFormattedTime(context) + " - " + singleSchedule.getDirection());
@@ -211,8 +211,9 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 		NotificationCompat.Builder builder =
 				new NotificationCompat.Builder(context)
 						.setSmallIcon(R.drawable.ic_stat_notify_twistoast)
-						.setContentTitle("Arrêt " + stop + " - " + lineName)
-						.setContentText("Prochain passage : " + schedule.getSchedules().get(0).getFormattedTime(context))
+						.setContentTitle(context.getString(R.string.notif_ongoing_content_title, stop, lineName))
+						.setContentText(context.getString(R.string.notif_ongoing_content_text,
+								schedule.getSchedules().get(0).getFormattedTime(context)))
 						.setStyle(inboxStyle)
 						.setCategory(NotificationCompat.CATEGORY_EVENT)
 						.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
@@ -235,8 +236,8 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 		NotificationCompat.Builder builder =
 				new NotificationCompat.Builder(context)
 						.setSmallIcon(R.drawable.ic_stat_notify_twistoast)
-						.setContentTitle("Erreur réseau")
-						.setContentText("Mise à jour des arrêts indisponible")
+						.setContentTitle(context.getString(R.string.notif_error_content_title))
+						.setContentText(context.getString(R.string.notif_error_content_text))
 						.setCategory(NotificationCompat.CATEGORY_ERROR)
 						.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
 						.setContentIntent(contentIntent)
