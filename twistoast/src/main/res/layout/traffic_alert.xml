@@ -33,7 +33,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:padding="2dp"
-		android:src="@drawable/traffic_cone"
+		android:src="@drawable/ic_traffic_cone"
 		android:tint="@color/traffic_alert_text_primary"
 		android:contentDescription="@string/traffic_info" />
 

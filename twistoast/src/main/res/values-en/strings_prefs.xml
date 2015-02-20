@@ -33,7 +33,7 @@
 	<string name="pref_about_title">About</string>
 	<string name="pref_relative_time_sum">Display timestamps relatively to current time. (e.g. in 3 minutes)</string>
 	<string name="pref_relative_time_title">Relative timestamps</string>
-	<string name="pref_license_sum">Twistoast is available under the terms of the GNU GPL Version 3.\n\n&quot;Traffic icon&quot; is an icon by Daniel Bruce available under the terms of the CC BY-SA 3.0 license.</string>
+	<string name="pref_license_sum">Twistoast is available under the terms of the GNU GPL Version 3.\n\n\"Traffic icon\" is an icon by Daniel Bruce available on www.flaticon.com under the terms of the CC BY-SA 3.0 license.\n\n\"Front of bus\" is an icon by Freepik available on www.flaticon.com under the terms of the CC BY 3.0 license.</string>
 	<string name="pref_license_title">License</string>
 	<string name="pref_links_title">Links</string>
 	<string name="pref_version_title">Version</string>

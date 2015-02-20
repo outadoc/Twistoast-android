@@ -309,7 +309,7 @@ public class MainActivity extends ThemedActivity implements StopsListContainer {
 				getString(R.string.url_drawer_navigation)));
 		list.add(new NavigationDrawerWebItem(R.drawable.ic_map, R.string.drawer_item_map, getString(R.string.url_drawer_map)));
 		list.add(new NavigationDrawerSeparator());
-		list.add(new NavigationDrawerWebItem(R.drawable.traffic_cone, R.string.drawer_item_traffic,
+		list.add(new NavigationDrawerWebItem(R.drawable.ic_traffic_cone, R.string.drawer_item_traffic,
 				getString(R.string.url_drawer_traffic)));
 		list.add(new NavigationDrawerWebItem(R.drawable.ic_books, R.string.drawer_item_news,
 				getString(R.string.url_drawer_news)));

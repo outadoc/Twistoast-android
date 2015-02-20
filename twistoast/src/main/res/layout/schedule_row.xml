@@ -42,7 +42,7 @@
 			android:layout_margin="10dp"
 			android:contentDescription="@string/traffic_info"
 			android:gravity="center_vertical"
-			android:src="@drawable/traffic_cone"
+			android:src="@drawable/ic_traffic_cone"
 			android:textSize="25sp"
 			android:tint="@color/bus_stop_alert_text_primary" />
 

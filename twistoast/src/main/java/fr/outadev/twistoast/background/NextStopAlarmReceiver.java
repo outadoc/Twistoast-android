@@ -165,7 +165,7 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 		// Make a nice notification to inform the user of the bus's imminence
 		NotificationCompat.Builder builder =
 				new NotificationCompat.Builder(context)
-						.setSmallIcon(R.drawable.ic_stat_notify_twistoast)
+						.setSmallIcon(R.drawable.ic_directions_bus_white)
 						.setContentTitle(context.getString(R.string.notif_watched_content_title, lineName))
 						.setContentText(context.getString(R.string.notif_watched_content_text, stop, direction))
 						.setStyle(new NotificationCompat.InboxStyle()
@@ -210,7 +210,7 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 		// Make a nice notification to inform the user of the bus's imminence
 		NotificationCompat.Builder builder =
 				new NotificationCompat.Builder(context)
-						.setSmallIcon(R.drawable.ic_stat_notify_twistoast)
+						.setSmallIcon(R.drawable.ic_directions_bus_white)
 						.setContentTitle(context.getString(R.string.notif_ongoing_content_title, stop, lineName))
 						.setContentText(context.getString(R.string.notif_ongoing_content_text,
 								schedule.getSchedules().get(0).getFormattedTime(context)))
@@ -235,7 +235,7 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 		// Make a nice notification to inform the user of an error
 		NotificationCompat.Builder builder =
 				new NotificationCompat.Builder(context)
-						.setSmallIcon(R.drawable.ic_stat_notify_twistoast)
+						.setSmallIcon(R.drawable.ic_directions_bus_white)
 						.setContentTitle(context.getString(R.string.notif_error_content_title))
 						.setContentText(context.getString(R.string.notif_error_content_text))
 						.setCategory(NotificationCompat.CATEGORY_ERROR)

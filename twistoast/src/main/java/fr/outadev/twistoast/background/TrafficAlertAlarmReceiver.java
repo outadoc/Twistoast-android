@@ -86,7 +86,7 @@ public class TrafficAlertAlarmReceiver extends CommonAlarmReceiver {
 
 						NotificationCompat.Builder mBuilder =
 								new NotificationCompat.Builder(context)
-										.setSmallIcon(R.drawable.ic_stat_notify_twistoast)
+										.setSmallIcon(R.drawable.ic_traffic_cone_white)
 										.setContentTitle(context.getString(R.string.notifs_traffic_title))
 										.setContentText(trafficAlert.getLabel())
 										.setCategory(NotificationCompat.CATEGORY_MESSAGE)
