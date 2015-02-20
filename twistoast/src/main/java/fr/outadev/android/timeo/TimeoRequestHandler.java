@@ -24,11 +24,12 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.util.Xml;
 
-import com.github.kevinsawicki.http.HttpRequest;
-import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
+import com.squareup.okhttp.CacheControl;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
 import org.apache.commons.lang3.StringUtils;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.xmlpull.v1.XmlPullParser;
@@ -51,9 +52,7 @@ public abstract class TimeoRequestHandler {
 	public final static String TAG = "Timeo";
 
 	public final static int DEFAULT_NETWORK_CODE = 147;
-	private final static int REQUEST_TIMEOUT = 10000;
-
-	private final static String API_BASE_URL = "http://timeo3.keolis.com/relais/";
+	public final static String API_BASE_URL = "http://timeo3.keolis.com/relais/";
 
 	/**
 	 * Requests a web page via an HTTP GET request.
@@ -62,16 +61,23 @@ public abstract class TimeoRequestHandler {
 	 * @param params    HTTP GET parameters as a string (e.g. foo=bar&bar=foobar)
 	 * @param useCaches true if the client can cache the request
 	 * @return the raw body of the page
-	 * @throws HttpRequestException if an HTTP error occurred
+	 * @throws IOException if an HTTP error occurred
 	 */
-	private static String requestWebPage(String url, String params, boolean useCaches) throws HttpRequestException {
+	private static String requestWebPage(String url, String params, boolean useCaches) throws IOException {
 		String finalUrl = url + "?" + params;
 		Log.i(TAG, "requesting " + finalUrl);
 
-		return HttpRequest.get(finalUrl)
-				.useCaches(useCaches)
-				.readTimeout(REQUEST_TIMEOUT)
-				.body();
+		OkHttpClient client = new OkHttpClient();
+
+		Request.Builder builder = new Request.Builder()
+				.url(finalUrl);
+
+		if(!useCaches) {
+			builder.cacheControl(CacheControl.FORCE_NETWORK);
+		}
+
+		Response response = client.newCall(builder.build()).execute();
+		return response.body().string();
 	}
 
 	/**
@@ -80,9 +86,9 @@ public abstract class TimeoRequestHandler {
 	 * @param url       URL to fetch
 	 * @param useCaches true if the client can cache the request
 	 * @return the raw body of the page
-	 * @throws HttpRequestException if an HTTP error occurred
+	 * @throws IOException if an HTTP error occurred
 	 */
-	private static String requestWebPage(String url, boolean useCaches) throws HttpRequestException {
+	private static String requestWebPage(String url, boolean useCaches) throws IOException {
 		return requestWebPage(url, "", useCaches);
 	}
 
@@ -95,13 +101,12 @@ public abstract class TimeoRequestHandler {
 	 * Fetch the bus lines from the API.
 	 *
 	 * @return a list of lines
-	 * @throws HttpRequestException   if an HTTP error occurred
 	 * @throws XmlPullParserException if a parsing exception occurred
 	 * @throws IOException            if an I/O exception occurred whilst parsing the XML
 	 * @throws TimeoException         if the API returned an error
 	 */
 	@NonNull
-	public static List<TimeoLine> getLines() throws HttpRequestException, XmlPullParserException, IOException, TimeoException {
+	public static List<TimeoLine> getLines() throws IOException, XmlPullParserException, IOException, TimeoException {
 		return getLines(DEFAULT_NETWORK_CODE);
 	}
 
@@ -110,13 +115,12 @@ public abstract class TimeoRequestHandler {
 	 *
 	 * @param line the line for which we should fetch the stops
 	 * @return a list of bus stops
-	 * @throws HttpRequestException   if an HTTP error occurred
 	 * @throws XmlPullParserException if a parsing exception occurred
 	 * @throws IOException            if an I/O exception occurred whilst parsing the XML
 	 * @throws TimeoException         if the API returned an error
 	 */
 	@NonNull
-	public static List<TimeoStop> getStops(TimeoLine line) throws HttpRequestException, XmlPullParserException, IOException,
+	public static List<TimeoStop> getStops(TimeoLine line) throws IOException, XmlPullParserException, IOException,
 			TimeoException {
 		return getStops(line.getNetworkCode(), line);
 	}
@@ -126,13 +130,12 @@ public abstract class TimeoRequestHandler {
 	 *
 	 * @param stop the bus stop to fetch the schedule for
 	 * @return a TimeoStopSchedule containing said schedule
-	 * @throws HttpRequestException   if an HTTP error occurred
 	 * @throws XmlPullParserException if a parsing exception occurred
 	 * @throws IOException            if an I/O exception occurred whilst parsing the XML
 	 * @throws TimeoException         if the API returned an error
 	 */
 	@NonNull
-	public static TimeoStopSchedule getSingleSchedule(TimeoStop stop) throws HttpRequestException, TimeoException, IOException,
+	public static TimeoStopSchedule getSingleSchedule(TimeoStop stop) throws IOException, TimeoException, IOException,
 			XmlPullParserException {
 		return getSingleSchedule(stop.getLine().getNetworkCode(), stop);
 	}
@@ -142,13 +145,12 @@ public abstract class TimeoRequestHandler {
 	 *
 	 * @param stops a list of bus stops we should fetch the schedules for
 	 * @return a list of TimeoStopSchedule containing said schedules
-	 * @throws HttpRequestException   if an HTTP error occurred
 	 * @throws XmlPullParserException if a parsing exception occurred
 	 * @throws IOException            if an I/O exception occurred whilst parsing the XML
 	 * @throws TimeoException         if the API returned an error
 	 */
 	@NonNull
-	public static List<TimeoStopSchedule> getMultipleSchedules(List<TimeoStop> stops) throws HttpRequestException,
+	public static List<TimeoStopSchedule> getMultipleSchedules(List<TimeoStop> stops) throws IOException,
 			TimeoException, XmlPullParserException, IOException {
 		//if we don't specify any network code when calling getMultipleSchedules, we'll have to figure them out ourselves.
 		//we can only fetch a list of schedules that are all part of the same network.
@@ -192,13 +194,12 @@ public abstract class TimeoRequestHandler {
 	 *
 	 * @param networkCode the code for the city's bus network
 	 * @return a list of lines
-	 * @throws HttpRequestException   if an HTTP error occurred
 	 * @throws XmlPullParserException if a parsing exception occurred
 	 * @throws IOException            if an I/O exception occurred whilst parsing the XML
 	 * @throws TimeoException         if the API returned an error
 	 */
 	@NonNull
-	public static List<TimeoLine> getLines(int networkCode) throws HttpRequestException, XmlPullParserException, IOException,
+	public static List<TimeoLine> getLines(int networkCode) throws IOException, XmlPullParserException, IOException,
 			TimeoException {
 		String params = "xml=1";
 		String result = requestWebPage(API_BASE_URL + getPageNameForNetworkCode(networkCode), params, true);
@@ -283,13 +284,12 @@ public abstract class TimeoRequestHandler {
 	 * @param networkCode the code for the city's bus network
 	 * @param line        the line for which we should fetch the stops
 	 * @return a list of bus stops
-	 * @throws HttpRequestException   if an HTTP error occurred
 	 * @throws XmlPullParserException if a parsing exception occurred
 	 * @throws IOException            if an I/O exception occurred whilst parsing the XML
 	 * @throws TimeoException         if the API returned an error
 	 */
 	@NonNull
-	public static List<TimeoStop> getStops(int networkCode, TimeoLine line) throws HttpRequestException, XmlPullParserException,
+	public static List<TimeoStop> getStops(int networkCode, TimeoLine line) throws IOException, XmlPullParserException,
 			IOException, TimeoException {
 		String params = "xml=1&ligne=" + line.getId() + "&sens=" + line.getDirection().getId();
 		String result = requestWebPage(API_BASE_URL + getPageNameForNetworkCode(networkCode), params, true);
@@ -365,13 +365,12 @@ public abstract class TimeoRequestHandler {
 	 * @param networkCode the code for the city's bus network
 	 * @param stop        the bus stop to fetch the schedule for
 	 * @return a TimeoStopSchedule containing said schedule
-	 * @throws HttpRequestException   if an HTTP error occurred
 	 * @throws XmlPullParserException if a parsing exception occurred
 	 * @throws IOException            if an I/O exception occurred whilst parsing the XML
 	 * @throws TimeoException         if the API returned an error
 	 */
 	@NonNull
-	public static TimeoStopSchedule getSingleSchedule(int networkCode, TimeoStop stop) throws HttpRequestException,
+	public static TimeoStopSchedule getSingleSchedule(int networkCode, TimeoStop stop) throws IOException,
 			TimeoException, IOException, XmlPullParserException {
 		List<TimeoStop> list = new ArrayList<>();
 		list.add(stop);
@@ -390,14 +389,13 @@ public abstract class TimeoRequestHandler {
 	 * @param networkCode the code for the city's bus network
 	 * @param stops       a list of bus stops we should fetch the schedules for
 	 * @return a list of TimeoStopSchedule containing said schedules
-	 * @throws HttpRequestException   if an HTTP error occurred
 	 * @throws XmlPullParserException if a parsing exception occurred
 	 * @throws IOException            if an I/O exception occurred whilst parsing the XML
 	 * @throws TimeoException         if the API returned an error
 	 */
 	@NonNull
 	public static List<TimeoStopSchedule> getMultipleSchedules(int networkCode, List<TimeoStop> stops)
-			throws HttpRequestException, TimeoException, XmlPullParserException, IOException {
+			throws IOException, TimeoException, XmlPullParserException, IOException {
 		//final schedules to return
 		List<TimeoStopSchedule> schedules = new ArrayList<>();
 
@@ -582,10 +580,10 @@ public abstract class TimeoRequestHandler {
 	 */
 	@Nullable
 	public static TimeoTrafficAlert getGlobalTrafficAlert(String preHomeUrl) {
-		String source = requestWebPage(preHomeUrl, true);
+		try {
+			String source = requestWebPage(preHomeUrl, true);
 
-		if(source != null && !source.isEmpty()) {
-			try {
+			if(source != null && !source.isEmpty()) {
 				JSONObject obj = (JSONObject) new JSONTokener(source).nextValue();
 
 				if(obj.has("alerte")) {
@@ -593,10 +591,11 @@ public abstract class TimeoRequestHandler {
 					return new TimeoTrafficAlert(alert.getInt("id_alerte"), alert.getString("libelle_alerte"),
 							alert.getString("url_alerte"));
 				}
-
-			} catch(JSONException | ClassCastException e) {
-				return null;
 			}
+
+		} catch(Exception e) {
+			e.printStackTrace();
+			return null;
 		}
 
 		return null;

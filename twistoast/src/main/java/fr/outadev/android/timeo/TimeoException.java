@@ -37,10 +37,16 @@ public class TimeoException extends Exception {
 	}
 
 	public TimeoException(String errorCode, String message) {
+		this(message);
 		this.errorCode = errorCode;
 	}
 
 	public String getErrorCode() {
 		return errorCode;
+	}
+
+	@Override
+	public String toString() {
+		return "TimeoException: [" + errorCode + "] " + getMessage();
 	}
 }

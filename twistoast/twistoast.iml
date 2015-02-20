@@ -87,6 +87,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="appcompat-v7-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="pebblekit-2.6.0" level="project" />
+    <orderEntry type="library" exported="" name="okhttp-2.2.0" level="project" />
     <orderEntry type="library" exported="" name="support-v4-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="recyclerview-v7-21.0.2" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-21.0.3" level="project" />
@@ -94,7 +95,7 @@
     <orderEntry type="library" exported="" name="floatingactionbutton-1.0.8" level="project" />
     <orderEntry type="library" exported="" name="play-services-6.5.87" level="project" />
     <orderEntry type="library" exported="" name="snackbar-2.3.0" level="project" />
-    <orderEntry type="library" exported="" name="http-request-5.6" level="project" />
+    <orderEntry type="library" exported="" name="okio-1.2.0" level="project" />
     <orderEntry type="module" module-name="colorPicker" exported="" />
   </component>
 </module>
