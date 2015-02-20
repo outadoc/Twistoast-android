@@ -30,6 +30,6 @@
 	<string name="notif_ongoing_content_title">Stop %1$s - %2$s</string>
 	<string name="notif_ongoing_content_text">Next bus: %1$s</string>
 	<string name="notif_error_content_title">Network Error</string>
-	<string name="notif_error_content_text">Couldn't update the bus schedules</string>
+	<string name="notif_error_content_text">Couldn\'t update the bus schedules</string>
 
 </resources>
