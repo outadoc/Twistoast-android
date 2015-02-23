@@ -195,11 +195,10 @@ public abstract class TimeoRequestHandler {
 	 * @param networkCode the code for the city's bus network
 	 * @return a list of lines
 	 * @throws XmlPullParserException if a parsing exception occurred
-	 * @throws IOException            if an I/O exception occurred whilst parsing the XML
 	 * @throws TimeoException         if the API returned an error
 	 */
 	@NonNull
-	public static List<TimeoLine> getLines(int networkCode) throws IOException, XmlPullParserException, IOException,
+	public static List<TimeoLine> getLines(int networkCode) throws XmlPullParserException, IOException,
 			TimeoException {
 		String params = "xml=1";
 		String result = requestWebPage(API_BASE_URL + getPageNameForNetworkCode(networkCode), params, true);
@@ -285,11 +284,10 @@ public abstract class TimeoRequestHandler {
 	 * @param line        the line for which we should fetch the stops
 	 * @return a list of bus stops
 	 * @throws XmlPullParserException if a parsing exception occurred
-	 * @throws IOException            if an I/O exception occurred whilst parsing the XML
 	 * @throws TimeoException         if the API returned an error
 	 */
 	@NonNull
-	public static List<TimeoStop> getStops(int networkCode, TimeoLine line) throws IOException, XmlPullParserException,
+	public static List<TimeoStop> getStops(int networkCode, TimeoLine line) throws XmlPullParserException,
 			IOException, TimeoException {
 		String params = "xml=1&ligne=" + line.getId() + "&sens=" + line.getDirection().getId();
 		String result = requestWebPage(API_BASE_URL + getPageNameForNetworkCode(networkCode), params, true);
@@ -366,11 +364,10 @@ public abstract class TimeoRequestHandler {
 	 * @param stop        the bus stop to fetch the schedule for
 	 * @return a TimeoStopSchedule containing said schedule
 	 * @throws XmlPullParserException if a parsing exception occurred
-	 * @throws IOException            if an I/O exception occurred whilst parsing the XML
 	 * @throws TimeoException         if the API returned an error
 	 */
 	@NonNull
-	public static TimeoStopSchedule getSingleSchedule(int networkCode, TimeoStop stop) throws IOException,
+	public static TimeoStopSchedule getSingleSchedule(int networkCode, TimeoStop stop) throws
 			TimeoException, IOException, XmlPullParserException {
 		List<TimeoStop> list = new ArrayList<>();
 		list.add(stop);
@@ -390,12 +387,11 @@ public abstract class TimeoRequestHandler {
 	 * @param stops       a list of bus stops we should fetch the schedules for
 	 * @return a list of TimeoStopSchedule containing said schedules
 	 * @throws XmlPullParserException if a parsing exception occurred
-	 * @throws IOException            if an I/O exception occurred whilst parsing the XML
 	 * @throws TimeoException         if the API returned an error
 	 */
 	@NonNull
 	public static List<TimeoStopSchedule> getMultipleSchedules(int networkCode, List<TimeoStop> stops)
-			throws IOException, TimeoException, XmlPullParserException, IOException {
+			throws TimeoException, XmlPullParserException, IOException {
 		//final schedules to return
 		List<TimeoStopSchedule> schedules = new ArrayList<>();
 
