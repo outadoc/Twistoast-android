@@ -5,3 +5,5 @@
 
 -dontwarn com.google.common.**
 -dontwarn okio.**
+
+-printmapping build/outputs/mapping/release/mapping.txt
