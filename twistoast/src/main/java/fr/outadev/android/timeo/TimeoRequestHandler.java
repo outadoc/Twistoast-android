@@ -37,6 +37,7 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -413,7 +414,7 @@ public abstract class TimeoRequestHandler {
 		//don't keep the last semicolon
 		refs = refs.substring(0, refs.length() - 1);
 
-		String params = "xml=3&refs=" + refs + "&ran=1";
+		String params = "xml=3&refs=" + URLEncoder.encode(refs, "UTF-8") + "&ran=1";
 		String result = requestWebPage(API_BASE_URL + getPageNameForNetworkCode(networkCode), params, false);
 
 		//create a new parser
