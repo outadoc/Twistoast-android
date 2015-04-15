@@ -20,7 +20,9 @@ package fr.outadev.twistoast;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -282,6 +284,9 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 								if(databaseHandler.getWatchedStopsCount() == 0) {
 									NextStopAlarmReceiver.disable(getActivity().getApplicationContext());
 								}
+
+								NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+								notificationManager.cancel(Integer.valueOf(currentStop.getId()));
 
 								Snackbar.with(getActivity())
 										.text(getString(R.string.notifs_disable_toast, currentStop.getName()))

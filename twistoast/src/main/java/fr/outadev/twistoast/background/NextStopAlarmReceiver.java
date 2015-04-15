@@ -262,7 +262,7 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 
 		AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 		alarmMgr.setInexactRepeating(ALARM_TYPE,
-				SystemClock.elapsedRealtime() + 10000, ALARM_FREQUENCY, getBroadcast(context));
+				SystemClock.elapsedRealtime() + 1000, ALARM_FREQUENCY, getBroadcast(context));
 	}
 
 	/**
