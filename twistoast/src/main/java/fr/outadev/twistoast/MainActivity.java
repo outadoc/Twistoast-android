@@ -59,7 +59,7 @@ import fr.outadev.twistoast.drawer.WebViewFragment;
  *
  * @author outadoc
  */
-public class MainActivity extends ThemedActivity implements StopsListContainer {
+public class MainActivity extends ThemedActivity implements IStopsListContainer {
 
 	private List<NavigationDrawerItem> drawerItems;
 	private DrawerLayout drawerLayout;

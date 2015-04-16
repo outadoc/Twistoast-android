@@ -23,7 +23,7 @@ package fr.outadev.android.timeo;
  *
  * @author outadoc
  */
-public class TimeoLine implements TimeoIDName {
+public class TimeoLine implements ITimeoIDName {
 
 	private TimeoIDNameObject line;
 	private TimeoIDNameObject direction;

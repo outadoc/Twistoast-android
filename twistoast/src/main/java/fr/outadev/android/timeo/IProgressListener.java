@@ -22,7 +22,7 @@ package fr.outadev.android.timeo;
  * Defines a progress listener.
  * Current process and maximum progress will be updated at will.
  */
-public interface ProgressListener {
+public interface IProgressListener {
 
 	/**
 	 * Updates the current progress.

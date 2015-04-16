@@ -21,7 +21,7 @@ package fr.outadev.android.timeo;
 /**
  * Defines an object that possesses a name and an identifier.
  */
-public interface TimeoIDName {
+public interface ITimeoIDName {
 
 	/**
 	 * Gets the identifier of this object.

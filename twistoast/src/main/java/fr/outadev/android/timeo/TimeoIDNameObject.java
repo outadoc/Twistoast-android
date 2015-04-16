@@ -24,7 +24,7 @@ package fr.outadev.android.timeo;
  *
  * @author outadoc
  */
-public class TimeoIDNameObject implements TimeoIDName {
+public class TimeoIDNameObject implements ITimeoIDName {
 
 	private String id;
 	private String name;

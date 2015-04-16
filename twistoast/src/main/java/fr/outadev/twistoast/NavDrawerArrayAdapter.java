@@ -48,10 +48,10 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<NavigationDrawerItem> {
 	private static final int TYPE_SEPARATOR = 2;
 	private static final int TYPE_HEADER = 3;
 
-	private final StopsListContainer container;
+	private final IStopsListContainer container;
 	private int selectedItemIndex;
 
-	public NavDrawerArrayAdapter(Context context, StopsListContainer container, int resource,
+	public NavDrawerArrayAdapter(Context context, IStopsListContainer container, int resource,
 	                             List<NavigationDrawerItem> objects, int selectedItemIndex) {
 		super(context, resource, objects);
 		this.container = container;

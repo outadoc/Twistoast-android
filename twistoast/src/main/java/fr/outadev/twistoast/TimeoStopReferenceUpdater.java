@@ -26,7 +26,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.util.List;
 
-import fr.outadev.android.timeo.ProgressListener;
+import fr.outadev.android.timeo.IProgressListener;
 import fr.outadev.android.timeo.TimeoException;
 import fr.outadev.android.timeo.TimeoLine;
 import fr.outadev.android.timeo.TimeoRequestHandler;
@@ -54,7 +54,7 @@ public class TimeoStopReferenceUpdater {
 	 * @throws IOException
 	 * @throws fr.outadev.android.timeo.TimeoException
 	 */
-	public void updateAllStopReferences(List<TimeoStop> stops, ProgressListener progressListener) throws XmlPullParserException,
+	public void updateAllStopReferences(List<TimeoStop> stops, IProgressListener progressListener) throws XmlPullParserException,
 			IOException,
 			TimeoException {
 		TimeoLine lastLine = null;

@@ -58,7 +58,7 @@ import fr.outadev.android.timeo.TimeoStopSchedule;
  */
 public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 
-	private final StopsListContainer stopsListContainer;
+	private final IStopsListContainer stopsListContainer;
 	private final Activity activity;
 	private final TwistoastDatabase db;
 
@@ -70,7 +70,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 	private int nbOutdatedStops = 0;
 
 	public StopsListArrayAdapter(Activity activity, int resource, List<TimeoStop> stops,
-	                             StopsListContainer stopsListContainer) {
+	                             IStopsListContainer stopsListContainer) {
 		super(activity, resource, stops);
 
 		this.activity = activity;

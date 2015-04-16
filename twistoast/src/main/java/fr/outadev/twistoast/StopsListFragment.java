@@ -50,11 +50,11 @@ import com.nispok.snackbar.listeners.ActionClickListener;
 
 import java.util.List;
 
-import fr.outadev.android.timeo.ProgressListener;
+import fr.outadev.android.timeo.IProgressListener;
 import fr.outadev.android.timeo.TimeoStop;
 import fr.outadev.twistoast.background.NextStopAlarmReceiver;
 
-public class StopsListFragment extends Fragment implements StopsListContainer {
+public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 	//Refresh automatically every 60 seconds.
 	private static final long REFRESH_INTERVAL = 60000L;
@@ -420,7 +420,7 @@ public class StopsListFragment extends Fragment implements StopsListContainer {
 		@Override
 		protected Exception doInBackground(Void... params) {
 			try {
-				referenceUpdater.updateAllStopReferences(stops, new ProgressListener() {
+				referenceUpdater.updateAllStopReferences(stops, new IProgressListener() {
 
 					@Override
 					public void onProgress(int current, int total) {
