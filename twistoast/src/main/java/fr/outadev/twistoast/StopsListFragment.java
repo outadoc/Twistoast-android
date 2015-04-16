@@ -205,93 +205,11 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 						public void onClick(DialogInterface dialog, int which) {
 
 							if(which == 0) {
-								// Remove from the database and the interface
-								databaseHandler.deleteStop(currentStop);
-								listAdapter.remove(currentStop);
-
-								if(currentStop.isWatched()) {
-									databaseHandler.stopWatchingStop(currentStop);
-									currentStop.setWatched(false);
-								}
-
-								if(listAdapter.isEmpty()) {
-									noContentView.setVisibility(View.VISIBLE);
-								}
-
-								listAdapter.notifyDataSetChanged();
-
-								// Workaround for the FAB not reappearing after the stop is deleted
-								// even if that means the scrollview isn't scrollable anymore
-								fab.show(true);
-
-								Snackbar.with(getActivity())
-										.text(R.string.confirm_delete_success)
-										.actionLabel(R.string.cancel_stop_deletion)
-										.actionColor(Colors.getColorAccent(getActivity()))
-										.attachToAbsListView(stopsListView)
-										.actionListener(new ActionClickListener() {
-
-											@Override
-											public void onActionClicked() {
-												Log.i(Utils.TAG, "restoring stop " + currentStop);
-
-												databaseHandler.addStopToDatabase(currentStop);
-												listAdapter.insert(currentStop, position);
-												listAdapter.notifyDataSetChanged();
-											}
-
-										})
-										.show(getActivity());
-
+								deleteStopAction(currentStop, position);
 							} else if(which == 1 && !currentStop.isWatched()) {
-								// We wish to get notifications about this upcoming stop
-								databaseHandler.addToWatchedStops(currentStop);
-								currentStop.setWatched(true);
-								listAdapter.notifyDataSetChanged();
-
-								// Turn the notifications on
-								NextStopAlarmReceiver.enable(getActivity().getApplicationContext());
-
-								Snackbar.with(getActivity())
-										.text(getString(R.string.notifs_enable_toast, currentStop.getName()))
-										.actionLabel(R.string.cancel_stop_deletion)
-										.actionColor(Colors.getColorAccent(getActivity()))
-										.attachToAbsListView(stopsListView)
-										.actionListener(new ActionClickListener() {
-
-											@Override
-											public void onActionClicked() {
-												databaseHandler.stopWatchingStop(currentStop);
-												currentStop.setWatched(false);
-												listAdapter.notifyDataSetChanged();
-
-												// Turn the notifications back off if necessary
-												if(databaseHandler.getWatchedStopsCount() == 0) {
-													NextStopAlarmReceiver.disable(getActivity().getApplicationContext());
-												}
-											}
-
-										})
-										.show(getActivity());
-
+								startWatchingStopAction(currentStop);
 							} else if(which == 1) {
-								// JUST STOP THESE NOTIFICATIONS ALREADY GHGHGHBLBLBL
-								databaseHandler.stopWatchingStop(currentStop);
-								currentStop.setWatched(false);
-								listAdapter.notifyDataSetChanged();
-
-								// Turn the notifications back off if necessary
-								if(databaseHandler.getWatchedStopsCount() == 0) {
-									NextStopAlarmReceiver.disable(getActivity().getApplicationContext());
-								}
-
-								NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-								notificationManager.cancel(Integer.valueOf(currentStop.getId()));
-
-								Snackbar.with(getActivity())
-										.text(getString(R.string.notifs_disable_toast, currentStop.getName()))
-										.attachToAbsListView(stopsListView)
-										.show(getActivity());
+								stopWatchingStopAction(currentStop);
 							}
 						}
 
@@ -334,6 +252,98 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 		});
 	}
 
+	private void deleteStopAction(final TimeoStop stop, final int position) {
+		// Remove from the database and the interface
+		databaseHandler.deleteStop(stop);
+		listAdapter.remove(stop);
+
+		if(stop.isWatched()) {
+			databaseHandler.stopWatchingStop(stop);
+			stop.setWatched(false);
+		}
+
+		if(listAdapter.isEmpty()) {
+			noContentView.setVisibility(View.VISIBLE);
+		}
+
+		listAdapter.notifyDataSetChanged();
+
+		// Workaround for the FAB not reappearing after the stop is deleted
+		// even if that means the scrollview isn't scrollable anymore
+		fab.show(true);
+
+		Snackbar.with(getActivity())
+				.text(R.string.confirm_delete_success)
+				.actionLabel(R.string.cancel_stop_deletion)
+				.actionColor(Colors.getColorAccent(getActivity()))
+				.attachToAbsListView(stopsListView)
+				.actionListener(new ActionClickListener() {
+
+					@Override
+					public void onActionClicked() {
+						Log.i(Utils.TAG, "restoring stop " + stop);
+
+						databaseHandler.addStopToDatabase(stop);
+						listAdapter.insert(stop, position);
+						listAdapter.notifyDataSetChanged();
+					}
+
+				})
+				.show(getActivity());
+	}
+
+	private void startWatchingStopAction(final TimeoStop stop) {
+		// We wish to get notifications about this upcoming stop
+		databaseHandler.addToWatchedStops(stop);
+		stop.setWatched(true);
+		listAdapter.notifyDataSetChanged();
+
+		// Turn the notifications on
+		NextStopAlarmReceiver.enable(getActivity().getApplicationContext());
+
+		Snackbar.with(getActivity())
+				.text(getString(R.string.notifs_enable_toast, stop.getName()))
+				.actionLabel(R.string.cancel_stop_deletion)
+				.actionColor(Colors.getColorAccent(getActivity()))
+				.attachToAbsListView(stopsListView)
+				.actionListener(new ActionClickListener() {
+
+					@Override
+					public void onActionClicked() {
+						databaseHandler.stopWatchingStop(stop);
+						stop.setWatched(false);
+						listAdapter.notifyDataSetChanged();
+
+						// Turn the notifications back off if necessary
+						if(databaseHandler.getWatchedStopsCount() == 0) {
+							NextStopAlarmReceiver.disable(getActivity().getApplicationContext());
+						}
+					}
+
+				})
+				.show(getActivity());
+	}
+
+	private void stopWatchingStopAction(TimeoStop stop) {
+		// JUST STOP THESE NOTIFICATIONS ALREADY GHGHGHBLBLBL
+		databaseHandler.stopWatchingStop(stop);
+		stop.setWatched(false);
+		listAdapter.notifyDataSetChanged();
+
+		// Turn the notifications back off if necessary
+		if(databaseHandler.getWatchedStopsCount() == 0) {
+			NextStopAlarmReceiver.disable(getActivity().getApplicationContext());
+		}
+
+		NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+		notificationManager.cancel(Integer.valueOf(stop.getId()));
+
+		Snackbar.with(getActivity())
+				.text(getString(R.string.notifs_disable_toast, stop.getName()))
+				.attachToAbsListView(stopsListView)
+				.show(getActivity());
+	}
+
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -359,8 +369,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 	 *                           to update the schedules
 	 */
 	public void refreshAllStopSchedules(boolean reloadFromDatabase) {
-		// we don't want to try to refresh if we're already refreshing (causes
-		// bugs)
+		// we don't want to try to refresh if we're already refreshing (causes bugs)
 		if(isRefreshing) {
 			return;
 		} else {
