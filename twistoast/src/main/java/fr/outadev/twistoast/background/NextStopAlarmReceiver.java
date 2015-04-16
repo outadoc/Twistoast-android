@@ -36,6 +36,7 @@ import fr.outadev.android.timeo.TimeoRequestHandler;
 import fr.outadev.android.timeo.TimeoSingleSchedule;
 import fr.outadev.android.timeo.TimeoStop;
 import fr.outadev.android.timeo.TimeoStopSchedule;
+import fr.outadev.twistoast.IWatchedStopDismissalListener;
 import fr.outadev.twistoast.MainActivity;
 import fr.outadev.twistoast.R;
 import fr.outadev.twistoast.TwistoastDatabase;
@@ -48,13 +49,15 @@ import fr.outadev.twistoast.Utils;
  */
 public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 
-	private static final int ALARM_TYPE = AlarmManager.ELAPSED_REALTIME_WAKEUP;
+	// If the bus is coming in less than ALARM_TIME_THRESHOLD_MS milliseconds, send a notification.
+	public static final int ALARM_TIME_THRESHOLD_MS = 90 * 1000;
 	private static final int ALARM_FREQUENCY = 60 * 1000;
+	private static final int ALARM_TYPE = AlarmManager.ELAPSED_REALTIME_WAKEUP;
 
-	public static final int ALARM_TIME_THRESHOLD_MS = 2 * 60 * 1000;
 	private static final int NOTIFICATION_ID_ERROR = 42;
 
 	private Context context;
+	private static IWatchedStopDismissalListener watchedStopDismissalListener = null;
 
 	@Override
 	public void onReceive(final Context context, Intent intent) {
@@ -108,7 +111,9 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 								// one. If that's the case, send the notification anyways; it may already be too late!
 
 								// This is to work around the fact that we actually can't know if a bus has passed already,
-								// we have to make assumptions instead.
+								// we have to make assumptions instead; if a bus is announced for 3 minutes, and then for 10
+								// minutes the next time we check, it most likely has passed.
+
 								if(busTime.getTimeInMillis() - schedule.getStop().getLastETA() > 5 * 60 * 1000) {
 									// Remove from database, and send a notification
 									notifyForIncomingBus(schedule);
@@ -169,8 +174,8 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 						.setContentTitle(context.getString(R.string.notif_watched_content_title, lineName))
 						.setContentText(context.getString(R.string.notif_watched_content_text, stop, direction))
 						.setStyle(new NotificationCompat.InboxStyle()
-								.addLine(context.getString(R.string.notif_watched_line_direction, direction))
 								.addLine(context.getString(R.string.notif_watched_line_stop, stop))
+								.addLine(context.getString(R.string.notif_watched_line_direction, direction))
 								.setSummaryText(context.getString(R.string.notif_watched_summary_text, time)))
 						.setCategory(NotificationCompat.CATEGORY_EVENT)
 						.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
@@ -181,6 +186,11 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 						.setDefaults(getNotificationDefaults(context));
 
 		notificationManager.notify(Integer.valueOf(schedule.getStop().getId()), builder.build());
+
+		// We want the rest of the application to know that this stop is not being watched anymore
+		if(watchedStopDismissalListener != null) {
+			watchedStopDismissalListener.onWatchedStopDismissed(schedule.getStop());
+		}
 	}
 
 	/**
@@ -286,6 +296,10 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 	public static PendingIntent getBroadcast(Context context) {
 		Intent intent = new Intent(context, NextStopAlarmReceiver.class);
 		return PendingIntent.getBroadcast(context, 0, intent, 0);
+	}
+
+	public static void setWatchedStopDismissalListener(IWatchedStopDismissalListener watchedStopDismissalListener) {
+		NextStopAlarmReceiver.watchedStopDismissalListener = watchedStopDismissalListener;
 	}
 
 }

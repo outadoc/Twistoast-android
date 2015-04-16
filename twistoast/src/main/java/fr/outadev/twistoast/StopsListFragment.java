@@ -315,6 +315,23 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 		});
 
+		NextStopAlarmReceiver.setWatchedStopDismissalListener(new IWatchedStopDismissalListener() {
+
+			@Override
+			public void onWatchedStopDismissed(TimeoStop dismissedStop) {
+				if(dismissedStop == null) {
+					return;
+				}
+
+				for(TimeoStop stop : stops) {
+					if(dismissedStop.equals(stop)) {
+						stop.setWatched(false);
+						listAdapter.notifyDataSetChanged();
+					}
+				}
+			}
+
+		});
 	}
 
 	@Override
