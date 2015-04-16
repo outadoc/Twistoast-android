@@ -170,7 +170,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 				if(hasGPS == ConnectionResult.SUCCESS) {
 					AdRequest adRequest = new AdRequest.Builder()
-							.addTestDevice("1176AD77C8CCAB0BE044FA12ACD473B0").build();
+							.addTestDevice(getString(R.string.admob_test_device)).build();
 					adView.loadAd(adRequest);
 				}
 			} else {
