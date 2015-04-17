@@ -21,7 +21,7 @@
 	<style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
 		<item name="colorPrimary">#0171BB</item>
 		<item name="colorPrimaryDark">#015ba4</item>
-		<item name="colorAccent">#00A885</item>
+		<item name="colorAccent">#ff01acff</item>
 	</style>
 
 	<style name="TwistoastActionBar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">

@@ -22,7 +22,7 @@
 	<style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
 		<item name="colorPrimary">#0171BB</item>
 		<item name="colorPrimaryDark">#015ba4</item>
-		<item name="colorAccent">#00A885</item>
+		<item name="colorAccent">#ff01acff</item>
 		<item name="android:navigationBarColor">?attr/colorPrimaryDark</item>
 		<item name="android:statusBarColor">?attr/colorPrimaryDark</item>
 		<item name="android:windowTranslucentStatus">true</item>
