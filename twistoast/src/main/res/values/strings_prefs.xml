@@ -19,11 +19,8 @@
 
 <resources>
 
-	<string name="pref_cat_other">Autres</string>
 	<string name="pref_pebble_dl_title">Télécharger la watchapp Pebble</string>
 	<string name="pref_pebble_dl_sum">Vous pouvez télécharger l\'app Twistoast pour votre montre Pebble depuis le Pebble appstore.</string>
-
-	<string name="pref_screen_about">À propos</string>
 
 	<string name="pref_links_title">Liens</string>
 	<string name="pref_outadev_website_sum">Rendez-vous sur dev.outadoc.fr pour plus d\'applications pratiques !</string>
@@ -32,7 +29,7 @@
 	<string name="pref_twisto_website_title">Site web Twisto</string>
 
 	<string name="pref_legal_title">Mentions légales</string>
-	<string name="pref_legal_sum">Twistoast est une application développée par Baptiste Candellier. &#169; outa[dev] - 2014-2015.\n\nTwisto et le logo Twisto sont des marques déposées de Keolis Caen.\n\nCette application repose sur l\'API Open-Data de Keolis et outa[dev] décline donc toute responsabilité en cas de données erronées.</string>
+	<string name="pref_legal_sum">Twistoast est une application développée par Baptiste Candellier. © outa[dev] – 2014–2015.\n\nTwisto et le logo Twisto sont des marques déposées de Keolis Caen.\n\nCette application repose sur l\'API Open-Data de Keolis et outa[dev] décline donc toute responsabilité en cas de données erronées.</string>
 
 	<string name="pref_license_title">Licence</string>
 	<string name="pref_license_sum">Twistoast est disponible selon les termes de la licence GNU GPL Version 3.\n\n\"Traffic icon\" est une icône créée par Daniel Bruce disponible sur www.flaticon.com selon les termes de la licence CC BY-SA 3.0.\n\n\"Front of bus\" est une icône créée par Freepik disponible sur www.flaticon.com sous les termes de la licence CC BY 3.0.</string>
