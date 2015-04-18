@@ -238,7 +238,7 @@ public class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 			db.execSQL("DROP TABLE twi_stop");
 			db.execSQL("DROP TABLE twi_direction");
 			db.execSQL("DROP TABLE twi_line");
-			db.execSQL("DROP TABLE twi_notifications");
+			db.execSQL("DROP TABLE twi_notification");
 		} catch(Exception ignored) {
 		}
 	}
