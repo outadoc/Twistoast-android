@@ -81,7 +81,7 @@ public class PebbleTimeReceiver extends PebbleKit.PebbleDataReceiver {
 		}
 	}
 
-	private void processGetScheduleRequest(Context context, PebbleDictionary request) {
+	private void processGetScheduleRequest(final Context context, final PebbleDictionary request) {
 		(new AsyncTask<Void, Void, PebbleDictionary>() {
 
 			@Override
