@@ -32,19 +32,24 @@ public class PebbleTimeReceiver extends PebbleKit.PebbleDataReceiver {
 			return;
 		}
 
-		switch(pebbleDictionary.getUnsignedIntegerAsLong(Keys.KEY_MESSAGE_TYPE).intValue()) {
-			case MsgType.MSG_GET_STOPS:
-				processGetStopsRequest(context, pebbleDictionary);
-				break;
-			case MsgType.MSG_WATCH:
-				processWatchRequest(context, pebbleDictionary, true);
-				break;
-			case MsgType.MSG_UNWATCH:
-				processWatchRequest(context, pebbleDictionary, false);
-				break;
-			case MsgType.MSG_GET_SCHEDULE:
-				processGetScheduleRequest(context, pebbleDictionary);
-				break;
+		try {
+			switch(pebbleDictionary.getUnsignedIntegerAsLong(Keys.KEY_MESSAGE_TYPE).intValue()) {
+				case MsgType.MSG_GET_STOPS:
+					processGetStopsRequest(context, pebbleDictionary);
+					break;
+				case MsgType.MSG_WATCH:
+					processWatchRequest(context, pebbleDictionary, true);
+					break;
+				case MsgType.MSG_UNWATCH:
+					processWatchRequest(context, pebbleDictionary, false);
+					break;
+				case MsgType.MSG_GET_SCHEDULE:
+					processGetScheduleRequest(context, pebbleDictionary);
+					break;
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+			sendErrorToWatch(context, (byte) 0x00);
 		}
 	}
 
