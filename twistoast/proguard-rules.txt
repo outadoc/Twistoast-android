@@ -1,7 +1,8 @@
--keep public class TwistoastPebbleReceiver
+-keep public class LegacyPebbleReceiver
+-keep public class PebbleTimeReceiver
 -keep public class NextStopAlarmReceiver
 -keep public class TrafficAlertAlarmReceiver
--keep public class TwistoastBootReceiver
+-keep public class BootReceiver
 
 -dontwarn com.google.common.**
 -dontwarn okio.**
