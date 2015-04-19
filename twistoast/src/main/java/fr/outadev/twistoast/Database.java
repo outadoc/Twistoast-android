@@ -36,11 +36,11 @@ import fr.outadev.android.timeo.TimeoStop;
  *
  * @author outadoc
  */
-public class TwistoastDatabase {
+public class Database {
 
 	private final SQLiteOpenHelper databaseOpenHelper;
 
-	public TwistoastDatabase(SQLiteOpenHelper openHelper) {
+	public Database(SQLiteOpenHelper openHelper) {
 		databaseOpenHelper = openHelper;
 	}
 

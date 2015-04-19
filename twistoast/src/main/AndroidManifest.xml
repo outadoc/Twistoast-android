@@ -53,7 +53,7 @@
 		</activity>
 
 		<receiver
-			android:name=".background.TwistoastLegacyPebbleReceiver"
+			android:name=".background.LegacyPebbleReceiver"
 			android:enabled="true"
 			android:exported="true">
 			<intent-filter>
@@ -61,7 +61,7 @@
 			</intent-filter>
 		</receiver>
 		<receiver
-			android:name=".background.TwistoastBootReceiver"
+			android:name=".background.BootReceiver"
 			android:enabled="true"
 			android:exported="true">
 			<intent-filter>

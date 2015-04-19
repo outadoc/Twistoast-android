@@ -14,15 +14,15 @@ import fr.outadev.android.timeo.TimeoRequestHandler;
 import fr.outadev.android.timeo.TimeoStop;
 import fr.outadev.android.timeo.TimeoStopSchedule;
 import fr.outadev.twistoast.IWatchedStopChangeListener;
-import fr.outadev.twistoast.TwistoastDatabase;
-import fr.outadev.twistoast.TwistoastDatabaseOpenHelper;
+import fr.outadev.twistoast.Database;
+import fr.outadev.twistoast.DatabaseOpenHelper;
 
-public class TwistoastPebbleTimeReceiver extends PebbleKit.PebbleDataReceiver {
+public class PebbleTimeReceiver extends PebbleKit.PebbleDataReceiver {
 
 	public static final UUID appUUID = UUID.fromString("49664da5-f3f9-47fd-87d0-574bb281e864");
 	private static IWatchedStopChangeListener watchedStopStateListener = null;
 
-	protected TwistoastPebbleTimeReceiver() {
+	protected PebbleTimeReceiver() {
 		super(appUUID);
 	}
 
@@ -49,7 +49,7 @@ public class TwistoastPebbleTimeReceiver extends PebbleKit.PebbleDataReceiver {
 	}
 
 	private void processGetStopsRequest(Context context, PebbleDictionary request) {
-		TwistoastDatabase db = new TwistoastDatabase(TwistoastDatabaseOpenHelper.getInstance(context));
+		Database db = new Database(DatabaseOpenHelper.getInstance(context));
 		List<TimeoStop> stops = db.getAllStops();
 
 		for(int i = 0; i < stops.size(); i++) {
@@ -59,7 +59,7 @@ public class TwistoastPebbleTimeReceiver extends PebbleKit.PebbleDataReceiver {
 	}
 
 	private void processWatchRequest(Context context, PebbleDictionary request, boolean watched) {
-		TwistoastDatabase db = new TwistoastDatabase(TwistoastDatabaseOpenHelper.getInstance(context));
+		Database db = new Database(DatabaseOpenHelper.getInstance(context));
 
 		// Get the stop we want to get the schedule of
 		TimeoStop stop = db.getStop(
@@ -135,7 +135,7 @@ public class TwistoastPebbleTimeReceiver extends PebbleKit.PebbleDataReceiver {
 
 	private PebbleDictionary craftWatchStatusPacket(Context context, PebbleDictionary request) {
 		PebbleDictionary response = new PebbleDictionary();
-		TwistoastDatabase db = new TwistoastDatabase(TwistoastDatabaseOpenHelper.getInstance(context));
+		Database db = new Database(DatabaseOpenHelper.getInstance(context));
 
 		// Get the stop we want to get the schedule of
 		TimeoStop stop = db.getStop(
@@ -162,7 +162,7 @@ public class TwistoastPebbleTimeReceiver extends PebbleKit.PebbleDataReceiver {
 
 	private PebbleDictionary craftSchedulePacket(Context context, PebbleDictionary request) throws Exception {
 		PebbleDictionary response = new PebbleDictionary();
-		TwistoastDatabase db = new TwistoastDatabase(TwistoastDatabaseOpenHelper.getInstance(context));
+		Database db = new Database(DatabaseOpenHelper.getInstance(context));
 
 		// Get the stop we want to get the schedule of
 		TimeoStop stop = db.getStop(
@@ -209,7 +209,7 @@ public class TwistoastPebbleTimeReceiver extends PebbleKit.PebbleDataReceiver {
 	}
 
 	public static void setWatchedStopDismissalListener(IWatchedStopChangeListener watchedStopStateListener) {
-		TwistoastPebbleTimeReceiver.watchedStopStateListener = watchedStopStateListener;
+		PebbleTimeReceiver.watchedStopStateListener = watchedStopStateListener;
 	}
 
 	private class MsgType {

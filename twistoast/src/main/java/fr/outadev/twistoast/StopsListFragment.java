@@ -53,7 +53,7 @@ import java.util.List;
 import fr.outadev.android.timeo.IProgressListener;
 import fr.outadev.android.timeo.TimeoStop;
 import fr.outadev.twistoast.background.NextStopAlarmReceiver;
-import fr.outadev.twistoast.background.TwistoastPebbleTimeReceiver;
+import fr.outadev.twistoast.background.PebbleTimeReceiver;
 
 public class StopsListFragment extends Fragment implements IStopsListContainer {
 
@@ -70,7 +70,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 	private List<TimeoStop> stops;
 
-	private TwistoastDatabase databaseHandler;
+	private Database databaseHandler;
 	private StopsListArrayAdapter listAdapter;
 	private boolean autoRefresh;
 
@@ -91,7 +91,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 		// yes hello please, I'd like to be inflated?
 		setHasOptionsMenu(true);
 
-		databaseHandler = new TwistoastDatabase(TwistoastDatabaseOpenHelper.getInstance(getActivity()));
+		databaseHandler = new Database(DatabaseOpenHelper.getInstance(getActivity()));
 
 		periodicRefreshRunnable = new Runnable() {
 			@Override
@@ -253,7 +253,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 		};
 
 		NextStopAlarmReceiver.setWatchedStopDismissalListener(watchedStopStateListener);
-		TwistoastPebbleTimeReceiver.setWatchedStopDismissalListener(watchedStopStateListener);
+		PebbleTimeReceiver.setWatchedStopDismissalListener(watchedStopStateListener);
 	}
 
 	private void deleteStopAction(final TimeoStop stop, final int position) {

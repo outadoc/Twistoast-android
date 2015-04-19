@@ -36,9 +36,9 @@ import fr.outadev.android.timeo.TimeoRequestHandler;
  *
  * @author outadoc
  */
-public class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
+public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
-	private static TwistoastDatabaseOpenHelper instance;
+	private static DatabaseOpenHelper instance;
 	private Context context;
 
 	private static final int DATABASE_VERSION = 3;
@@ -88,14 +88,14 @@ public class TwistoastDatabaseOpenHelper extends SQLiteOpenHelper {
 					"REFERENCES twi_stop(stop_id, line_id, dir_id, network_code))";
 
 
-	private TwistoastDatabaseOpenHelper(Context context) {
+	private DatabaseOpenHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		this.context = context;
 	}
 
-	public static TwistoastDatabaseOpenHelper getInstance(Context context) {
+	public static DatabaseOpenHelper getInstance(Context context) {
 		if(instance == null) {
-			instance = new TwistoastDatabaseOpenHelper(context);
+			instance = new DatabaseOpenHelper(context);
 		}
 
 		return instance;

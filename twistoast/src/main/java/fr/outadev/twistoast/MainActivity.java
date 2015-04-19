@@ -130,7 +130,7 @@ public class MainActivity extends ThemedActivity implements IStopsListContainer 
 		}
 
 		// Turn the notifications back off if necessary
-		TwistoastDatabase db = new TwistoastDatabase(TwistoastDatabaseOpenHelper.getInstance(this));
+		Database db = new Database(DatabaseOpenHelper.getInstance(this));
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		if(db.getWatchedStopsCount() > 0) {
@@ -316,8 +316,8 @@ public class MainActivity extends ThemedActivity implements IStopsListContainer 
 		list.add(new NavigationDrawerWebItem(R.drawable.ic_payment, R.string.drawer_item_pricing,
 				getString(R.string.url_drawer_pricing)));
 		list.add(new NavigationDrawerSeparator());
-		list.add(new NavigationDrawerSecondaryItem(R.string.drawer_item_preferences, TwistoastPreferencesFragment.class));
-		list.add(new NavigationDrawerSecondaryItem(R.string.drawer_item_about, TwistoastAboutFragment.class));
+		list.add(new NavigationDrawerSecondaryItem(R.string.drawer_item_preferences, PreferencesFragment.class));
+		list.add(new NavigationDrawerSecondaryItem(R.string.drawer_item_about, AboutFragment.class));
 
 		return list;
 	}

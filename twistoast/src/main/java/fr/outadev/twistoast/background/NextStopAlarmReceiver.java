@@ -39,8 +39,8 @@ import fr.outadev.android.timeo.TimeoStopSchedule;
 import fr.outadev.twistoast.IWatchedStopChangeListener;
 import fr.outadev.twistoast.MainActivity;
 import fr.outadev.twistoast.R;
-import fr.outadev.twistoast.TwistoastDatabase;
-import fr.outadev.twistoast.TwistoastDatabaseOpenHelper;
+import fr.outadev.twistoast.Database;
+import fr.outadev.twistoast.DatabaseOpenHelper;
 import fr.outadev.twistoast.Utils;
 
 /**
@@ -65,12 +65,12 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 
 		(new AsyncTask<Void, Void, List<TimeoStopSchedule>>() {
 
-			private TwistoastDatabase db;
+			private Database db;
 			private List<TimeoStop> stopsToCheck;
 
 			@Override
 			protected void onPreExecute() {
-				db = new TwistoastDatabase(TwistoastDatabaseOpenHelper.getInstance(context));
+				db = new Database(DatabaseOpenHelper.getInstance(context));
 				Log.d(Utils.TAG, "checking stop schedules for notifications");
 			}
 

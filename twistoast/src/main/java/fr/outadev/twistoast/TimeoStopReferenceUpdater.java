@@ -39,10 +39,10 @@ import fr.outadev.android.timeo.TimeoStop;
  */
 public class TimeoStopReferenceUpdater {
 
-	private TwistoastDatabase db;
+	private Database db;
 
 	public TimeoStopReferenceUpdater(Context context) {
-		this.db = new TwistoastDatabase(TwistoastDatabaseOpenHelper.getInstance(context));
+		this.db = new Database(DatabaseOpenHelper.getInstance(context));
 	}
 
 	/**

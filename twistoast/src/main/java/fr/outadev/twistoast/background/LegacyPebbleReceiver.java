@@ -35,15 +35,15 @@ import fr.outadev.android.timeo.TimeoRequestHandler;
 import fr.outadev.android.timeo.TimeoStop;
 import fr.outadev.android.timeo.TimeoStopSchedule;
 import fr.outadev.twistoast.R;
-import fr.outadev.twistoast.TwistoastDatabase;
-import fr.outadev.twistoast.TwistoastDatabaseOpenHelper;
+import fr.outadev.twistoast.Database;
+import fr.outadev.twistoast.DatabaseOpenHelper;
 
 /**
  * Receives and handles the Twistoast Pebble app requests in the background.
  *
  * @author outadoc
  */
-public class TwistoastLegacyPebbleReceiver extends PebbleDataReceiver {
+public class LegacyPebbleReceiver extends PebbleDataReceiver {
 
 	private static final String TAG = "TwistoastPebbleReceiver";
 	private static final UUID PEBBLE_UUID = UUID.fromString("020f9398-c407-454b-996c-6ac341337281");
@@ -65,7 +65,7 @@ public class TwistoastLegacyPebbleReceiver extends PebbleDataReceiver {
 
 	private static final int KEY_SHOULD_VIBRATE = 0x30;
 
-	public TwistoastLegacyPebbleReceiver() {
+	public LegacyPebbleReceiver() {
 		super(PEBBLE_UUID);
 	}
 
@@ -74,7 +74,7 @@ public class TwistoastLegacyPebbleReceiver extends PebbleDataReceiver {
 		Log.d(TAG, "received a message from pebble " + PEBBLE_UUID);
 
 		// open the database and count the stops
-		TwistoastDatabase databaseHandler = new TwistoastDatabase(TwistoastDatabaseOpenHelper.getInstance(context));
+		Database databaseHandler = new Database(DatabaseOpenHelper.getInstance(context));
 		int stopsCount = databaseHandler.getStopsCount();
 
 		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

@@ -60,7 +60,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 
 	private final IStopsListContainer stopsListContainer;
 	private final Activity activity;
-	private final TwistoastDatabase db;
+	private final Database db;
 
 	private final List<TimeoStop> stops;
 	private final Map<TimeoStop, TimeoStopSchedule> schedules;
@@ -78,7 +78,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 		this.stopsListContainer = stopsListContainer;
 		this.schedules = new HashMap<>();
 		this.networks = TimeoRequestHandler.getNetworksList();
-		this.db = new TwistoastDatabase(TwistoastDatabaseOpenHelper.getInstance(getContext()));
+		this.db = new Database(DatabaseOpenHelper.getInstance(getContext()));
 		this.networkCount = db.getNetworksCount();
 	}
 

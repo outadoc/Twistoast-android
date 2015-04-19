@@ -24,19 +24,19 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import fr.outadev.twistoast.TwistoastDatabase;
-import fr.outadev.twistoast.TwistoastDatabaseOpenHelper;
+import fr.outadev.twistoast.Database;
+import fr.outadev.twistoast.DatabaseOpenHelper;
 
 /**
  * The boot receiver of the application. It enables the notification receivers if needed.
  */
-public class TwistoastBootReceiver extends BroadcastReceiver {
+public class BootReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		if(intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
 			// Turn the notifications back off if necessary
-			TwistoastDatabase db = new TwistoastDatabase(TwistoastDatabaseOpenHelper.getInstance(context));
+			Database db = new Database(DatabaseOpenHelper.getInstance(context));
 			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
 			if(db.getWatchedStopsCount() > 0) {

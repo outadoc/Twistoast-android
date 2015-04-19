@@ -31,7 +31,7 @@ import fr.outadev.twistoast.background.TrafficAlertAlarmReceiver;
  *
  * @author outadoc
  */
-public class TwistoastPreferencesFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
+public class PreferencesFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

@@ -88,7 +88,7 @@ public class AddStopActivity extends ThemedActivity {
 
 	private MenuItem item_next;
 
-	private TwistoastDatabase databaseHandler;
+	private Database databaseHandler;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +109,7 @@ public class AddStopActivity extends ThemedActivity {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		setSupportProgressBarIndeterminateVisibility(false);
 
-		databaseHandler = new TwistoastDatabase(TwistoastDatabaseOpenHelper.getInstance(this));
+		databaseHandler = new Database(DatabaseOpenHelper.getInstance(this));
 
 		// get all the UI elements we'll need in the future
 

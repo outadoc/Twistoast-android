@@ -28,7 +28,7 @@ import android.preference.PreferenceFragment;
  *
  * @author outadoc
  */
-public class TwistoastAboutFragment extends PreferenceFragment {
+public class AboutFragment extends PreferenceFragment {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
