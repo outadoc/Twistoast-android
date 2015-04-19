@@ -53,6 +53,7 @@ import java.util.List;
 import fr.outadev.android.timeo.IProgressListener;
 import fr.outadev.android.timeo.TimeoStop;
 import fr.outadev.twistoast.background.NextStopAlarmReceiver;
+import fr.outadev.twistoast.background.TwistoastPebbleTimeReceiver;
 
 public class StopsListFragment extends Fragment implements IStopsListContainer {
 
@@ -233,23 +234,26 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 		});
 
-		NextStopAlarmReceiver.setWatchedStopDismissalListener(new IWatchedStopDismissalListener() {
+		IWatchedStopChangeListener watchedStopStateListener = new IWatchedStopChangeListener() {
 
 			@Override
-			public void onWatchedStopDismissed(TimeoStop dismissedStop) {
+			public void onStopWatchingStateChanged(TimeoStop dismissedStop, boolean watched) {
 				if(dismissedStop == null) {
 					return;
 				}
 
 				for(TimeoStop stop : stops) {
 					if(dismissedStop.equals(stop)) {
-						stop.setWatched(false);
+						stop.setWatched(watched);
 						listAdapter.notifyDataSetChanged();
 					}
 				}
 			}
 
-		});
+		};
+
+		NextStopAlarmReceiver.setWatchedStopDismissalListener(watchedStopStateListener);
+		TwistoastPebbleTimeReceiver.setWatchedStopDismissalListener(watchedStopStateListener);
 	}
 
 	private void deleteStopAction(final TimeoStop stop, final int position) {

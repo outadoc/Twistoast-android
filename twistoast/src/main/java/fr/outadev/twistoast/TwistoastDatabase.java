@@ -196,6 +196,51 @@ public class TwistoastDatabase {
 	}
 
 	/**
+	 * Gets a bus stop with the corresponding primary key.
+	 *
+	 * @param stopId the ID of the stop to get
+	 * @param lineId the ID of the line of the stop to get
+	 * @param dirId the ID of the direction of the stop to get
+	 * @return the corresponding stop object
+	 */
+	public TimeoStop getStop(String stopId, String lineId, String dirId, int networkCode) {
+		SQLiteDatabase db = databaseOpenHelper.getReadableDatabase();
+		TimeoStop stop = null;
+
+		Cursor results = db.rawQuery(
+				"SELECT * FROM twi_stop " +
+						"JOIN twi_line USING (line_id, network_code) " +
+						"JOIN twi_direction USING (line_id, dir_id, network_code) " +
+						"WHERE stop_id = ? AND line_id = ? AND dir_id = ? AND network_code = ?",
+				new String[]{stopId, lineId, dirId, String.valueOf(networkCode)});
+
+		if(results.moveToFirst()) {
+			TimeoLine line = new TimeoLine(
+					new TimeoIDNameObject(
+							results.getString(results.getColumnIndex("line_id")),
+							results.getString(results.getColumnIndex("line_name"))),
+					new TimeoIDNameObject(
+							results.getString(results.getColumnIndex("dir_id")),
+							results.getString(results.getColumnIndex("dir_name"))),
+					results.getString(results.getColumnIndex("line_color")),
+					results.getInt(results.getColumnIndex("network_code")));
+
+			stop = new TimeoStop(
+					results.getString(results.getColumnIndex("stop_id")),
+					results.getString(results.getColumnIndex("stop_name")),
+					results.getString(results.getColumnIndex("stop_ref")),
+					line,
+					(results.getInt(results.getColumnIndex("notif")) == 1));
+		}
+
+		// close the cursor and the database
+		results.close();
+		db.close();
+
+		return stop;
+	}
+
+	/**
 	 * Gets the number of stops in the database.
 	 *
 	 * @return the number of bus stops

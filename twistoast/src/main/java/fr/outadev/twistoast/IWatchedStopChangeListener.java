@@ -25,8 +25,8 @@ import fr.outadev.android.timeo.TimeoStop;
  * This is used, for example, in the main list, to hide the little "watched" icon when the bus has arrived
  * and the notifications are now effectively turned off.
  */
-public interface IWatchedStopDismissalListener {
+public interface IWatchedStopChangeListener {
 
-	void onWatchedStopDismissed(TimeoStop stop);
+	void onStopWatchingStateChanged(TimeoStop stop, boolean watched);
 
 }

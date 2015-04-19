@@ -43,7 +43,7 @@ import fr.outadev.twistoast.TwistoastDatabaseOpenHelper;
  *
  * @author outadoc
  */
-public class TwistoastPebbleReceiver extends PebbleDataReceiver {
+public class TwistoastLegacyPebbleReceiver extends PebbleDataReceiver {
 
 	private static final String TAG = "TwistoastPebbleReceiver";
 	private static final UUID PEBBLE_UUID = UUID.fromString("020f9398-c407-454b-996c-6ac341337281");
@@ -65,7 +65,7 @@ public class TwistoastPebbleReceiver extends PebbleDataReceiver {
 
 	private static final int KEY_SHOULD_VIBRATE = 0x30;
 
-	public TwistoastPebbleReceiver() {
+	public TwistoastLegacyPebbleReceiver() {
 		super(PEBBLE_UUID);
 	}
 

@@ -36,7 +36,7 @@ import fr.outadev.android.timeo.TimeoRequestHandler;
 import fr.outadev.android.timeo.TimeoSingleSchedule;
 import fr.outadev.android.timeo.TimeoStop;
 import fr.outadev.android.timeo.TimeoStopSchedule;
-import fr.outadev.twistoast.IWatchedStopDismissalListener;
+import fr.outadev.twistoast.IWatchedStopChangeListener;
 import fr.outadev.twistoast.MainActivity;
 import fr.outadev.twistoast.R;
 import fr.outadev.twistoast.TwistoastDatabase;
@@ -57,7 +57,7 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 	private static final int NOTIFICATION_ID_ERROR = 42;
 
 	private Context context;
-	private static IWatchedStopDismissalListener watchedStopDismissalListener = null;
+	private static IWatchedStopChangeListener watchedStopStateListener = null;
 
 	@Override
 	public void onReceive(final Context context, Intent intent) {
@@ -188,8 +188,8 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 		notificationManager.notify(Integer.valueOf(schedule.getStop().getId()), builder.build());
 
 		// We want the rest of the application to know that this stop is not being watched anymore
-		if(watchedStopDismissalListener != null) {
-			watchedStopDismissalListener.onWatchedStopDismissed(schedule.getStop());
+		if(watchedStopStateListener != null) {
+			watchedStopStateListener.onStopWatchingStateChanged(schedule.getStop(), false);
 		}
 	}
 
@@ -298,8 +298,8 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 		return PendingIntent.getBroadcast(context, 0, intent, 0);
 	}
 
-	public static void setWatchedStopDismissalListener(IWatchedStopDismissalListener watchedStopDismissalListener) {
-		NextStopAlarmReceiver.watchedStopDismissalListener = watchedStopDismissalListener;
+	public static void setWatchedStopDismissalListener(IWatchedStopChangeListener watchedStopStateListener) {
+		NextStopAlarmReceiver.watchedStopStateListener = watchedStopStateListener;
 	}
 
 }
