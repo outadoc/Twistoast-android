@@ -84,9 +84,7 @@ public class PreferencesFragment extends PreferenceFragment implements OnSharedP
 	 */
 	private void updateDependentSwitchesState() {
 		boolean enabled = getPreferenceScreen().getSharedPreferences().getBoolean("pref_enable_notif_traffic", true);
-
 		findPreference("pref_notif_traffic_ring").setEnabled(enabled);
-		findPreference("pref_notif_traffic_vibrate").setEnabled(enabled);
 	}
 
 }

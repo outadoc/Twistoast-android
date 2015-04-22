@@ -39,11 +39,6 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.melnykov.fab.FloatingActionButton;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.listeners.ActionClickListener;
@@ -53,7 +48,6 @@ import java.util.List;
 import fr.outadev.android.timeo.IProgressListener;
 import fr.outadev.android.timeo.TimeoStop;
 import fr.outadev.twistoast.background.NextStopAlarmReceiver;
-import fr.outadev.twistoast.background.PebbleTimeReceiver;
 
 public class StopsListFragment extends Fragment implements IStopsListContainer {
 
@@ -146,40 +140,6 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 	@Override
 	public void onStart() {
 		super.onStart();
-
-		if(getView() != null) {
-			final AdView adView = (AdView) getView().findViewById(R.id.adView);
-			adView.setAdListener(new AdListener() {
-
-				@Override
-				public void onAdFailedToLoad(int errorCode) {
-					adView.setVisibility(View.GONE);
-					super.onAdFailedToLoad(errorCode);
-				}
-
-				@Override
-				public void onAdLoaded() {
-					adView.setVisibility(View.VISIBLE);
-					super.onAdLoaded();
-				}
-
-			});
-
-			if(getActivity().getResources().getBoolean(R.bool.enableAds)) {
-				// if we want ads, check for availability and load them
-				int hasGPS = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity());
-
-				if(hasGPS == ConnectionResult.SUCCESS) {
-					AdRequest adRequest = new AdRequest.Builder()
-							.addTestDevice(getString(R.string.admob_test_device)).build();
-					adView.loadAd(adRequest);
-				}
-			} else {
-				// if we don't want ads, remove the view from the layout
-				adView.setVisibility(View.GONE);
-			}
-		}
-
 		refreshAllStopSchedules(true);
 	}
 
@@ -253,7 +213,6 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 		};
 
 		NextStopAlarmReceiver.setWatchedStopDismissalListener(watchedStopStateListener);
-		PebbleTimeReceiver.setWatchedStopDismissalListener(watchedStopStateListener);
 	}
 
 	private void deleteStopAction(final TimeoStop stop, final int position) {

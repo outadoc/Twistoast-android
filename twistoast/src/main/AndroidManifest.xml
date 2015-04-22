@@ -29,9 +29,6 @@
 		android:icon="@drawable/ic_launcher"
 		android:label="@string/app_name"
 		android:theme="@style/AppTheme">
-		<meta-data
-			android:name="com.google.android.gms.version"
-			android:value="@integer/google_play_services_version" />
 
 		<activity
 			android:name=".MainActivity"
@@ -52,14 +49,6 @@
 			android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize">
 		</activity>
 
-		<receiver
-			android:name=".background.LegacyPebbleReceiver"
-			android:enabled="true"
-			android:exported="true">
-			<intent-filter>
-				<action android:name="com.getpebble.action.app.RECEIVE" />
-			</intent-filter>
-		</receiver>
 		<receiver
 			android:name=".background.BootReceiver"
 			android:enabled="true"

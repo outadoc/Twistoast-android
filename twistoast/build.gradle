@@ -26,8 +26,8 @@ android {
         applicationId "fr.outadev.twistoast"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 20
-        versionName "2.4.2"
+        versionCode 21
+        versionName "2.4.3-chromium"
     }
 
     buildTypes {
@@ -40,7 +40,6 @@ android {
 
 dependencies {
     compile project(':colorPicker')
-    compile 'com.google.android.gms:play-services:7.0.0'
     compile 'com.android.support:appcompat-v7:22.0.0'
     compile 'com.android.support:support-v4:22.0.0'
     compile 'com.getpebble:pebblekit:3.0.0'

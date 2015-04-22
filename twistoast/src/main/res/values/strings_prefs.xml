@@ -25,7 +25,7 @@
 	<string name="pref_links_title">Liens</string>
 	<string name="pref_outadev_website_sum">Rendez-vous sur dev.outadoc.fr pour plus d\'applications pratiques !</string>
 	<string name="pref_outadev_website_title">Plus d\'applications</string>
-	<string name="pref_twisto_website_sum">Visitez twisto.mobi, le site mobile du réseau Twisto.</string>
+	<string name="pref_twisto_website_sum">Visitez twisto.fr, le site officiel du réseau Twisto.</string>
 	<string name="pref_twisto_website_title">Site web Twisto</string>
 
 	<string name="pref_legal_title">Mentions légales</string>

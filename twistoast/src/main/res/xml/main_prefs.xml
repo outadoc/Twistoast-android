@@ -33,14 +33,6 @@
 			app:numColumns="5"
 			app:itemLayout="@layout/dash_grid_item_color" />
 
-		<Preference
-			android:summary="@string/pref_pebble_dl_sum"
-			android:title="@string/pref_pebble_dl_title">
-			<intent
-				android:action="android.intent.action.VIEW"
-				android:data="pebble://appstore/53088e81ab1ae2f12900034e" />
-		</Preference>
-
 	</PreferenceCategory>
 	<PreferenceCategory android:title="@string/pref_cat_stops">
 
@@ -71,12 +63,6 @@
 			android:summary="@string/pref_notif_traffic_ring_sum"
 			android:title="@string/pref_ringer_title" />
 
-		<CheckBoxPreference
-			android:defaultValue="true"
-			android:key="pref_notif_traffic_vibrate"
-			android:summary="@string/pref_notif_traffic_vibrate_sum"
-			android:title="@string/pref_vibrate_title" />
-
 	</PreferenceCategory>
 	<PreferenceCategory android:title="@string/pref_cat_notif_watched">
 
@@ -85,12 +71,6 @@
 			android:key="pref_notif_watched_ring"
 			android:summary="@string/pref_notif_watched_ring_sum"
 			android:title="@string/pref_ringer_title" />
-
-		<CheckBoxPreference
-			android:defaultValue="true"
-			android:key="pref_notif_watched_vibrate"
-			android:summary="@string/pref_notif_watched_vibrate_sum"
-			android:title="@string/pref_vibrate_title" />
 
 	</PreferenceCategory>
 </PreferenceScreen>
