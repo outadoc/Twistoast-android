@@ -59,7 +59,7 @@ public class MainActivity extends ThemedActivity implements IStopsListContainer,
 	private NavigationView navigationView;
 
 	private int currentDrawerItem;
-	private HashMap<Integer, Fragment> frags;
+	private HashMap<Integer, Fragment> loadedFragments;
 
 	private TimeoTrafficAlert trafficAlert;
 
@@ -72,11 +72,8 @@ public class MainActivity extends ThemedActivity implements IStopsListContainer,
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setHomeButtonEnabled(true);
-
 		// Drawer config
-		frags = new HashMap<>();
+		loadedFragments = new HashMap<>();
 
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.action_ok, R.string.action_delete) {
@@ -96,8 +93,6 @@ public class MainActivity extends ThemedActivity implements IStopsListContainer,
 
 		navigationView = (NavigationView) findViewById(R.id.drawer_nav_view);
 		navigationView.setNavigationItemSelectedListener(this);
-
-		refreshActionBarTitle();
 
 		// Handle saved variables and check traffic info if needed
 		if(savedInstanceState != null) {
@@ -143,7 +138,7 @@ public class MainActivity extends ThemedActivity implements IStopsListContainer,
 
 	@Override
 	public void onBackPressed() {
-		Fragment frag = frags.get(currentDrawerItem);
+		Fragment frag = loadedFragments.get(currentDrawerItem);
 
 		if(frag instanceof WebViewFragment
 				&& ((WebViewFragment) frag).canGoBack()) {
@@ -183,8 +178,8 @@ public class MainActivity extends ThemedActivity implements IStopsListContainer,
 		currentDrawerItem = itemId;
 		Fragment fragmentToOpen;
 
-		if(frags.containsKey(itemId)) {
-			fragmentToOpen = frags.get(itemId);
+		if(loadedFragments.containsKey(itemId)) {
+			fragmentToOpen = loadedFragments.get(itemId);
 		} else {
 			fragmentToOpen = FragmentFactory.getFragmentFromMenuItem(this, itemId);
 		}
@@ -194,6 +189,7 @@ public class MainActivity extends ThemedActivity implements IStopsListContainer,
 		fragmentManager.beginTransaction().replace(R.id.content_frame, fragmentToOpen).commit();
 
 		// Highlight the selected item, update the title, and close the drawer
+		refreshActionBarTitle();
 		drawerLayout.closeDrawer(GravityCompat.START);
 	}
 
@@ -266,6 +262,7 @@ public class MainActivity extends ThemedActivity implements IStopsListContainer,
 	@Override
 	public boolean onNavigationItemSelected(MenuItem menuItem) {
 		loadFragmentForDrawerItem(menuItem.getItemId());
+		menuItem.setChecked(true);
 		return true;
 	}
 }
