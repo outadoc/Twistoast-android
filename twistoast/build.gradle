@@ -19,15 +19,20 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 22
+    compileSdkVersion 'android-MNC'
     buildToolsVersion "21.1.2"
 
     defaultConfig {
         applicationId "fr.outadev.twistoast"
-        minSdkVersion 15
-        targetSdkVersion "android-M"
+        minSdkVersion 'MNC'
+        targetSdkVersion 'MNC'
         versionCode 20
         versionName "2.4.2"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
     }
 
     buildTypes {
