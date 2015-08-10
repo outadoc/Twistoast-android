@@ -24,6 +24,7 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -38,9 +39,6 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.nispok.snackbar.Snackbar;
-import com.nispok.snackbar.listeners.ActionClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -435,19 +433,16 @@ public class AddStopActivity extends ThemedActivity {
 						message = getString(R.string.loading_error);
 					}
 
-					Snackbar.with(AddStopActivity.this)
-							.text(message)
-							.actionLabel(R.string.error_retry)
-							.actionColor(Colors.getColorAccent(AddStopActivity.this))
-							.actionListener(new ActionClickListener() {
+					Snackbar.make(findViewById(R.id.content), message, Snackbar.LENGTH_LONG)
+							.setAction(R.string.error_retry, new View.OnClickListener() {
 
 								@Override
-								public void onActionClicked() {
+								public void onClick(View view) {
 									getLinesFromAPI();
 								}
 
 							})
-							.show(AddStopActivity.this);
+							.show();
 				}
 			}
 

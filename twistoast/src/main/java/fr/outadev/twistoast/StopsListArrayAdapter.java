@@ -23,6 +23,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -34,9 +35,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.nispok.snackbar.Snackbar;
-import com.nispok.snackbar.listeners.ActionClickListener;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -59,6 +57,7 @@ import fr.outadev.android.timeo.TimeoStopSchedule;
 public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 
 	private final IStopsListContainer stopsListContainer;
+	private final View parentView;
 	private final Activity activity;
 	private final Database db;
 
@@ -70,12 +69,13 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 	private int nbOutdatedStops = 0;
 
 	public StopsListArrayAdapter(Activity activity, int resource, List<TimeoStop> stops,
-	                             IStopsListContainer stopsListContainer) {
+	                             IStopsListContainer stopsListContainer, View parentView) {
 		super(activity, resource, stops);
 
 		this.activity = activity;
 		this.stops = stops;
 		this.stopsListContainer = stopsListContainer;
+		this.parentView = parentView;
 		this.schedules = new HashMap<>();
 		this.networks = TimeoRequestHandler.getNetworksList();
 		this.db = new Database(DatabaseOpenHelper.getInstance(getContext()));
@@ -197,7 +197,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 	}
 
 	/**
-	 * Fetches from the API and reloads the schedules.
+	 * Fetches every stop schedule from the API and reloads everything.
 	 */
 	public void updateScheduleData() {
 		// start refreshing schedules
@@ -206,6 +206,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 			@Override
 			protected Map<TimeoStop, TimeoStopSchedule> doInBackground(Void... params) {
 				try {
+					// Get the schedules and put them in a list
 					List<TimeoStopSchedule> schedulesList = TimeoRequestHandler.getMultipleSchedules(stops);
 					Map<TimeoStop, TimeoStopSchedule> schedulesMap = new HashMap<>();
 
@@ -213,6 +214,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 						schedulesMap.put(schedule.getStop(), schedule);
 					}
 
+					// Check the number of outdated stops we tried to fetch
 					nbOutdatedStops = TimeoRequestHandler.checkForOutdatedStops(stops, schedulesList);
 					return schedulesMap;
 
@@ -234,19 +236,16 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 									message = getContext().getString(R.string.loading_error);
 								}
 
-								Snackbar.with(getContext())
-										.text(message)
-										.actionLabel(R.string.error_retry)
-										.actionColor(Colors.getColorAccent(getContext()))
-										.actionListener(new ActionClickListener() {
+								Snackbar.make(parentView, message, Snackbar.LENGTH_LONG)
+										.setAction(R.string.error_retry, new View.OnClickListener() {
 
 											@Override
-											public void onActionClicked() {
+											public void onClick(View view) {
 												updateScheduleData();
 											}
 
 										})
-										.show(activity);
+										.show();
 							}
 						}
 

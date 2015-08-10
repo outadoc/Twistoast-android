@@ -52,5 +52,4 @@ dependencies {
     compile 'com.getpebble:pebblekit:3.0.0'
     compile 'org.apache.commons:commons-lang3:3.3.2'
     compile 'com.squareup.okhttp:okhttp:2.2.0'
-    compile 'com.nispok:snackbar:2.3.0'
 }
