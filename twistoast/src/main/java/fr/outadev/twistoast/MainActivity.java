@@ -34,8 +34,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -58,11 +56,7 @@ public class MainActivity extends ThemedActivity implements IStopsListContainer,
 
 	private DrawerLayout drawerLayout;
 	private ActionBarDrawerToggle drawerToggle;
-	private Menu drawerMenu;
 	private NavigationView navigationView;
-
-	private CharSequence drawerTitle;
-	private CharSequence actionBarTitle;
 
 	private int currentDrawerItem;
 	private HashMap<Integer, Fragment> frags;
@@ -83,31 +77,26 @@ public class MainActivity extends ThemedActivity implements IStopsListContainer,
 
 		// Drawer config
 		frags = new HashMap<>();
-		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		drawerTitle = getTitle();
 
-		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.action_ok,
-				R.string.action_delete) {
+		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.action_ok, R.string.action_delete) {
 
 			@Override
 			public void onDrawerOpened(View drawerView) {
-				getSupportActionBar().setTitle(drawerTitle);
 				super.onDrawerOpened(drawerView);
 			}
 
 			@Override
 			public void onDrawerClosed(View view) {
-				getSupportActionBar().setTitle(actionBarTitle);
 				super.onDrawerClosed(view);
 			}
 		};
 
-		drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 		drawerLayout.setDrawerListener(drawerToggle);
-		navigationView = (NavigationView) findViewById(R.id.drawer_nav_view);
-		drawerMenu = navigationView.getMenu();
 
+		navigationView = (NavigationView) findViewById(R.id.drawer_nav_view);
 		navigationView.setNavigationItemSelectedListener(this);
+
 		refreshActionBarTitle();
 
 		// Handle saved variables and check traffic info if needed
@@ -163,9 +152,9 @@ public class MainActivity extends ThemedActivity implements IStopsListContainer,
 		} else if(currentDrawerItem == DEFAULT_DRAWER_ITEM) {
 			// If we're on the main screen, just exit
 			super.onBackPressed();
-		} else if(!drawerLayout.isDrawerOpen(Gravity.LEFT)) {
+		} else if(!drawerLayout.isDrawerOpen(GravityCompat.START)) {
 			// If the drawer isn't opened, open it
-			drawerLayout.openDrawer(Gravity.LEFT);
+			drawerLayout.openDrawer(GravityCompat.START);
 		} else {
 			// Otherwise, go back to the main screen
 			loadFragmentForDrawerItem(DEFAULT_DRAWER_ITEM);
@@ -205,13 +194,18 @@ public class MainActivity extends ThemedActivity implements IStopsListContainer,
 		fragmentManager.beginTransaction().replace(R.id.content_frame, fragmentToOpen).commit();
 
 		// Highlight the selected item, update the title, and close the drawer
-		drawerLayout.closeDrawer(Gravity.LEFT);
+		drawerLayout.closeDrawer(GravityCompat.START);
 	}
 
 
 	public void refreshActionBarTitle() {
-		//actionBarTitle = drawerMenu.findItem(currentDrawerItem).getTitle();
-		getSupportActionBar().setTitle(actionBarTitle);
+		MenuItem item = navigationView.getMenu().findItem(currentDrawerItem);
+
+		if(item == null) {
+			return;
+		}
+
+		getSupportActionBar().setTitle(item.getTitle());
 	}
 
 	/**
