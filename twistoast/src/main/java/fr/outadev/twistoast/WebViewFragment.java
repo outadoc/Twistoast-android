@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast.drawer;
+package fr.outadev.twistoast;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
@@ -36,8 +36,6 @@ import android.webkit.WebViewClient;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import fr.outadev.twistoast.R;
 
 /**
  * A fragment that contains a webview and its controls.

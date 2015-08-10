@@ -28,49 +28,44 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 import fr.outadev.android.timeo.TimeoRequestHandler;
 import fr.outadev.android.timeo.TimeoTrafficAlert;
 import fr.outadev.twistoast.background.NextStopAlarmReceiver;
 import fr.outadev.twistoast.background.TrafficAlertAlarmReceiver;
-import fr.outadev.twistoast.drawer.NavigationDrawerFragmentItem;
-import fr.outadev.twistoast.drawer.NavigationDrawerHeader;
-import fr.outadev.twistoast.drawer.NavigationDrawerItem;
-import fr.outadev.twistoast.drawer.NavigationDrawerSecondaryItem;
-import fr.outadev.twistoast.drawer.NavigationDrawerSeparator;
-import fr.outadev.twistoast.drawer.NavigationDrawerWebItem;
-import fr.outadev.twistoast.drawer.WebViewFragment;
 
 /**
  * The main activity of the app.
  *
  * @author outadoc
  */
-public class MainActivity extends ThemedActivity implements IStopsListContainer {
+public class MainActivity extends ThemedActivity implements IStopsListContainer, NavigationView.OnNavigationItemSelectedListener {
 
-	private List<NavigationDrawerItem> drawerItems;
+	public static final int DEFAULT_DRAWER_ITEM = R.id.drawer_realtime;
+
 	private DrawerLayout drawerLayout;
 	private ActionBarDrawerToggle drawerToggle;
-	private ListView drawerList;
+	private Menu drawerMenu;
+	private NavigationView navigationView;
 
 	private CharSequence drawerTitle;
 	private CharSequence actionBarTitle;
 
-	private int currentFragmentIndex;
-	private Fragment[] frags;
+	private int currentDrawerItem;
+	private HashMap<Integer, Fragment> frags;
 
 	private TimeoTrafficAlert trafficAlert;
 
@@ -87,10 +82,8 @@ public class MainActivity extends ThemedActivity implements IStopsListContainer 
 		getSupportActionBar().setHomeButtonEnabled(true);
 
 		// Drawer config
-		drawerItems = getDrawerItems();
-		frags = new Fragment[drawerItems.size()];
+		frags = new HashMap<>();
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		drawerList = (ListView) findViewById(R.id.left_drawer);
 		drawerTitle = getTitle();
 
 		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.action_ok,
@@ -111,21 +104,20 @@ public class MainActivity extends ThemedActivity implements IStopsListContainer 
 
 		drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 		drawerLayout.setDrawerListener(drawerToggle);
-		drawerList.setAdapter(
-				new NavDrawerArrayAdapter(this, this, R.layout.drawer_list_item, drawerItems, currentFragmentIndex));
-		drawerList.setItemChecked(currentFragmentIndex, true);
+		navigationView = (NavigationView) findViewById(R.id.drawer_nav_view);
+		drawerMenu = navigationView.getMenu();
 
+		navigationView.setNavigationItemSelectedListener(this);
 		refreshActionBarTitle();
 
 		// Handle saved variables and check traffic info if needed
 		if(savedInstanceState != null) {
-			currentFragmentIndex = savedInstanceState.getInt("key_current_frag");
+			currentDrawerItem = savedInstanceState.getInt("key_current_drawer_item");
 			trafficAlert = (TimeoTrafficAlert) savedInstanceState.get("key_traffic_alert");
-			checkDrawerItem(currentFragmentIndex);
 			displayGlobalTrafficInfo();
 		} else {
-			currentFragmentIndex = 1;
-			loadFragmentFromDrawerPosition(currentFragmentIndex);
+			currentDrawerItem = DEFAULT_DRAWER_ITEM;
+			loadFragmentForDrawerItem(currentDrawerItem);
 			checkForGlobalTrafficInfo();
 		}
 
@@ -162,32 +154,33 @@ public class MainActivity extends ThemedActivity implements IStopsListContainer 
 
 	@Override
 	public void onBackPressed() {
-		if(frags[currentFragmentIndex] instanceof WebViewFragment
-				&& ((WebViewFragment) frags[currentFragmentIndex]).canGoBack()) {
+		Fragment frag = frags.get(currentDrawerItem);
+
+		if(frag instanceof WebViewFragment
+				&& ((WebViewFragment) frag).canGoBack()) {
 			// If we can move back of a page in the browser, do it
-			((WebViewFragment) frags[currentFragmentIndex]).goBack();
-		} else if(currentFragmentIndex == 1) {
+			((WebViewFragment) frag).goBack();
+		} else if(currentDrawerItem == DEFAULT_DRAWER_ITEM) {
 			// If we're on the main screen, just exit
 			super.onBackPressed();
-		} else if(!drawerLayout.isDrawerOpen(Gravity.START)) {
+		} else if(!drawerLayout.isDrawerOpen(Gravity.LEFT)) {
 			// If the drawer isn't opened, open it
-			drawerLayout.openDrawer(Gravity.START);
+			drawerLayout.openDrawer(Gravity.LEFT);
 		} else {
 			// Otherwise, go back to the main screen
-			loadFragmentFromDrawerPosition(1);
+			loadFragmentForDrawerItem(DEFAULT_DRAWER_ITEM);
 		}
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		return drawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
-
 	}
 
 	@Override
 	protected void onSaveInstanceState(@NonNull Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putInt("key_current_frag", currentFragmentIndex);
+		outState.putInt("key_current_drawer_item", currentDrawerItem);
 		outState.putSerializable("key_traffic_alert", trafficAlert);
 	}
 
@@ -197,44 +190,28 @@ public class MainActivity extends ThemedActivity implements IStopsListContainer 
 	}
 
 	@Override
-	public void loadFragmentFromDrawerPosition(int position) {
-		currentFragmentIndex = position;
+	public void loadFragmentForDrawerItem(int itemId) {
+		currentDrawerItem = itemId;
+		Fragment fragmentToOpen;
 
-		if(!(drawerItems.get(currentFragmentIndex) instanceof NavigationDrawerFragmentItem)) {
-			return;
-		}
-
-		if(frags[currentFragmentIndex] == null && drawerItems != null && drawerItems.size() > currentFragmentIndex) {
-			try {
-				frags[currentFragmentIndex] = ((NavigationDrawerFragmentItem) drawerItems.get(currentFragmentIndex))
-						.getFragment();
-			} catch(IllegalAccessException | InstantiationException e) {
-				e.printStackTrace();
-			}
+		if(frags.containsKey(itemId)) {
+			fragmentToOpen = frags.get(itemId);
+		} else {
+			fragmentToOpen = FragmentFactory.getFragmentFromMenuItem(this, itemId);
 		}
 
 		// Insert the fragment by replacing any existing fragment
 		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.content_frame, frags[currentFragmentIndex]).commit();
+		fragmentManager.beginTransaction().replace(R.id.content_frame, fragmentToOpen).commit();
 
 		// Highlight the selected item, update the title, and close the drawer
-		checkDrawerItem(currentFragmentIndex);
-		drawerLayout.closeDrawer(drawerList);
+		drawerLayout.closeDrawer(Gravity.LEFT);
 	}
 
-	public void checkDrawerItem(int position) {
-		refreshActionBarTitle();
-		drawerList.setItemChecked(position, true);
-		((NavDrawerArrayAdapter) drawerList.getAdapter()).setSelectedItemIndex(position);
-	}
 
 	public void refreshActionBarTitle() {
-		NavigationDrawerItem item = drawerItems.get(currentFragmentIndex);
-
-		if(item.getTitleResId() != -1) {
-			actionBarTitle = getString(item.getTitleResId());
-			getSupportActionBar().setTitle(actionBarTitle);
-		}
+		//actionBarTitle = drawerMenu.findItem(currentDrawerItem).getTitle();
+		getSupportActionBar().setTitle(actionBarTitle);
 	}
 
 	/**
@@ -292,34 +269,9 @@ public class MainActivity extends ThemedActivity implements IStopsListContainer 
 		}
 	}
 
-	/**
-	 * Get the navigation drawer items that must be added to the drawer.
-	 *
-	 * @return a list of NavigationDrawerItems
-	 */
-	private List<NavigationDrawerItem> getDrawerItems() {
-		List<NavigationDrawerItem> list = new ArrayList<>();
-
-		list.add(new NavigationDrawerHeader());
-		list.add(new NavigationDrawerFragmentItem(R.drawable.ic_schedule, R.string.drawer_item_realtime,
-				StopsListFragment.class));
-		list.add(new NavigationDrawerWebItem(R.drawable.ic_directions_bus, R.string.drawer_item_timetables,
-				getString(R.string.url_drawer_directions)));
-		list.add(new NavigationDrawerWebItem(R.drawable.ic_navigation, R.string.drawer_item_routes,
-				getString(R.string.url_drawer_navigation)));
-		list.add(new NavigationDrawerWebItem(R.drawable.ic_map, R.string.drawer_item_map, getString(R.string.url_drawer_map)));
-		list.add(new NavigationDrawerSeparator());
-		list.add(new NavigationDrawerWebItem(R.drawable.ic_traffic_cone, R.string.drawer_item_traffic,
-				getString(R.string.url_drawer_traffic)));
-		list.add(new NavigationDrawerWebItem(R.drawable.ic_books, R.string.drawer_item_news,
-				getString(R.string.url_drawer_news)));
-		list.add(new NavigationDrawerWebItem(R.drawable.ic_payment, R.string.drawer_item_pricing,
-				getString(R.string.url_drawer_pricing)));
-		list.add(new NavigationDrawerSeparator());
-		list.add(new NavigationDrawerSecondaryItem(R.string.drawer_item_preferences, PreferencesFragment.class));
-		list.add(new NavigationDrawerSecondaryItem(R.string.drawer_item_about, AboutFragment.class));
-
-		return list;
+	@Override
+	public boolean onNavigationItemSelected(MenuItem menuItem) {
+		loadFragmentForDrawerItem(menuItem.getItemId());
+		return true;
 	}
-
 }

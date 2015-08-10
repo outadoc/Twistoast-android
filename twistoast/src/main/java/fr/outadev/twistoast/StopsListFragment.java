@@ -418,8 +418,8 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 	}
 
 	@Override
-	public void loadFragmentFromDrawerPosition(int index) {
-		((MainActivity) getActivity()).loadFragmentFromDrawerPosition(index);
+	public void loadFragmentForDrawerItem(int index) {
+		((MainActivity) getActivity()).loadFragmentForDrawerItem(index);
 	}
 
 	private class ReferenceUpdateTask extends AsyncTask<Void, Void, Exception> {

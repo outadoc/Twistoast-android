@@ -23,6 +23,8 @@ import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 
+import fr.outadev.twistoast.WebViewFragment;
+
 /**
  * A navigation drawer item designed to open a web page fragment when selected.
  *

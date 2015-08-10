@@ -176,7 +176,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 
 			@Override
 			public void onClick(View v) {
-				stopsListContainer.loadFragmentFromDrawerPosition(3);
+				stopsListContainer.loadFragmentForDrawerItem(3);
 			}
 
 		});

@@ -33,8 +33,8 @@ public interface IStopsListContainer {
 	/**
 	 * Load the fragment at the specified drawer index.
 	 *
-	 * @param position the index of the element of the drawer we should load
+	 * @param
 	 */
-	public void loadFragmentFromDrawerPosition(int position);
+	public void loadFragmentForDrawerItem(int itemId);
 
 }
