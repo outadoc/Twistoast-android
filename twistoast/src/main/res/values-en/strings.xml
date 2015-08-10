@@ -70,5 +70,7 @@
 	<string name="stop_action_unwatch">Stop notifications for this stop</string>
 	<string name="fab_add_stop_description">Add a stop</string>
 	<string name="error_toast_twisto">Twisto error %1$s. Try again later.</string>
+	<string name="drawer_section_more_twisto_info">Learn more</string>
+	<string name="drawer_section_misc">More</string>
 
 </resources>

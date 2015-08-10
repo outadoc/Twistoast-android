@@ -21,7 +21,7 @@
 	</group>
 	<item
 		android:id="@+id/drawer_group_learn_more"
-		android:title="Learn more">
+		android:title="@string/drawer_section_more_twisto_info">
 		<menu>
 			<item
 				android:id="@+id/drawer_traffic"
@@ -39,7 +39,7 @@
 	</item>
 	<item
 		android:id="@+id/drawer_group_others"
-		android:title="More">
+		android:title="@string/drawer_section_misc">
 		<menu>
 			<item
 				android:id="@+id/drawer_settings"

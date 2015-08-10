@@ -28,13 +28,13 @@ public interface IStopsListContainer {
 	/**
 	 * Called when the list of bus stops is refreshed and the user should be notified.
 	 */
-	public void endRefresh(boolean success);
+	void endRefresh(boolean success);
 
 	/**
 	 * Load the fragment at the specified drawer index.
 	 *
-	 * @param
+	 * @param itemId The identifier of the menu item to load
 	 */
-	public void loadFragmentForDrawerItem(int itemId);
+	void loadFragmentForDrawerItem(int itemId);
 
 }

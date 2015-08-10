@@ -5,10 +5,16 @@ import android.content.Context;
 import android.os.Bundle;
 
 /**
- * Created by outadoc on 10/08/15.
+ * A factory that instantiates fragments for the navigation drawer, using the menu item ID.
  */
 public class FragmentFactory {
 
+	/**
+	 * Gets a new Fragment corresponding to the specified menu item ID.
+	 * @param context A context
+	 * @param itemId The menu item's identifier
+	 * @return A new fragment, or null if no corresponding fragment could be found.
+	 */
 	public static Fragment getFragmentFromMenuItem(Context context, int itemId) {
 		switch(itemId) {
 			case R.id.drawer_realtime:
