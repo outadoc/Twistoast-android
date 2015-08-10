@@ -53,14 +53,6 @@
 		</activity>
 
 		<receiver
-			android:name=".background.LegacyPebbleReceiver"
-			android:enabled="true"
-			android:exported="true">
-			<intent-filter>
-				<action android:name="com.getpebble.action.app.RECEIVE" />
-			</intent-filter>
-		</receiver>
-		<receiver
 			android:name=".background.BootReceiver"
 			android:enabled="true"
 			android:exported="true">
@@ -77,6 +69,15 @@
 			android:name=".background.TrafficAlertAlarmReceiver"
 			android:enabled="true"
 			android:exported="false">
+		</receiver>
+		<receiver
+			android:name=".background.PebbleTimeReceiver"
+			android:enabled="true"
+			android:exported="true">
+			<intent-filter>
+				<action android:name="com.getpebble.action.app.RECEIVE" />
+				<action android:name="com.getpebble.action.app.RECEIVE_ACK" />
+			</intent-filter>
 		</receiver>
 	</application>
 
