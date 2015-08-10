@@ -82,7 +82,6 @@ public class AddStopActivity extends ThemedActivity {
 	private FrameLayout view_line_id;
 	private TextView lbl_stop;
 	private TextView lbl_direction;
-	private TextView lbl_schedule_direction;
 
 	private LinearLayout view_schedule_container;
 
@@ -94,20 +93,14 @@ public class AddStopActivity extends ThemedActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		// we'll want to show a loading spinning wheel, we have to request that feature
-		//TODO: fix this, this is broken when using AppCompat for some reason
-		//supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-
 		// setup everything
 		setContentView(R.layout.activity_add_stop);
-
 		setResult(NO_STOP_ADDED);
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
 		setSupportActionBar(toolbar);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		setSupportProgressBarIndeterminateVisibility(false);
 
 		databaseHandler = new Database(DatabaseOpenHelper.getInstance(this));
 
@@ -260,11 +253,6 @@ public class AddStopActivity extends ThemedActivity {
 					(new AsyncTask<Void, Void, List<TimeoStop>>() {
 
 						@Override
-						protected void onPreExecute() {
-							setSupportProgressBarIndeterminateVisibility(true);
-						}
-
-						@Override
 						protected List<TimeoStop> doInBackground(Void... voids) {
 							try {
 								getCurrentLine().setDirection(getCurrentDirection());
@@ -278,8 +266,6 @@ public class AddStopActivity extends ThemedActivity {
 
 						@Override
 						protected void onPostExecute(List<TimeoStop> timeoStops) {
-							setSupportProgressBarIndeterminateVisibility(false);
-
 							if(timeoStops != null) {
 								spinStop.setEnabled(true);
 
@@ -337,11 +323,6 @@ public class AddStopActivity extends ThemedActivity {
 		(new AsyncTask<Void, Void, TimeoStopSchedule>() {
 
 			@Override
-			protected void onPreExecute() {
-				setSupportProgressBarIndeterminateVisibility(true);
-			}
-
-			@Override
 			protected TimeoStopSchedule doInBackground(Void... voids) {
 				try {
 					return TimeoRequestHandler.getSingleSchedule(getCurrentStop());
@@ -354,9 +335,8 @@ public class AddStopActivity extends ThemedActivity {
 
 			@Override
 			protected void onPostExecute(TimeoStopSchedule schedule) {
-				setSupportProgressBarIndeterminateVisibility(false);
-				LayoutInflater inflater = (LayoutInflater) AddStopActivity.this.getSystemService(Context
-						.LAYOUT_INFLATER_SERVICE);
+				LayoutInflater inflater = (LayoutInflater) AddStopActivity.this
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 				if(schedule != null) {
 					List<TimeoSingleSchedule> schedList = schedule.getSchedules();
@@ -395,11 +375,6 @@ public class AddStopActivity extends ThemedActivity {
 		(new AsyncTask<Void, Void, List<TimeoLine>>() {
 
 			@Override
-			protected void onPreExecute() {
-				setSupportProgressBarIndeterminateVisibility(true);
-			}
-
-			@Override
 			protected List<TimeoLine> doInBackground(Void... voids) {
 				try {
 					return TimeoRequestHandler.getLines();
@@ -412,8 +387,6 @@ public class AddStopActivity extends ThemedActivity {
 
 			@Override
 			protected void onPostExecute(List<TimeoLine> timeoLines) {
-				setSupportProgressBarIndeterminateVisibility(false);
-
 				if(timeoLines != null) {
 					lineList.clear();
 					lineList.addAll(timeoLines);

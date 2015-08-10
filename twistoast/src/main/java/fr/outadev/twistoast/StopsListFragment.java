@@ -30,6 +30,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.Log;
@@ -44,7 +45,6 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.melnykov.fab.FloatingActionButton;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.listeners.ActionClickListener;
 
@@ -133,10 +133,10 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 		fab = (FloatingActionButton) view.findViewById(R.id.fab);
 
-		fab.attachToListView(stopsListView);
+		/*fab.attachToListView(stopsListView);
 		fab.setColorNormal(Colors.getColorAccent(getActivity()));
 		fab.setColorPressedResId(R.color.twisto_secondary);
-		fab.setColorRippleResId(R.color.twisto_secondary);
+		fab.setColorRippleResId(R.color.twisto_secondary);*/
 
 		setupListeners();
 
@@ -274,7 +274,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 		// Workaround for the FAB not reappearing after the stop is deleted
 		// even if that means the scrollview isn't scrollable anymore
-		fab.show(true);
+		//fab.show(true);
 
 		Snackbar.with(getActivity())
 				.text(R.string.confirm_delete_success)
