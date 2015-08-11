@@ -32,9 +32,9 @@ import java.util.UUID;
 
 import fr.outadev.android.timeo.ScheduleTime;
 import fr.outadev.android.timeo.TimeoRequestHandler;
+import fr.outadev.android.timeo.TimeoSingleSchedule;
 import fr.outadev.android.timeo.TimeoStop;
 import fr.outadev.android.timeo.TimeoStopSchedule;
-import fr.outadev.twistoast.R;
 import fr.outadev.twistoast.Database;
 import fr.outadev.twistoast.DatabaseOpenHelper;
 
@@ -61,7 +61,9 @@ public class LegacyPebbleReceiver extends PebbleDataReceiver {
 	private static final int KEY_BUS_DIRECTION_NAME = 0x22;
 	private static final int KEY_BUS_LINE_NAME = 0x23;
 	private static final int KEY_BUS_NEXT_SCHEDULE = 0x24;
-	private static final int KEY_BUS_SECOND_SCHEDULE = 0x25;
+	private static final int KEY_BUS_NEXT_SCHEDULE_DIR = 0x25;
+	private static final int KEY_BUS_SECOND_SCHEDULE = 0x26;
+	private static final int KEY_BUS_SECOND_SCHEDULE_DIR = 0x27;
 
 	private static final int KEY_SHOULD_VIBRATE = 0x30;
 
@@ -80,7 +82,8 @@ public class LegacyPebbleReceiver extends PebbleDataReceiver {
 		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
 		// if we want a schedule and we have buses in the database
-		if(data.getInteger(KEY_TWISTOAST_MESSAGE_TYPE) == BUS_STOP_REQUEST && stopsCount > 0 && cm.getActiveNetworkInfo() != null
+		if(data.getInteger(KEY_TWISTOAST_MESSAGE_TYPE) == BUS_STOP_REQUEST
+				&& stopsCount > 0 && cm.getActiveNetworkInfo() != null
 				&& cm.getActiveNetworkInfo().isConnected()) {
 			Log.d(TAG, "pebble request acknowledged");
 			PebbleKit.sendAckToPebble(context, transactionId);
@@ -139,22 +142,33 @@ public class LegacyPebbleReceiver extends PebbleDataReceiver {
 
 		response.addInt8(KEY_TWISTOAST_MESSAGE_TYPE, BUS_STOP_DATA_RESPONSE);
 		response.addString(KEY_BUS_LINE_NAME, processStringForPebble(schedule.getStop().getLine().getName(), 10));
-		response.addString(KEY_BUS_DIRECTION_NAME, processStringForPebble(schedule.getStop().getLine().getDirection().getName(),
-				15));
+		response.addString(KEY_BUS_DIRECTION_NAME,
+				processStringForPebble(schedule.getStop().getLine().getDirection().getName(), 15));
 		response.addString(KEY_BUS_STOP_NAME, processStringForPebble(schedule.getStop().getName(), 15));
 
+		// Add first schedule time and direction to the buffer
 		if(!schedule.getSchedules().isEmpty()) {
-			response.addString(KEY_BUS_NEXT_SCHEDULE, processStringForPebble(schedule.getSchedules().get(0)
-					.getShortFormattedTime(context), 15));
+			// Time at which the next bus is planned
+			Calendar nextSchedule = ScheduleTime.getNextDateForTime(schedule.getSchedules().get(0).getTime());
+
+			// Convert to milliseconds and add to the buffer
+			response.addInt32(KEY_BUS_NEXT_SCHEDULE, (int) ScheduleTime.getMillisUntilBus(nextSchedule));
+			// Get a short version of the destination if required - e.g. A or B for the tram
+			response.addString(KEY_BUS_NEXT_SCHEDULE_DIR, getOptionalShortDirection(schedule.getSchedules().get(0)));
 		} else {
-			response.addString(KEY_BUS_NEXT_SCHEDULE, context.getResources().getString(R.string.no_upcoming_stops));
+			response.addInt32(KEY_BUS_NEXT_SCHEDULE, -1);
+			response.addString(KEY_BUS_NEXT_SCHEDULE_DIR, "");
 		}
 
+		// Add the second schedule, same process
 		if(schedule.getSchedules().size() > 1) {
-			response.addString(KEY_BUS_SECOND_SCHEDULE, processStringForPebble(schedule.getSchedules().get(1)
-					.getShortFormattedTime(context), 15));
+			Calendar nextSchedule = ScheduleTime.getNextDateForTime(schedule.getSchedules().get(1).getTime());
+
+			response.addInt32(KEY_BUS_SECOND_SCHEDULE, (int) ScheduleTime.getMillisUntilBus(nextSchedule));
+			response.addString(KEY_BUS_SECOND_SCHEDULE_DIR, getOptionalShortDirection(schedule.getSchedules().get(1)));
 		} else {
-			response.addString(KEY_BUS_SECOND_SCHEDULE, "");
+			response.addInt32(KEY_BUS_SECOND_SCHEDULE, -1);
+			response.addString(KEY_BUS_SECOND_SCHEDULE_DIR, "");
 		}
 
 		if(!schedule.getSchedules().isEmpty()) {
@@ -169,6 +183,14 @@ public class LegacyPebbleReceiver extends PebbleDataReceiver {
 
 		Log.d(TAG, "sending back: " + response);
 		PebbleKit.sendDataToPebble(context, PEBBLE_UUID, response);
+	}
+
+	private String getOptionalShortDirection(TimeoSingleSchedule schedule) {
+		if(schedule.getDirection() != null && schedule.getDirection().matches("(A|B) .+")) {
+			return schedule.getDirection().charAt(0) + "";
+		} else {
+			return "";
+		}
 	}
 
 	/**

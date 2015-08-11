@@ -70,7 +70,7 @@ public abstract class ScheduleTime {
 	 * @param schedule the time at which the bus will arrive
 	 * @return the difference between now and then, in milliseconds
 	 */
-	private static long getMillisUntilBus(Calendar schedule) {
+	public static long getMillisUntilBus(Calendar schedule) {
 		Calendar now = getCurrentTime();
 		return schedule.getTimeInMillis() - now.getTimeInMillis();
 	}
