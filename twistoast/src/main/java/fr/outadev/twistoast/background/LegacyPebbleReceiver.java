@@ -19,6 +19,7 @@
 package fr.outadev.twistoast.background;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -66,6 +67,7 @@ public class LegacyPebbleReceiver extends PebbleDataReceiver {
 	private static final int KEY_BUS_SECOND_SCHEDULE_DIR = 0x27;
 
 	private static final int KEY_SHOULD_VIBRATE = 0x30;
+	private static final int KEY_BACKGROUND_COLOR = 0x31;
 
 	public LegacyPebbleReceiver() {
 		super(PEBBLE_UUID);
@@ -180,6 +182,8 @@ public class LegacyPebbleReceiver extends PebbleDataReceiver {
 				response.addInt8(KEY_SHOULD_VIBRATE, (byte) 1);
 			}
 		}
+
+		response.addInt32(KEY_BACKGROUND_COLOR, Color.parseColor(schedule.getStop().getLine().getColor()));
 
 		Log.d(TAG, "sending back: " + response);
 		PebbleKit.sendDataToPebble(context, PEBBLE_UUID, response);
