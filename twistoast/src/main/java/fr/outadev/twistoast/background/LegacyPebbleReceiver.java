@@ -157,7 +157,7 @@ public class LegacyPebbleReceiver extends PebbleDataReceiver {
 			response.addString(KEY_BUS_NEXT_SCHEDULE_DIR, getOptionalShortDirection(schedule.getSchedules().get(0)));
 		} else {
 			response.addInt32(KEY_BUS_NEXT_SCHEDULE, -1);
-			response.addString(KEY_BUS_NEXT_SCHEDULE_DIR, "");
+			response.addString(KEY_BUS_NEXT_SCHEDULE_DIR, " ");
 		}
 
 		// Add the second schedule, same process
@@ -168,7 +168,7 @@ public class LegacyPebbleReceiver extends PebbleDataReceiver {
 			response.addString(KEY_BUS_SECOND_SCHEDULE_DIR, getOptionalShortDirection(schedule.getSchedules().get(1)));
 		} else {
 			response.addInt32(KEY_BUS_SECOND_SCHEDULE, -1);
-			response.addString(KEY_BUS_SECOND_SCHEDULE_DIR, "");
+			response.addString(KEY_BUS_SECOND_SCHEDULE_DIR, " ");
 		}
 
 		if(!schedule.getSchedules().isEmpty()) {
@@ -189,7 +189,7 @@ public class LegacyPebbleReceiver extends PebbleDataReceiver {
 		if(schedule.getDirection() != null && schedule.getDirection().matches("(A|B) .+")) {
 			return schedule.getDirection().charAt(0) + "";
 		} else {
-			return "";
+			return " ";
 		}
 	}
 
