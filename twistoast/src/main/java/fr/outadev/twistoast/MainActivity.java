@@ -191,6 +191,7 @@ public class MainActivity extends ThemedActivity implements IStopsListContainer,
 
 		// Highlight the selected item, update the title, and close the drawer
 		refreshActionBarTitle();
+		navigationView.getMenu().findItem(currentDrawerItem).setChecked(true);
 		drawerLayout.closeDrawer(GravityCompat.START);
 	}
 
@@ -270,7 +271,6 @@ public class MainActivity extends ThemedActivity implements IStopsListContainer,
 	@Override
 	public boolean onNavigationItemSelected(MenuItem menuItem) {
 		loadFragmentForDrawerItem(menuItem.getItemId());
-		menuItem.setChecked(true);
 		return true;
 	}
 }
