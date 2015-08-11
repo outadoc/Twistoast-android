@@ -23,14 +23,14 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 
 import java.util.HashMap;
 
 /**
  * Created by outadoc on 1/2/15.
  */
-public class ThemedActivity extends ActionBarActivity {
+public class ThemedActivity extends AppCompatActivity {
 
 	private static HashMap<Integer, Integer> themes = new HashMap<>();
 
