@@ -34,6 +34,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -254,8 +255,15 @@ public class MainActivity extends ThemedActivity implements IStopsListContainer,
 
 			trafficLabel.setText(trafficAlert.getLabel().replace("Info Trafic", "").trim());
 			trafficView.setVisibility(View.VISIBLE);
+
+			// Set toolbar elevation to 0, since we'll have the traffic alert just right under it
+			getSupportActionBar().setElevation(0);
 		} else if(trafficView != null) {
 			trafficView.setVisibility(View.GONE);
+
+			// Set toolbar elevation to 4 dp, not 4 px
+			float pixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
+			getSupportActionBar().setElevation(pixels);
 		}
 	}
 

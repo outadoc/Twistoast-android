@@ -26,6 +26,6 @@
 	android:layout_alignParentTop="true"
 	android:minHeight="?attr/actionBarSize"
 	android:fitsSystemWindows="true"
-	android:elevation="3dp"
+	android:elevation="4dp"
 	app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
 	app:theme="@style/TwistoastActionBar" />
