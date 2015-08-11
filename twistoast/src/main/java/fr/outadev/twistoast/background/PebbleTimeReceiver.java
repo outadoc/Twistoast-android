@@ -38,7 +38,7 @@ import fr.outadev.twistoast.IWatchedStopChangeListener;
 
 public class PebbleTimeReceiver extends PebbleKit.PebbleDataReceiver {
 
-	public static final UUID appUUID = UUID.fromString("020f9398-c407-454b-996c-6ac341337281");
+	public static final UUID appUUID = UUID.fromString("f3d681a3-1218-48cd-8a5e-66c41f3fe250");
 	private static IWatchedStopChangeListener watchedStopStateListener = null;
 
 	public PebbleTimeReceiver() {
