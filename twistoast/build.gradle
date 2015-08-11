@@ -19,13 +19,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 'android-MNC'
+    compileSdkVersion 22
     buildToolsVersion "21.1.2"
 
     defaultConfig {
         applicationId "fr.outadev.twistoast"
-        minSdkVersion 'MNC'
-        targetSdkVersion 'MNC'
+        minSdkVersion 15
+        targetSdkVersion 22
         versionCode 20
         versionName "2.4.2"
     }
@@ -45,7 +45,7 @@ android {
 
 dependencies {
     compile project(':colorPicker')
-    compile 'com.google.android.gms:play-services:7.5.0'
+    compile 'com.google.android.gms:play-services-ads:7.5.0'
     compile 'com.android.support:design:22.2.1'
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.android.support:support-v4:22.2.1'
