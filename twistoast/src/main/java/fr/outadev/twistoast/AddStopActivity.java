@@ -25,6 +25,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -82,6 +83,7 @@ public class AddStopActivity extends ThemedActivity {
 	private TextView lbl_direction;
 
 	private LinearLayout view_schedule_container;
+	private SwipeRefreshLayout swipeRefreshLayout;
 
 	private MenuItem item_next;
 
@@ -125,6 +127,12 @@ public class AddStopActivity extends ThemedActivity {
 		view_line_id = (FrameLayout) findViewById(R.id.view_line_id);
 
 		view_schedule_container = (LinearLayout) findViewById(R.id.view_schedule_labels_container);
+
+		swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.ptr_layout);
+		swipeRefreshLayout.setColorSchemeResources(
+				R.color.twisto_primary, R.color.twisto_secondary,
+				R.color.twisto_primary, R.color.twisto_secondary);
+		swipeRefreshLayout.setRefreshing(true);
 
 		spinLine.setEnabled(false);
 		spinDirection.setEnabled(false);
@@ -251,6 +259,12 @@ public class AddStopActivity extends ThemedActivity {
 					(new AsyncTask<Void, Void, List<TimeoStop>>() {
 
 						@Override
+						protected void onPreExecute() {
+							swipeRefreshLayout.setEnabled(true);
+							swipeRefreshLayout.setRefreshing(true);
+						}
+
+						@Override
 						protected List<TimeoStop> doInBackground(Void... voids) {
 							try {
 								getCurrentLine().setDirection(getCurrentDirection());
@@ -264,6 +278,9 @@ public class AddStopActivity extends ThemedActivity {
 
 						@Override
 						protected void onPostExecute(List<TimeoStop> timeoStops) {
+							swipeRefreshLayout.setEnabled(false);
+							swipeRefreshLayout.setRefreshing(false);
+
 							if(timeoStops != null) {
 								spinStop.setEnabled(true);
 
@@ -321,6 +338,12 @@ public class AddStopActivity extends ThemedActivity {
 		(new AsyncTask<Void, Void, TimeoStopSchedule>() {
 
 			@Override
+			protected void onPreExecute() {
+				swipeRefreshLayout.setEnabled(true);
+				swipeRefreshLayout.setRefreshing(true);
+			}
+
+			@Override
 			protected TimeoStopSchedule doInBackground(Void... voids) {
 				try {
 					return TimeoRequestHandler.getSingleSchedule(getCurrentStop());
@@ -335,6 +358,9 @@ public class AddStopActivity extends ThemedActivity {
 			protected void onPostExecute(TimeoStopSchedule schedule) {
 				LayoutInflater inflater = (LayoutInflater) AddStopActivity.this
 						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+				swipeRefreshLayout.setEnabled(false);
+				swipeRefreshLayout.setRefreshing(false);
 
 				if(schedule != null) {
 					List<TimeoSingleSchedule> schedList = schedule.getSchedules();
@@ -373,6 +399,12 @@ public class AddStopActivity extends ThemedActivity {
 		(new AsyncTask<Void, Void, List<TimeoLine>>() {
 
 			@Override
+			protected void onPreExecute() {
+				swipeRefreshLayout.setEnabled(true);
+				swipeRefreshLayout.setRefreshing(true);
+			}
+
+			@Override
 			protected List<TimeoLine> doInBackground(Void... voids) {
 				try {
 					return TimeoRequestHandler.getLines();
@@ -385,6 +417,9 @@ public class AddStopActivity extends ThemedActivity {
 
 			@Override
 			protected void onPostExecute(List<TimeoLine> timeoLines) {
+				swipeRefreshLayout.setEnabled(false);
+				swipeRefreshLayout.setRefreshing(false);
+
 				if(timeoLines != null) {
 					lineList.clear();
 					lineList.addAll(timeoLines);
