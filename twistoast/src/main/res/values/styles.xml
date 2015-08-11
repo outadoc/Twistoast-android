@@ -24,8 +24,9 @@
 		<item name="colorAccent">#ff01acff</item>
 	</style>
 
-	<style name="TwistoastActionBar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+	<style name="TwistoastActionBar" parent="ThemeOverlay.AppCompat.ActionBar">
 		<item name="android:background">?attr/colorPrimary</item>
+		<item name="android:textColorPrimary">@android:color/white</item>
 	</style>
 
 	<style name="AppTheme" parent="AppBaseTheme" />

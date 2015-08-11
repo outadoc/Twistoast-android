@@ -46,6 +46,7 @@ android {
 dependencies {
     compile project(':colorPicker')
     compile 'com.google.android.gms:play-services-ads:7.5.0'
+    compile 'com.android.support:cardview-v7:22.2.1'
     compile 'com.android.support:design:22.2.1'
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.android.support:support-v4:22.2.1'

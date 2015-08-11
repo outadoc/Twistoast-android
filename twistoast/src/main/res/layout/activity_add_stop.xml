@@ -48,53 +48,52 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:text="@string/lbl_line"
-				android:textAppearance="?android:attr/textAppearanceMedium"
-				android:textStyle="italic"
+				android:textSize="13sp"
 				android:labelFor="@+id/spin_line" />
 
 			<Spinner
 				android:id="@+id/spin_line"
 				android:layout_width="match_parent"
 				android:layout_height="40dp"
-				android:layout_marginBottom="10dp" />
+				android:layout_marginBottom="20dp"
+				style="@style/Widget.AppCompat.Spinner"/>
 
 			<TextView
 				android:id="@+id/lbl_direction"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:text="@string/lbl_direction"
-				android:textAppearance="?android:attr/textAppearanceMedium"
-				android:textStyle="italic"
+				android:textSize="13sp"
 				android:labelFor="@+id/spin_direction" />
 
 			<Spinner
 				android:id="@+id/spin_direction"
 				android:layout_width="match_parent"
 				android:layout_height="40dp"
-				android:layout_marginBottom="10dp" />
+				android:layout_marginBottom="20dp"
+				style="@style/Widget.AppCompat.Spinner" />
 
 			<TextView
 				android:id="@+id/lbl_stop"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:text="@string/lbl_stop"
-				android:textAppearance="?android:attr/textAppearanceMedium"
-				android:textStyle="italic"
+				android:textSize="13sp"
 				android:labelFor="@+id/spin_stop" />
 
 			<Spinner
 				android:id="@+id/spin_stop"
 				android:layout_width="match_parent"
 				android:layout_height="40dp"
-				android:layout_marginBottom="20dp" />
+				android:layout_marginBottom="20dp"
+				style="@style/Widget.AppCompat.Spinner" />
 
 			<TextView
 				android:id="@+id/lbl_preview"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:text="@string/lbl_preview"
-				android:textAppearance="?android:attr/textAppearanceMedium"
-				android:textStyle="italic"
+				android:textSize="13sp"
 				android:labelFor="@+id/view_preview" />
 
 			<LinearLayout
