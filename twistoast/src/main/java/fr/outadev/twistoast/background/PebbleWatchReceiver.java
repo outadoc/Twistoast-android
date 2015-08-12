@@ -1,5 +1,5 @@
 /*
- * Twistoast - LegacyPebbleReceiver
+ * Twistoast - PebbleWatchReceiver
  * Copyright (C) 2013-2015 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -46,7 +46,7 @@ import fr.outadev.twistoast.DatabaseOpenHelper;
  *
  * @author outadoc
  */
-public class LegacyPebbleReceiver extends PebbleDataReceiver {
+public class PebbleWatchReceiver extends PebbleDataReceiver {
 
 	private static final String TAG = "TwistoastPebbleReceiver";
 	private static final UUID PEBBLE_UUID = UUID.fromString("020f9398-c407-454b-996c-6ac341337281");
@@ -73,7 +73,7 @@ public class LegacyPebbleReceiver extends PebbleDataReceiver {
 
 	private SharedPreferences prefs;
 
-	public LegacyPebbleReceiver() {
+	public PebbleWatchReceiver() {
 		super(PEBBLE_UUID);
 	}
 
