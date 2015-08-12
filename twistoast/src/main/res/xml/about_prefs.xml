@@ -20,13 +20,6 @@
 <PreferenceScreen
 	xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<PreferenceCategory android:title="@string/pref_about_title">
-
-		<Preference
-			android:key="version"
-			android:title="@string/pref_version_title" />
-
-	</PreferenceCategory>
 	<PreferenceCategory android:title="@string/pref_links_title">
 
 		<Preference
@@ -34,7 +27,7 @@
 			android:title="@string/pref_outadev_website_title">
 			<intent
 				android:action="android.intent.action.VIEW"
-				android:data="http://dev.outadoc.fr" />
+				android:data="https://dev.outadoc.fr" />
 		</Preference>
 		<Preference
 			android:summary="@string/pref_twisto_website_sum"
@@ -45,18 +38,40 @@
 		</Preference>
 
 	</PreferenceCategory>
-	<PreferenceCategory android:title="@string/pref_legal_title">
+	<PreferenceCategory android:title="@string/pref_about_title">
+
+		<Preference
+			android:key="version"
+			android:title="@string/pref_version_title" />
 
 		<Preference
 			android:summary="@string/pref_legal_sum"
 			android:title="@string/pref_legal_title" />
+
+	</PreferenceCategory>
+	<PreferenceCategory
+		android:title="@string/pref_cat_oss">
+
 		<Preference
-			android:summary="@string/pref_license_sum"
-			android:title="@string/pref_license_title">
+			android:summary="@string/pref_license_gnu_gpl_sum"
+			android:title="GNU GPL Version 3">
+
 			<intent
 				android:action="android.intent.action.VIEW"
 				android:data="https://github.com/outadoc/Twistoast-android" />
 		</Preference>
+
+		<Preference
+			android:summary="@string/pref_license_ccbysa_sum"
+			android:title="CC BY-SA 3.0" />
+
+		<Preference
+			android:summary="@string/pref_license_ccby_sum"
+			android:title="CC BY 3.0" />
+
+		<Preference
+			android:summary="@string/pref_license_apache_sum"
+			android:title="Apache License 2.0" />
 
 	</PreferenceCategory>
 </PreferenceScreen>
