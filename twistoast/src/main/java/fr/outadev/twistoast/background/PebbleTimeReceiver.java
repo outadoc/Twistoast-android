@@ -1,8 +1,27 @@
+/*
+ * Twistoast - PebbleTimeReceiver
+ * Copyright (C) 2013-2015 Baptiste Candellier
+ *
+ * Twistoast is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Twistoast is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package fr.outadev.twistoast.background;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.util.PebbleDictionary;
@@ -13,24 +32,26 @@ import java.util.UUID;
 import fr.outadev.android.timeo.TimeoRequestHandler;
 import fr.outadev.android.timeo.TimeoStop;
 import fr.outadev.android.timeo.TimeoStopSchedule;
-import fr.outadev.twistoast.IWatchedStopChangeListener;
 import fr.outadev.twistoast.Database;
 import fr.outadev.twistoast.DatabaseOpenHelper;
+import fr.outadev.twistoast.IWatchedStopChangeListener;
 
 public class PebbleTimeReceiver extends PebbleKit.PebbleDataReceiver {
 
-	public static final UUID appUUID = UUID.fromString("49664da5-f3f9-47fd-87d0-574bb281e864");
+	public static final UUID appUUID = UUID.fromString("f3d681a3-1218-48cd-8a5e-66c41f3fe250");
 	private static IWatchedStopChangeListener watchedStopStateListener = null;
 
-	protected PebbleTimeReceiver() {
+	public PebbleTimeReceiver() {
 		super(appUUID);
 	}
 
 	@Override
-	public void receiveData(Context context, int i, PebbleDictionary pebbleDictionary) {
+	public void receiveData(Context context, final int transactionId, PebbleDictionary pebbleDictionary) {
 		if(pebbleDictionary == null) {
 			return;
 		}
+
+		Log.d("Twistoast", pebbleDictionary.toJsonString());
 
 		try {
 			switch(pebbleDictionary.getUnsignedIntegerAsLong(Keys.KEY_MESSAGE_TYPE).intValue()) {
@@ -46,6 +67,9 @@ public class PebbleTimeReceiver extends PebbleKit.PebbleDataReceiver {
 				case MsgType.MSG_GET_SCHEDULE:
 					processGetScheduleRequest(context, pebbleDictionary);
 					break;
+				default:
+					PebbleKit.sendNackToPebble(context, transactionId);
+					return;
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -57,10 +81,33 @@ public class PebbleTimeReceiver extends PebbleKit.PebbleDataReceiver {
 		Database db = new Database(DatabaseOpenHelper.getInstance(context));
 		List<TimeoStop> stops = db.getAllStops();
 
-		for(int i = 0; i < stops.size(); i++) {
-			PebbleDictionary dict = craftStopInfoPacket(context, stops.get(i), i, stops.size());
-			PebbleKit.sendDataToPebble(context, appUUID, dict);
+		sendOneStopInfoPacket(context, stops, 0);
+	}
+
+	private void sendOneStopInfoPacket(Context context, final List<TimeoStop> stops, final int index) {
+		if(index >= stops.size()) {
+			return;
 		}
+
+		PebbleDictionary dict = craftStopInfoPacket(context, stops.get(index), index, stops.size());
+		PebbleKit.sendDataToPebbleWithTransactionId(context, appUUID, dict, index);
+		Log.d("Twistoast", dict.toJsonString());
+
+		PebbleKit.registerReceivedAckHandler(context.getApplicationContext(), new PebbleKit.PebbleAckReceiver(appUUID) {
+
+			private boolean fired = false;
+
+			@Override
+			public void receiveAck(Context context, int i) {
+				if(fired || i != index) {
+					return;
+				}
+
+				fired = true;
+				sendOneStopInfoPacket(context, stops, index + 1);
+			}
+
+		});
 	}
 
 	private void processWatchRequest(Context context, PebbleDictionary request, boolean watched) {
@@ -129,13 +176,17 @@ public class PebbleTimeReceiver extends PebbleKit.PebbleDataReceiver {
 		response.addString(Keys.KEY_LINE_ID, stop.getLine().getId());
 		response.addString(Keys.KEY_DIR_ID, stop.getLine().getDirection().getId());
 		response.addUint16(Keys.KEY_NETWORK_CODE, (short) stop.getLine().getNetworkCode());
-		response.addString(Keys.KEY_STOP_NAME, stop.getName());
-		response.addString(Keys.KEY_LINE_NAME, stop.getLine().getName());
-		response.addString(Keys.KEY_DIR_NAME, stop.getLine().getDirection().getName());
+		response.addString(Keys.KEY_STOP_NAME, crop(stop.getName(), 10));
+		response.addString(Keys.KEY_LINE_NAME, crop(stop.getLine().getName(), 10));
+		response.addString(Keys.KEY_DIR_NAME, crop(stop.getLine().getDirection().getName(), 10));
 		response.addUint32(Keys.KEY_COLOR, Color.parseColor(stop.getLine().getColor()));
 		response.addUint8(Keys.KEY_IS_WATCHED, (byte) (stop.isWatched() ? 1 : 0));
 
 		return response;
+	}
+
+	private String crop(String str, int size) {
+		return str.substring(0, size > str.length() ? str.length() : size);
 	}
 
 	private PebbleDictionary craftWatchStatusPacket(Context context, PebbleDictionary request) {

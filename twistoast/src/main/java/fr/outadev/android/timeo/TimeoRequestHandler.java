@@ -1,13 +1,13 @@
 /*
- * Twistoast - KeolisRequestHandler
- * Copyright (C) 2013-2014  Baptiste Candellier
+ * Twistoast - TimeoRequestHandler
+ * Copyright (C) 2013-2015 Baptiste Candellier
  *
- * This program is free software: you can redistribute it and/or modify
+ * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * Twistoast is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -107,7 +107,7 @@ public abstract class TimeoRequestHandler {
 	 * @throws TimeoException         if the API returned an error
 	 */
 	@NonNull
-	public static List<TimeoLine> getLines() throws IOException, XmlPullParserException, IOException, TimeoException {
+	public static List<TimeoLine> getLines() throws XmlPullParserException, IOException, TimeoException {
 		return getLines(DEFAULT_NETWORK_CODE);
 	}
 
@@ -121,7 +121,7 @@ public abstract class TimeoRequestHandler {
 	 * @throws TimeoException         if the API returned an error
 	 */
 	@NonNull
-	public static List<TimeoStop> getStops(TimeoLine line) throws IOException, XmlPullParserException, IOException,
+	public static List<TimeoStop> getStops(TimeoLine line) throws XmlPullParserException, IOException,
 			TimeoException {
 		return getStops(line.getNetworkCode(), line);
 	}
@@ -136,7 +136,7 @@ public abstract class TimeoRequestHandler {
 	 * @throws TimeoException         if the API returned an error
 	 */
 	@NonNull
-	public static TimeoStopSchedule getSingleSchedule(TimeoStop stop) throws IOException, TimeoException, IOException,
+	public static TimeoStopSchedule getSingleSchedule(TimeoStop stop) throws TimeoException, IOException,
 			XmlPullParserException {
 		return getSingleSchedule(stop.getLine().getNetworkCode(), stop);
 	}
@@ -151,7 +151,7 @@ public abstract class TimeoRequestHandler {
 	 * @throws TimeoException         if the API returned an error
 	 */
 	@NonNull
-	public static List<TimeoStopSchedule> getMultipleSchedules(List<TimeoStop> stops) throws IOException,
+	public static List<TimeoStopSchedule> getMultipleSchedules(List<TimeoStop> stops) throws
 			TimeoException, XmlPullParserException, IOException {
 		//if we don't specify any network code when calling getMultipleSchedules, we'll have to figure them out ourselves.
 		//we can only fetch a list of schedules that are all part of the same network.

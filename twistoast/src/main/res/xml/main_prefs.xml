@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Twistoast - main_prefs.xml
-  ~ Copyright (C) 2013-2014  Baptiste Candellier
+  ~ Copyright (C) 2013-2015 Baptiste Candellier
   ~
-  ~ This program is free software: you can redistribute it and/or modify
+  ~ Twistoast is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
   ~ the Free Software Foundation, either version 3 of the License, or
   ~ (at your option) any later version.
   ~
-  ~ This program is distributed in the hope that it will be useful,
+  ~ Twistoast is distributed in the hope that it will be useful,
   ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
   ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   ~ GNU General Public License for more details.
@@ -24,22 +24,14 @@
 	<PreferenceCategory android:title="@string/prefs_cat_global">
 
 		<it.gmariotti.android.example.colorpicker.calendarstock.ColorPickerPreference
-			android:key="pref_app_theme"
-			android:title="@string/pref_app_theme_title"
-			android:summary="@string/pref_app_theme_sum"
 			android:defaultValue="-16682565"
+			android:key="pref_app_theme"
 			android:negativeButtonText="@null"
 			android:positiveButtonText="@null"
-			app:numColumns="5"
-			app:itemLayout="@layout/dash_grid_item_color" />
-
-		<Preference
-			android:summary="@string/pref_pebble_dl_sum"
-			android:title="@string/pref_pebble_dl_title">
-			<intent
-				android:action="android.intent.action.VIEW"
-				android:data="pebble://appstore/53088e81ab1ae2f12900034e" />
-		</Preference>
+			android:summary="@string/pref_app_theme_sum"
+			android:title="@string/pref_app_theme_title"
+			app:itemLayout="@layout/dash_grid_item_color"
+			app:numColumns="5" />
 
 	</PreferenceCategory>
 	<PreferenceCategory android:title="@string/pref_cat_stops">
@@ -55,6 +47,24 @@
 			android:key="pref_relative_time"
 			android:summary="@string/pref_relative_time_sum"
 			android:title="@string/pref_relative_time_title" />
+
+	</PreferenceCategory>
+	<PreferenceCategory android:title="@string/pref_cat_pebble">
+
+		<Preference
+			android:summary="@string/pref_pebble_dl_sum"
+			android:title="@string/pref_pebble_dl_title">
+			<intent
+				android:action="android.intent.action.VIEW"
+				android:data="pebble://appstore/53088e81ab1ae2f12900034e" />
+		</Preference>
+
+		<CheckBoxPreference
+			android:defaultValue="true"
+			android:key="pref_pebble_use_color"
+			android:summaryOff="@string/pref_pebble_color_sum_off"
+			android:summaryOn="@string/pref_pebble_color_sum_on"
+			android:title="@string/pref_pebble_color_title" />
 
 	</PreferenceCategory>
 	<PreferenceCategory android:title="@string/pref_cat_notif_traffic">

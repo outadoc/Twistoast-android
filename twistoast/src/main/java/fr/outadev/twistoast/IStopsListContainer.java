@@ -1,13 +1,13 @@
 /*
  * Twistoast - IStopsListContainer
- * Copyright (C) 2013-2014  Baptiste Candellier
+ * Copyright (C) 2013-2015 Baptiste Candellier
  *
- * This program is free software: you can redistribute it and/or modify
+ * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * Twistoast is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -28,13 +28,13 @@ public interface IStopsListContainer {
 	/**
 	 * Called when the list of bus stops is refreshed and the user should be notified.
 	 */
-	public void endRefresh(boolean success);
+	void endRefresh(boolean success);
 
 	/**
 	 * Load the fragment at the specified drawer index.
 	 *
-	 * @param position the index of the element of the drawer we should load
+	 * @param itemId The identifier of the menu item to load
 	 */
-	public void loadFragmentFromDrawerPosition(int position);
+	void loadFragmentForDrawerItem(int itemId);
 
 }

@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!--
   ~ Twistoast - AndroidManifest.xml
-  ~ Copyright (C) 2013-2014  Baptiste Candellier
+  ~ Copyright (C) 2013-2015 Baptiste Candellier
   ~
-  ~ This program is free software: you can redistribute it and/or modify
+  ~ Twistoast is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
   ~ the Free Software Foundation, either version 3 of the License, or
   ~ (at your option) any later version.
   ~
-  ~ This program is distributed in the hope that it will be useful,
+  ~ Twistoast is distributed in the hope that it will be useful,
   ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
   ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   ~ GNU General Public License for more details.
   ~
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
--->
+  -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="fr.outadev.twistoast">
 
@@ -53,14 +54,6 @@
 		</activity>
 
 		<receiver
-			android:name=".background.LegacyPebbleReceiver"
-			android:enabled="true"
-			android:exported="true">
-			<intent-filter>
-				<action android:name="com.getpebble.action.app.RECEIVE" />
-			</intent-filter>
-		</receiver>
-		<receiver
 			android:name=".background.BootReceiver"
 			android:enabled="true"
 			android:exported="true">
@@ -77,6 +70,15 @@
 			android:name=".background.TrafficAlertAlarmReceiver"
 			android:enabled="true"
 			android:exported="false">
+		</receiver>
+		<receiver
+			android:name=".background.LegacyPebbleReceiver"
+			android:enabled="true"
+			android:exported="true">
+			<intent-filter>
+				<action android:name="com.getpebble.action.app.RECEIVE" />
+				<action android:name="com.getpebble.action.app.RECEIVE_ACK" />
+			</intent-filter>
 		</receiver>
 	</application>
 

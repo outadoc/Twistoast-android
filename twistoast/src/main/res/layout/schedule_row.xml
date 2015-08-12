@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Twistoast - schedule_row.xml
-  ~ Copyright (C) 2013-2014  Baptiste Candellier
+  ~ Copyright (C) 2013-2015 Baptiste Candellier
   ~
-  ~ This program is free software: you can redistribute it and/or modify
+  ~ Twistoast is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
   ~ the Free Software Foundation, either version 3 of the License, or
   ~ (at your option) any later version.
   ~
-  ~ This program is distributed in the hope that it will be useful,
+  ~ Twistoast is distributed in the hope that it will be useful,
   ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
   ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   ~ GNU General Public License for more details.
@@ -22,61 +22,19 @@
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:layout_gravity="center"
-	android:background="@color/main_background_color"
 	android:orientation="vertical"
 	android:paddingLeft="10dp"
 	android:paddingRight="10dp"
-	android:paddingTop="5dp">
-
-	<LinearLayout
-		android:id="@+id/view_traffic_message"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:background="@color/bus_stop_alert_background"
-		android:orientation="horizontal"
-		android:visibility="gone">
-
-		<ImageView
-			android:layout_width="25dp"
-			android:layout_height="25dp"
-			android:layout_margin="10dp"
-			android:contentDescription="@string/traffic_info"
-			android:gravity="center_vertical"
-			android:src="@drawable/ic_traffic_cone"
-			android:textSize="25sp"
-			android:tint="@color/bus_stop_alert_text_primary" />
-
-		<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:orientation="vertical"
-			android:padding="3dp">
-
-			<TextView
-				android:id="@+id/lbl_message_title"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:textColor="@color/bus_stop_alert_text_primary"
-				android:textSize="17sp" />
-
-			<TextView
-				android:id="@+id/lbl_message_body"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_margin="2dp"
-				android:textColor="@color/bus_stop_alert_text_secondary"
-				android:textStyle="italic" />
-		</LinearLayout>
-	</LinearLayout>
+	android:paddingTop="5dp"
+	android:longClickable="true"
+	android:background="?android:attr/selectableItemBackground">
 
 	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:orientation="horizontal"
 		android:paddingTop="7dp"
-		android:paddingBottom="7dp"
-		android:longClickable="true"
-		android:background="?android:attr/selectableItemBackground">
+		android:paddingBottom="7dp">
 
 		<FrameLayout
 			android:id="@+id/view_line_id"

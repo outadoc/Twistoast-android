@@ -1,13 +1,13 @@
 /*
  * Twistoast - StopsListArrayAdapter
- * Copyright (C) 2013-2014  Baptiste Candellier
+ * Copyright (C) 2013-2015 Baptiste Candellier
  *
- * This program is free software: you can redistribute it and/or modify
+ * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * Twistoast is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -23,20 +23,18 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.nispok.snackbar.Snackbar;
-import com.nispok.snackbar.listeners.ActionClickListener;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -59,6 +57,7 @@ import fr.outadev.android.timeo.TimeoStopSchedule;
 public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 
 	private final IStopsListContainer stopsListContainer;
+	private final View parentView;
 	private final Activity activity;
 	private final Database db;
 
@@ -70,12 +69,13 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 	private int nbOutdatedStops = 0;
 
 	public StopsListArrayAdapter(Activity activity, int resource, List<TimeoStop> stops,
-	                             IStopsListContainer stopsListContainer) {
+	                             IStopsListContainer stopsListContainer, View parentView) {
 		super(activity, resource, stops);
 
 		this.activity = activity;
 		this.stops = stops;
 		this.stopsListContainer = stopsListContainer;
+		this.parentView = parentView;
 		this.schedules = new HashMap<>();
 		this.networks = TimeoRequestHandler.getNetworksList();
 		this.db = new Database(DatabaseOpenHelper.getInstance(getContext()));
@@ -99,10 +99,8 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 		TextView lbl_direction = (TextView) containerView.findViewById(R.id.lbl_direction_name);
 
 		LinearLayout view_schedule_container = (LinearLayout) containerView.findViewById(R.id.view_schedule_labels_container);
-		LinearLayout view_traffic_message = (LinearLayout) containerView.findViewById(R.id.view_traffic_message);
 
 		ImageView img_stop_watched = (ImageView) containerView.findViewById(R.id.img_stop_watched);
-
 
 		// Set line drawable. We have to set the colour on the background
 		GradientDrawable lineDrawable = (GradientDrawable) view_line_id.getBackground();
@@ -155,7 +153,13 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 					view_schedule_container.addView(getEmptyScheduleLabel(inflater));
 				}
 
-				containerView.setAlpha(1.0F);
+				if(containerView.getAlpha() != 1.0F) {
+					containerView.setAlpha(1.0F);
+
+					AlphaAnimation alphaAnim = new AlphaAnimation(0.4F, 1.0f);
+					alphaAnim.setDuration(500);
+					containerView.startAnimation(alphaAnim);
+				}
 			}
 
 		} else {
@@ -170,16 +174,6 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 		}
 
 		img_stop_watched.setVisibility((currentStop.isWatched()) ? View.VISIBLE : View.GONE);
-
-		// Load the traffic view if we want to see it
-		view_traffic_message.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				stopsListContainer.loadFragmentFromDrawerPosition(3);
-			}
-
-		});
 
 		return containerView;
 	}
@@ -197,7 +191,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 	}
 
 	/**
-	 * Fetches from the API and reloads the schedules.
+	 * Fetches every stop schedule from the API and reloads everything.
 	 */
 	public void updateScheduleData() {
 		// start refreshing schedules
@@ -206,6 +200,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 			@Override
 			protected Map<TimeoStop, TimeoStopSchedule> doInBackground(Void... params) {
 				try {
+					// Get the schedules and put them in a list
 					List<TimeoStopSchedule> schedulesList = TimeoRequestHandler.getMultipleSchedules(stops);
 					Map<TimeoStop, TimeoStopSchedule> schedulesMap = new HashMap<>();
 
@@ -213,6 +208,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 						schedulesMap.put(schedule.getStop(), schedule);
 					}
 
+					// Check the number of outdated stops we tried to fetch
 					nbOutdatedStops = TimeoRequestHandler.checkForOutdatedStops(stops, schedulesList);
 					return schedulesMap;
 
@@ -228,25 +224,22 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 								String message;
 
 								if(e instanceof TimeoException) {
-									message = getContext().getString(R.string.error_toast_twisto, ((TimeoException) e)
-											.getErrorCode());
+									message = getContext().getString(R.string.error_toast_twisto,
+											((TimeoException) e).getErrorCode(), e.getMessage());
 								} else {
 									message = getContext().getString(R.string.loading_error);
 								}
 
-								Snackbar.with(getContext())
-										.text(message)
-										.actionLabel(R.string.error_retry)
-										.actionColor(Colors.getColorAccent(getContext()))
-										.actionListener(new ActionClickListener() {
+								Snackbar.make(parentView, message, Snackbar.LENGTH_LONG)
+										.setAction(R.string.error_retry, new View.OnClickListener() {
 
 											@Override
-											public void onActionClicked() {
+											public void onClick(View view) {
 												updateScheduleData();
 											}
 
 										})
-										.show(activity);
+										.show();
 							}
 						}
 

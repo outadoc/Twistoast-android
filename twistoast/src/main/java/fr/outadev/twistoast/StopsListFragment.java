@@ -1,13 +1,13 @@
 /*
  * Twistoast - StopsListFragment
- * Copyright (C) 2013-2014  Baptiste Candellier
+ * Copyright (C) 2013-2015 Baptiste Candellier
  *
- * This program is free software: you can redistribute it and/or modify
+ * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * Twistoast is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -30,6 +30,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.Log;
@@ -44,9 +46,6 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.melnykov.fab.FloatingActionButton;
-import com.nispok.snackbar.Snackbar;
-import com.nispok.snackbar.listeners.ActionClickListener;
 
 import java.util.List;
 
@@ -133,10 +132,10 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 		fab = (FloatingActionButton) view.findViewById(R.id.fab);
 
-		fab.attachToListView(stopsListView);
+		/*fab.attachToListView(stopsListView);
 		fab.setColorNormal(Colors.getColorAccent(getActivity()));
 		fab.setColorPressedResId(R.color.twisto_secondary);
-		fab.setColorRippleResId(R.color.twisto_secondary);
+		fab.setColorRippleResId(R.color.twisto_secondary);*/
 
 		setupListeners();
 
@@ -272,19 +271,11 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 		listAdapter.notifyDataSetChanged();
 
-		// Workaround for the FAB not reappearing after the stop is deleted
-		// even if that means the scrollview isn't scrollable anymore
-		fab.show(true);
-
-		Snackbar.with(getActivity())
-				.text(R.string.confirm_delete_success)
-				.actionLabel(R.string.cancel_stop_deletion)
-				.actionColor(Colors.getColorAccent(getActivity()))
-				.attachToAbsListView(stopsListView)
-				.actionListener(new ActionClickListener() {
+		Snackbar.make(stopsListView, R.string.confirm_delete_success, Snackbar.LENGTH_LONG)
+				.setAction(R.string.cancel_stop_deletion, new View.OnClickListener() {
 
 					@Override
-					public void onActionClicked() {
+					public void onClick(View view) {
 						Log.i(Utils.TAG, "restoring stop " + stop);
 
 						databaseHandler.addStopToDatabase(stop);
@@ -293,7 +284,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 					}
 
 				})
-				.show(getActivity());
+				.show();
 	}
 
 	private void startWatchingStopAction(final TimeoStop stop) {
@@ -305,15 +296,11 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 		// Turn the notifications on
 		NextStopAlarmReceiver.enable(getActivity().getApplicationContext());
 
-		Snackbar.with(getActivity())
-				.text(getString(R.string.notifs_enable_toast, stop.getName()))
-				.actionLabel(R.string.cancel_stop_deletion)
-				.actionColor(Colors.getColorAccent(getActivity()))
-				.attachToAbsListView(stopsListView)
-				.actionListener(new ActionClickListener() {
+		Snackbar.make(stopsListView, getString(R.string.notifs_enable_toast, stop.getName()), Snackbar.LENGTH_LONG)
+				.setAction(R.string.cancel_stop_deletion, new View.OnClickListener() {
 
 					@Override
-					public void onActionClicked() {
+					public void onClick(View view) {
 						databaseHandler.stopWatchingStop(stop);
 						stop.setWatched(false);
 						listAdapter.notifyDataSetChanged();
@@ -325,7 +312,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 					}
 
 				})
-				.show(getActivity());
+				.show();
 	}
 
 	private void stopWatchingStopAction(TimeoStop stop) {
@@ -342,10 +329,8 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 		NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
 		notificationManager.cancel(Integer.valueOf(stop.getId()));
 
-		Snackbar.with(getActivity())
-				.text(getString(R.string.notifs_disable_toast, stop.getName()))
-				.attachToAbsListView(stopsListView)
-				.show(getActivity());
+		Snackbar.make(stopsListView, getString(R.string.notifs_disable_toast, stop.getName()), Snackbar.LENGTH_LONG)
+				.show();
 	}
 
 	@Override
@@ -388,7 +373,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 		// modified
 		if(reloadFromDatabase) {
 			stops = databaseHandler.getAllStops();
-			listAdapter = new StopsListArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, stops, this);
+			listAdapter = new StopsListArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, stops, this, stopsListView);
 			stopsListView.setAdapter(listAdapter);
 		}
 
@@ -418,28 +403,23 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 			Log.i(Utils.TAG, "refreshed, " + listAdapter.getCount() + " stops in db");
 
 			if(mismatch > 0) {
-				Snackbar.with(getActivity())
-						.text(R.string.stop_ref_update_message_title)
-						.actionLabel(R.string.stop_ref_update_message_action)
-						.actionColor(Colors.getColorAccent(getActivity()))
-						.actionListener(new ActionClickListener() {
+				Snackbar.make(stopsListView, R.string.stop_ref_update_message_title, Snackbar.LENGTH_LONG)
+						.setAction(R.string.stop_ref_update_message_action, new View.OnClickListener() {
 
 							@Override
-							public void onActionClicked() {
+							public void onClick(View view) {
 								(new ReferenceUpdateTask()).execute();
 							}
 
 						})
-						.duration(7000)
-						.swipeToDismiss(true)
-						.show(getActivity());
+						.show();
 			}
 		}
 	}
 
 	@Override
-	public void loadFragmentFromDrawerPosition(int index) {
-		((MainActivity) getActivity()).loadFragmentFromDrawerPosition(index);
+	public void loadFragmentForDrawerItem(int index) {
+		((MainActivity) getActivity()).loadFragmentForDrawerItem(index);
 	}
 
 	private class ReferenceUpdateTask extends AsyncTask<Void, Void, Exception> {
@@ -486,20 +466,16 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 			refreshAllStopSchedules(true);
 
 			if(e != null) {
-				Snackbar.with(getActivity())
-						.text(R.string.stop_ref_update_error_text)
-						.actionLabel(R.string.error_retry)
-						.actionColor(Colors.getColorAccent(getActivity()))
-						.attachToAbsListView(stopsListView)
-						.actionListener(new ActionClickListener() {
+				Snackbar.make(stopsListView, R.string.stop_ref_update_error_text, Snackbar.LENGTH_LONG)
+						.setAction(R.string.error_retry, new View.OnClickListener() {
 
 							@Override
-							public void onActionClicked() {
+							public void onClick(View view) {
 								(new ReferenceUpdateTask()).execute();
 							}
 
 						})
-						.show(getActivity());
+						.show();
 			}
 		}
 	}

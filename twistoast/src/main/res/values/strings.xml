@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Twistoast - strings.xml
-  ~ Copyright (C) 2013-2014  Baptiste Candellier
+  ~ Copyright (C) 2013-2015 Baptiste Candellier
   ~
-  ~ This program is free software: you can redistribute it and/or modify
+  ~ Twistoast is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
   ~ the Free Software Foundation, either version 3 of the License, or
   ~ (at your option) any later version.
   ~
-  ~ This program is distributed in the hope that it will be useful,
+  ~ Twistoast is distributed in the hope that it will be useful,
   ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
   ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   ~ GNU General Public License for more details.
@@ -73,6 +73,8 @@
 	<string name="stop_action_unwatch">Désactiver les notifications</string>
 	<string name="pref_cat_notif_traffic">Notifications info trafic</string>
 	<string name="fab_add_stop_description">Ajouter un arrêt</string>
-	<string name="error_toast_twisto">Erreur Twisto %1$s. Réessayez plus tard.</string>
+	<string name="error_toast_twisto">Erreur Twisto %1$s (%2$s). Réessayez plus tard.</string>
+	<string name="drawer_section_more_twisto_info">Plus d\'infos</string>
+	<string name="drawer_section_misc">Autres</string>
 
 </resources>

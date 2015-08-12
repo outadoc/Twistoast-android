@@ -1,13 +1,13 @@
 /*
  * Twistoast - ThemedActivity
- * Copyright (C) 2013-2015  Baptiste Candellier
+ * Copyright (C) 2013-2015 Baptiste Candellier
  *
- * This program is free software: you can redistribute it and/or modify
+ * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * Twistoast is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -23,14 +23,14 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 
 import java.util.HashMap;
 
 /**
  * Created by outadoc on 1/2/15.
  */
-public class ThemedActivity extends ActionBarActivity {
+public class ThemedActivity extends AppCompatActivity {
 
 	private static HashMap<Integer, Integer> themes = new HashMap<>();
 
@@ -84,7 +84,6 @@ public class ThemedActivity extends ActionBarActivity {
 
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			getWindow().setStatusBarColor(Colors.getColorPrimaryDark(this));
-			getWindow().setNavigationBarColor(Colors.getColorPrimaryDark(this));
 		}
 	}
 
