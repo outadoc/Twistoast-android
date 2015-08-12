@@ -131,13 +131,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 		fab = (FloatingActionButton) view.findViewById(R.id.fab);
 
-		/*fab.attachToListView(stopsListView);
-		fab.setColorNormal(Colors.getColorAccent(getActivity()));
-		fab.setColorPressedResId(R.color.twisto_secondary);
-		fab.setColorRippleResId(R.color.twisto_secondary);*/
-
 		setupListeners();
-
 		return view;
 	}
 
