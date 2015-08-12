@@ -30,6 +30,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -155,7 +156,13 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 					view_schedule_container.addView(getEmptyScheduleLabel(inflater));
 				}
 
-				containerView.setAlpha(1.0F);
+				if(containerView.getAlpha() != 1.0F) {
+					containerView.setAlpha(1.0F);
+
+					AlphaAnimation alphaAnim = new AlphaAnimation(0.4F, 1.0f);
+					alphaAnim.setDuration(500);
+					containerView.startAnimation(alphaAnim);
+				}
 			}
 
 		} else {
