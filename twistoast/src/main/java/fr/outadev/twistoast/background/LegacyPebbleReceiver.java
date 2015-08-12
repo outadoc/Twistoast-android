@@ -19,9 +19,11 @@
 package fr.outadev.twistoast.background;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.getpebble.android.kit.PebbleKit;
@@ -69,6 +71,8 @@ public class LegacyPebbleReceiver extends PebbleDataReceiver {
 	private static final int KEY_SHOULD_VIBRATE = 0x30;
 	private static final int KEY_BACKGROUND_COLOR = 0x31;
 
+	private SharedPreferences prefs;
+
 	public LegacyPebbleReceiver() {
 		super(PEBBLE_UUID);
 	}
@@ -76,6 +80,8 @@ public class LegacyPebbleReceiver extends PebbleDataReceiver {
 	@Override
 	public void receiveData(final Context context, final int transactionId, PebbleDictionary data) {
 		Log.d(TAG, "received a message from pebble " + PEBBLE_UUID);
+
+		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
 		// open the database and count the stops
 		Database databaseHandler = new Database(DatabaseOpenHelper.getInstance(context));
@@ -183,7 +189,13 @@ public class LegacyPebbleReceiver extends PebbleDataReceiver {
 			}
 		}
 
-		response.addInt32(KEY_BACKGROUND_COLOR, Color.parseColor(schedule.getStop().getLine().getColor()));
+		int color = 0x0;
+
+		if(prefs.getBoolean("pref_pebble_use_color", true)) {
+			color = Color.parseColor(schedule.getStop().getLine().getColor());
+		}
+
+		response.addInt32(KEY_BACKGROUND_COLOR, color);
 
 		Log.d(TAG, "sending back: " + response);
 		PebbleKit.sendDataToPebble(context, PEBBLE_UUID, response);

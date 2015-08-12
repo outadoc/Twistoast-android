@@ -19,6 +19,11 @@
 
 <resources>
 
+
+	<string name="pref_cat_pebble">Pebble</string>
+	<string name="pref_pebble_color_sum_off">Toujours afficher la watchapp Pebble en noir et blanc</string>
+	<string name="pref_pebble_color_sum_on">Utiliser de la couleur dans la watchapp Pebble quand possible</string>
+	<string name="pref_pebble_color_title">Couleur dans la watchapp Pebble</string>
 	<string name="pref_pebble_dl_title">Télécharger la watchapp Pebble</string>
 	<string name="pref_pebble_dl_sum">Vous pouvez télécharger l\'app Twistoast pour votre montre Pebble depuis le Pebble appstore.</string>
 

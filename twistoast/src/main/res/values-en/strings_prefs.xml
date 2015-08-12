@@ -50,5 +50,9 @@
 	<string name="pref_ringer_title">Sound</string>
 	<string name="pref_vibrate_title">Vibrate</string>
 	<string name="prefs_cat_global">Global</string>
+	<string name="pref_cat_pebble">Pebble</string>
+	<string name="pref_pebble_color_sum_off">Always display the Pebble app in black and white</string>
+	<string name="pref_pebble_color_sum_on">Use the color of the line in the Pebble app where supported</string>
+	<string name="pref_pebble_color_title">Use color in the Pebble Time app</string>
 
 </resources>

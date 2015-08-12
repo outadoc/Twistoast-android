@@ -24,14 +24,17 @@
 	<PreferenceCategory android:title="@string/prefs_cat_global">
 
 		<it.gmariotti.android.example.colorpicker.calendarstock.ColorPickerPreference
-			android:key="pref_app_theme"
-			android:title="@string/pref_app_theme_title"
-			android:summary="@string/pref_app_theme_sum"
 			android:defaultValue="-16682565"
+			android:key="pref_app_theme"
 			android:negativeButtonText="@null"
 			android:positiveButtonText="@null"
-			app:numColumns="5"
-			app:itemLayout="@layout/dash_grid_item_color" />
+			android:summary="@string/pref_app_theme_sum"
+			android:title="@string/pref_app_theme_title"
+			app:itemLayout="@layout/dash_grid_item_color"
+			app:numColumns="5" />
+
+	</PreferenceCategory>
+	<PreferenceCategory android:title="@string/pref_cat_pebble">
 
 		<Preference
 			android:summary="@string/pref_pebble_dl_sum"
@@ -40,6 +43,13 @@
 				android:action="android.intent.action.VIEW"
 				android:data="pebble://appstore/53088e81ab1ae2f12900034e" />
 		</Preference>
+
+		<CheckBoxPreference
+			android:defaultValue="true"
+			android:key="pref_pebble_use_color"
+			android:summaryOff="@string/pref_pebble_color_sum_off"
+			android:summaryOn="@string/pref_pebble_color_sum_on"
+			android:title="@string/pref_pebble_color_title" />
 
 	</PreferenceCategory>
 	<PreferenceCategory android:title="@string/pref_cat_stops">
