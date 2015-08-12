@@ -278,9 +278,6 @@ public class AddStopActivity extends ThemedActivity {
 
 						@Override
 						protected void onPostExecute(List<TimeoStop> timeoStops) {
-							swipeRefreshLayout.setEnabled(false);
-							swipeRefreshLayout.setRefreshing(false);
-
 							if(timeoStops != null) {
 								spinStop.setEnabled(true);
 
@@ -417,9 +414,6 @@ public class AddStopActivity extends ThemedActivity {
 
 			@Override
 			protected void onPostExecute(List<TimeoLine> timeoLines) {
-				swipeRefreshLayout.setEnabled(false);
-				swipeRefreshLayout.setRefreshing(false);
-
 				if(timeoLines != null) {
 					lineList.clear();
 					lineList.addAll(timeoLines);
@@ -467,6 +461,9 @@ public class AddStopActivity extends ThemedActivity {
 					} else {
 						message = getString(R.string.loading_error);
 					}
+
+					swipeRefreshLayout.setEnabled(false);
+					swipeRefreshLayout.setRefreshing(false);
 
 					Snackbar.make(findViewById(R.id.content), message, Snackbar.LENGTH_LONG)
 							.setAction(R.string.error_retry, new View.OnClickListener() {
