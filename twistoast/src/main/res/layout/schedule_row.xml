@@ -29,47 +29,6 @@
 	android:paddingTop="5dp">
 
 	<LinearLayout
-		android:id="@+id/view_traffic_message"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:background="@color/bus_stop_alert_background"
-		android:orientation="horizontal"
-		android:visibility="gone">
-
-		<ImageView
-			android:layout_width="25dp"
-			android:layout_height="25dp"
-			android:layout_margin="10dp"
-			android:contentDescription="@string/traffic_info"
-			android:gravity="center_vertical"
-			android:src="@drawable/ic_traffic_cone"
-			android:textSize="25sp"
-			android:tint="@color/bus_stop_alert_text_primary" />
-
-		<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:orientation="vertical"
-			android:padding="3dp">
-
-			<TextView
-				android:id="@+id/lbl_message_title"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:textColor="@color/bus_stop_alert_text_primary"
-				android:textSize="17sp" />
-
-			<TextView
-				android:id="@+id/lbl_message_body"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_margin="2dp"
-				android:textColor="@color/bus_stop_alert_text_secondary"
-				android:textStyle="italic" />
-		</LinearLayout>
-	</LinearLayout>
-
-	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:orientation="horizontal"

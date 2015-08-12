@@ -104,7 +104,6 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 
 		ImageView img_stop_watched = (ImageView) containerView.findViewById(R.id.img_stop_watched);
 
-
 		// Set line drawable. We have to set the colour on the background
 		GradientDrawable lineDrawable = (GradientDrawable) view_line_id.getBackground();
 		lineDrawable.setColor(Colors.getBrighterColor(Color.parseColor(currentStop.getLine().getColor())));
