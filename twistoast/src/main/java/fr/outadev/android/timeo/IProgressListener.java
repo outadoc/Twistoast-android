@@ -1,13 +1,13 @@
 /*
  * Twistoast - IProgressListener
- * Copyright (C) 2013-2014  Baptiste Candellier
+ * Copyright (C) 2013-2015 Baptiste Candellier
  *
- * This program is free software: you can redistribute it and/or modify
+ * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * Twistoast is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -30,6 +30,6 @@ public interface IProgressListener {
 	 * @param current current progress, can't be greater than total
 	 * @param total   maximum progress
 	 */
-	public void onProgress(int current, int total);
+	void onProgress(int current, int total);
 
 }
