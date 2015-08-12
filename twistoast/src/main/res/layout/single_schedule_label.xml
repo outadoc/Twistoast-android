@@ -23,9 +23,10 @@
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
 	android:layout_marginTop="8dp"
-	android:orientation="horizontal">
+	android:orientation="horizontal"
+	android:gravity="center_vertical">
 
-<TextView
+	<TextView
 		android:id="@+id/lbl_schedule"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -33,7 +34,8 @@
 		android:maxLines="1"
 		android:textAppearance="?android:attr/textAppearanceMedium"
 		android:textColor="#333333"
-		android:textSize="15sp" />
+		android:textSize="16sp"
+		android:layout_gravity="center_vertical"/>
 
 	<TextView
 		android:id="@+id/lbl_schedule_direction"
@@ -43,5 +45,6 @@
 		android:maxLines="1"
 		android:textAppearance="?android:attr/textAppearanceMedium"
 		android:textColor="#ff707070"
-		android:textSize="15sp" />
+		android:textSize="15sp"
+		android:layout_gravity="center_vertical"/>
 </LinearLayout>
