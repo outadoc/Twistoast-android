@@ -28,7 +28,6 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.ArrayAdapter;
@@ -100,7 +99,6 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 		TextView lbl_direction = (TextView) containerView.findViewById(R.id.lbl_direction_name);
 
 		LinearLayout view_schedule_container = (LinearLayout) containerView.findViewById(R.id.view_schedule_labels_container);
-		LinearLayout view_traffic_message = (LinearLayout) containerView.findViewById(R.id.view_traffic_message);
 
 		ImageView img_stop_watched = (ImageView) containerView.findViewById(R.id.img_stop_watched);
 
@@ -176,16 +174,6 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 		}
 
 		img_stop_watched.setVisibility((currentStop.isWatched()) ? View.VISIBLE : View.GONE);
-
-		// Load the traffic view if we want to see it
-		view_traffic_message.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				stopsListContainer.loadFragmentForDrawerItem(3);
-			}
-
-		});
 
 		return containerView;
 	}

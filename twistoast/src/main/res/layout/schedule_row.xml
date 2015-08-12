@@ -22,20 +22,19 @@
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:layout_gravity="center"
-	android:background="@color/main_background_color"
 	android:orientation="vertical"
 	android:paddingLeft="10dp"
 	android:paddingRight="10dp"
-	android:paddingTop="5dp">
+	android:paddingTop="5dp"
+	android:longClickable="true"
+	android:background="?android:attr/selectableItemBackground">
 
 	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:orientation="horizontal"
 		android:paddingTop="7dp"
-		android:paddingBottom="7dp"
-		android:longClickable="true"
-		android:background="?android:attr/selectableItemBackground">
+		android:paddingBottom="7dp">
 
 		<FrameLayout
 			android:id="@+id/view_line_id"
