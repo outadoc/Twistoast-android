@@ -60,6 +60,8 @@ import fr.outadev.twistoast.background.NextStopAlarmReceiver;
  */
 public class ArrayAdapterRealtime extends RecyclerView.Adapter<ArrayAdapterRealtime.ViewHolder> {
 
+	public static final int NB_SCHEDULES_DISPLAYED = 2;
+
 	private final IStopsListContainer stopsListContainer;
 	private final View parentView;
 
@@ -72,6 +74,7 @@ public class ArrayAdapterRealtime extends RecyclerView.Adapter<ArrayAdapterRealt
 
 	private int networkCount = 0;
 	private int nbOutdatedStops = 0;
+
 	private ViewHolder.IOnLongClickListener clickListener = new ViewHolder.IOnLongClickListener() {
 
 		@Override
@@ -200,18 +203,6 @@ public class ArrayAdapterRealtime extends RecyclerView.Adapter<ArrayAdapterRealt
 	}
 
 	/**
-	 * Instanciates and returns a view containing a label that says no stops are scheduled.
-	 * Supposed to be used as a placeholder for an actual schedule time row.
-	 */
-	private View getEmptyScheduleLabel(LayoutInflater inflater) {
-		View singleScheduleView = inflater.inflate(R.layout.frag_single_schedule_label, null);
-		TextView lbl_schedule_time = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule);
-		lbl_schedule_time.setText(R.string.no_upcoming_stops);
-
-		return singleScheduleView;
-	}
-
-	/**
 	 * Fetches every stop schedule from the API and reloads everything.
 	 */
 	public void updateScheduleData() {
@@ -318,7 +309,6 @@ public class ArrayAdapterRealtime extends RecyclerView.Adapter<ArrayAdapterRealt
 	public void onBindViewHolder(ArrayAdapterRealtime.ViewHolder view, final int position) {
 		// Get the stop we're inflating
 		TimeoStop currentStop = stops.get(position);
-		LayoutInflater inflater = LayoutInflater.from(view.container.getContext());
 
 		view.lineDrawable.setColor(Colors.getBrighterColor(Color.parseColor(currentStop.getLine().getColor())));
 
@@ -326,8 +316,11 @@ public class ArrayAdapterRealtime extends RecyclerView.Adapter<ArrayAdapterRealt
 		view.lbl_stop.setText(view.lbl_stop.getContext().getString(R.string.stop_name, currentStop.getName()));
 		view.lbl_direction.setText(view.lbl_direction.getContext().getString(R.string.direction_name, currentStop.getLine().getDirection().getName()));
 
-		// Remove all existing schedules in that view
-		view.view_schedule_container.removeAllViewsInLayout();
+		// Clear labels
+		for(int i = 0; i < NB_SCHEDULES_DISPLAYED; i++) {
+			view.lbl_schedule_time[i].setText("");
+			view.lbl_schedule_direction[i].setText("");
+		}
 
 		// Add the new schedules one by one
 		if(schedules.containsKey(currentStop) && schedules.get(currentStop) != null) {
@@ -337,7 +330,8 @@ public class ArrayAdapterRealtime extends RecyclerView.Adapter<ArrayAdapterRealt
 				// Get the schedules for this stop
 				List<TimeoSingleSchedule> currScheds = schedules.get(currentStop).getSchedules();
 
-				for(TimeoSingleSchedule currSched : currScheds) {
+				for(int i = 0; i < currScheds.size() && i < NB_SCHEDULES_DISPLAYED; i++) {
+					TimeoSingleSchedule currSched = currScheds.get(i);
 
 					// We don't update from database all the time, so we can't figure this out by just updating everything.
 					// If there is a bus coming, tell the stop that it's not watched anymore.
@@ -347,23 +341,16 @@ public class ArrayAdapterRealtime extends RecyclerView.Adapter<ArrayAdapterRealt
 						currentStop.setWatched(false);
 					}
 
-					// Display the current schedule
-					View singleScheduleView = inflater.inflate(R.layout.frag_single_schedule_label, null);
-
-					TextView lbl_schedule_time = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule);
-					TextView lbl_schedule_direction = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule_direction);
-
-					lbl_schedule_time.setText(currSched.getFormattedTime(lbl_schedule_time.getContext()));
-					lbl_schedule_direction.setText(" — " + currSched.getDirection());
-
-					view.view_schedule_container.addView(singleScheduleView);
+					view.lbl_schedule_time[i].setText(currSched.getFormattedTime(view.lbl_schedule_time[i].getContext()));
+					view.lbl_schedule_direction[i].setText(" — " + currSched.getDirection());
 				}
 
 				if(currScheds.isEmpty()) {
 					// If no schedules are available, add a fake one to inform the user
-					view.view_schedule_container.addView(getEmptyScheduleLabel(inflater));
+					view.lbl_schedule_time[0].setText(R.string.no_upcoming_stops);
 				}
 
+				// Fade in the row!
 				if(view.container.getAlpha() != 1.0F) {
 					view.container.setAlpha(1.0F);
 
@@ -380,7 +367,7 @@ public class ArrayAdapterRealtime extends RecyclerView.Adapter<ArrayAdapterRealt
 					" (ref=" + currentStop.getReference() + "); ref outdated?");
 
 			// Make the row look a bit translucent to make it stand out
-			view.view_schedule_container.addView(getEmptyScheduleLabel(inflater));
+			view.lbl_schedule_time[0].setText(R.string.no_upcoming_stops);
 			view.container.setAlpha(0.4F);
 		}
 
@@ -415,9 +402,13 @@ public class ArrayAdapterRealtime extends RecyclerView.Adapter<ArrayAdapterRealt
 		public ImageView img_stop_watched;
 		public GradientDrawable lineDrawable;
 
+		public TextView[] lbl_schedule_time = new TextView[2];
+		public TextView[] lbl_schedule_direction = new TextView[2];
+
 		public ViewHolder(View v) {
 			super(v);
 
+			LayoutInflater inflater = LayoutInflater.from(v.getContext());
 			container = (LinearLayout) v;
 
 			// Get references to the views
@@ -430,6 +421,16 @@ public class ArrayAdapterRealtime extends RecyclerView.Adapter<ArrayAdapterRealt
 			view_schedule_container = (LinearLayout) v.findViewById(R.id.view_schedule_labels_container);
 			img_stop_watched = (ImageView) v.findViewById(R.id.img_stop_watched);
 			lineDrawable = (GradientDrawable) view_line_id.getBackground();
+
+			for(int i = 0; i < NB_SCHEDULES_DISPLAYED; i++) {
+				// Display the current schedule
+				View singleScheduleView = inflater.inflate(R.layout.frag_single_schedule_label, null);
+
+				lbl_schedule_time[i] = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule);
+				lbl_schedule_direction[i] = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule_direction);
+
+				view_schedule_container.addView(singleScheduleView);
+			}
 		}
 
 		public interface IOnLongClickListener {

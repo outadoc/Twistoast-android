@@ -30,6 +30,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -127,8 +128,8 @@ public class FragmentRealtime extends Fragment implements IStopsListContainer {
 
 		fab = (FloatingActionButton) view.findViewById(R.id.fab);
 
-		final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-		layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+		final LinearLayoutManager layoutManager = new GridLayoutManager(getActivity(), 1);
+		layoutManager.setOrientation(GridLayoutManager.VERTICAL);
 		stopsRecyclerView.setLayoutManager(layoutManager);
 
 		setupListeners();
