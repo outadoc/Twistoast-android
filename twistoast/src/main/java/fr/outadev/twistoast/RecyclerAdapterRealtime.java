@@ -402,8 +402,8 @@ public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapte
 		public ImageView img_stop_watched;
 		public GradientDrawable lineDrawable;
 
-		public TextView[] lbl_schedule_time = new TextView[2];
-		public TextView[] lbl_schedule_direction = new TextView[2];
+		public TextView[] lbl_schedule_time = new TextView[NB_SCHEDULES_DISPLAYED];
+		public TextView[] lbl_schedule_direction = new TextView[NB_SCHEDULES_DISPLAYED];
 
 		public ViewHolder(View v) {
 			super(v);
