@@ -137,12 +137,14 @@ public class FragmentRealtime extends Fragment implements IStopsListContainer {
 
 					@Override
 					public void onGlobalLayout() {
-						int viewWidth = stopsRecyclerView.getMeasuredWidth();
-						float cardViewWidth = getActivity().getResources().getDimension(R.dimen.schedule_row_max_size);
-						int newSpanCount = (int) Math.floor(viewWidth / cardViewWidth);
+						if(getActivity() != null) {
+							int viewWidth = stopsRecyclerView.getMeasuredWidth();
+							float cardViewWidth = getActivity().getResources().getDimension(R.dimen.schedule_row_max_size);
+							int newSpanCount = (int) Math.floor(viewWidth / cardViewWidth);
 
-						layoutManager.setSpanCount(newSpanCount);
-						layoutManager.requestLayout();
+							layoutManager.setSpanCount(newSpanCount);
+							layoutManager.requestLayout();
+						}
 					}
 
 				});
