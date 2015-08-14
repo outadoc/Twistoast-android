@@ -1,19 +1,17 @@
 /*
- * Twistoast - DividerItemDecoration
- * Copyright (C) 2013-2015 Baptiste Candellier
+ * Copyright (C) 2014 The Android Open Source Project
  *
- * Twistoast is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Twistoast is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package fr.outadev.twistoast;
@@ -49,6 +47,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 		if(orientation != HORIZONTAL_LIST && orientation != VERTICAL_LIST) {
 			throw new IllegalArgumentException("invalid orientation");
 		}
+
 		mOrientation = orientation;
 	}
 
@@ -56,8 +55,6 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 	public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
 		if(mOrientation == VERTICAL_LIST) {
 			drawVertical(c, parent);
-		} else {
-			drawHorizontal(c, parent);
 		}
 	}
 
@@ -71,34 +68,27 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 	}
 
 	public void drawVertical(Canvas c, RecyclerView parent) {
-		final int left = parent.getPaddingLeft();
+		final int left = parent.getPaddingLeft() + 280;
 		final int right = parent.getWidth() - parent.getPaddingRight();
 
 		final int childCount = parent.getChildCount();
+
 		for(int i = 0; i < childCount; i++) {
 			final View child = parent.getChildAt(i);
+
+			// Check if we should draw the separator or not
+			if(!((IRecyclerAdapterAccess) parent.getAdapter()).shouldItemHaveSeparator(parent.getChildAdapterPosition(child))) {
+				continue;
+			}
+
 			final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child
 					.getLayoutParams();
 			final int top = child.getBottom() + params.bottomMargin;
 			final int bottom = top + mDivider.getIntrinsicHeight();
+
 			mDivider.setBounds(left, top, right, bottom);
 			mDivider.draw(c);
 		}
 	}
 
-	public void drawHorizontal(Canvas c, RecyclerView parent) {
-		final int top = parent.getPaddingTop();
-		final int bottom = parent.getHeight() - parent.getPaddingBottom();
-
-		final int childCount = parent.getChildCount();
-		for(int i = 0; i < childCount; i++) {
-			final View child = parent.getChildAt(i);
-			final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child
-					.getLayoutParams();
-			final int left = child.getRight() + params.rightMargin;
-			final int right = left + mDivider.getIntrinsicHeight();
-			mDivider.setBounds(left, top, right, bottom);
-			mDivider.draw(c);
-		}
-	}
 }

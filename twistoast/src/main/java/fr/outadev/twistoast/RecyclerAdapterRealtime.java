@@ -58,7 +58,7 @@ import fr.outadev.twistoast.background.NextStopAlarmReceiver;
  *
  * @author outadoc
  */
-public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapterRealtime.ViewHolder> {
+public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapterRealtime.ViewHolder> implements IRecyclerAdapterAccess {
 
 	public static final int NB_SCHEDULES_DISPLAYED = 2;
 
@@ -388,6 +388,21 @@ public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapte
 
 	public Activity getActivity() {
 		return activity;
+	}
+
+	@Override
+	public boolean shouldItemHaveSeparator(int position) {
+		// If it's the last item, no separator
+		if(position == stops.size() - 1) {
+			return false;
+		}
+
+		TimeoStop item = stops.get(position);
+		TimeoStop nextItem = stops.get(position + 1);
+
+		// If the next item's line is the same as this one, don't draw a separator either
+		return !item.getLine().getId().equals(nextItem.getLine().getId());
+
 	}
 
 	public static class ViewHolder extends RecyclerView.ViewHolder {
