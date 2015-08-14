@@ -22,31 +22,31 @@
 	android:id="@+id/view_global_traffic_alert"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
-	android:layout_height="40dp"
+	android:layout_height="37dp"
 	android:background="@color/traffic_alert_background"
 	android:elevation="2dp"
 	android:orientation="horizontal"
-	android:padding="5dp"
+	android:padding="4dp"
 	android:visibility="gone">
 
 	<ImageView
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:contentDescription="@string/traffic_info"
 		android:padding="2dp"
 		android:src="@drawable/ic_traffic_cone"
-		android:tint="@color/traffic_alert_text_primary"
-		android:contentDescription="@string/traffic_info" />
+		android:tint="@color/traffic_alert_text_primary" />
 
 	<TextView
 		android:id="@+id/lbl_traffic_info_string"
 		android:layout_width="wrap_content"
 		android:layout_height="match_parent"
-		android:layout_marginLeft="5dp"
-		android:layout_marginStart="5dp"
+		android:layout_marginLeft="2dp"
+		android:layout_marginStart="2dp"
 		android:gravity="center"
 		android:singleLine="true"
-		android:textStyle="italic"
+		android:textAllCaps="true"
 		android:textColor="@color/traffic_alert_text_primary"
-		android:textSize="17sp" />
+		android:textSize="16sp" />
 
 </LinearLayout>
