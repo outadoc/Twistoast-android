@@ -17,12 +17,14 @@
 package fr.outadev.twistoast;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.View;
 
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
@@ -32,11 +34,14 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 	private static final int[] ATTRS = new int[]{
 			android.R.attr.listDivider
 	};
+	private final int leftAdditionalPadding;
 	private Drawable mDivider;
-
 	private int mOrientation;
 
 	public DividerItemDecoration(Context context, int orientation) {
+		Resources r = context.getResources();
+		leftAdditionalPadding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 95, r.getDisplayMetrics());
+
 		final TypedArray a = context.obtainStyledAttributes(ATTRS);
 		mDivider = a.getDrawable(0);
 		a.recycle();
@@ -68,7 +73,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 	}
 
 	public void drawVertical(Canvas c, RecyclerView parent) {
-		final int left = parent.getPaddingLeft() + 280;
+		final int left = parent.getPaddingLeft() + leftAdditionalPadding;
 		final int right = parent.getWidth() - parent.getPaddingRight();
 
 		final int childCount = parent.getChildCount();
