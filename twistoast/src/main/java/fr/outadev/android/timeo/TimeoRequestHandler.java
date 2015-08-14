@@ -580,12 +580,12 @@ public abstract class TimeoRequestHandler {
 		try {
 			String source = requestWebPage(preHomeUrl, true);
 
-			if(source != null && !source.isEmpty()) {
+			if(!source.isEmpty()) {
 				JSONObject obj = (JSONObject) new JSONTokener(source).nextValue();
 
 				if(obj.has("alerte")) {
 					JSONObject alert = obj.getJSONObject("alerte");
-					return new TimeoTrafficAlert(alert.getInt("id_alerte"), alert.getString("libelle_alerte"),
+					return new TimeoTrafficAlert(alert.getInt("id_alerte"), alert.getString("libelle_alerte").trim(),
 							alert.getString("url_alerte"));
 				}
 			}
