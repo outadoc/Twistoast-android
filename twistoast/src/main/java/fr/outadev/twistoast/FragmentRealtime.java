@@ -130,8 +130,9 @@ public class FragmentRealtime extends Fragment implements IStopsListContainer {
 
 		final GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 3);
 		layoutManager.setOrientation(GridLayoutManager.VERTICAL);
-		stopsRecyclerView.setLayoutManager(layoutManager);
 
+		stopsRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
+		stopsRecyclerView.setLayoutManager(layoutManager);
 		stopsRecyclerView.getViewTreeObserver().addOnGlobalLayoutListener(
 				new ViewTreeObserver.OnGlobalLayoutListener() {
 
