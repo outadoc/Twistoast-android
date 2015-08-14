@@ -18,10 +18,15 @@
 
 package fr.outadev.twistoast;
 
+import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
+import android.widget.Toast;
 
 /**
  * A preferences fragment for the preferences of the app.
@@ -34,8 +39,44 @@ public class FragmentAbout extends PreferenceFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
 		// Load the preferences from an XML resource
 		addPreferencesFromResource(R.xml.about_prefs);
+		findPreference("version").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+
+			private int count = 5;
+			private Toast toast;
+
+			@SuppressLint("ShowToast")
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				count--;
+
+				if(toast != null) {
+					toast.cancel();
+				}
+
+				if(prefs.getBoolean("pref_disable_ads", false)) {
+					// Already disabled the ads
+					(toast = Toast.makeText(getActivity(), R.string.prefs_ads_already_disabled, Toast.LENGTH_SHORT))
+							.show();
+
+				} else if(count == 0) {
+					// Ready to disable the ads
+					prefs.edit().putBoolean("pref_disable_ads", true).apply();
+					(toast = Toast.makeText(getActivity(), R.string.prefs_ads_disabled, Toast.LENGTH_SHORT)).show();
+
+				} else if(count <= 3) {
+					// Decrement teh counter
+					(toast = Toast.makeText(getActivity(),
+							getActivity().getString(R.string.prefs_ads_step_count, count), Toast.LENGTH_SHORT)).show();
+				}
+
+				return true;
+			}
+
+		});
 	}
 
 	@Override
