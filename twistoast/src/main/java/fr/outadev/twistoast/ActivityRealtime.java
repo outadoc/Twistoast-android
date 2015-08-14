@@ -264,6 +264,7 @@ public class ActivityRealtime extends ThemedActivity implements IStopsListContai
 
 			trafficLabel.setText(trafficAlert.getLabel().replace("Info Trafic", "").trim());
 			trafficView.setVisibility(View.VISIBLE);
+			trafficLabel.setSelected(true);
 
 			// Set toolbar elevation to 0, since we'll have the traffic alert just right under it
 			getSupportActionBar().setElevation(0);

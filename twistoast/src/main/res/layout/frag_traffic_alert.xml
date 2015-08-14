@@ -43,9 +43,12 @@
 		android:layout_height="match_parent"
 		android:layout_marginLeft="2dp"
 		android:layout_marginStart="2dp"
+		android:ellipsize="marquee"
 		android:gravity="center"
+		android:marqueeRepeatLimit="1"
+		android:scrollHorizontally="true"
 		android:singleLine="true"
 		android:textColor="@color/traffic_alert_text_primary"
-		android:textSize="16sp" />
+		android:textSize="16sp"/>
 
 </LinearLayout>
