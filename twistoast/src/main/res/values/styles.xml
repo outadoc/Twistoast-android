@@ -18,20 +18,20 @@
 
 <resources>
 
-	<style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+	<style name="Twistoast.Base.Theme" parent="Theme.AppCompat.Light.NoActionBar">
 		<item name="colorPrimary">#0171BB</item>
 		<item name="colorPrimaryDark">#015ba4</item>
 		<item name="colorAccent">#ff01acff</item>
 	</style>
 
-	<style name="TwistoastActionBar" parent="ThemeOverlay.AppCompat.ActionBar">
+	<style name="Twistoast.Theme.ActionBar" parent="ThemeOverlay.AppCompat.ActionBar">
 		<item name="android:background">?attr/colorPrimary</item>
 		<item name="android:textColorPrimary">@android:color/white</item>
 	</style>
 
-	<style name="AppTheme" parent="AppBaseTheme" />
+	<style name="Twistoast.Theme" parent="Twistoast.Base.Theme" />
 
-	<style name="AddActivityTheme" parent="Theme.AppCompat.DialogWhenLarge">
+	<style name="Twistoast.Theme.NewStopActivity" parent="Theme.AppCompat.DialogWhenLarge">
 		<item name="windowActionBar">false</item>
 		<item name="windowNoTitle">true</item>
 	</style>
