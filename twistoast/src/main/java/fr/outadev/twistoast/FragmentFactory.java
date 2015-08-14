@@ -36,7 +36,7 @@ public class FragmentFactory {
 	public static Fragment getFragmentFromMenuItem(Context context, int itemId) {
 		switch(itemId) {
 			case R.id.drawer_realtime:
-				return new StopsListFragment();
+				return new FragmentRealtime();
 			case R.id.drawer_timetables:
 				return getWebViewFragment(context.getString(R.string.url_drawer_timetables));
 			case R.id.drawer_routes:

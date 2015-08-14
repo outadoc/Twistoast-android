@@ -1,5 +1,5 @@
 /*
- * Twistoast - StopsListFragment
+ * Twistoast - FragmentRealtime
  * Copyright (C) 2013-2015 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -49,7 +49,7 @@ import fr.outadev.android.timeo.IProgressListener;
 import fr.outadev.android.timeo.TimeoStop;
 import fr.outadev.twistoast.background.NextStopAlarmReceiver;
 
-public class StopsListFragment extends Fragment implements IStopsListContainer {
+public class FragmentRealtime extends Fragment implements IStopsListContainer {
 
 	//Refresh automatically every 60 seconds.
 	private static final long REFRESH_INTERVAL = 60000L;
