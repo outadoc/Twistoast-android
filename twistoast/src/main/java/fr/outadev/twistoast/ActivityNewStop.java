@@ -1,5 +1,5 @@
 /*
- * Twistoast - AddStopActivity
+ * Twistoast - ActivityNewStop
  * Copyright (C) 2013-2015 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -58,7 +58,7 @@ import fr.outadev.android.timeo.TimeoStopSchedule;
  *
  * @author outadoc
  */
-public class AddStopActivity extends ThemedActivity {
+public class ActivityNewStop extends ThemedActivity {
 
 	public static final int NO_STOP_ADDED = 0;
 	public static final int STOP_ADDED = 1;
@@ -94,7 +94,7 @@ public class AddStopActivity extends ThemedActivity {
 		super.onCreate(savedInstanceState);
 
 		// setup everything
-		setContentView(R.layout.activity_add_stop);
+		setContentView(R.layout.activity_new_stop);
 		setResult(NO_STOP_ADDED);
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -353,7 +353,7 @@ public class AddStopActivity extends ThemedActivity {
 
 			@Override
 			protected void onPostExecute(TimeoStopSchedule schedule) {
-				LayoutInflater inflater = (LayoutInflater) AddStopActivity.this
+				LayoutInflater inflater = (LayoutInflater) ActivityNewStop.this
 						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 				swipeRefreshLayout.setEnabled(false);
@@ -365,13 +365,13 @@ public class AddStopActivity extends ThemedActivity {
 					// set the schedule labels, if we need to
 					if(schedList != null) {
 						for(TimeoSingleSchedule currSched : schedList) {
-							View singleScheduleView = inflater.inflate(R.layout.single_schedule_label, null);
+							View singleScheduleView = inflater.inflate(R.layout.frag_single_schedule_label, null);
 
 							TextView lbl_schedule = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule);
 							TextView lbl_schedule_direction = (TextView) singleScheduleView.findViewById(R.id
 									.lbl_schedule_direction);
 
-							lbl_schedule.setText(currSched.getFormattedTime(AddStopActivity.this));
+							lbl_schedule.setText(currSched.getFormattedTime(ActivityNewStop.this));
 							lbl_schedule_direction.setText(" — " + currSched.getDirection());
 
 							view_schedule_container.addView(singleScheduleView);
@@ -452,7 +452,7 @@ public class AddStopActivity extends ThemedActivity {
 			@Override
 			public void run() {
 				if(e instanceof TimeoBlockingMessageException) {
-					((TimeoBlockingMessageException) e).getAlertMessage(AddStopActivity.this).show();
+					((TimeoBlockingMessageException) e).getAlertMessage(ActivityNewStop.this).show();
 				} else {
 					String message;
 

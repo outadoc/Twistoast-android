@@ -69,7 +69,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 	private List<TimeoStop> stops;
 
 	private Database databaseHandler;
-	private StopsListArrayAdapter listAdapter;
+	private ArrayAdapterRealtime listAdapter;
 	private boolean autoRefresh;
 
 	private boolean isRefreshing;
@@ -77,7 +77,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if(requestCode == 0 && resultCode == AddStopActivity.STOP_ADDED) {
+		if(requestCode == 0 && resultCode == ActivityNewStop.STOP_ADDED) {
 			refreshAllStopSchedules(true);
 		}
 	}
@@ -110,7 +110,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		View view = inflater.inflate(R.layout.fragment_stops_list, container, false);
+		View view = inflater.inflate(R.layout.fragment_realtime, container, false);
 
 		// get pull to refresh view
 		swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.ptr_layout);
@@ -220,7 +220,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(getActivity(), AddStopActivity.class);
+				Intent intent = new Intent(getActivity(), ActivityNewStop.class);
 				startActivityForResult(intent, 0);
 			}
 
@@ -365,7 +365,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 		// modified
 		if(reloadFromDatabase) {
 			stops = databaseHandler.getAllStops();
-			listAdapter = new StopsListArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, stops, this, stopsListView);
+			listAdapter = new ArrayAdapterRealtime(getActivity(), android.R.layout.simple_list_item_1, stops, this, stopsListView);
 			stopsListView.setAdapter(listAdapter);
 		}
 
@@ -411,7 +411,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 
 	@Override
 	public void loadFragmentForDrawerItem(int index) {
-		((MainActivity) getActivity()).loadFragmentForDrawerItem(index);
+		((ActivityRealtime) getActivity()).loadFragmentForDrawerItem(index);
 	}
 
 	private class ReferenceUpdateTask extends AsyncTask<Void, Void, Exception> {

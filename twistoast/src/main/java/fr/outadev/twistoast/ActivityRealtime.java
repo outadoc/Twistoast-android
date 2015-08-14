@@ -1,5 +1,5 @@
 /*
- * Twistoast - MainActivity
+ * Twistoast - ActivityRealtime
  * Copyright (C) 2013-2015 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -51,7 +51,7 @@ import fr.outadev.twistoast.background.TrafficAlertAlarmReceiver;
  *
  * @author outadoc
  */
-public class MainActivity extends ThemedActivity implements IStopsListContainer, NavigationView.OnNavigationItemSelectedListener {
+public class ActivityRealtime extends ThemedActivity implements IStopsListContainer, NavigationView.OnNavigationItemSelectedListener {
 
 	public static final int DEFAULT_DRAWER_ITEM = R.id.drawer_realtime;
 
@@ -67,7 +67,7 @@ public class MainActivity extends ThemedActivity implements IStopsListContainer,
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_realtime);
 
 		// Toolbar
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -141,10 +141,10 @@ public class MainActivity extends ThemedActivity implements IStopsListContainer,
 	public void onBackPressed() {
 		Fragment frag = loadedFragments.get(currentDrawerItem);
 
-		if(frag instanceof WebViewFragment
-				&& ((WebViewFragment) frag).canGoBack()) {
+		if(frag instanceof FragmentWebView
+				&& ((FragmentWebView) frag).canGoBack()) {
 			// If we can move back of a page in the browser, do it
-			((WebViewFragment) frag).goBack();
+			((FragmentWebView) frag).goBack();
 		} else if(currentDrawerItem == DEFAULT_DRAWER_ITEM) {
 			// If we're on the main screen, just exit
 			super.onBackPressed();

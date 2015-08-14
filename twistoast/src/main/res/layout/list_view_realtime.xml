@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Twistoast - drawer_list_header.xml
+  ~ Twistoast - list_view_realtime.xml
   ~ Copyright (C) 2013-2015 Baptiste Candellier
   ~
   ~ Twistoast is free software: you can redistribute it and/or modify
@@ -17,8 +17,14 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<ImageView
+<ListView
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/stops_list"
 	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-    android:background="@drawable/banner" />
+	android:layout_height="match_parent"
+	android:cacheColorHint="@android:color/transparent"
+	android:clipToPadding="false"
+	android:divider="@null"
+	android:listSelector="@android:color/transparent"
+	android:paddingBottom="5dp"
+	android:paddingTop="5dp" />

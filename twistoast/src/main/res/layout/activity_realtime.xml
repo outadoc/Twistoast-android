@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Twistoast - activity_main.xml
+  ~ Twistoast - activity_realtime.xml
   ~ Copyright (C) 2013-2015 Baptiste Candellier
   ~
   ~ Twistoast is free software: you can redistribute it and/or modify
@@ -48,7 +48,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
 			android:layout_gravity="start"
-			app:headerLayout="@layout/drawer_list_header"
+			app:headerLayout="@layout/nav_drawer_header"
 			app:menu="@menu/drawer"/>
 
 	</android.support.v4.widget.DrawerLayout>

@@ -50,16 +50,16 @@ public class FragmentFactory {
 			case R.id.drawer_pricing:
 				return getWebViewFragment(context.getString(R.string.url_drawer_pricing));
 			case R.id.drawer_settings:
-				return new PreferencesFragment();
+				return new FragmentPreferences();
 			case R.id.drawer_about:
-				return new AboutFragment();
+				return new FragmentAbout();
 		}
 
 		return null;
 	}
 
 	private static Fragment getWebViewFragment(String url) {
-		Fragment frag = new WebViewFragment();
+		Fragment frag = new FragmentWebView();
 		Bundle args = new Bundle();
 		args.putString("url", url);
 		frag.setArguments(args);

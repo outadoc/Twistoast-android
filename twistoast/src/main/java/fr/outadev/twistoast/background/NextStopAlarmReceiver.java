@@ -37,7 +37,7 @@ import fr.outadev.android.timeo.TimeoSingleSchedule;
 import fr.outadev.android.timeo.TimeoStop;
 import fr.outadev.android.timeo.TimeoStopSchedule;
 import fr.outadev.twistoast.IWatchedStopChangeListener;
-import fr.outadev.twistoast.MainActivity;
+import fr.outadev.twistoast.ActivityRealtime;
 import fr.outadev.twistoast.R;
 import fr.outadev.twistoast.Database;
 import fr.outadev.twistoast.DatabaseOpenHelper;
@@ -158,7 +158,7 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 	private void notifyForIncomingBus(TimeoStopSchedule schedule) {
 		NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-		Intent notificationIntent = new Intent(context, MainActivity.class);
+		Intent notificationIntent = new Intent(context, ActivityRealtime.class);
 		PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
 
 		// Get the data we need for the notification
@@ -201,7 +201,7 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 	private void updateStopTimeNotification(TimeoStopSchedule schedule) {
 		NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-		Intent notificationIntent = new Intent(context, MainActivity.class);
+		Intent notificationIntent = new Intent(context, ActivityRealtime.class);
 		PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
 
 		// Get the data we need for the notification
@@ -239,7 +239,7 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 	private void notifyNetworkError() {
 		NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-		Intent notificationIntent = new Intent(context, MainActivity.class);
+		Intent notificationIntent = new Intent(context, ActivityRealtime.class);
 		PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
 
 		// Make a nice notification to inform the user of an error

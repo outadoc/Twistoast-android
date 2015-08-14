@@ -36,7 +36,7 @@
 			android:value="@integer/google_play_services_version" />
 
 		<activity
-			android:name=".MainActivity"
+			android:name=".ActivityRealtime"
 			android:label="@string/app_name">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
@@ -45,7 +45,7 @@
 			</intent-filter>
 		</activity>
 		<activity
-			android:name=".AddStopActivity"
+			android:name=".ActivityNewStop"
 			android:label="@string/title_activity_add_stop"
 			android:theme="@style/AddActivityTheme">
 		</activity>

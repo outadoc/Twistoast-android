@@ -1,5 +1,5 @@
 /*
- * Twistoast - PreferencesFragment
+ * Twistoast - FragmentPreferences
  * Copyright (C) 2013-2015 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -31,7 +31,7 @@ import fr.outadev.twistoast.background.TrafficAlertAlarmReceiver;
  *
  * @author outadoc
  */
-public class PreferencesFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
+public class FragmentPreferences extends PreferenceFragment implements OnSharedPreferenceChangeListener {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

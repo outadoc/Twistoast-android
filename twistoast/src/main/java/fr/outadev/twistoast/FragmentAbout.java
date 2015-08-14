@@ -1,5 +1,5 @@
 /*
- * Twistoast - AboutFragment
+ * Twistoast - FragmentAbout
  * Copyright (C) 2013-2015 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -28,7 +28,7 @@ import android.preference.PreferenceFragment;
  *
  * @author outadoc
  */
-public class AboutFragment extends PreferenceFragment {
+public class FragmentAbout extends PreferenceFragment {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

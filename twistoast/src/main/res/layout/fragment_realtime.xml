@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Twistoast - fragment_stops_list.xml
+  ~ Twistoast - fragment_realtime.xml
   ~ Copyright (C) 2013-2015 Baptiste Candellier
   ~
   ~ Twistoast is free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@
 	android:background="@color/main_background_color"
 	android:orientation="vertical">
 
-	<include layout="@layout/traffic_alert" />
+	<include layout="@layout/frag_traffic_alert" />
 
 	<RelativeLayout
 		android:layout_width="match_parent"
@@ -38,11 +38,11 @@
 			android:layout_width="match_parent"
 			android:layout_height="match_parent">
 
-			<include layout="@layout/stops_list" />
+			<include layout="@layout/list_view_realtime" />
 
 		</android.support.v4.widget.SwipeRefreshLayout>
 
-		<include layout="@layout/no_content_view" />
+		<include layout="@layout/view_no_content" />
 
 		<android.support.design.widget.FloatingActionButton
 			android:id="@+id/fab"

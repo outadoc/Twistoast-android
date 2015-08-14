@@ -1,5 +1,5 @@
 /*
- * Twistoast - StopsListArrayAdapter
+ * Twistoast - ArrayAdapterRealtime
  * Copyright (C) 2013-2015 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -54,7 +54,7 @@ import fr.outadev.android.timeo.TimeoStopSchedule;
  *
  * @author outadoc
  */
-public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
+public class ArrayAdapterRealtime extends ArrayAdapter<TimeoStop> {
 
 	private final IStopsListContainer stopsListContainer;
 	private final View parentView;
@@ -68,8 +68,8 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 	private int networkCount = 0;
 	private int nbOutdatedStops = 0;
 
-	public StopsListArrayAdapter(Activity activity, int resource, List<TimeoStop> stops,
-	                             IStopsListContainer stopsListContainer, View parentView) {
+	public ArrayAdapterRealtime(Activity activity, int resource, List<TimeoStop> stops,
+	                            IStopsListContainer stopsListContainer, View parentView) {
 		super(activity, resource, stops);
 
 		this.activity = activity;
@@ -88,7 +88,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 		LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		if(containerView == null) {
-			containerView = inflater.inflate(R.layout.schedule_row, parent, false);
+			containerView = inflater.inflate(R.layout.frag_schedule_row, parent, false);
 		}
 
 		// Get references to the views
@@ -137,7 +137,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 					}
 
 					// Display the current schedule
-					View singleScheduleView = inflater.inflate(R.layout.single_schedule_label, null);
+					View singleScheduleView = inflater.inflate(R.layout.frag_single_schedule_label, null);
 
 					TextView lbl_schedule_time = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule);
 					TextView lbl_schedule_direction = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule_direction);
@@ -183,7 +183,7 @@ public class StopsListArrayAdapter extends ArrayAdapter<TimeoStop> {
 	 * Supposed to be used as a placeholder for an actual schedule time row.
 	 */
 	private View getEmptyScheduleLabel(LayoutInflater inflater) {
-		View singleScheduleView = inflater.inflate(R.layout.single_schedule_label, null);
+		View singleScheduleView = inflater.inflate(R.layout.frag_single_schedule_label, null);
 		TextView lbl_schedule_time = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule);
 		lbl_schedule_time.setText(R.string.no_upcoming_stops);
 

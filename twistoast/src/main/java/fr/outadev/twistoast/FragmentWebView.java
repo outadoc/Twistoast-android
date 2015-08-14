@@ -1,5 +1,5 @@
 /*
- * Twistoast - WebViewFragment
+ * Twistoast - FragmentWebView
  * Copyright (C) 2013-2015 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -41,7 +41,7 @@ import java.util.Map;
  * A fragment that contains a webview and its controls.
  * Will automatically inject some JS in the pages to make their title disappear, for cosmetic reasons.
  */
-public class WebViewFragment extends Fragment {
+public class FragmentWebView extends Fragment {
 
 	private WebView webView;
 	private MenuItem itemRefresh;
