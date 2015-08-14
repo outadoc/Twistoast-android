@@ -30,6 +30,10 @@ public interface IStopsListContainer {
 	 */
 	void endRefresh(boolean success);
 
+	boolean isRefreshing();
+
+	void setNoContentViewVisible(boolean visible);
+
 	/**
 	 * Load the fragment at the specified drawer index.
 	 *

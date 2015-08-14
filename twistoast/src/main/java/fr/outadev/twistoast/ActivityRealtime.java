@@ -126,12 +126,6 @@ public class ActivityRealtime extends ThemedActivity implements IStopsListContai
 	}
 
 	@Override
-	protected void onStart() {
-		super.onStart();
-		displayGlobalTrafficInfo();
-	}
-
-	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		drawerToggle.onConfigurationChanged(newConfig);
@@ -158,11 +152,6 @@ public class ActivityRealtime extends ThemedActivity implements IStopsListContai
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		return drawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
-	}
-
-	@Override
 	protected void onSaveInstanceState(@NonNull Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putInt("key_current_drawer_item", currentDrawerItem);
@@ -170,8 +159,27 @@ public class ActivityRealtime extends ThemedActivity implements IStopsListContai
 	}
 
 	@Override
+	protected void onStart() {
+		super.onStart();
+		displayGlobalTrafficInfo();
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		return drawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+	}
+
+	@Override
 	public void endRefresh(boolean success) {
-		// useless here, wat
+	}
+
+	@Override
+	public boolean isRefreshing() {
+		return false;
+	}
+
+	@Override
+	public void setNoContentViewVisible(boolean visible) {
 	}
 
 	@Override

@@ -19,18 +19,21 @@
 package fr.outadev.twistoast;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
-import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -48,16 +51,18 @@ import fr.outadev.android.timeo.TimeoRequestHandler;
 import fr.outadev.android.timeo.TimeoSingleSchedule;
 import fr.outadev.android.timeo.TimeoStop;
 import fr.outadev.android.timeo.TimeoStopSchedule;
+import fr.outadev.twistoast.background.NextStopAlarmReceiver;
 
 /**
  * An array adapter for the main list of bus stops.
  *
  * @author outadoc
  */
-public class ArrayAdapterRealtime extends ArrayAdapter<TimeoStop> {
+public class ArrayAdapterRealtime extends RecyclerView.Adapter<ArrayAdapterRealtime.ViewHolder> {
 
 	private final IStopsListContainer stopsListContainer;
 	private final View parentView;
+
 	private final Activity activity;
 	private final Database db;
 
@@ -67,115 +72,131 @@ public class ArrayAdapterRealtime extends ArrayAdapter<TimeoStop> {
 
 	private int networkCount = 0;
 	private int nbOutdatedStops = 0;
+	private ViewHolder.IOnLongClickListener clickListener = new ViewHolder.IOnLongClickListener() {
 
-	public ArrayAdapterRealtime(Activity activity, int resource, List<TimeoStop> stops,
-	                            IStopsListContainer stopsListContainer, View parentView) {
-		super(activity, resource, stops);
+		@Override
+		public boolean onLongClick(View view, int position) {
+			if(!stopsListContainer.isRefreshing()) {
+				final TimeoStop currentStop = stops.get(position);
 
+				// Menu items
+				String contextualMenuItems[] = new String[]{
+						view.getContext().getString(R.string.stop_action_delete),
+						view.getContext().getString((!currentStop.isWatched()) ? R.string.stop_action_watch : R.string.stop_action_unwatch)
+				};
+
+				// Build the long click contextual menu
+				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+				builder.setItems(contextualMenuItems, new DialogInterface.OnClickListener() {
+
+					public void onClick(DialogInterface dialog, int which) {
+
+						if(which == 0) {
+							deleteStopAction(currentStop, which);
+						} else if(which == 1 && !currentStop.isWatched()) {
+							startWatchingStopAction(currentStop);
+						} else if(which == 1) {
+							stopWatchingStopAction(currentStop);
+						}
+					}
+
+				});
+
+				builder.show();
+			}
+
+			return true;
+		}
+
+		private void deleteStopAction(final TimeoStop stop, final int position) {
+			// Remove from the database and the interface
+			db.deleteStop(stop);
+			stops.remove(stop);
+
+			if(stop.isWatched()) {
+				db.stopWatchingStop(stop);
+				stop.setWatched(false);
+			}
+
+			if(stops.isEmpty()) {
+				stopsListContainer.setNoContentViewVisible(true);
+			}
+
+			notifyDataSetChanged();
+
+			Snackbar.make(parentView, R.string.confirm_delete_success, Snackbar.LENGTH_LONG)
+					.setAction(R.string.cancel_stop_deletion, new View.OnClickListener() {
+
+						@Override
+						public void onClick(View view) {
+							Log.i(Utils.TAG, "restoring stop " + stop);
+
+							db.addStopToDatabase(stop);
+							stops.add(position, stop);
+							notifyDataSetChanged();
+						}
+
+					})
+					.show();
+		}
+
+		private void startWatchingStopAction(final TimeoStop stop) {
+			// We wish to get notifications about this upcoming stop
+			db.addToWatchedStops(stop);
+			stop.setWatched(true);
+			notifyDataSetChanged();
+
+			// Turn the notifications on
+			NextStopAlarmReceiver.enable(getActivity().getApplicationContext());
+
+			Snackbar.make(parentView, parentView.getContext().getString(R.string.notifs_enable_toast, stop.getName()), Snackbar.LENGTH_LONG)
+					.setAction(R.string.cancel_stop_deletion, new View.OnClickListener() {
+
+						@Override
+						public void onClick(View view) {
+							db.stopWatchingStop(stop);
+							stop.setWatched(false);
+							notifyDataSetChanged();
+
+							// Turn the notifications back off if necessary
+							if(db.getWatchedStopsCount() == 0) {
+								NextStopAlarmReceiver.disable(getActivity().getApplicationContext());
+							}
+						}
+
+					})
+					.show();
+		}
+
+		private void stopWatchingStopAction(TimeoStop stop) {
+			// JUST STOP THESE NOTIFICATIONS ALREADY GHGHGHBLBLBL
+			db.stopWatchingStop(stop);
+			stop.setWatched(false);
+			notifyDataSetChanged();
+
+			// Turn the notifications back off if necessary
+			if(db.getWatchedStopsCount() == 0) {
+				NextStopAlarmReceiver.disable(getActivity().getApplicationContext());
+			}
+
+			NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+			notificationManager.cancel(Integer.valueOf(stop.getId()));
+
+			Snackbar.make(parentView, parentView.getContext().getString(R.string.notifs_disable_toast, stop.getName()), Snackbar.LENGTH_LONG)
+					.show();
+		}
+
+	};
+
+	public ArrayAdapterRealtime(Activity activity, List<TimeoStop> stops, IStopsListContainer stopsListContainer, View parentView) {
 		this.activity = activity;
 		this.stops = stops;
 		this.stopsListContainer = stopsListContainer;
 		this.parentView = parentView;
 		this.schedules = new HashMap<>();
 		this.networks = TimeoRequestHandler.getNetworksList();
-		this.db = new Database(DatabaseOpenHelper.getInstance(getContext()));
+		this.db = new Database(DatabaseOpenHelper.getInstance(activity));
 		this.networkCount = db.getNetworksCount();
-	}
-
-	@Override
-	public View getView(final int position, View containerView, final ViewGroup parent) {
-		TimeoStop currentStop = getItem(position);
-		LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-		if(containerView == null) {
-			containerView = inflater.inflate(R.layout.frag_schedule_row, parent, false);
-		}
-
-		// Get references to the views
-		FrameLayout view_line_id = (FrameLayout) containerView.findViewById(R.id.view_line_id);
-
-		TextView lbl_line = (TextView) containerView.findViewById(R.id.lbl_line_id);
-		TextView lbl_stop = (TextView) containerView.findViewById(R.id.lbl_stop_name);
-		TextView lbl_direction = (TextView) containerView.findViewById(R.id.lbl_direction_name);
-
-		LinearLayout view_schedule_container = (LinearLayout) containerView.findViewById(R.id.view_schedule_labels_container);
-
-		ImageView img_stop_watched = (ImageView) containerView.findViewById(R.id.img_stop_watched);
-
-		// Set line drawable. We have to set the colour on the background
-		GradientDrawable lineDrawable = (GradientDrawable) view_line_id.getBackground();
-		lineDrawable.setColor(Colors.getBrighterColor(Color.parseColor(currentStop.getLine().getColor())));
-
-		lbl_line.setText(currentStop.getLine().getId());
-
-		// Set stop text
-		lbl_stop.setText(getContext().getResources().getString(R.string.stop_name, currentStop.getName()));
-
-		// Set direction text
-		lbl_direction.setText(getContext().getResources()
-				.getString(R.string.direction_name, currentStop.getLine().getDirection().getName()));
-
-		// Remove all existing schedules in that view
-		view_schedule_container.removeAllViewsInLayout();
-
-		// Add the new schedules one by one
-		if(schedules.containsKey(currentStop) && schedules.get(currentStop) != null) {
-
-			// If there are schedules
-			if(schedules.get(currentStop).getSchedules() != null) {
-				// Get the schedules for this stop
-				List<TimeoSingleSchedule> currScheds = schedules.get(currentStop).getSchedules();
-
-				for(TimeoSingleSchedule currSched : currScheds) {
-
-					// We don't update from database all the time, so we can't figure this out by just updating everything.
-					// If there is a bus coming, tell the stop that it's not watched anymore.
-					// This won't work all the time, but it's not too bad.
-					if(Calendar.getInstance().getTimeInMillis()
-							> ScheduleTime.getNextDateForTime(currSched.getTime()).getTimeInMillis()) {
-						currentStop.setWatched(false);
-					}
-
-					// Display the current schedule
-					View singleScheduleView = inflater.inflate(R.layout.frag_single_schedule_label, null);
-
-					TextView lbl_schedule_time = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule);
-					TextView lbl_schedule_direction = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule_direction);
-
-					lbl_schedule_time.setText(currSched.getFormattedTime(getContext()));
-					lbl_schedule_direction.setText(" — " + currSched.getDirection());
-
-					view_schedule_container.addView(singleScheduleView);
-				}
-
-				if(currScheds.isEmpty()) {
-					// If no schedules are available, add a fake one to inform the user
-					view_schedule_container.addView(getEmptyScheduleLabel(inflater));
-				}
-
-				if(containerView.getAlpha() != 1.0F) {
-					containerView.setAlpha(1.0F);
-
-					AlphaAnimation alphaAnim = new AlphaAnimation(0.4F, 1.0f);
-					alphaAnim.setDuration(500);
-					containerView.startAnimation(alphaAnim);
-				}
-			}
-
-		} else {
-			// If we can't find the schedules we asked for in the hashmap, something went wrong. :c
-			// It should be noted that it normally happens the first time the list is loaded, since no data was downloaded yet.
-			Log.e(Utils.TAG, "missing stop schedule for " + currentStop +
-					" (ref=" + currentStop.getReference() + "); ref outdated?");
-
-			// Make the row look a bit translucent to make it stand out
-			view_schedule_container.addView(getEmptyScheduleLabel(inflater));
-			containerView.setAlpha(0.4F);
-		}
-
-		img_stop_watched.setVisibility((currentStop.isWatched()) ? View.VISIBLE : View.GONE);
-
-		return containerView;
 	}
 
 	/**
@@ -214,25 +235,31 @@ public class ArrayAdapterRealtime extends ArrayAdapter<TimeoStop> {
 
 				} catch(final Exception e) {
 					e.printStackTrace();
-					activity.runOnUiThread(new Runnable() {
+					getActivity().runOnUiThread(new Runnable() {
 
 						@Override
 						public void run() {
+							// It's it's a blocking message, display it in a dialog
 							if(e instanceof TimeoBlockingMessageException) {
-								((TimeoBlockingMessageException) e).getAlertMessage(getContext()).show();
+								((TimeoBlockingMessageException) e).getAlertMessage(getActivity()).show();
 							} else {
 								String message;
 
+								// If the error is a TimeoException, we'll use a special formatting string
 								if(e instanceof TimeoException) {
+									TimeoException e1 = (TimeoException) e;
+
+									// If there are details to the error, display them. Otherwise, only display the error code
 									if(e.getMessage() != null && !e.getMessage().trim().isEmpty()) {
-										message = getContext().getString(R.string.error_toast_twisto_detailed,
-												((TimeoException) e).getErrorCode(), e.getMessage());
+										message = getActivity().getString(R.string.error_toast_twisto_detailed,
+												e1.getErrorCode(), e.getMessage());
 									} else {
-										message = getContext().getString(R.string.error_toast_twisto,
-												((TimeoException) e).getErrorCode());
+										message = getActivity().getString(R.string.error_toast_twisto,
+												e1.getErrorCode());
 									}
 								} else {
-									message = getContext().getString(R.string.loading_error);
+									// If it's a simple error, just display a generic error message
+									message = getActivity().getString(R.string.loading_error);
 								}
 
 								Snackbar.make(parentView, message, Snackbar.LENGTH_LONG)
@@ -279,6 +306,137 @@ public class ArrayAdapterRealtime extends ArrayAdapter<TimeoStop> {
 	 */
 	public int checkSchedulesMismatchCount() {
 		return nbOutdatedStops;
+	}
+
+	@Override
+	public ArrayAdapterRealtime.ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
+		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.frag_schedule_row, parent, false);
+		return new ViewHolder(v);
+	}
+
+	@Override
+	public void onBindViewHolder(ArrayAdapterRealtime.ViewHolder view, final int position) {
+		// Get the stop we're inflating
+		TimeoStop currentStop = stops.get(position);
+		LayoutInflater inflater = LayoutInflater.from(view.container.getContext());
+
+		view.lineDrawable.setColor(Colors.getBrighterColor(Color.parseColor(currentStop.getLine().getColor())));
+
+		view.lbl_line.setText(currentStop.getLine().getId());
+		view.lbl_stop.setText(view.lbl_stop.getContext().getString(R.string.stop_name, currentStop.getName()));
+		view.lbl_direction.setText(view.lbl_direction.getContext().getString(R.string.direction_name, currentStop.getLine().getDirection().getName()));
+
+		// Remove all existing schedules in that view
+		view.view_schedule_container.removeAllViewsInLayout();
+
+		// Add the new schedules one by one
+		if(schedules.containsKey(currentStop) && schedules.get(currentStop) != null) {
+
+			// If there are schedules
+			if(schedules.get(currentStop).getSchedules() != null) {
+				// Get the schedules for this stop
+				List<TimeoSingleSchedule> currScheds = schedules.get(currentStop).getSchedules();
+
+				for(TimeoSingleSchedule currSched : currScheds) {
+
+					// We don't update from database all the time, so we can't figure this out by just updating everything.
+					// If there is a bus coming, tell the stop that it's not watched anymore.
+					// This won't work all the time, but it's not too bad.
+					if(Calendar.getInstance().getTimeInMillis()
+							> ScheduleTime.getNextDateForTime(currSched.getTime()).getTimeInMillis()) {
+						currentStop.setWatched(false);
+					}
+
+					// Display the current schedule
+					View singleScheduleView = inflater.inflate(R.layout.frag_single_schedule_label, null);
+
+					TextView lbl_schedule_time = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule);
+					TextView lbl_schedule_direction = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule_direction);
+
+					lbl_schedule_time.setText(currSched.getFormattedTime(lbl_schedule_time.getContext()));
+					lbl_schedule_direction.setText(" — " + currSched.getDirection());
+
+					view.view_schedule_container.addView(singleScheduleView);
+				}
+
+				if(currScheds.isEmpty()) {
+					// If no schedules are available, add a fake one to inform the user
+					view.view_schedule_container.addView(getEmptyScheduleLabel(inflater));
+				}
+
+				if(view.container.getAlpha() != 1.0F) {
+					view.container.setAlpha(1.0F);
+
+					AlphaAnimation alphaAnim = new AlphaAnimation(0.4F, 1.0f);
+					alphaAnim.setDuration(500);
+					view.container.startAnimation(alphaAnim);
+				}
+			}
+
+		} else {
+			// If we can't find the schedules we asked for in the hashmap, something went wrong. :c
+			// It should be noted that it normally happens the first time the list is loaded, since no data was downloaded yet.
+			Log.e(Utils.TAG, "missing stop schedule for " + currentStop +
+					" (ref=" + currentStop.getReference() + "); ref outdated?");
+
+			// Make the row look a bit translucent to make it stand out
+			view.view_schedule_container.addView(getEmptyScheduleLabel(inflater));
+			view.container.setAlpha(0.4F);
+		}
+
+		view.container.setOnLongClickListener(new View.OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View v) {
+				return clickListener.onLongClick(v, position);
+			}
+		});
+
+		view.img_stop_watched.setVisibility((currentStop.isWatched()) ? View.VISIBLE : View.GONE);
+	}
+
+	@Override
+	public int getItemCount() {
+		return stops.size();
+	}
+
+	public Activity getActivity() {
+		return activity;
+	}
+
+	public static class ViewHolder extends RecyclerView.ViewHolder {
+
+		public LinearLayout container;
+		public FrameLayout view_line_id;
+
+		public TextView lbl_line;
+		public TextView lbl_stop;
+		public TextView lbl_direction;
+		public LinearLayout view_schedule_container;
+		public ImageView img_stop_watched;
+		public GradientDrawable lineDrawable;
+
+		public ViewHolder(View v) {
+			super(v);
+
+			container = (LinearLayout) v;
+
+			// Get references to the views
+			view_line_id = (FrameLayout) v.findViewById(R.id.view_line_id);
+
+			lbl_line = (TextView) v.findViewById(R.id.lbl_line_id);
+			lbl_stop = (TextView) v.findViewById(R.id.lbl_stop_name);
+			lbl_direction = (TextView) v.findViewById(R.id.lbl_direction_name);
+
+			view_schedule_container = (LinearLayout) v.findViewById(R.id.view_schedule_labels_container);
+			img_stop_watched = (ImageView) v.findViewById(R.id.img_stop_watched);
+			lineDrawable = (GradientDrawable) view_line_id.getBackground();
+		}
+
+		public interface IOnLongClickListener {
+
+			boolean onLongClick(View view, int position);
+		}
+
 	}
 
 }

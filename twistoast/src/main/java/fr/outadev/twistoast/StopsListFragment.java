@@ -18,12 +18,8 @@
 
 package fr.outadev.twistoast;
 
-import android.app.AlertDialog;
 import android.app.Fragment;
-import android.app.NotificationManager;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -34,12 +30,12 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -61,7 +57,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 	private final Handler periodicRefreshHandler = new Handler();
 	private Runnable periodicRefreshRunnable;
 
-	private AbsListView stopsListView;
+	private RecyclerView stopsRecyclerView;
 	private SwipeRefreshLayout swipeRefreshLayout;
 	private View noContentView;
 	private FloatingActionButton fab;
@@ -126,10 +122,14 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 		swipeRefreshLayout.setColorSchemeResources(R.color.twisto_primary, R.color.twisto_secondary,
 				R.color.twisto_primary, R.color.twisto_secondary);
 
-		stopsListView = (AbsListView) view.findViewById(R.id.stops_list);
+		stopsRecyclerView = (RecyclerView) view.findViewById(R.id.stops_list);
 		noContentView = view.findViewById(R.id.view_no_content);
 
 		fab = (FloatingActionButton) view.findViewById(R.id.fab);
+
+		final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+		layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+		stopsRecyclerView.setLayoutManager(layoutManager);
 
 		setupListeners();
 		return view;
@@ -175,47 +175,25 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 		refreshAllStopSchedules(true);
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+
+		isInBackground = false;
+		// when the activity is resuming, refresh
+		refreshAllStopSchedules(false);
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		// when the activity is pausing, stop refreshing automatically
+		Log.i(Utils.TAG, "stopping automatic refresh, app paused");
+		isInBackground = true;
+		periodicRefreshHandler.removeCallbacks(periodicRefreshRunnable);
+	}
+
 	private void setupListeners() {
-		// Set up a long click listener for the main stops list that offers actions
-		// to be realised on a single item
-		stopsListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-
-			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-				if(!isRefreshing) {
-					final TimeoStop currentStop = listAdapter.getItem(position);
-
-					// Menu items
-					String contextualMenuItems[] = new String[]{
-							getString(R.string.stop_action_delete),
-							getString((!currentStop.isWatched()) ? R.string.stop_action_watch : R.string.stop_action_unwatch)
-					};
-
-					// Build the long click contextual menu
-					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-					builder.setItems(contextualMenuItems, new DialogInterface.OnClickListener() {
-
-						public void onClick(DialogInterface dialog, int which) {
-
-							if(which == 0) {
-								deleteStopAction(currentStop, position);
-							} else if(which == 1 && !currentStop.isWatched()) {
-								startWatchingStopAction(currentStop);
-							} else if(which == 1) {
-								stopWatchingStopAction(currentStop);
-							}
-						}
-
-					});
-
-					builder.show();
-				}
-
-				return true;
-			}
-
-		});
-
 		fab.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -247,102 +225,6 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 		NextStopAlarmReceiver.setWatchedStopDismissalListener(watchedStopStateListener);
 	}
 
-	private void deleteStopAction(final TimeoStop stop, final int position) {
-		// Remove from the database and the interface
-		databaseHandler.deleteStop(stop);
-		listAdapter.remove(stop);
-
-		if(stop.isWatched()) {
-			databaseHandler.stopWatchingStop(stop);
-			stop.setWatched(false);
-		}
-
-		if(listAdapter.isEmpty()) {
-			noContentView.setVisibility(View.VISIBLE);
-		}
-
-		listAdapter.notifyDataSetChanged();
-
-		Snackbar.make(stopsListView, R.string.confirm_delete_success, Snackbar.LENGTH_LONG)
-				.setAction(R.string.cancel_stop_deletion, new View.OnClickListener() {
-
-					@Override
-					public void onClick(View view) {
-						Log.i(Utils.TAG, "restoring stop " + stop);
-
-						databaseHandler.addStopToDatabase(stop);
-						listAdapter.insert(stop, position);
-						listAdapter.notifyDataSetChanged();
-					}
-
-				})
-				.show();
-	}
-
-	private void startWatchingStopAction(final TimeoStop stop) {
-		// We wish to get notifications about this upcoming stop
-		databaseHandler.addToWatchedStops(stop);
-		stop.setWatched(true);
-		listAdapter.notifyDataSetChanged();
-
-		// Turn the notifications on
-		NextStopAlarmReceiver.enable(getActivity().getApplicationContext());
-
-		Snackbar.make(stopsListView, getString(R.string.notifs_enable_toast, stop.getName()), Snackbar.LENGTH_LONG)
-				.setAction(R.string.cancel_stop_deletion, new View.OnClickListener() {
-
-					@Override
-					public void onClick(View view) {
-						databaseHandler.stopWatchingStop(stop);
-						stop.setWatched(false);
-						listAdapter.notifyDataSetChanged();
-
-						// Turn the notifications back off if necessary
-						if(databaseHandler.getWatchedStopsCount() == 0) {
-							NextStopAlarmReceiver.disable(getActivity().getApplicationContext());
-						}
-					}
-
-				})
-				.show();
-	}
-
-	private void stopWatchingStopAction(TimeoStop stop) {
-		// JUST STOP THESE NOTIFICATIONS ALREADY GHGHGHBLBLBL
-		databaseHandler.stopWatchingStop(stop);
-		stop.setWatched(false);
-		listAdapter.notifyDataSetChanged();
-
-		// Turn the notifications back off if necessary
-		if(databaseHandler.getWatchedStopsCount() == 0) {
-			NextStopAlarmReceiver.disable(getActivity().getApplicationContext());
-		}
-
-		NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-		notificationManager.cancel(Integer.valueOf(stop.getId()));
-
-		Snackbar.make(stopsListView, getString(R.string.notifs_disable_toast, stop.getName()), Snackbar.LENGTH_LONG)
-				.show();
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-
-		isInBackground = false;
-		// when the activity is resuming, refresh
-		refreshAllStopSchedules(false);
-	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
-		// when the activity is pausing, stop refreshing automatically
-		Log.i(Utils.TAG, "stopping automatic refresh, app paused");
-		isInBackground = true;
-		periodicRefreshHandler.removeCallbacks(periodicRefreshRunnable);
-	}
-
 	/**
 	 * Refreshes the list's schedules and displays them to the user.
 	 *
@@ -365,8 +247,8 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 		// modified
 		if(reloadFromDatabase) {
 			stops = databaseHandler.getAllStops();
-			listAdapter = new ArrayAdapterRealtime(getActivity(), android.R.layout.simple_list_item_1, stops, this, stopsListView);
-			stopsListView.setAdapter(listAdapter);
+			listAdapter = new ArrayAdapterRealtime(getActivity(), stops, this, stopsRecyclerView);
+			stopsRecyclerView.setAdapter(listAdapter);
 		}
 
 		// finally, get the schedule
@@ -379,7 +261,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 		isRefreshing = false;
 		swipeRefreshLayout.setRefreshing(false);
 
-		noContentView.setVisibility((listAdapter.isEmpty()) ? View.VISIBLE : View.GONE);
+		noContentView.setVisibility((listAdapter.getItemCount() == 0) ? View.VISIBLE : View.GONE);
 
 		// reset the timer loop, and start it again
 		// this ensures the list is refreshed automatically every 60 seconds
@@ -392,10 +274,10 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 		if(success) {
 			int mismatch = listAdapter.checkSchedulesMismatchCount();
 
-			Log.i(Utils.TAG, "refreshed, " + listAdapter.getCount() + " stops in db");
+			Log.i(Utils.TAG, "refreshed, " + listAdapter.getItemCount() + " stops in db");
 
 			if(mismatch > 0) {
-				Snackbar.make(stopsListView, R.string.stop_ref_update_message_title, Snackbar.LENGTH_LONG)
+				Snackbar.make(stopsRecyclerView, R.string.stop_ref_update_message_title, Snackbar.LENGTH_LONG)
 						.setAction(R.string.stop_ref_update_message_action, new View.OnClickListener() {
 
 							@Override
@@ -407,6 +289,16 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 						.show();
 			}
 		}
+	}
+
+	@Override
+	public boolean isRefreshing() {
+		return isRefreshing;
+	}
+
+	@Override
+	public void setNoContentViewVisible(boolean visible) {
+		noContentView.setVisibility(visible ? View.VISIBLE : View.GONE);
 	}
 
 	@Override
@@ -458,7 +350,7 @@ public class StopsListFragment extends Fragment implements IStopsListContainer {
 			refreshAllStopSchedules(true);
 
 			if(e != null) {
-				Snackbar.make(stopsListView, R.string.stop_ref_update_error_text, Snackbar.LENGTH_LONG)
+				Snackbar.make(stopsRecyclerView, R.string.stop_ref_update_error_text, Snackbar.LENGTH_LONG)
 						.setAction(R.string.error_retry, new View.OnClickListener() {
 
 							@Override
