@@ -66,7 +66,7 @@ public class FragmentRealtime extends Fragment implements IStopsListContainer {
 	private List<TimeoStop> stops;
 
 	private Database databaseHandler;
-	private ArrayAdapterRealtime listAdapter;
+	private RecyclerAdapterRealtime listAdapter;
 	private boolean autoRefresh;
 
 	private boolean isRefreshing;
@@ -248,7 +248,7 @@ public class FragmentRealtime extends Fragment implements IStopsListContainer {
 		// modified
 		if(reloadFromDatabase) {
 			stops = databaseHandler.getAllStops();
-			listAdapter = new ArrayAdapterRealtime(getActivity(), stops, this, stopsRecyclerView);
+			listAdapter = new RecyclerAdapterRealtime(getActivity(), stops, this, stopsRecyclerView);
 			stopsRecyclerView.setAdapter(listAdapter);
 		}
 

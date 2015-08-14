@@ -1,5 +1,5 @@
 /*
- * Twistoast - ArrayAdapterRealtime
+ * Twistoast - RecyclerAdapterRealtime
  * Copyright (C) 2013-2015 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -58,7 +58,7 @@ import fr.outadev.twistoast.background.NextStopAlarmReceiver;
  *
  * @author outadoc
  */
-public class ArrayAdapterRealtime extends RecyclerView.Adapter<ArrayAdapterRealtime.ViewHolder> {
+public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapterRealtime.ViewHolder> {
 
 	public static final int NB_SCHEDULES_DISPLAYED = 2;
 
@@ -191,7 +191,7 @@ public class ArrayAdapterRealtime extends RecyclerView.Adapter<ArrayAdapterRealt
 
 	};
 
-	public ArrayAdapterRealtime(Activity activity, List<TimeoStop> stops, IStopsListContainer stopsListContainer, View parentView) {
+	public RecyclerAdapterRealtime(Activity activity, List<TimeoStop> stops, IStopsListContainer stopsListContainer, View parentView) {
 		this.activity = activity;
 		this.stops = stops;
 		this.stopsListContainer = stopsListContainer;
@@ -300,13 +300,13 @@ public class ArrayAdapterRealtime extends RecyclerView.Adapter<ArrayAdapterRealt
 	}
 
 	@Override
-	public ArrayAdapterRealtime.ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
+	public RecyclerAdapterRealtime.ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
 		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.frag_schedule_row, parent, false);
 		return new ViewHolder(v);
 	}
 
 	@Override
-	public void onBindViewHolder(ArrayAdapterRealtime.ViewHolder view, final int position) {
+	public void onBindViewHolder(RecyclerAdapterRealtime.ViewHolder view, final int position) {
 		// Get the stop we're inflating
 		TimeoStop currentStop = stops.get(position);
 
