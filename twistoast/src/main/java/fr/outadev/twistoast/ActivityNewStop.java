@@ -1,13 +1,13 @@
 /*
- * Twistoast - AddStopActivity
- * Copyright (C) 2013-2014  Baptiste Candellier
+ * Twistoast - ActivityNewStop
+ * Copyright (C) 2013-2015 Baptiste Candellier
  *
- * This program is free software: you can redistribute it and/or modify
+ * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * Twistoast is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -24,6 +24,8 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -38,9 +40,6 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.nispok.snackbar.Snackbar;
-import com.nispok.snackbar.listeners.ActionClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +58,7 @@ import fr.outadev.android.timeo.TimeoStopSchedule;
  *
  * @author outadoc
  */
-public class AddStopActivity extends ThemedActivity {
+public class ActivityNewStop extends ThemedActivity {
 
 	public static final int NO_STOP_ADDED = 0;
 	public static final int STOP_ADDED = 1;
@@ -82,9 +81,9 @@ public class AddStopActivity extends ThemedActivity {
 	private FrameLayout view_line_id;
 	private TextView lbl_stop;
 	private TextView lbl_direction;
-	private TextView lbl_schedule_direction;
 
 	private LinearLayout view_schedule_container;
+	private SwipeRefreshLayout swipeRefreshLayout;
 
 	private MenuItem item_next;
 
@@ -94,20 +93,14 @@ public class AddStopActivity extends ThemedActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		// we'll want to show a loading spinning wheel, we have to request that feature
-		//TODO: fix this, this is broken when using AppCompat for some reason
-		//supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-
 		// setup everything
-		setContentView(R.layout.activity_add_stop);
-
+		setContentView(R.layout.activity_new_stop);
 		setResult(NO_STOP_ADDED);
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
 		setSupportActionBar(toolbar);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		setSupportProgressBarIndeterminateVisibility(false);
 
 		databaseHandler = new Database(DatabaseOpenHelper.getInstance(this));
 
@@ -134,6 +127,12 @@ public class AddStopActivity extends ThemedActivity {
 		view_line_id = (FrameLayout) findViewById(R.id.view_line_id);
 
 		view_schedule_container = (LinearLayout) findViewById(R.id.view_schedule_labels_container);
+
+		swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.ptr_layout);
+		swipeRefreshLayout.setColorSchemeResources(
+				R.color.twisto_primary, R.color.twisto_secondary,
+				R.color.twisto_primary, R.color.twisto_secondary);
+		swipeRefreshLayout.setRefreshing(true);
 
 		spinLine.setEnabled(false);
 		spinDirection.setEnabled(false);
@@ -261,7 +260,8 @@ public class AddStopActivity extends ThemedActivity {
 
 						@Override
 						protected void onPreExecute() {
-							setSupportProgressBarIndeterminateVisibility(true);
+							swipeRefreshLayout.setEnabled(true);
+							swipeRefreshLayout.setRefreshing(true);
 						}
 
 						@Override
@@ -278,8 +278,6 @@ public class AddStopActivity extends ThemedActivity {
 
 						@Override
 						protected void onPostExecute(List<TimeoStop> timeoStops) {
-							setSupportProgressBarIndeterminateVisibility(false);
-
 							if(timeoStops != null) {
 								spinStop.setEnabled(true);
 
@@ -338,7 +336,8 @@ public class AddStopActivity extends ThemedActivity {
 
 			@Override
 			protected void onPreExecute() {
-				setSupportProgressBarIndeterminateVisibility(true);
+				swipeRefreshLayout.setEnabled(true);
+				swipeRefreshLayout.setRefreshing(true);
 			}
 
 			@Override
@@ -354,9 +353,11 @@ public class AddStopActivity extends ThemedActivity {
 
 			@Override
 			protected void onPostExecute(TimeoStopSchedule schedule) {
-				setSupportProgressBarIndeterminateVisibility(false);
-				LayoutInflater inflater = (LayoutInflater) AddStopActivity.this.getSystemService(Context
-						.LAYOUT_INFLATER_SERVICE);
+				LayoutInflater inflater = (LayoutInflater) ActivityNewStop.this
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+				swipeRefreshLayout.setEnabled(false);
+				swipeRefreshLayout.setRefreshing(false);
 
 				if(schedule != null) {
 					List<TimeoSingleSchedule> schedList = schedule.getSchedules();
@@ -364,13 +365,13 @@ public class AddStopActivity extends ThemedActivity {
 					// set the schedule labels, if we need to
 					if(schedList != null) {
 						for(TimeoSingleSchedule currSched : schedList) {
-							View singleScheduleView = inflater.inflate(R.layout.single_schedule_label, null);
+							View singleScheduleView = inflater.inflate(R.layout.frag_single_schedule_label, null);
 
 							TextView lbl_schedule = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule);
 							TextView lbl_schedule_direction = (TextView) singleScheduleView.findViewById(R.id
 									.lbl_schedule_direction);
 
-							lbl_schedule.setText(currSched.getFormattedTime(AddStopActivity.this));
+							lbl_schedule.setText(currSched.getFormattedTime(ActivityNewStop.this));
 							lbl_schedule_direction.setText(" — " + currSched.getDirection());
 
 							view_schedule_container.addView(singleScheduleView);
@@ -396,7 +397,8 @@ public class AddStopActivity extends ThemedActivity {
 
 			@Override
 			protected void onPreExecute() {
-				setSupportProgressBarIndeterminateVisibility(true);
+				swipeRefreshLayout.setEnabled(true);
+				swipeRefreshLayout.setRefreshing(true);
 			}
 
 			@Override
@@ -412,8 +414,6 @@ public class AddStopActivity extends ThemedActivity {
 
 			@Override
 			protected void onPostExecute(List<TimeoLine> timeoLines) {
-				setSupportProgressBarIndeterminateVisibility(false);
-
 				if(timeoLines != null) {
 					lineList.clear();
 					lineList.addAll(timeoLines);
@@ -452,29 +452,34 @@ public class AddStopActivity extends ThemedActivity {
 			@Override
 			public void run() {
 				if(e instanceof TimeoBlockingMessageException) {
-					((TimeoBlockingMessageException) e).getAlertMessage(AddStopActivity.this).show();
+					((TimeoBlockingMessageException) e).getAlertMessage(ActivityNewStop.this).show();
 				} else {
 					String message;
 
 					if(e instanceof TimeoException) {
-						message = getString(R.string.error_toast_twisto, ((TimeoException) e).getErrorCode());
+						if(e.getMessage() != null && !e.getMessage().trim().isEmpty()) {
+							message = getString(R.string.error_toast_twisto_detailed,
+									((TimeoException) e).getErrorCode(), e.getMessage());
+						} else {
+							message = getString(R.string.error_toast_twisto, ((TimeoException) e).getErrorCode());
+						}
 					} else {
 						message = getString(R.string.loading_error);
 					}
 
-					Snackbar.with(AddStopActivity.this)
-							.text(message)
-							.actionLabel(R.string.error_retry)
-							.actionColor(Colors.getColorAccent(AddStopActivity.this))
-							.actionListener(new ActionClickListener() {
+					swipeRefreshLayout.setEnabled(false);
+					swipeRefreshLayout.setRefreshing(false);
+
+					Snackbar.make(findViewById(R.id.content), message, Snackbar.LENGTH_LONG)
+							.setAction(R.string.error_retry, new View.OnClickListener() {
 
 								@Override
-								public void onActionClicked() {
+								public void onClick(View view) {
 									getLinesFromAPI();
 								}
 
 							})
-							.show(AddStopActivity.this);
+							.show();
 				}
 			}
 

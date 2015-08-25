@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Twistoast - toolbar.xml
+  ~ Twistoast - strings_urls.xml
   ~ Copyright (C) 2013-2015 Baptiste Candellier
   ~
   ~ Twistoast is free software: you can redistribute it and/or modify
@@ -17,15 +17,12 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<android.support.v7.widget.Toolbar
-	android:id="@+id/toolbar"
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:layout_alignParentTop="true"
-	android:elevation="4dp"
-	android:fitsSystemWindows="true"
-	android:minHeight="?attr/actionBarSize"
-	app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-	app:theme="@style/Twistoast.Theme.ActionBar" />
+<resources>
+
+	<string name="url_drawer_timetables" translatable="false">http://twisto.fr/515-Horaires-aux-arrets.html</string>
+	<string name="url_drawer_traffic" translatable="false">http://twisto.fr/affichage.php?actu_trafic</string>
+	<string name="url_drawer_navigation" translatable="false">http://twisto.fr/514-Itineraires-Twisto.html</string>
+	<string name="url_drawer_news" translatable="false">http://twisto.fr/affichage.php?pageactu=2</string>
+	<string name="url_drawer_pricing" translatable="false">http://twisto.fr/829-Tickets.html</string>
+
+</resources>

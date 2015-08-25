@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-  ~ Twistoast - traffic_alert.xml
-  ~ Copyright (C) 2013-2014  Baptiste Candellier
+  ~ Twistoast - frag_traffic_alert.xml
+  ~ Copyright (C) 2013-2015 Baptiste Candellier
   ~
-  ~ This program is free software: you can redistribute it and/or modify
+  ~ Twistoast is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
   ~ the Free Software Foundation, either version 3 of the License, or
   ~ (at your option) any later version.
   ~
-  ~ This program is distributed in the hope that it will be useful,
+  ~ Twistoast is distributed in the hope that it will be useful,
   ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
   ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   ~ GNU General Public License for more details.
@@ -22,41 +22,33 @@
 	android:id="@+id/view_global_traffic_alert"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
-	android:layout_height="40dp"
+	android:layout_height="37dp"
 	android:background="@color/traffic_alert_background"
 	android:elevation="2dp"
 	android:orientation="horizontal"
-	android:padding="5dp"
+	android:padding="4dp"
 	android:visibility="gone">
 
 	<ImageView
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:contentDescription="@string/traffic_info"
 		android:padding="2dp"
 		android:src="@drawable/ic_traffic_cone"
-		android:tint="@color/traffic_alert_text_primary"
-		android:contentDescription="@string/traffic_info" />
-
-	<TextView
-		android:layout_width="wrap_content"
-		android:layout_height="match_parent"
-		android:layout_marginLeft="3dp"
-		android:layout_marginStart="3dp"
-		android:gravity="center"
-		android:text="@string/traffic_info"
-		android:textColor="@color/traffic_alert_text_primary"
-		android:textSize="20sp" />
+		android:tint="@color/traffic_alert_text_primary" />
 
 	<TextView
 		android:id="@+id/lbl_traffic_info_string"
 		android:layout_width="wrap_content"
 		android:layout_height="match_parent"
-		android:layout_marginLeft="10dp"
-		android:layout_marginStart="10dp"
+		android:layout_marginLeft="2dp"
+		android:layout_marginStart="2dp"
+		android:ellipsize="marquee"
 		android:gravity="center"
+		android:marqueeRepeatLimit="2"
+		android:scrollHorizontally="true"
 		android:singleLine="true"
-		android:textStyle="italic"
-		android:textColor="@color/traffic_alert_text_secondary"
-		android:textSize="17sp" />
+		android:textColor="@color/traffic_alert_text_primary"
+		android:textSize="16sp"/>
 
 </LinearLayout>

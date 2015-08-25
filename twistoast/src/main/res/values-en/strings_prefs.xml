@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Twistoast - strings_prefs.xml
-  ~ Copyright (C) 2013-2014  Baptiste Candellier
+  ~ Copyright (C) 2013-2015 Baptiste Candellier
   ~
-  ~ This program is free software: you can redistribute it and/or modify
+  ~ Twistoast is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
   ~ the Free Software Foundation, either version 3 of the License, or
   ~ (at your option) any later version.
   ~
-  ~ This program is distributed in the hope that it will be useful,
+  ~ Twistoast is distributed in the hope that it will be useful,
   ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
   ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   ~ GNU General Public License for more details.
@@ -25,16 +25,14 @@
 	<string name="pref_auto_refresh_sum">Allows you to automatically refresh the schedules when the app is in the foreground.</string>
 	<string name="pref_cat_stops">Stops List</string>
 	<string name="pref_legal_title">Legal</string>
-	<string name="pref_legal_sum">Twistoast is an application developed by Baptiste Candellier. © outa[dev] – 2014–2015.\n\nThe Twisto brand and logo are trademarks of Keolis Caen.\n\nThis app relies on Keolis\' Open-Data API and outa[dev] therefore disclaims any responsibility in the case of erroneous data.</string>
+	<string name="pref_legal_sum">Twistoast is an application developed by Baptiste Candellier. © outa[dev] – 2013–2015.\n\nThe Twisto brand and logo are trademarks of Keolis Caen.\n\nThis app relies on Keolis\' Open-Data API and outa[dev] therefore disclaims any responsibility in the case of erroneous data.</string>
 	<string name="pref_outadev_website_sum">Go to dev.outadoc.fr for more handy apps!</string>
 	<string name="pref_outadev_website_title">More applications</string>
-	<string name="pref_twisto_website_sum">Visit twisto.fr, the official website for the Twisto network. (in French)</string>
+	<string name="pref_twisto_website_sum">Visit twisto.mobi, the official website for the Twisto network. (in French)</string>
 	<string name="pref_twisto_website_title">Twisto Website</string>
 	<string name="pref_about_title">About</string>
 	<string name="pref_relative_time_sum">Display timestamps relatively to current time. (e.g. in 3 minutes)</string>
 	<string name="pref_relative_time_title">Relative timestamps</string>
-	<string name="pref_license_sum">Twistoast is available under the terms of the GNU GPL Version 3.\n\n\"Traffic icon\" is an icon by Daniel Bruce available on www.flaticon.com under the terms of the CC BY-SA 3.0 license.\n\n\"Front of bus\" is an icon by Freepik available on www.flaticon.com under the terms of the CC BY 3.0 license.</string>
-	<string name="pref_license_title">License</string>
 	<string name="pref_links_title">Links</string>
 	<string name="pref_version_title">Version</string>
 	<string name="pref_app_theme_title">Application Theme</string>
@@ -50,5 +48,17 @@
 	<string name="pref_ringer_title">Sound</string>
 	<string name="pref_vibrate_title">Vibrate</string>
 	<string name="prefs_cat_global">Global</string>
+	<string name="pref_cat_pebble">Pebble</string>
+	<string name="pref_pebble_color_sum_off">Always display the Pebble app in black and white</string>
+	<string name="pref_pebble_color_sum_on">Use the color of the line in the Pebble app where supported</string>
+	<string name="pref_pebble_color_title">Use color in the Pebble Time app</string>
+	<string name="pref_cat_oss">Open-source and Libre software</string>
+	<string name="pref_license_gnu_gpl_sum">Twistoast is provided under the terms of the GNU GPL v3. Tap here to get the source code.</string>
+	<string name="pref_license_ccbysa_sum">\"Traffic icon\" is an icon by Daniel Bruce available on www.flaticon.com.</string>
+	<string name="pref_license_ccby_sum">\"Front of bus\" is an icon by Freepik available on www.flaticon.com.</string>
+	<string name="pref_license_apache_sum">Apache Commons Lang\nOkHttp by Square\nColor Picker Collection by Gabriele Mariotti</string>
+	<string name="prefs_ads_already_disabled">The ads are already disabled. Enjoy!</string>
+	<string name="prefs_ads_disabled">No more ads for you! \o/</string>
+	<string name="prefs_ads_step_count">Only %1$s more steps to disable the ads</string>
 
 </resources>

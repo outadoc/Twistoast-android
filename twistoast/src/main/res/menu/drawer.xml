@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Twistoast - drawer.xml
+  ~ Copyright (C) 2013-2015 Baptiste Candellier
+  ~
+  ~ Twistoast is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Twistoast is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+	<group android:checkableBehavior="single">
+		<item
+			android:id="@+id/drawer_realtime"
+			android:checked="true"
+			android:icon="@drawable/ic_directions_bus"
+			android:title="@string/drawer_item_realtime"/>
+		<item
+			android:id="@+id/drawer_timetables"
+			android:icon="@drawable/ic_schedule"
+			android:title="@string/drawer_item_timetables"/>
+		<item
+			android:id="@+id/drawer_routes"
+			android:icon="@drawable/ic_navigation"
+			android:title="@string/drawer_item_routes"/>
+		<item
+			android:id="@+id/drawer_map"
+			android:icon="@drawable/ic_map"
+			android:title="@string/drawer_item_map"/>
+	</group>
+	<item
+		android:id="@+id/drawer_group_learn_more"
+		android:title="@string/drawer_section_more_twisto_info">
+		<menu>
+			<item
+				android:id="@+id/drawer_traffic"
+				android:icon="@drawable/ic_traffic_cone"
+				android:title="@string/drawer_item_traffic"/>
+			<item
+				android:id="@+id/drawer_news"
+				android:icon="@drawable/ic_books"
+				android:title="@string/drawer_item_news"/>
+			<item
+				android:id="@+id/drawer_pricing"
+				android:icon="@drawable/ic_payment"
+				android:title="@string/drawer_item_pricing"/>
+		</menu>
+	</item>
+	<item
+		android:id="@+id/drawer_group_others"
+		android:title="@string/drawer_section_misc">
+		<menu>
+			<item
+				android:id="@+id/drawer_settings"
+				android:title="@string/drawer_item_preferences"/>
+			<item
+				android:id="@+id/drawer_about"
+				android:title="@string/drawer_item_about"/>
+		</menu>
+	</item>
+</menu>

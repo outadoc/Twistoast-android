@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Twistoast - color.xml
-  ~ Copyright (C) 2013-2014  Baptiste Candellier
+  ~ Copyright (C) 2013-2015 Baptiste Candellier
   ~
-  ~ This program is free software: you can redistribute it and/or modify
+  ~ Twistoast is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
   ~ the Free Software Foundation, either version 3 of the License, or
   ~ (at your option) any later version.
   ~
-  ~ This program is distributed in the hope that it will be useful,
+  ~ Twistoast is distributed in the hope that it will be useful,
   ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
   ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   ~ GNU General Public License for more details.
@@ -24,11 +24,6 @@
 	<color name="main_background_color">#FFFFFF</color>
 
 	<color name="traffic_alert_background">#F5A400</color>
-	<color name="traffic_alert_text_primary">#ffffeda9</color>
-	<color name="traffic_alert_text_secondary">#FBDB9B</color>
-
-	<color name="bus_stop_alert_background">#9bf5a400</color>
-	<color name="bus_stop_alert_text_primary">#ffffff</color>
-	<color name="bus_stop_alert_text_secondary">#ffffe9cf</color>
+	<color name="traffic_alert_text_primary">#fff1a4</color>
 
 </resources>

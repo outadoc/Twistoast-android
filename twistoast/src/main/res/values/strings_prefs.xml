@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Twistoast - strings_prefs.xml
-  ~ Copyright (C) 2013-2014  Baptiste Candellier
+  ~ Copyright (C) 2013-2015 Baptiste Candellier
   ~
-  ~ This program is free software: you can redistribute it and/or modify
+  ~ Twistoast is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
   ~ the Free Software Foundation, either version 3 of the License, or
   ~ (at your option) any later version.
   ~
-  ~ This program is distributed in the hope that it will be useful,
+  ~ Twistoast is distributed in the hope that it will be useful,
   ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
   ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   ~ GNU General Public License for more details.
@@ -19,6 +19,10 @@
 
 <resources>
 
+	<string name="pref_cat_pebble">Pebble</string>
+	<string name="pref_pebble_color_sum_off">Toujours afficher la watchapp Pebble en noir et blanc</string>
+	<string name="pref_pebble_color_sum_on">Utiliser de la couleur dans la watchapp Pebble quand possible</string>
+	<string name="pref_pebble_color_title">Couleur dans la watchapp Pebble</string>
 	<string name="pref_pebble_dl_title">Télécharger la watchapp Pebble</string>
 	<string name="pref_pebble_dl_sum">Vous pouvez télécharger l\'app Twistoast pour votre montre Pebble depuis le Pebble appstore.</string>
 
@@ -29,10 +33,7 @@
 	<string name="pref_twisto_website_title">Site web Twisto</string>
 
 	<string name="pref_legal_title">Mentions légales</string>
-	<string name="pref_legal_sum">Twistoast est une application développée par Baptiste Candellier. © outa[dev] – 2014–2015.\n\nTwisto et le logo Twisto sont des marques déposées de Keolis Caen.\n\nCette application repose sur l\'API Open-Data de Keolis et outa[dev] décline donc toute responsabilité en cas de données erronées.</string>
-
-	<string name="pref_license_title">Licence</string>
-	<string name="pref_license_sum">Twistoast est disponible selon les termes de la licence GNU GPL Version 3.\n\n\"Traffic icon\" est une icône créée par Daniel Bruce disponible sur www.flaticon.com selon les termes de la licence CC BY-SA 3.0.\n\n\"Front of bus\" est une icône créée par Freepik disponible sur www.flaticon.com sous les termes de la licence CC BY 3.0.</string>
+	<string name="pref_legal_sum">Twistoast est une application développée par Baptiste Candellier. © outa[dev] – 2013–2015.\n\nTwisto et le logo Twisto sont des marques déposées de Keolis Caen.\n\nCette application repose sur l\'API Open-Data de Keolis et outa[dev] décline donc toute responsabilité en cas de données erronées.</string>
 
 	<string name="pref_about_title">À propos</string>
 	<string name="pref_version_title">Version</string>
@@ -58,5 +59,13 @@
 	<string name="pref_enable_notif_traffic_title">Notifications relatives au trafic</string>
 	<string name="pref_notif_traffic_ring_sum">Émettre un son lors de la réception d\'alertes trafic.</string>
 	<string name="pref_notif_traffic_vibrate_sum">Vibrer lors de la réception d\'alertes trafic.</string>
+	<string name="pref_cat_oss">Logiciels open-source et libres</string>
+	<string name="pref_license_gnu_gpl_sum">Twistoast est fournie sous les termes de la GNU GPL v3. Tapez ici pour obtenir le code source.</string>
+	<string name="pref_license_ccbysa_sum">\"Traffic icon\" est une icône de Daniel Bruce disponible sur www.flaticon.com.</string>
+	<string name="pref_license_ccby_sum">\"Front of bus\" est une icône de Freepik disponible sur www.flaticon.com.</string>
+	<string name="pref_license_apache_sum">Apache Commons Lang\nOkHttp par Square\nColor Picker Collection par Gabriele Mariotti</string>
+	<string name="prefs_ads_already_disabled">Vous avez déjà désactivé les pubs. Profitez-en !</string>
+	<string name="prefs_ads_disabled">Plus de pubs pour vous ! \\o/</string>
+	<string name="prefs_ads_step_count">Plus que %1$s étapes pour désactiver les pubs</string>
 
 </resources>
