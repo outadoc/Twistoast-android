@@ -32,13 +32,8 @@ import fr.outadev.android.timeo.TimeoRequestHandler;
  */
 public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
-	private static DatabaseOpenHelper instance;
-	private Context context;
-
 	private static final int DATABASE_VERSION = 3;
-
 	private static final String DATABASE_NAME = "twistoast.db";
-
 	private static final String LINES_TABLE_CREATE =
 			"CREATE TABLE twi_line(" +
 					"line_id TEXT, " +
@@ -46,7 +41,6 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 					"line_color TEXT, " +
 					"network_code INTEGER DEFAULT " + TimeoRequestHandler.DEFAULT_NETWORK_CODE + ", " +
 					"PRIMARY KEY (line_id, network_code))";
-
 	private static final String DIRECTIONS_TABLE_CREATE =
 			"CREATE TABLE twi_direction(" +
 					"dir_id TEXT, " +
@@ -55,7 +49,6 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 					"network_code INTEGER DEFAULT " + TimeoRequestHandler.DEFAULT_NETWORK_CODE + ", " +
 					"PRIMARY KEY(dir_id, line_id, network_code), " +
 					"FOREIGN KEY(line_id, network_code) REFERENCES twi_line(line_id, network_code))";
-
 	private static final String STOPS_TABLE_CREATE =
 			"CREATE TABLE twi_stop(" +
 					"stop_id INTEGER, " +
@@ -66,7 +59,6 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 					"network_code INTEGER DEFAULT " + TimeoRequestHandler.DEFAULT_NETWORK_CODE + ", " +
 					"PRIMARY KEY(stop_id, line_id, dir_id, network_code), " +
 					"FOREIGN KEY(dir_id, line_id, network_code) REFERENCES twi_direction(dir_id, line_id, network_code))";
-
 	private static final String NOTIFICATIONS_TABLE_CREATE =
 			"CREATE TABLE twi_notification(" +
 					"stop_id INTEGER," +
@@ -79,6 +71,8 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 					"PRIMARY KEY(stop_id, line_id, dir_id, network_code, notif_active, notif_creation_time), " +
 					"FOREIGN KEY(stop_id, line_id, dir_id, network_code) " +
 					"REFERENCES twi_stop(stop_id, line_id, dir_id, network_code))";
+	private static DatabaseOpenHelper instance;
+	private Context context;
 
 
 	private DatabaseOpenHelper(Context context) {

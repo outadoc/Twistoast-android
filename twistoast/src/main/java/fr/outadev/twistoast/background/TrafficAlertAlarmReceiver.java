@@ -45,6 +45,43 @@ public class TrafficAlertAlarmReceiver extends CommonAlarmReceiver {
 	private static final int ALARM_TYPE = AlarmManager.ELAPSED_REALTIME;
 	private static final long ALARM_FREQUENCY = AlarmManager.INTERVAL_HALF_HOUR;
 
+	/**
+	 * Enables the regular checks performed every X minutes by this receiver.
+	 * They should be disabled once not needed anymore, as they can be battery and network hungry.
+	 *
+	 * @param context a context
+	 */
+	public static void enable(Context context) {
+		Log.d(Utils.TAG, "enabling " + TrafficAlertAlarmReceiver.class.getSimpleName());
+
+		AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+		alarmMgr.setInexactRepeating(ALARM_TYPE,
+				SystemClock.elapsedRealtime() + 60 * 1000, ALARM_FREQUENCY, getBroadcast(context));
+	}
+
+	/**
+	 * Disables the regular checks performed every X minutes by this receiver.
+	 *
+	 * @param context a context
+	 */
+	public static void disable(Context context) {
+		Log.d(Utils.TAG, "disabling " + TrafficAlertAlarmReceiver.class.getSimpleName());
+
+		AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+		alarmMgr.cancel(getBroadcast(context));
+	}
+
+	/**
+	 * Returns the PendingIntent that will be called by the alarm every X minutes.
+	 *
+	 * @param context a context
+	 * @return the PendingIntent corresponding to this class
+	 */
+	protected static PendingIntent getBroadcast(Context context) {
+		Intent intent = new Intent(context, TrafficAlertAlarmReceiver.class);
+		return PendingIntent.getBroadcast(context, 0, intent, 0);
+	}
+
 	@Override
 	public void onReceive(final Context context, Intent intent) {
 
@@ -56,16 +93,6 @@ public class TrafficAlertAlarmReceiver extends CommonAlarmReceiver {
 			private NotificationManager notificationManager;
 
 			@Override
-			protected void onPreExecute() {
-				prefs = PreferenceManager.getDefaultSharedPreferences(context);
-				notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-				lastTrafficId = prefs.getInt("last_traffic_notif_id", -1);
-
-				Log.d(Utils.TAG, "checking traffic alert");
-			}
-
-			@Override
 			protected TimeoTrafficAlert doInBackground(Void... params) {
 				try {
 					return TimeoRequestHandler.getGlobalTrafficAlert(context.getString(R.string.url_pre_home_info));
@@ -73,6 +100,16 @@ public class TrafficAlertAlarmReceiver extends CommonAlarmReceiver {
 					e.printStackTrace();
 					return null;
 				}
+			}
+
+			@Override
+			protected void onPreExecute() {
+				prefs = PreferenceManager.getDefaultSharedPreferences(context);
+				notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+				lastTrafficId = prefs.getInt("last_traffic_notif_id", -1);
+
+				Log.d(Utils.TAG, "checking traffic alert");
 			}
 
 			@Override
@@ -115,43 +152,6 @@ public class TrafficAlertAlarmReceiver extends CommonAlarmReceiver {
 	@Override
 	protected String getPreferencesKeyPrefix() {
 		return "traffic";
-	}
-
-	/**
-	 * Enables the regular checks performed every X minutes by this receiver.
-	 * They should be disabled once not needed anymore, as they can be battery and network hungry.
-	 *
-	 * @param context a context
-	 */
-	public static void enable(Context context) {
-		Log.d(Utils.TAG, "enabling " + TrafficAlertAlarmReceiver.class.getSimpleName());
-
-		AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-		alarmMgr.setInexactRepeating(ALARM_TYPE,
-				SystemClock.elapsedRealtime() + 60 * 1000, ALARM_FREQUENCY, getBroadcast(context));
-	}
-
-	/**
-	 * Disables the regular checks performed every X minutes by this receiver.
-	 *
-	 * @param context a context
-	 */
-	public static void disable(Context context) {
-		Log.d(Utils.TAG, "disabling " + TrafficAlertAlarmReceiver.class.getSimpleName());
-
-		AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-		alarmMgr.cancel(getBroadcast(context));
-	}
-
-	/**
-	 * Returns the PendingIntent that will be called by the alarm every X minutes.
-	 *
-	 * @param context a context
-	 * @return the PendingIntent corresponding to this class
-	 */
-	protected static PendingIntent getBroadcast(Context context) {
-		Intent intent = new Intent(context, TrafficAlertAlarmReceiver.class);
-		return PendingIntent.getBroadcast(context, 0, intent, 0);
 	}
 
 }

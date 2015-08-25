@@ -38,12 +38,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-
 import java.util.List;
 
 import fr.outadev.android.timeo.IProgressListener;
@@ -62,7 +56,6 @@ public class FragmentRealtime extends Fragment implements IStopsListContainer {
 	private SwipeRefreshLayout swipeRefreshLayout;
 	private View noContentView;
 	private FloatingActionButton fab;
-	private AdView adView;
 
 	private List<TimeoStop> stops;
 
@@ -128,7 +121,6 @@ public class FragmentRealtime extends Fragment implements IStopsListContainer {
 		noContentView = view.findViewById(R.id.view_no_content);
 
 		fab = (FloatingActionButton) view.findViewById(R.id.fab);
-		adView = (AdView) view.findViewById(R.id.adView);
 
 		final GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 3);
 		layoutManager.setOrientation(GridLayoutManager.VERTICAL);
@@ -152,7 +144,6 @@ public class FragmentRealtime extends Fragment implements IStopsListContainer {
 
 				});
 
-		setupAdvertisement();
 		setupListeners();
 
 		return view;
@@ -193,22 +184,6 @@ public class FragmentRealtime extends Fragment implements IStopsListContainer {
 
 		});
 
-		adView.setAdListener(new AdListener() {
-
-			@Override
-			public void onAdFailedToLoad(int errorCode) {
-				adView.setVisibility(View.GONE);
-				super.onAdFailedToLoad(errorCode);
-			}
-
-			@Override
-			public void onAdLoaded() {
-				adView.setVisibility(View.VISIBLE);
-				super.onAdLoaded();
-			}
-
-		});
-
 		IWatchedStopChangeListener watchedStopStateListener = new IWatchedStopChangeListener() {
 
 			@Override
@@ -228,23 +203,6 @@ public class FragmentRealtime extends Fragment implements IStopsListContainer {
 		};
 
 		NextStopAlarmReceiver.setWatchedStopDismissalListener(watchedStopStateListener);
-	}
-
-	private void setupAdvertisement() {
-		if(!getActivity().getResources().getBoolean(R.bool.enableAds)
-				|| PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("pref_disable_ads", false)) {
-			// If we don't want ads, hide the view
-			adView.setVisibility(View.GONE);
-		} else {
-			// If we want ads, check for availability and load them
-			int hasGPS = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity());
-
-			if(hasGPS == ConnectionResult.SUCCESS) {
-				AdRequest adRequest = new AdRequest.Builder()
-						.addTestDevice(getString(R.string.admob_test_device)).build();
-				adView.loadAd(adRequest);
-			}
-		}
 	}
 
 	/**

@@ -259,12 +259,6 @@ public class ActivityNewStop extends ThemedActivity {
 					(new AsyncTask<Void, Void, List<TimeoStop>>() {
 
 						@Override
-						protected void onPreExecute() {
-							swipeRefreshLayout.setEnabled(true);
-							swipeRefreshLayout.setRefreshing(true);
-						}
-
-						@Override
 						protected List<TimeoStop> doInBackground(Void... voids) {
 							try {
 								getCurrentLine().setDirection(getCurrentDirection());
@@ -274,7 +268,13 @@ public class ActivityNewStop extends ThemedActivity {
 							}
 
 							return null;
+						}						@Override
+						protected void onPreExecute() {
+							swipeRefreshLayout.setEnabled(true);
+							swipeRefreshLayout.setRefreshing(true);
 						}
+
+
 
 						@Override
 						protected void onPostExecute(List<TimeoStop> timeoStops) {

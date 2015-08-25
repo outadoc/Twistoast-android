@@ -36,11 +36,11 @@ import fr.outadev.android.timeo.TimeoRequestHandler;
 import fr.outadev.android.timeo.TimeoSingleSchedule;
 import fr.outadev.android.timeo.TimeoStop;
 import fr.outadev.android.timeo.TimeoStopSchedule;
-import fr.outadev.twistoast.IWatchedStopChangeListener;
 import fr.outadev.twistoast.ActivityRealtime;
-import fr.outadev.twistoast.R;
 import fr.outadev.twistoast.Database;
 import fr.outadev.twistoast.DatabaseOpenHelper;
+import fr.outadev.twistoast.IWatchedStopChangeListener;
+import fr.outadev.twistoast.R;
 import fr.outadev.twistoast.Utils;
 
 /**
@@ -55,9 +55,49 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 	private static final int ALARM_TYPE = AlarmManager.ELAPSED_REALTIME_WAKEUP;
 
 	private static final int NOTIFICATION_ID_ERROR = 42;
-
-	private Context context;
 	private static IWatchedStopChangeListener watchedStopStateListener = null;
+	private Context context;
+
+	/**
+	 * Enables the regular checks performed every minute by this receiver.
+	 * They should be disabled once not needed anymore, as they can be battery and network hungry.
+	 *
+	 * @param context a context
+	 */
+	public static void enable(Context context) {
+		Log.d(Utils.TAG, "enabling " + NextStopAlarmReceiver.class.getSimpleName());
+
+		AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+		alarmMgr.setInexactRepeating(ALARM_TYPE,
+				SystemClock.elapsedRealtime() + 1000, ALARM_FREQUENCY, getBroadcast(context));
+	}
+
+	/**
+	 * Disables the regular checks performed every minute by this receiver.
+	 *
+	 * @param context a context
+	 */
+	public static void disable(Context context) {
+		Log.d(Utils.TAG, "disabling " + NextStopAlarmReceiver.class.getSimpleName());
+
+		AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+		alarmMgr.cancel(getBroadcast(context));
+	}
+
+	/**
+	 * Returns the PendingIntent that will be called by the alarm every minute.
+	 *
+	 * @param context a context
+	 * @return the PendingIntent corresponding to this class
+	 */
+	public static PendingIntent getBroadcast(Context context) {
+		Intent intent = new Intent(context, NextStopAlarmReceiver.class);
+		return PendingIntent.getBroadcast(context, 0, intent, 0);
+	}
+
+	public static void setWatchedStopDismissalListener(IWatchedStopChangeListener watchedStopStateListener) {
+		NextStopAlarmReceiver.watchedStopStateListener = watchedStopStateListener;
+	}
 
 	@Override
 	public void onReceive(final Context context, Intent intent) {
@@ -69,12 +109,6 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 			private List<TimeoStop> stopsToCheck;
 
 			@Override
-			protected void onPreExecute() {
-				db = new Database(DatabaseOpenHelper.getInstance(context));
-				Log.d(Utils.TAG, "checking stop schedules for notifications");
-			}
-
-			@Override
 			protected List<TimeoStopSchedule> doInBackground(Void... params) {
 				try {
 					stopsToCheck = db.getWatchedStops();
@@ -83,6 +117,12 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 					e.printStackTrace();
 					return null;
 				}
+			}
+
+			@Override
+			protected void onPreExecute() {
+				db = new Database(DatabaseOpenHelper.getInstance(context));
+				Log.d(Utils.TAG, "checking stop schedules for notifications");
 			}
 
 			@Override
@@ -259,47 +299,6 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 	@Override
 	protected String getPreferencesKeyPrefix() {
 		return "watched";
-	}
-
-	/**
-	 * Enables the regular checks performed every minute by this receiver.
-	 * They should be disabled once not needed anymore, as they can be battery and network hungry.
-	 *
-	 * @param context a context
-	 */
-	public static void enable(Context context) {
-		Log.d(Utils.TAG, "enabling " + NextStopAlarmReceiver.class.getSimpleName());
-
-		AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-		alarmMgr.setInexactRepeating(ALARM_TYPE,
-				SystemClock.elapsedRealtime() + 1000, ALARM_FREQUENCY, getBroadcast(context));
-	}
-
-	/**
-	 * Disables the regular checks performed every minute by this receiver.
-	 *
-	 * @param context a context
-	 */
-	public static void disable(Context context) {
-		Log.d(Utils.TAG, "disabling " + NextStopAlarmReceiver.class.getSimpleName());
-
-		AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-		alarmMgr.cancel(getBroadcast(context));
-	}
-
-	/**
-	 * Returns the PendingIntent that will be called by the alarm every minute.
-	 *
-	 * @param context a context
-	 * @return the PendingIntent corresponding to this class
-	 */
-	public static PendingIntent getBroadcast(Context context) {
-		Intent intent = new Intent(context, NextStopAlarmReceiver.class);
-		return PendingIntent.getBroadcast(context, 0, intent, 0);
-	}
-
-	public static void setWatchedStopDismissalListener(IWatchedStopChangeListener watchedStopStateListener) {
-		NextStopAlarmReceiver.watchedStopStateListener = watchedStopStateListener;
 	}
 
 }

@@ -27,7 +27,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 22
         versionCode 21
-        versionName "2.5"
+        versionName "2.5-chromium"
     }
 
     compileOptions {

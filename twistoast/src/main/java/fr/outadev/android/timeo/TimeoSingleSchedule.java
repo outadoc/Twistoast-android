@@ -28,10 +28,9 @@ import android.preference.PreferenceManager;
  */
 public class TimeoSingleSchedule {
 
+	private static Boolean relative;
 	private String time;
 	private String direction;
-
-	private static Boolean relative;
 
 	/**
 	 * Create a new schedule.
@@ -48,6 +47,14 @@ public class TimeoSingleSchedule {
 	 * Create a new empty schedule.
 	 */
 	public TimeoSingleSchedule() {
+	}
+
+	private static boolean isRelative(Context context) {
+		if(relative == null) {
+			relative = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("pref_relative_time", true);
+		}
+
+		return relative;
 	}
 
 	public String getTime() {
@@ -73,13 +80,5 @@ public class TimeoSingleSchedule {
 	public String getShortFormattedTime(Context context) {
 		String dir = (getDirection() != null && getDirection().matches("(A|B) .+")) ? getDirection().charAt(0) + " : " : "";
 		return (isRelative(context)) ? dir + ScheduleTime.formatTime(context, getTime()) : dir + getTime();
-	}
-
-	private static boolean isRelative(Context context) {
-		if(relative == null) {
-			relative = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("pref_relative_time", true);
-		}
-
-		return relative;
 	}
 }
