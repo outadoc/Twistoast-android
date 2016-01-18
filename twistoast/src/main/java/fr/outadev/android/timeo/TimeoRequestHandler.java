@@ -1,6 +1,6 @@
 /*
  * Twistoast - TimeoRequestHandler
- * Copyright (C) 2013-2015 Baptiste Candellier
+ * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,11 +24,6 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.util.Xml;
 
-import com.squareup.okhttp.CacheControl;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
-
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -50,49 +45,10 @@ import java.util.Locale;
  */
 public abstract class TimeoRequestHandler {
 
-	public final static String TAG = "Timeo";
+	public final static String TAG = TimeoRequestHandler.class.getName();
 
 	public final static int DEFAULT_NETWORK_CODE = 147;
 	public final static String API_BASE_URL = "http://timeo3.keolis.com/relais/";
-
-	/**
-	 * Requests a web page via an HTTP GET request.
-	 *
-	 * @param url       URL to fetch
-	 * @param params    HTTP GET parameters as a string (e.g. foo=bar&bar=foobar)
-	 * @param useCaches true if the client can cache the request
-	 * @return the raw body of the page
-	 * @throws IOException if an HTTP error occurred
-	 */
-	private static String requestWebPage(String url, String params, boolean useCaches) throws IOException {
-		String finalUrl = url + "?" + params;
-		Log.i(TAG, "requesting " + finalUrl);
-
-		OkHttpClient client = new OkHttpClient();
-
-		Request.Builder builder = new Request.Builder()
-				.url(finalUrl);
-
-		if(!useCaches) {
-			builder.cacheControl(CacheControl.FORCE_NETWORK);
-		}
-
-		Response response = client.newCall(builder.build()).execute();
-		return response.body().string();
-	}
-
-	/**
-	 * Requests a web page via an HTTP GET request.
-	 *
-	 * @param url       URL to fetch
-	 * @param useCaches true if the client can cache the request
-	 * @return the raw body of the page
-	 * @throws IOException if an HTTP error occurred
-	 */
-	private static String requestWebPage(String url, boolean useCaches) throws IOException {
-		return requestWebPage(url, "", useCaches);
-	}
-
 
 	/**
 	 * Shorthand methods for requesting data from the default city's API (Twisto/Caen)
@@ -202,7 +158,8 @@ public abstract class TimeoRequestHandler {
 	public static List<TimeoLine> getLines(int networkCode) throws XmlPullParserException, IOException,
 			TimeoException {
 		String params = "xml=1";
-		String result = requestWebPage(API_BASE_URL + getPageNameForNetworkCode(networkCode), params, true);
+		String result = HttpRequester.getInstance().requestWebPage(getEndpointUrl(networkCode),
+				params, true);
 
 		XmlPullParser parser = getParserForXMLString(result);
 		int eventType = parser.getEventType();
@@ -291,7 +248,8 @@ public abstract class TimeoRequestHandler {
 	public static List<TimeoStop> getStops(int networkCode, TimeoLine line) throws XmlPullParserException,
 			IOException, TimeoException {
 		String params = "xml=1&ligne=" + line.getId() + "&sens=" + line.getDirection().getId();
-		String result = requestWebPage(API_BASE_URL + getPageNameForNetworkCode(networkCode), params, true);
+		String result = HttpRequester.getInstance().requestWebPage(getEndpointUrl(networkCode),
+				params, true);
 
 		XmlPullParser parser = getParserForXMLString(result);
 		int eventType = parser.getEventType();
@@ -415,7 +373,8 @@ public abstract class TimeoRequestHandler {
 		refs = refs.substring(0, refs.length() - 1);
 
 		String params = "xml=3&refs=" + URLEncoder.encode(refs, "UTF-8") + "&ran=1";
-		String result = requestWebPage(API_BASE_URL + getPageNameForNetworkCode(networkCode), params, false);
+		String result = HttpRequester.getInstance().requestWebPage(getEndpointUrl(networkCode),
+				params, false);
 
 		//create a new parser
 		XmlPullParser parser = getParserForXMLString(result);
@@ -578,7 +537,7 @@ public abstract class TimeoRequestHandler {
 	@Nullable
 	public static TimeoTrafficAlert getGlobalTrafficAlert(String preHomeUrl) {
 		try {
-			String source = requestWebPage(preHomeUrl, true);
+			String source = HttpRequester.getInstance().requestWebPage(preHomeUrl, true);
 
 			if(!source.isEmpty()) {
 				JSONObject obj = (JSONObject) new JSONTokener(source).nextValue();
@@ -692,8 +651,8 @@ public abstract class TimeoRequestHandler {
 	 * @param networkCode the code for the city's bus network
 	 * @return the name of the page that has to be called for this specific network
 	 */
-	private static String getPageNameForNetworkCode(int networkCode) {
-		return networkCode + ".php";
+	private static String getEndpointUrl(int networkCode) {
+		return API_BASE_URL + networkCode + ".php";
 	}
 
 }
