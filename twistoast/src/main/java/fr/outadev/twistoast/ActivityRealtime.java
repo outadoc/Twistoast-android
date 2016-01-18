@@ -77,7 +77,7 @@ public class ActivityRealtime extends ThemedActivity implements IStopsListContai
 		loadedFragments = new HashMap<>();
 
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.action_ok, R.string.action_delete) {
+		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_action_open, R.string.drawer_action_close) {
 
 			@Override
 			public void onDrawerOpened(View drawerView) {
@@ -199,7 +199,7 @@ public class ActivityRealtime extends ThemedActivity implements IStopsListContai
 
 		// Highlight the selected item, update the title, and close the drawer
 		refreshActionBarTitle();
-		navigationView.getMenu().findItem(currentDrawerItem).setChecked(true);
+		navigationView.setCheckedItem(currentDrawerItem);
 		drawerLayout.closeDrawer(GravityCompat.START);
 	}
 

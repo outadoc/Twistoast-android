@@ -73,5 +73,7 @@
 	<string name="error_toast_twisto_detailed">Erreur Twisto %1$s (%2$s). Réessayez plus tard.</string>
 	<string name="drawer_section_more_twisto_info">Learn more</string>
 	<string name="drawer_section_misc">More</string>
+	<string name="drawer_action_open">Open drawer</string>
+	<string name="drawer_action_close">Close drawer</string>
 
 </resources>

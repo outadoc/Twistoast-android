@@ -23,48 +23,52 @@
 			android:id="@+id/drawer_realtime"
 			android:checked="true"
 			android:icon="@drawable/ic_directions_bus"
-			android:title="@string/drawer_item_realtime"/>
+			android:title="@string/drawer_item_realtime" />
 		<item
 			android:id="@+id/drawer_timetables"
 			android:icon="@drawable/ic_schedule"
-			android:title="@string/drawer_item_timetables"/>
+			android:title="@string/drawer_item_timetables" />
 		<item
 			android:id="@+id/drawer_routes"
 			android:icon="@drawable/ic_navigation"
-			android:title="@string/drawer_item_routes"/>
+			android:title="@string/drawer_item_routes" />
 		<item
 			android:id="@+id/drawer_map"
 			android:icon="@drawable/ic_map"
-			android:title="@string/drawer_item_map"/>
+			android:title="@string/drawer_item_map" />
 	</group>
 	<item
 		android:id="@+id/drawer_group_learn_more"
 		android:title="@string/drawer_section_more_twisto_info">
 		<menu>
-			<item
-				android:id="@+id/drawer_traffic"
-				android:icon="@drawable/ic_traffic_cone"
-				android:title="@string/drawer_item_traffic"/>
-			<item
-				android:id="@+id/drawer_news"
-				android:icon="@drawable/ic_books"
-				android:title="@string/drawer_item_news"/>
-			<item
-				android:id="@+id/drawer_pricing"
-				android:icon="@drawable/ic_payment"
-				android:title="@string/drawer_item_pricing"/>
+			<group android:checkableBehavior="single">
+				<item
+					android:id="@+id/drawer_traffic"
+					android:icon="@drawable/ic_traffic_cone"
+					android:title="@string/drawer_item_traffic" />
+				<item
+					android:id="@+id/drawer_news"
+					android:icon="@drawable/ic_books"
+					android:title="@string/drawer_item_news" />
+				<item
+					android:id="@+id/drawer_pricing"
+					android:icon="@drawable/ic_payment"
+					android:title="@string/drawer_item_pricing" />
+			</group>
 		</menu>
 	</item>
 	<item
 		android:id="@+id/drawer_group_others"
 		android:title="@string/drawer_section_misc">
 		<menu>
-			<item
-				android:id="@+id/drawer_settings"
-				android:title="@string/drawer_item_preferences"/>
-			<item
-				android:id="@+id/drawer_about"
-				android:title="@string/drawer_item_about"/>
+			<group android:checkableBehavior="single">
+				<item
+					android:id="@+id/drawer_settings"
+					android:title="@string/drawer_item_preferences" />
+				<item
+					android:id="@+id/drawer_about"
+					android:title="@string/drawer_item_about" />
+			</group>
 		</menu>
 	</item>
 </menu>
