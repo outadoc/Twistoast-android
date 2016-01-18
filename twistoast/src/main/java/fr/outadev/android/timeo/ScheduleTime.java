@@ -1,6 +1,6 @@
 /*
  * Twistoast - ScheduleTime
- * Copyright (C) 2013-2015 Baptiste Candellier
+ * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,10 @@ package fr.outadev.android.timeo;
 import android.content.Context;
 import android.preference.PreferenceManager;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import fr.outadev.twistoast.R;
@@ -47,20 +50,26 @@ public abstract class ScheduleTime {
 	 * @return if time is less than one minute in the future: "imminent arrival"-ish, if less than 45 minutes in the future: "in
 	 * xx minutes", if more than that: the untouched time parameter
 	 */
-	public static String formatTime(Context context, String time) {
-		Calendar schedule = getNextDateForTime(time);
+	public static String formatTime(Context context, Calendar time) {
+		DateFormat format = SimpleDateFormat.getTimeInstance(DateFormat.SHORT, Locale.FRENCH);
 
-		switch(getTimeDisplayMode(schedule, context)) {
+		switch(getTimeDisplayMode(time, context)) {
 			case CURRENTLY_AT_STOP:
 				return context.getString(R.string.schedule_time_currently_at_stop);
 			case ARRIVAL_IMMINENT:
 				return context.getString(R.string.schedule_time_arrival_imminent);
 			case COUNTDOWN:
-				return context.getString(R.string.schedule_time_countdown, getMinutesUntilBus(schedule));
+				if (isRelative(context)) {
+					return context.getString(R.string.schedule_time_countdown, getMinutesUntilBus(time));
+				}
 			default:
 			case FULL:
-				return time;
+				return format.format(time.getTime());
 		}
+	}
+
+	private static boolean isRelative(Context context) {
+		return PreferenceManager.getDefaultSharedPreferences(context).getBoolean("pref_relative_time", true);
 	}
 
 	/**

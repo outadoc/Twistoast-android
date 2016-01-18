@@ -1,6 +1,6 @@
 /*
  * Twistoast - RecyclerAdapterRealtime
- * Copyright (C) 2013-2015 Baptiste Candellier
+ * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,7 +44,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import fr.outadev.android.timeo.ScheduleTime;
 import fr.outadev.android.timeo.TimeoBlockingMessageException;
 import fr.outadev.android.timeo.TimeoException;
 import fr.outadev.android.timeo.TimeoRequestHandler;
@@ -336,8 +335,7 @@ public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapte
 					// We don't update from database all the time, so we can't figure this out by just updating everything.
 					// If there is a bus coming, tell the stop that it's not watched anymore.
 					// This won't work all the time, but it's not too bad.
-					if(Calendar.getInstance().getTimeInMillis()
-							> ScheduleTime.getNextDateForTime(currSched.getTime()).getTimeInMillis()) {
+					if(Calendar.getInstance().getTimeInMillis()	> currSched.getTime().getTimeInMillis()) {
 						currentStop.setWatched(false);
 					}
 

@@ -1,6 +1,6 @@
 /*
  * Twistoast - PebbleWatchReceiver
- * Copyright (C) 2013-2015 Baptiste Candellier
+ * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -157,7 +157,7 @@ public class PebbleWatchReceiver extends PebbleDataReceiver {
 		// Add first schedule time and direction to the buffer
 		if(!schedule.getSchedules().isEmpty()) {
 			// Time at which the next bus is planned
-			Calendar nextSchedule = ScheduleTime.getNextDateForTime(schedule.getSchedules().get(0).getTime());
+			Calendar nextSchedule = schedule.getSchedules().get(0).getTime();
 
 			// Convert to milliseconds and add to the buffer
 			response.addInt32(KEY_BUS_NEXT_SCHEDULE, (int) ScheduleTime.getMillisUntilBus(nextSchedule));
@@ -170,7 +170,7 @@ public class PebbleWatchReceiver extends PebbleDataReceiver {
 
 		// Add the second schedule, same process
 		if(schedule.getSchedules().size() > 1) {
-			Calendar nextSchedule = ScheduleTime.getNextDateForTime(schedule.getSchedules().get(1).getTime());
+			Calendar nextSchedule = schedule.getSchedules().get(1).getTime();
 
 			response.addInt32(KEY_BUS_SECOND_SCHEDULE, (int) ScheduleTime.getMillisUntilBus(nextSchedule));
 			response.addString(KEY_BUS_SECOND_SCHEDULE_DIR, getOptionalShortDirection(schedule.getSchedules().get(1)));
@@ -180,7 +180,7 @@ public class PebbleWatchReceiver extends PebbleDataReceiver {
 		}
 
 		if(!schedule.getSchedules().isEmpty()) {
-			Calendar scheduleCalendar = ScheduleTime.getNextDateForTime(schedule.getSchedules().get(0).getTime());
+			Calendar scheduleCalendar = schedule.getSchedules().get(0).getTime();
 			ScheduleTime.TimeDisplayMode displayMode = ScheduleTime.getTimeDisplayMode(scheduleCalendar, context);
 
 			if(displayMode == ScheduleTime.TimeDisplayMode.ARRIVAL_IMMINENT

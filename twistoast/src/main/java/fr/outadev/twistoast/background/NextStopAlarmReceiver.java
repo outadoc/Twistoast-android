@@ -1,6 +1,6 @@
 /*
  * Twistoast - NextStopAlarmReceiver
- * Copyright (C) 2013-2015 Baptiste Candellier
+ * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,16 +31,15 @@ import android.util.Log;
 import java.util.Calendar;
 import java.util.List;
 
-import fr.outadev.android.timeo.ScheduleTime;
 import fr.outadev.android.timeo.TimeoRequestHandler;
 import fr.outadev.android.timeo.TimeoSingleSchedule;
 import fr.outadev.android.timeo.TimeoStop;
 import fr.outadev.android.timeo.TimeoStopSchedule;
-import fr.outadev.twistoast.IWatchedStopChangeListener;
 import fr.outadev.twistoast.ActivityRealtime;
-import fr.outadev.twistoast.R;
 import fr.outadev.twistoast.Database;
 import fr.outadev.twistoast.DatabaseOpenHelper;
+import fr.outadev.twistoast.IWatchedStopChangeListener;
+import fr.outadev.twistoast.R;
 import fr.outadev.twistoast.Utils;
 
 /**
@@ -94,7 +93,7 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 
 						// If there are stops scheduled for this bus
 						if(schedule.getSchedules() != null && !schedule.getSchedules().isEmpty()) {
-							Calendar busTime = ScheduleTime.getNextDateForTime(schedule.getSchedules().get(0).getTime());
+							Calendar busTime = schedule.getSchedules().get(0).getTime();
 
 							updateStopTimeNotification(schedule);
 
@@ -165,7 +164,7 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 		String stop = schedule.getStop().getName();
 		String direction = schedule.getStop().getLine().getDirection().getName();
 		String lineName = schedule.getStop().getLine().getName();
-		String time = schedule.getSchedules().get(0).getTime();
+		String time = schedule.getSchedules().get(0).getFormattedTime(context);
 
 		// Make a nice notification to inform the user of the bus's imminence
 		NotificationCompat.Builder builder =

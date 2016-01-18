@@ -1,6 +1,6 @@
 /*
  * Twistoast - TimeoSingleSchedule
- * Copyright (C) 2013-2015 Baptiste Candellier
+ * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,8 @@
 package fr.outadev.android.timeo;
 
 import android.content.Context;
-import android.preference.PreferenceManager;
+
+import java.util.Calendar;
 
 /**
  * Stores a single schedule, containing a time and a direction.
@@ -28,7 +29,7 @@ import android.preference.PreferenceManager;
  */
 public class TimeoSingleSchedule {
 
-	private String time;
+	private Calendar time;
 	private String direction;
 
 	private static Boolean relative;
@@ -40,7 +41,7 @@ public class TimeoSingleSchedule {
 	 * @param direction the direction towards which the bus is heading
 	 */
 	public TimeoSingleSchedule(String time, String direction) {
-		this.time = time;
+		this.time = ScheduleTime.getNextDateForTime(time);
 		this.direction = direction;
 	}
 
@@ -50,12 +51,12 @@ public class TimeoSingleSchedule {
 	public TimeoSingleSchedule() {
 	}
 
-	public String getTime() {
-		return time;
+	public void setTime(String time) {
+		this.time = ScheduleTime.getNextDateForTime(time);
 	}
 
-	public void setTime(String time) {
-		this.time = time;
+	public Calendar getTime() {
+		return time;
 	}
 
 	public String getDirection() {
@@ -67,19 +68,7 @@ public class TimeoSingleSchedule {
 	}
 
 	public String getFormattedTime(Context context) {
-		return (isRelative(context)) ? ScheduleTime.formatTime(context, getTime()) : getTime();
+		return ScheduleTime.formatTime(context, time);
 	}
 
-	public String getShortFormattedTime(Context context) {
-		String dir = (getDirection() != null && getDirection().matches("(A|B) .+")) ? getDirection().charAt(0) + " : " : "";
-		return (isRelative(context)) ? dir + ScheduleTime.formatTime(context, getTime()) : dir + getTime();
-	}
-
-	private static boolean isRelative(Context context) {
-		if(relative == null) {
-			relative = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("pref_relative_time", true);
-		}
-
-		return relative;
-	}
 }
