@@ -42,7 +42,7 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.GoogleApiAvailability;
 
 import java.util.List;
 
@@ -237,7 +237,7 @@ public class FragmentRealtime extends Fragment implements IStopsListContainer {
 			adView.setVisibility(View.GONE);
 		} else {
 			// If we want ads, check for availability and load them
-			int hasGPS = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity());
+			int hasGPS = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getActivity());
 
 			if(hasGPS == ConnectionResult.SUCCESS) {
 				AdRequest adRequest = new AdRequest.Builder()
