@@ -1,6 +1,6 @@
 /*
  * Twistoast - TimeoStop
- * Copyright (C) 2013-2015 Baptiste Candellier
+ * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
 
 package fr.outadev.android.timeo;
 
+import org.joda.time.DateTime;
+
 /**
  * A bus stop.
  *
@@ -31,7 +33,7 @@ public class TimeoStop extends TimeoIDNameObject {
 	private boolean isOutdated;
 	private boolean isWatched;
 
-	private long lastETA;
+	private DateTime lastETA;
 
 	/**
 	 * Creates a stop.
@@ -47,7 +49,7 @@ public class TimeoStop extends TimeoIDNameObject {
 		this.line = line;
 		this.isWatched = false;
 		this.isOutdated = false;
-		this.lastETA = -1;
+		this.lastETA = null;
 	}
 
 	/**
@@ -71,7 +73,7 @@ public class TimeoStop extends TimeoIDNameObject {
 	 * @param ref       the reference of the stop
 	 * @param isWatched true if notifications are enabled for this stop, otherwise false
 	 */
-	public TimeoStop(String id, String name, String ref, TimeoLine line, boolean isWatched, long lastETA) {
+	public TimeoStop(String id, String name, String ref, TimeoLine line, boolean isWatched, DateTime lastETA) {
 		this(id, name, ref, line, isWatched);
 		this.lastETA = lastETA;
 	}
@@ -130,11 +132,11 @@ public class TimeoStop extends TimeoIDNameObject {
 	 *
 	 * @return a timestamp of an approximation of the arrival of the next bus
 	 */
-	public long getLastETA() {
+	public DateTime getLastETA() {
 		return lastETA;
 	}
 
-	public void setLastETA(long lastETA) {
+	public void setLastETA(DateTime lastETA) {
 		this.lastETA = lastETA;
 	}
 }

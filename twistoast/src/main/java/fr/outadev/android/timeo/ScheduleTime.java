@@ -21,11 +21,11 @@ package fr.outadev.android.timeo;
 import android.content.Context;
 import android.preference.PreferenceManager;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
-import java.util.TimeZone;
+import org.joda.time.DateTime;
+import org.joda.time.Duration;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
+import org.joda.time.format.DateTimeFormat;
 
 import fr.outadev.twistoast.R;
 
@@ -50,9 +50,7 @@ public abstract class ScheduleTime {
 	 * @return if time is less than one minute in the future: "imminent arrival"-ish, if less than 45 minutes in the future: "in
 	 * xx minutes", if more than that: the untouched time parameter
 	 */
-	public static String formatTime(Context context, Calendar time) {
-		DateFormat format = SimpleDateFormat.getTimeInstance(DateFormat.SHORT, Locale.FRENCH);
-
+	public static String formatTime(Context context, DateTime time) {
 		switch(getTimeDisplayMode(time, context)) {
 			case CURRENTLY_AT_STOP:
 				return context.getString(R.string.schedule_time_currently_at_stop);
@@ -60,11 +58,11 @@ public abstract class ScheduleTime {
 				return context.getString(R.string.schedule_time_arrival_imminent);
 			case COUNTDOWN:
 				if (isRelative(context)) {
-					return context.getString(R.string.schedule_time_countdown, getMinutesUntilBus(time));
+					return context.getString(R.string.schedule_time_countdown, getDurationUntilBus(time).getStandardMinutes());
 				}
 			default:
 			case FULL:
-				return format.format(time.getTime());
+				return time.toString(DateTimeFormat.forPattern("HH:mm"));
 		}
 	}
 
@@ -73,25 +71,13 @@ public abstract class ScheduleTime {
 	}
 
 	/**
-	 * Computes the number of milliseconds after which the bus shall arrive.
-	 * Note: might not be accurate down to the millisecond.
+	 * Computes the interval of time after which the bus shall arrive.
 	 *
 	 * @param schedule the time at which the bus will arrive
-	 * @return the difference between now and then, in milliseconds
+	 * @return the difference between now and then
 	 */
-	public static long getMillisUntilBus(Calendar schedule) {
-		Calendar now = getCurrentTime();
-		return schedule.getTimeInMillis() - now.getTimeInMillis();
-	}
-
-	/**
-	 * Similar to getMillisUntilBus, except it does it for minutes.
-	 *
-	 * @param schedule the time at which the bus will arrive
-	 * @return the difference between now and then, in minutes
-	 */
-	private static long getMinutesUntilBus(Calendar schedule) {
-		return (long) Math.ceil(getMillisUntilBus(schedule) / 1000 / 60);
+	public static Duration getDurationUntilBus(DateTime schedule) {
+		return new Duration(null, schedule);
 	}
 
 	/**
@@ -103,8 +89,8 @@ public abstract class ScheduleTime {
 	 * @param schedule the time at which the bus will arrive
 	 * @return a TimeDisplayMode constant to tell you the right mode
 	 */
-	public static TimeDisplayMode getTimeDisplayMode(Calendar schedule, Context context) {
-		long offset = getMinutesUntilBus(schedule);
+	public static TimeDisplayMode getTimeDisplayMode(DateTime schedule, Context context) {
+		long offset = getDurationUntilBus(schedule).getMillis() / 1000 / 60;
 
 		if(!PreferenceManager.getDefaultSharedPreferences(context).getBoolean("pref_relative_time", true)) {
 			return TimeDisplayMode.FULL;
@@ -129,28 +115,22 @@ public abstract class ScheduleTime {
 	 * @param time a time in a string, separated with a colon: e.g. "14:53"
 	 * @return a calendar object, with the time in the string set for the next valid day
 	 */
-	public static Calendar getNextDateForTime(String time) {
+	public static DateTime getNextDateForTime(String time) {
 		String[] splitTime = time.split(":");
 
 		int hours = Integer.valueOf(splitTime[0]);
 		int minutes = Integer.valueOf(splitTime[1]);
 
-		Calendar scheduledTime = getCurrentTime();
-		Calendar now = getCurrentTime();
+		LocalTime scheduledTime = new LocalTime(hours, minutes);
+		LocalDate currDate = LocalDate.now();
 
-		scheduledTime.set(Calendar.HOUR_OF_DAY, hours);
-		scheduledTime.set(Calendar.MINUTE, minutes);
+		DateTime now = new DateTime();
 
-		if(now.get(Calendar.HOUR_OF_DAY) > hours
-				|| now.get(Calendar.HOUR_OF_DAY) == hours && now.get(Calendar.MINUTE) > minutes) {
-			scheduledTime.add(Calendar.DAY_OF_YEAR, 1);
+		if(now.getHourOfDay() > hours || (now.getHourOfDay() == hours && now.getMinuteOfHour() > minutes)) {
+			currDate.plusDays(1);
 		}
 
-		return scheduledTime;
-	}
-
-	private static Calendar getCurrentTime() {
-		return Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
+		return currDate.toDateTime(scheduledTime);
 	}
 
 	public enum TimeDisplayMode {

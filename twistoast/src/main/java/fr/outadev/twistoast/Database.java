@@ -1,6 +1,6 @@
 /*
  * Twistoast - Database
- * Copyright (C) 2013-2015 Baptiste Candellier
+ * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,6 +23,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -371,7 +373,7 @@ public class Database {
 					results.getString(results.getColumnIndex("stop_ref")),
 					line,
 					true,
-					results.getLong(results.getColumnIndex("notif_last_estim")));
+					new DateTime(results.getLong(results.getColumnIndex("notif_last_estim"))));
 
 			// add it to the list
 			stopsList.add(stop);
@@ -430,11 +432,11 @@ public class Database {
 	 * @param stop    the bus stop we want to update
 	 * @param lastETA a UNIX timestamp for the last know ETA for this bus
 	 */
-	public void updateWatchedStopETA(TimeoStop stop, long lastETA) {
+	public void updateWatchedStopETA(TimeoStop stop, DateTime lastETA) {
 		SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
 
 		ContentValues updateClause = new ContentValues();
-		updateClause.put("notif_last_estim", lastETA);
+		updateClause.put("notif_last_estim", lastETA.getMillis());
 
 		db.update("twi_notification", updateClause,
 				"stop_id = ? AND line_id = ? AND dir_id = ? AND network_code = ? AND notif_active = 1", new String[]{

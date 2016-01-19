@@ -20,7 +20,7 @@ package fr.outadev.android.timeo;
 
 import android.content.Context;
 
-import java.util.Calendar;
+import org.joda.time.DateTime;
 
 /**
  * Stores a single schedule, containing a time and a direction.
@@ -29,10 +29,8 @@ import java.util.Calendar;
  */
 public class TimeoSingleSchedule {
 
-	private Calendar time;
+	private DateTime time;
 	private String direction;
-
-	private static Boolean relative;
 
 	/**
 	 * Create a new schedule.
@@ -55,7 +53,7 @@ public class TimeoSingleSchedule {
 		this.time = ScheduleTime.getNextDateForTime(time);
 	}
 
-	public Calendar getTime() {
+	public DateTime getTime() {
 		return time;
 	}
 

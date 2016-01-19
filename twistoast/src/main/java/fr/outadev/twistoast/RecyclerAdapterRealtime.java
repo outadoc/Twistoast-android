@@ -39,7 +39,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -335,7 +334,7 @@ public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapte
 					// We don't update from database all the time, so we can't figure this out by just updating everything.
 					// If there is a bus coming, tell the stop that it's not watched anymore.
 					// This won't work all the time, but it's not too bad.
-					if(Calendar.getInstance().getTimeInMillis()	> currSched.getTime().getTimeInMillis()) {
+					if(currSched.getTime().isBeforeNow()) {
 						currentStop.setWatched(false);
 					}
 

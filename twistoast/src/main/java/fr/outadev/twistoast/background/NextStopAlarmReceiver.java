@@ -28,7 +28,8 @@ import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import java.util.Calendar;
+import org.joda.time.DateTime;
+
 import java.util.List;
 
 import fr.outadev.android.timeo.TimeoRequestHandler;
@@ -93,19 +94,19 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 
 						// If there are stops scheduled for this bus
 						if(schedule.getSchedules() != null && !schedule.getSchedules().isEmpty()) {
-							Calendar busTime = schedule.getSchedules().get(0).getTime();
+							DateTime busTime = schedule.getSchedules().get(0).getTime();
 
 							updateStopTimeNotification(schedule);
 
 							// THE BUS IS COMIIIING
-							if(Calendar.getInstance().getTimeInMillis() + ALARM_TIME_THRESHOLD_MS > busTime.getTimeInMillis()) {
+							if(busTime.isBefore(DateTime.now().plus(ALARM_TIME_THRESHOLD_MS))) {
 								// Remove from database, and send a notification
 								notifyForIncomingBus(schedule);
 								db.stopWatchingStop(schedule.getStop());
 								schedule.getStop().setWatched(false);
 
 								Log.d(Utils.TAG, "less than two minutes till " + busTime.toString() + ": " + schedule.getStop());
-							} else if(schedule.getStop().getLastETA() != -1) {
+							} else if(schedule.getStop().getLastETA() != null) {
 								// Check if there's more than five minutes of difference between the last estimation and the new
 								// one. If that's the case, send the notification anyways; it may already be too late!
 
@@ -113,19 +114,18 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 								// we have to make assumptions instead; if a bus is announced for 3 minutes, and then for 10
 								// minutes the next time we check, it most likely has passed.
 
-								if(busTime.getTimeInMillis() - schedule.getStop().getLastETA() > 5 * 60 * 1000) {
+								if(busTime.isBefore(schedule.getStop().getLastETA().plus(5 * 60 * 1000))) {
 									// Remove from database, and send a notification
 									notifyForIncomingBus(schedule);
 									db.stopWatchingStop(schedule.getStop());
 									schedule.getStop().setWatched(false);
 
 									Log.d(Utils.TAG, "last time we saw " + schedule.getStop() + " the bus was scheduled for " +
-											schedule.getStop().getLastETA() + ", but now the ETA is "
-											+ busTime.getTimeInMillis() + ", so we're notifying");
+											schedule.getStop().getLastETA() + ", but now the ETA is " + busTime + ", so we're notifying");
 								}
 
 							} else {
-								db.updateWatchedStopETA(schedule.getStop(), busTime.getTimeInMillis());
+								db.updateWatchedStopETA(schedule.getStop(), busTime);
 							}
 						}
 					}

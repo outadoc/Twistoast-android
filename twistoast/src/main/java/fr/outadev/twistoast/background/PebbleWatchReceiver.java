@@ -30,7 +30,8 @@ import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.PebbleKit.PebbleDataReceiver;
 import com.getpebble.android.kit.util.PebbleDictionary;
 
-import java.util.Calendar;
+import org.joda.time.DateTime;
+
 import java.util.UUID;
 
 import fr.outadev.android.timeo.ScheduleTime;
@@ -157,10 +158,10 @@ public class PebbleWatchReceiver extends PebbleDataReceiver {
 		// Add first schedule time and direction to the buffer
 		if(!schedule.getSchedules().isEmpty()) {
 			// Time at which the next bus is planned
-			Calendar nextSchedule = schedule.getSchedules().get(0).getTime();
+			DateTime nextSchedule = schedule.getSchedules().get(0).getTime();
 
 			// Convert to milliseconds and add to the buffer
-			response.addInt32(KEY_BUS_NEXT_SCHEDULE, (int) ScheduleTime.getMillisUntilBus(nextSchedule));
+			response.addInt32(KEY_BUS_NEXT_SCHEDULE, (int) ScheduleTime.getDurationUntilBus(nextSchedule).getMillis());
 			// Get a short version of the destination if required - e.g. A or B for the tram
 			response.addString(KEY_BUS_NEXT_SCHEDULE_DIR, getOptionalShortDirection(schedule.getSchedules().get(0)));
 		} else {
@@ -170,9 +171,9 @@ public class PebbleWatchReceiver extends PebbleDataReceiver {
 
 		// Add the second schedule, same process
 		if(schedule.getSchedules().size() > 1) {
-			Calendar nextSchedule = schedule.getSchedules().get(1).getTime();
+			DateTime nextSchedule = schedule.getSchedules().get(1).getTime();
 
-			response.addInt32(KEY_BUS_SECOND_SCHEDULE, (int) ScheduleTime.getMillisUntilBus(nextSchedule));
+			response.addInt32(KEY_BUS_SECOND_SCHEDULE, (int) ScheduleTime.getDurationUntilBus(nextSchedule).getMillis());
 			response.addString(KEY_BUS_SECOND_SCHEDULE_DIR, getOptionalShortDirection(schedule.getSchedules().get(1)));
 		} else {
 			response.addInt32(KEY_BUS_SECOND_SCHEDULE, -1);
@@ -180,8 +181,8 @@ public class PebbleWatchReceiver extends PebbleDataReceiver {
 		}
 
 		if(!schedule.getSchedules().isEmpty()) {
-			Calendar scheduleCalendar = schedule.getSchedules().get(0).getTime();
-			ScheduleTime.TimeDisplayMode displayMode = ScheduleTime.getTimeDisplayMode(scheduleCalendar, context);
+			DateTime scheduleTime = schedule.getSchedules().get(0).getTime();
+			ScheduleTime.TimeDisplayMode displayMode = ScheduleTime.getTimeDisplayMode(scheduleTime, context);
 
 			if(displayMode == ScheduleTime.TimeDisplayMode.ARRIVAL_IMMINENT
 					|| displayMode == ScheduleTime.TimeDisplayMode.CURRENTLY_AT_STOP) {
