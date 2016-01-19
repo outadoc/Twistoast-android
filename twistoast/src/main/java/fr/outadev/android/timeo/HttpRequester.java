@@ -32,55 +32,56 @@ import java.io.IOException;
  */
 public class HttpRequester {
 
-	private static HttpRequester instance;
-	public final static String TAG = HttpRequester.class.getName();
+    public final static String TAG = HttpRequester.class.getName();
+    private static HttpRequester sInstance;
 
-	private HttpRequester() {
-	}
+    private HttpRequester() {
+    }
 
-	public static HttpRequester getInstance() {
-		if (instance == null)
-			instance = new HttpRequester();
+    public static HttpRequester getInstance() {
+        if (sInstance == null) {
+            sInstance = new HttpRequester();
+        }
 
-		return instance;
-	}
+        return sInstance;
+    }
 
-	/**
-	 * Requests a web page via an HTTP GET request.
-	 *
-	 * @param url       URL to fetch
-	 * @param params    HTTP GET parameters as a string (e.g. foo=bar&bar=foobar)
-	 * @param useCaches true if the client can cache the request
-	 * @return the raw body of the page
-	 * @throws IOException if an HTTP error occurred
-	 */
-	public String requestWebPage(String url, String params, boolean useCaches) throws IOException {
-		String finalUrl = url + "?" + params;
-		Log.i(TAG, "requesting " + finalUrl);
+    /**
+     * Requests a web page via an HTTP GET request.
+     *
+     * @param url       URL to fetch
+     * @param params    HTTP GET parameters as a string (e.g. foo=bar&bar=foobar)
+     * @param useCaches true if the client can cache the request
+     * @return the raw body of the page
+     * @throws IOException if an HTTP error occurred
+     */
+    public String requestWebPage(String url, String params, boolean useCaches) throws IOException {
+        String finalUrl = url + "?" + params;
+        Log.i(TAG, "requesting " + finalUrl);
 
-		OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = new OkHttpClient();
 
-		Request.Builder builder = new Request.Builder()
-				.url(finalUrl);
+        Request.Builder builder = new Request.Builder()
+                .url(finalUrl);
 
-		if(!useCaches) {
-			builder.cacheControl(CacheControl.FORCE_NETWORK);
-		}
+        if (!useCaches) {
+            builder.cacheControl(CacheControl.FORCE_NETWORK);
+        }
 
-		Response response = client.newCall(builder.build()).execute();
-		return response.body().string();
-	}
+        Response response = client.newCall(builder.build()).execute();
+        return response.body().string();
+    }
 
-	/**
-	 * Requests a web page via an HTTP GET request.
-	 *
-	 * @param url       URL to fetch
-	 * @param useCaches true if the client can cache the request
-	 * @return the raw body of the page
-	 * @throws IOException if an HTTP error occurred
-	 */
-	public String requestWebPage(String url, boolean useCaches) throws IOException {
-		return requestWebPage(url, "", useCaches);
-	}
+    /**
+     * Requests a web page via an HTTP GET request.
+     *
+     * @param url       URL to fetch
+     * @param useCaches true if the client can cache the request
+     * @return the raw body of the page
+     * @throws IOException if an HTTP error occurred
+     */
+    public String requestWebPage(String url, boolean useCaches) throws IOException {
+        return requestWebPage(url, "", useCaches);
+    }
 
 }

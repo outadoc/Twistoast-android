@@ -1,6 +1,6 @@
 /*
  * Twistoast - TimeoTrafficAlert
- * Copyright (C) 2013-2015 Baptiste Candellier
+ * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,53 +27,53 @@ import java.io.Serializable;
  */
 public class TimeoTrafficAlert implements Serializable {
 
-	private int id;
-	private String label;
-	private String url;
+    private int mId;
+    private String mLabel;
+    private String mUrl;
 
-	/**
-	 * Creates a new traffic alert.
-	 *
-	 * @param id    the id of the alert
-	 * @param label the label (title) of the alert
-	 * @param url   the URL to redirect to, to get more info
-	 */
-	public TimeoTrafficAlert(int id, String label, String url) {
-		this.id = id;
-		this.label = label;
-		this.url = url;
-	}
+    /**
+     * Creates a new traffic alert.
+     *
+     * @param id    the id of the alert
+     * @param label the label (title) of the alert
+     * @param url   the URL to redirect to, to get more info
+     */
+    public TimeoTrafficAlert(int id, String label, String url) {
+        this.mId = id;
+        this.mLabel = label;
+        this.mUrl = url;
+    }
 
-	public int getId() {
-		return id;
-	}
+    public int getId() {
+        return mId;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setId(int id) {
+        this.mId = id;
+    }
 
-	public String getLabel() {
-		return label;
-	}
+    public String getLabel() {
+        return mLabel;
+    }
 
-	public void setLabel(String label) {
-		this.label = label;
-	}
+    public void setLabel(String label) {
+        this.mLabel = label;
+    }
 
-	public String getUrl() {
-		return url;
-	}
+    public String getUrl() {
+        return mUrl;
+    }
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
+    public void setUrl(String url) {
+        this.mUrl = url;
+    }
 
-	@Override
-	public String toString() {
-		return "TimeoTrafficAlert{" +
-				"id=" + id +
-				", label='" + label + '\'' +
-				", url='" + url + '\'' +
-				'}';
-	}
+    @Override
+    public String toString() {
+        return "TimeoTrafficAlert{" +
+                "id=" + mId +
+                ", label='" + mLabel + '\'' +
+                ", url='" + mUrl + '\'' +
+                '}';
+    }
 }

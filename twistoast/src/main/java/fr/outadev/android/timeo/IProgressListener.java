@@ -1,6 +1,6 @@
 /*
  * Twistoast - IProgressListener
- * Copyright (C) 2013-2015 Baptiste Candellier
+ * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,12 +24,12 @@ package fr.outadev.android.timeo;
  */
 public interface IProgressListener {
 
-	/**
-	 * Updates the current progress.
-	 *
-	 * @param current current progress, can't be greater than total
-	 * @param total   maximum progress
-	 */
-	void onProgress(int current, int total);
+    /**
+     * Updates the current progress.
+     *
+     * @param current current progress, can't be greater than total
+     * @param total   maximum progress
+     */
+    void onProgress(int current, int total);
 
 }

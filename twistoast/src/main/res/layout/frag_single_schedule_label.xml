@@ -2,7 +2,7 @@
 
 <!--
   ~ Twistoast - frag_single_schedule_label.xml
-  ~ Copyright (C) 2013-2015 Baptiste Candellier
+  ~ Copyright (C) 2013-2016 Baptiste Candellier
   ~
   ~ Twistoast is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@
 		android:textAppearance="?android:attr/textAppearanceMedium"
 		android:textColor="#333333"
 		android:textSize="16sp"
-		android:layout_gravity="center_vertical"/>
+		android:layout_gravity="center_vertical" />
 
 	<TextView
 		android:id="@+id/lbl_schedule_direction"
@@ -46,5 +46,5 @@
 		android:textAppearance="?android:attr/textAppearanceMedium"
 		android:textColor="#ff707070"
 		android:textSize="15sp"
-		android:layout_gravity="center_vertical"/>
+		android:layout_gravity="center_vertical" />
 </LinearLayout>

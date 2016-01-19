@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Twistoast - activity_realtime.xml
-  ~ Copyright (C) 2013-2015 Baptiste Candellier
+  ~ Copyright (C) 2013-2016 Baptiste Candellier
   ~
   ~ Twistoast is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@
 			android:layout_height="match_parent"
 			android:layout_gravity="start"
 			app:headerLayout="@layout/nav_drawer_header"
-			app:menu="@menu/drawer"/>
+			app:menu="@menu/drawer" />
 
 	</android.support.v4.widget.DrawerLayout>
 </LinearLayout>

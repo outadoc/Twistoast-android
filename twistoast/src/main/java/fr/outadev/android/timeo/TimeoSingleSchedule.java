@@ -29,44 +29,44 @@ import org.joda.time.DateTime;
  */
 public class TimeoSingleSchedule {
 
-	private DateTime time;
-	private String direction;
+    private DateTime mScheduleTime;
+    private String mDirection;
 
-	/**
-	 * Create a new schedule.
-	 *
-	 * @param time      the time at which the bus should arrive (e.g. "13:53")
-	 * @param direction the direction towards which the bus is heading
-	 */
-	public TimeoSingleSchedule(String time, String direction) {
-		this.time = ScheduleTime.getNextDateForTime(time);
-		this.direction = direction;
-	}
+    /**
+     * Create a new schedule.
+     *
+     * @param scheduleTime the time at which the bus should arrive (e.g. "13:53")
+     * @param direction    the direction towards which the bus is heading
+     */
+    public TimeoSingleSchedule(String scheduleTime, String direction) {
+        this.mScheduleTime = ScheduleTime.getNextDateForTime(scheduleTime);
+        this.mDirection = direction;
+    }
 
-	/**
-	 * Create a new empty schedule.
-	 */
-	public TimeoSingleSchedule() {
-	}
+    /**
+     * Create a new empty schedule.
+     */
+    public TimeoSingleSchedule() {
+    }
 
-	public void setTime(String time) {
-		this.time = ScheduleTime.getNextDateForTime(time);
-	}
+    public DateTime getScheduleTime() {
+        return mScheduleTime;
+    }
 
-	public DateTime getTime() {
-		return time;
-	}
+    public void setScheduleTime(String scheduleTime) {
+        this.mScheduleTime = ScheduleTime.getNextDateForTime(scheduleTime);
+    }
 
-	public String getDirection() {
-		return direction;
-	}
+    public String getDirection() {
+        return mDirection;
+    }
 
-	public void setDirection(String direction) {
-		this.direction = direction;
-	}
+    public void setDirection(String direction) {
+        this.mDirection = direction;
+    }
 
-	public String getFormattedTime(Context context) {
-		return ScheduleTime.formatTime(context, time);
-	}
+    public String getFormattedTime(Context context) {
+        return ScheduleTime.formatTime(context, mScheduleTime);
+    }
 
 }

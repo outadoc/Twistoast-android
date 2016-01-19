@@ -43,16 +43,16 @@ public class Database {
 	private final SQLiteOpenHelper databaseOpenHelper;
 
 	public Database(SQLiteOpenHelper openHelper) {
-		databaseOpenHelper = openHelper;
+        databaseOpenHelper = openHelper;
 	}
 
 	/**
-	 * Adds a bus stop to the database.
-	 *
-	 * @param stop the bus stop to add
-	 * @throws IllegalArgumentException  if the stop is not valid
-	 * @throws SQLiteConstraintException if a constraint failed
-	 */
+     * Adds a bus stop to the database.
+     *
+     * @param stop the bus stop to add
+     * @throws IllegalArgumentException  if the stop is not valid
+     * @throws SQLiteConstraintException if a constraint failed
+     */
 	public void addStopToDatabase(TimeoStop stop) throws IllegalArgumentException, SQLiteConstraintException {
 		if(stop != null) {
 			// when we want to add a stop, we add the line first, then the

@@ -1,6 +1,6 @@
 /*
  * Twistoast - TimeoIDNameObject
- * Copyright (C) 2013-2015 Baptiste Candellier
+ * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,58 +26,58 @@ package fr.outadev.android.timeo;
  */
 public class TimeoIDNameObject implements ITimeoIDName {
 
-	private String id;
-	private String name;
+    private String mId;
+    private String mName;
 
-	/**
-	 * Creates an ID/name object.
-	 *
-	 * @param id   the id of the object
-	 * @param name the name of the object
-	 */
-	public TimeoIDNameObject(String id, String name) {
-		this.id = id;
-		this.name = name;
-	}
+    /**
+     * Creates an ID/name object.
+     *
+     * @param id   the id of the object
+     * @param name the name of the object
+     */
+    public TimeoIDNameObject(String id, String name) {
+        this.mId = id;
+        this.mName = name;
+    }
 
-	public TimeoIDNameObject() {
+    public TimeoIDNameObject() {
 
-	}
+    }
 
-	public String getId() {
-		return id;
-	}
+    public String getId() {
+        return mId;
+    }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public void setId(String id) {
+        this.mId = id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return mName;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.mName = name;
+    }
 
-	@Override
-	public boolean equals(Object object) {
-		if(object == this) {
-			return true;
-		}
+    @Override
+    public boolean equals(Object object) {
+        if (object == this) {
+            return true;
+        }
 
-		if(object instanceof TimeoIDNameObject) {
-			if(((TimeoIDNameObject) object).getId().equals(this.getId())) {
-				return true;
-			}
-		}
+        if (object instanceof TimeoIDNameObject) {
+            if (((TimeoIDNameObject) object).getId().equals(this.getId())) {
+                return true;
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	@Override
-	public String toString() {
-		return id + " - " + name;
-	}
+    @Override
+    public String toString() {
+        return mId + " - " + mName;
+    }
 
 }

@@ -1,6 +1,6 @@
 /*
  * Twistoast - TimeoStopSchedule
- * Copyright (C) 2013-2015 Baptiste Candellier
+ * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,45 +29,45 @@ import java.util.List;
  */
 public class TimeoStopSchedule {
 
-	private TimeoStop stop;
-	private List<TimeoSingleSchedule> schedules;
+    private TimeoStop mStop;
+    private List<TimeoSingleSchedule> mSingleSchedules;
 
-	/**
-	 * Create a new schedule.
-	 *
-	 * @param stop      the stop this schedule corresponds to.
-	 * @param schedules a list of the schedules the stop is associated with.
-	 */
-	public TimeoStopSchedule(TimeoStop stop, List<TimeoSingleSchedule> schedules) {
-		this.stop = stop;
-		this.schedules = schedules;
-	}
+    /**
+     * Create a new schedule.
+     *
+     * @param stop      the stop this schedule corresponds to.
+     * @param schedules a list of the schedules the stop is associated with.
+     */
+    public TimeoStopSchedule(TimeoStop stop, List<TimeoSingleSchedule> schedules) {
+        this.mStop = stop;
+        this.mSingleSchedules = schedules;
+    }
 
-	public TimeoStopSchedule() {
-		this(null, new ArrayList<TimeoSingleSchedule>());
-	}
+    public TimeoStopSchedule() {
+        this(null, new ArrayList<TimeoSingleSchedule>());
+    }
 
-	public TimeoStop getStop() {
-		return stop;
-	}
+    public TimeoStop getStop() {
+        return mStop;
+    }
 
-	public void setStop(TimeoStop stop) {
-		this.stop = stop;
-	}
+    public void setStop(TimeoStop stop) {
+        this.mStop = stop;
+    }
 
-	public List<TimeoSingleSchedule> getSchedules() {
-		return schedules;
-	}
+    public List<TimeoSingleSchedule> getSchedules() {
+        return mSingleSchedules;
+    }
 
-	public void setSchedules(List<TimeoSingleSchedule> schedules) {
-		this.schedules = schedules;
-	}
+    public void setSchedules(List<TimeoSingleSchedule> schedules) {
+        this.mSingleSchedules = schedules;
+    }
 
-	@Override
-	public String toString() {
-		return "TimeoStopSchedule{" +
-				"stop=" + stop +
-				", schedules=" + schedules +
-				'}';
-	}
+    @Override
+    public String toString() {
+        return "TimeoStopSchedule{" +
+                "stop=" + mStop +
+                ", schedules=" + mSingleSchedules +
+                '}';
+    }
 }

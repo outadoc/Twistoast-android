@@ -49,256 +49,256 @@ import fr.outadev.twistoast.Utils;
  */
 public class NextStopAlarmReceiver extends CommonAlarmReceiver {
 
-	// If the bus is coming in less than ALARM_TIME_THRESHOLD_MS milliseconds, send a notification.
-	public static final int ALARM_TIME_THRESHOLD_MS = 90 * 1000;
-	private static final int ALARM_FREQUENCY = 60 * 1000;
-	private static final int ALARM_TYPE = AlarmManager.ELAPSED_REALTIME_WAKEUP;
+    // If the bus is coming in less than ALARM_TIME_THRESHOLD_MS milliseconds, send a notification.
+    public static final int ALARM_TIME_THRESHOLD_MS = 90 * 1000;
+    private static final int ALARM_FREQUENCY = 60 * 1000;
+    private static final int ALARM_TYPE = AlarmManager.ELAPSED_REALTIME_WAKEUP;
 
-	private static final int NOTIFICATION_ID_ERROR = 42;
+    private static final int NOTIFICATION_ID_ERROR = 42;
+    private static IWatchedStopChangeListener sWatchedStopStateListener = null;
+    private Context mContext;
 
-	private Context context;
-	private static IWatchedStopChangeListener watchedStopStateListener = null;
+    /**
+     * Enables the regular checks performed every minute by this receiver.
+     * They should be disabled once not needed anymore, as they can be battery and network hungry.
+     *
+     * @param context a context
+     */
+    public static void enable(Context context) {
+        Log.d(Utils.TAG, "enabling " + NextStopAlarmReceiver.class.getSimpleName());
 
-	@Override
-	public void onReceive(final Context context, Intent intent) {
-		this.context = context;
+        AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmMgr.setInexactRepeating(ALARM_TYPE,
+                SystemClock.elapsedRealtime() + 1000, ALARM_FREQUENCY, getBroadcast(context));
+    }
 
-		(new AsyncTask<Void, Void, List<TimeoStopSchedule>>() {
+    /**
+     * Disables the regular checks performed every minute by this receiver.
+     *
+     * @param context a context
+     */
+    public static void disable(Context context) {
+        Log.d(Utils.TAG, "disabling " + NextStopAlarmReceiver.class.getSimpleName());
 
-			private Database db;
-			private List<TimeoStop> stopsToCheck;
+        AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmMgr.cancel(getBroadcast(context));
+    }
 
-			@Override
-			protected void onPreExecute() {
-				db = new Database(DatabaseOpenHelper.getInstance(context));
-				Log.d(Utils.TAG, "checking stop schedules for notifications");
-			}
+    /**
+     * Returns the PendingIntent that will be called by the alarm every minute.
+     *
+     * @param context a context
+     * @return the PendingIntent corresponding to this class
+     */
+    public static PendingIntent getBroadcast(Context context) {
+        Intent intent = new Intent(context, NextStopAlarmReceiver.class);
+        return PendingIntent.getBroadcast(context, 0, intent, 0);
+    }
 
-			@Override
-			protected List<TimeoStopSchedule> doInBackground(Void... params) {
-				try {
-					stopsToCheck = db.getWatchedStops();
-					return TimeoRequestHandler.getMultipleSchedules(stopsToCheck);
-				} catch(Exception e) {
-					e.printStackTrace();
-					return null;
-				}
-			}
+    public static void setWatchedStopDismissalListener(IWatchedStopChangeListener watchedStopStateListener) {
+        NextStopAlarmReceiver.sWatchedStopStateListener = watchedStopStateListener;
+    }
 
-			@Override
-			protected void onPostExecute(List<TimeoStopSchedule> stopSchedules) {
-				if(stopSchedules != null) {
+    @Override
+    public void onReceive(final Context context, Intent intent) {
+        this.mContext = context;
 
-					// Look through each schedule
-					for(TimeoStopSchedule schedule : stopSchedules) {
+        (new AsyncTask<Void, Void, List<TimeoStopSchedule>>() {
 
-						// If there are stops scheduled for this bus
-						if(schedule.getSchedules() != null && !schedule.getSchedules().isEmpty()) {
-							DateTime busTime = schedule.getSchedules().get(0).getTime();
+            private Database mDatabase;
+            private List<TimeoStop> mStopsToCheck;
 
-							updateStopTimeNotification(schedule);
+            @Override
+            protected List<TimeoStopSchedule> doInBackground(Void... params) {
+                try {
+                    mStopsToCheck = mDatabase.getWatchedStops();
+                    return TimeoRequestHandler.getMultipleSchedules(mStopsToCheck);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
 
-							// THE BUS IS COMIIIING
-							if(busTime.isBefore(DateTime.now().plus(ALARM_TIME_THRESHOLD_MS))) {
-								// Remove from database, and send a notification
-								notifyForIncomingBus(schedule);
-								db.stopWatchingStop(schedule.getStop());
-								schedule.getStop().setWatched(false);
+            @Override
+            protected void onPreExecute() {
+                mDatabase = new Database(DatabaseOpenHelper.getInstance(context));
+                Log.d(Utils.TAG, "checking stop schedules for notifications");
+            }
 
-								Log.d(Utils.TAG, "less than two minutes till " + busTime.toString() + ": " + schedule.getStop());
-							} else if(schedule.getStop().getLastETA() != null) {
-								// Check if there's more than five minutes of difference between the last estimation and the new
-								// one. If that's the case, send the notification anyways; it may already be too late!
+            @Override
+            protected void onPostExecute(List<TimeoStopSchedule> stopSchedules) {
+                if (stopSchedules != null) {
 
-								// This is to work around the fact that we actually can't know if a bus has passed already,
-								// we have to make assumptions instead; if a bus is announced for 3 minutes, and then for 10
-								// minutes the next time we check, it most likely has passed.
+                    // Look through each schedule
+                    for (TimeoStopSchedule schedule : stopSchedules) {
 
-								if(busTime.isBefore(schedule.getStop().getLastETA().plus(5 * 60 * 1000))) {
-									// Remove from database, and send a notification
-									notifyForIncomingBus(schedule);
-									db.stopWatchingStop(schedule.getStop());
-									schedule.getStop().setWatched(false);
+                        // If there are stops scheduled for this bus
+                        if (schedule.getSchedules() != null && !schedule.getSchedules().isEmpty()) {
+                            DateTime busTime = schedule.getSchedules().get(0).getScheduleTime();
 
-									Log.d(Utils.TAG, "last time we saw " + schedule.getStop() + " the bus was scheduled for " +
-											schedule.getStop().getLastETA() + ", but now the ETA is " + busTime + ", so we're notifying");
-								}
+                            updateStopTimeNotification(schedule);
 
-							} else {
-								db.updateWatchedStopETA(schedule.getStop(), busTime);
-							}
-						}
-					}
-				} else {
-					// A network error occurred, or something ;-;
-					NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context
-							.NOTIFICATION_SERVICE);
+                            // THE BUS IS COMIIIING
+                            if (busTime.isBefore(DateTime.now().plus(ALARM_TIME_THRESHOLD_MS))) {
+                                // Remove from database, and send a notification
+                                notifyForIncomingBus(schedule);
+                                mDatabase.stopWatchingStop(schedule.getStop());
+                                schedule.getStop().setWatched(false);
 
-					for(TimeoStop stop : stopsToCheck) {
-						notificationManager.cancel(Integer.valueOf(stop.getId()));
-					}
+                                Log.d(Utils.TAG, "less than two minutes till " + busTime.toString() + ": " + schedule.getStop());
+                            } else if (schedule.getStop().getLastETA() != null) {
+                                // Check if there's more than five minutes of difference between the last estimation and the new
+                                // one. If that's the case, send the notification anyways; it may already be too late!
 
-					notifyNetworkError();
-				}
+                                // This is to work around the fact that we actually can't know if a bus has passed already,
+                                // we have to make assumptions instead; if a bus is announced for 3 minutes, and then for 10
+                                // minutes the next time we check, it most likely has passed.
 
-				if(db.getWatchedStopsCount() == 0) {
-					NextStopAlarmReceiver.disable(context.getApplicationContext());
-				}
-			}
+                                if (busTime.isBefore(schedule.getStop().getLastETA().plus(5 * 60 * 1000))) {
+                                    // Remove from database, and send a notification
+                                    notifyForIncomingBus(schedule);
+                                    mDatabase.stopWatchingStop(schedule.getStop());
+                                    schedule.getStop().setWatched(false);
 
-		}).execute();
-	}
+                                    Log.d(Utils.TAG, "last time we saw " + schedule.getStop() + " the bus was scheduled for " +
+                                            schedule.getStop().getLastETA() + ", but now the ETA is " + busTime + ", so we're " +
+                                            "notifying");
+                                }
 
-	/**
-	 * Sends a notification to the user informing them that their bus is incoming.
-	 *
-	 * @param schedule the schedule to notify about
-	 */
-	private void notifyForIncomingBus(TimeoStopSchedule schedule) {
-		NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                            } else {
+                                mDatabase.updateWatchedStopETA(schedule.getStop(), busTime);
+                            }
+                        }
+                    }
+                } else {
+                    // A network error occurred, or something ;-;
+                    NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context
+                            .NOTIFICATION_SERVICE);
 
-		Intent notificationIntent = new Intent(context, ActivityRealtime.class);
-		PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
+                    for (TimeoStop stop : mStopsToCheck) {
+                        notificationManager.cancel(Integer.valueOf(stop.getId()));
+                    }
 
-		// Get the data we need for the notification
-		String stop = schedule.getStop().getName();
-		String direction = schedule.getStop().getLine().getDirection().getName();
-		String lineName = schedule.getStop().getLine().getName();
-		String time = schedule.getSchedules().get(0).getFormattedTime(context);
+                    notifyNetworkError();
+                }
 
-		// Make a nice notification to inform the user of the bus's imminence
-		NotificationCompat.Builder builder =
-				new NotificationCompat.Builder(context)
-						.setSmallIcon(R.drawable.ic_directions_bus_white)
-						.setContentTitle(context.getString(R.string.notif_watched_content_title, lineName))
-						.setContentText(context.getString(R.string.notif_watched_content_text, stop, direction))
-						.setStyle(new NotificationCompat.InboxStyle()
-								.addLine(context.getString(R.string.notif_watched_line_stop, stop))
-								.addLine(context.getString(R.string.notif_watched_line_direction, direction))
-								.setSummaryText(context.getString(R.string.notif_watched_summary_text, time)))
-						.setCategory(NotificationCompat.CATEGORY_EVENT)
-						.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-						.setPriority(NotificationCompat.PRIORITY_MAX)
-						.setContentIntent(contentIntent)
-						.setAutoCancel(true)
-						.setOnlyAlertOnce(true)
-						.setDefaults(getNotificationDefaults(context));
+                if (mDatabase.getWatchedStopsCount() == 0) {
+                    NextStopAlarmReceiver.disable(context.getApplicationContext());
+                }
+            }
 
-		notificationManager.notify(Integer.valueOf(schedule.getStop().getId()), builder.build());
+        }).execute();
+    }
 
-		// We want the rest of the application to know that this stop is not being watched anymore
-		if(watchedStopStateListener != null) {
-			watchedStopStateListener.onStopWatchingStateChanged(schedule.getStop(), false);
-		}
-	}
+    /**
+     * Sends a notification to the user informing them that their bus is incoming.
+     *
+     * @param schedule the schedule to notify about
+     */
+    private void notifyForIncomingBus(TimeoStopSchedule schedule) {
+        NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
 
-	/**
-	 * Sends a notification to the user and keeps it updated with the latest bus schedules.
-	 *
-	 * @param schedule the bus schedule that will be included in the notification
-	 */
-	private void updateStopTimeNotification(TimeoStopSchedule schedule) {
-		NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        Intent notificationIntent = new Intent(mContext, ActivityRealtime.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(mContext, 0, notificationIntent, 0);
 
-		Intent notificationIntent = new Intent(context, ActivityRealtime.class);
-		PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
+        // Get the data we need for the notification
+        String stop = schedule.getStop().getName();
+        String direction = schedule.getStop().getLine().getDirection().getName();
+        String lineName = schedule.getStop().getLine().getName();
+        String time = schedule.getSchedules().get(0).getFormattedTime(mContext);
 
-		// Get the data we need for the notification
-		String stop = schedule.getStop().getName();
-		String direction = schedule.getStop().getLine().getDirection().getName();
-		String lineName = schedule.getStop().getLine().getName();
+        // Make a nice notification to inform the user of the bus's imminence
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(mContext)
+                        .setSmallIcon(R.drawable.ic_directions_bus_white)
+                        .setContentTitle(mContext.getString(R.string.notif_watched_content_title, lineName))
+                        .setContentText(mContext.getString(R.string.notif_watched_content_text, stop, direction))
+                        .setStyle(new NotificationCompat.InboxStyle()
+                                .addLine(mContext.getString(R.string.notif_watched_line_stop, stop))
+                                .addLine(mContext.getString(R.string.notif_watched_line_direction, direction))
+                                .setSummaryText(mContext.getString(R.string.notif_watched_summary_text, time)))
+                        .setCategory(NotificationCompat.CATEGORY_EVENT)
+                        .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                        .setPriority(NotificationCompat.PRIORITY_MAX)
+                        .setContentIntent(contentIntent)
+                        .setAutoCancel(true)
+                        .setOnlyAlertOnce(true)
+                        .setDefaults(getNotificationDefaults(mContext));
 
-		NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle()
-				.setSummaryText(context.getString(R.string.notif_watched_content_text, lineName, direction))
-				.setBigContentTitle(context.getString(R.string.stop_name, stop));
+        notificationManager.notify(Integer.valueOf(schedule.getStop().getId()), builder.build());
 
-		for(TimeoSingleSchedule singleSchedule : schedule.getSchedules()) {
-			inboxStyle.addLine(singleSchedule.getFormattedTime(context) + " - " + singleSchedule.getDirection());
-		}
+        // We want the rest of the application to know that this stop is not being watched anymore
+        if (sWatchedStopStateListener != null) {
+            sWatchedStopStateListener.onStopWatchingStateChanged(schedule.getStop(), false);
+        }
+    }
 
-		// Make a nice notification to inform the user of the bus's imminence
-		NotificationCompat.Builder builder =
-				new NotificationCompat.Builder(context)
-						.setSmallIcon(R.drawable.ic_directions_bus_white)
-						.setContentTitle(context.getString(R.string.notif_ongoing_content_title, stop, lineName))
-						.setContentText(context.getString(R.string.notif_ongoing_content_text,
-								schedule.getSchedules().get(0).getFormattedTime(context)))
-						.setStyle(inboxStyle)
-						.setCategory(NotificationCompat.CATEGORY_EVENT)
-						.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-						.setContentIntent(contentIntent)
-						.setOngoing(true);
+    /**
+     * Sends a notification to the user and keeps it updated with the latest bus schedules.
+     *
+     * @param schedule the bus schedule that will be included in the notification
+     */
+    private void updateStopTimeNotification(TimeoStopSchedule schedule) {
+        NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
 
-		notificationManager.notify(Integer.valueOf(schedule.getStop().getId()), builder.build());
-	}
+        Intent notificationIntent = new Intent(mContext, ActivityRealtime.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(mContext, 0, notificationIntent, 0);
 
-	/**
-	 * Updates the schedule notification to the user, informing him that there's something wrong with the network.
-	 */
-	private void notifyNetworkError() {
-		NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        // Get the data we need for the notification
+        String stop = schedule.getStop().getName();
+        String direction = schedule.getStop().getLine().getDirection().getName();
+        String lineName = schedule.getStop().getLine().getName();
 
-		Intent notificationIntent = new Intent(context, ActivityRealtime.class);
-		PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
+        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle()
+                .setSummaryText(mContext.getString(R.string.notif_watched_content_text, lineName, direction))
+                .setBigContentTitle(mContext.getString(R.string.stop_name, stop));
 
-		// Make a nice notification to inform the user of an error
-		NotificationCompat.Builder builder =
-				new NotificationCompat.Builder(context)
-						.setSmallIcon(R.drawable.ic_directions_bus_white)
-						.setContentTitle(context.getString(R.string.notif_error_content_title))
-						.setContentText(context.getString(R.string.notif_error_content_text))
-						.setCategory(NotificationCompat.CATEGORY_ERROR)
-						.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-						.setContentIntent(contentIntent)
-						.setAutoCancel(true);
+        for (TimeoSingleSchedule singleSchedule : schedule.getSchedules()) {
+            inboxStyle.addLine(singleSchedule.getFormattedTime(mContext) + " - " + singleSchedule.getDirection());
+        }
 
-		notificationManager.notify(NOTIFICATION_ID_ERROR, builder.build());
-	}
+        // Make a nice notification to inform the user of the bus's imminence
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(mContext)
+                        .setSmallIcon(R.drawable.ic_directions_bus_white)
+                        .setContentTitle(mContext.getString(R.string.notif_ongoing_content_title, stop, lineName))
+                        .setContentText(mContext.getString(R.string.notif_ongoing_content_text,
+                                schedule.getSchedules().get(0).getFormattedTime(mContext)))
+                        .setStyle(inboxStyle)
+                        .setCategory(NotificationCompat.CATEGORY_EVENT)
+                        .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                        .setContentIntent(contentIntent)
+                        .setOngoing(true);
 
-	@Override
-	protected String getPreferencesKeyPrefix() {
-		return "watched";
-	}
+        notificationManager.notify(Integer.valueOf(schedule.getStop().getId()), builder.build());
+    }
 
-	/**
-	 * Enables the regular checks performed every minute by this receiver.
-	 * They should be disabled once not needed anymore, as they can be battery and network hungry.
-	 *
-	 * @param context a context
-	 */
-	public static void enable(Context context) {
-		Log.d(Utils.TAG, "enabling " + NextStopAlarmReceiver.class.getSimpleName());
+    /**
+     * Updates the schedule notification to the user, informing him that there's something wrong with the network.
+     */
+    private void notifyNetworkError() {
+        NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
 
-		AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-		alarmMgr.setInexactRepeating(ALARM_TYPE,
-				SystemClock.elapsedRealtime() + 1000, ALARM_FREQUENCY, getBroadcast(context));
-	}
+        Intent notificationIntent = new Intent(mContext, ActivityRealtime.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(mContext, 0, notificationIntent, 0);
 
-	/**
-	 * Disables the regular checks performed every minute by this receiver.
-	 *
-	 * @param context a context
-	 */
-	public static void disable(Context context) {
-		Log.d(Utils.TAG, "disabling " + NextStopAlarmReceiver.class.getSimpleName());
+        // Make a nice notification to inform the user of an error
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(mContext)
+                        .setSmallIcon(R.drawable.ic_directions_bus_white)
+                        .setContentTitle(mContext.getString(R.string.notif_error_content_title))
+                        .setContentText(mContext.getString(R.string.notif_error_content_text))
+                        .setCategory(NotificationCompat.CATEGORY_ERROR)
+                        .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                        .setContentIntent(contentIntent)
+                        .setAutoCancel(true);
 
-		AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-		alarmMgr.cancel(getBroadcast(context));
-	}
+        notificationManager.notify(NOTIFICATION_ID_ERROR, builder.build());
+    }
 
-	/**
-	 * Returns the PendingIntent that will be called by the alarm every minute.
-	 *
-	 * @param context a context
-	 * @return the PendingIntent corresponding to this class
-	 */
-	public static PendingIntent getBroadcast(Context context) {
-		Intent intent = new Intent(context, NextStopAlarmReceiver.class);
-		return PendingIntent.getBroadcast(context, 0, intent, 0);
-	}
-
-	public static void setWatchedStopDismissalListener(IWatchedStopChangeListener watchedStopStateListener) {
-		NextStopAlarmReceiver.watchedStopStateListener = watchedStopStateListener;
-	}
+    @Override
+    protected String getPreferencesKeyPrefix() {
+        return "watched";
+    }
 
 }

@@ -1,6 +1,6 @@
 /*
  * Twistoast - TimeoBlockingMessageException
- * Copyright (C) 2013-2015 Baptiste Candellier
+ * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,39 +29,39 @@ import android.content.Context;
  */
 public class TimeoBlockingMessageException extends TimeoException {
 
-	private String messageTitle;
-	private String messageBody;
+    private String mMessageTitle;
+    private String mMessageBody;
 
-	public TimeoBlockingMessageException() {
-		super();
-	}
+    public TimeoBlockingMessageException() {
+        super();
+    }
 
-	public String getMessageTitle() {
-		return messageTitle;
-	}
+    public String getMessageTitle() {
+        return mMessageTitle;
+    }
 
-	public void setMessageTitle(String messageTitle) {
-		this.messageTitle = messageTitle;
-	}
+    public void setMessageTitle(String messageTitle) {
+        this.mMessageTitle = messageTitle;
+    }
 
-	public String getMessageBody() {
-		return messageBody;
-	}
+    public String getMessageBody() {
+        return mMessageBody;
+    }
 
-	public void setMessageBody(String messageBody) {
-		this.messageBody = messageBody;
-	}
+    public void setMessageBody(String messageBody) {
+        this.mMessageBody = messageBody;
+    }
 
-	@Override
-	public String getMessage() {
-		return getMessageTitle();
-	}
+    @Override
+    public String getMessage() {
+        return getMessageTitle();
+    }
 
-	public AlertDialog getAlertMessage(Context context) {
-		return new AlertDialog.Builder(context)
-				.setTitle(getMessageTitle())
-				.setMessage(getMessageBody())
-				.setNeutralButton("OK", null)
-				.create();
-	}
+    public AlertDialog getAlertMessage(Context context) {
+        return new AlertDialog.Builder(context)
+                .setTitle(getMessageTitle())
+                .setMessage(getMessageBody())
+                .setNeutralButton("OK", null)
+                .create();
+    }
 }

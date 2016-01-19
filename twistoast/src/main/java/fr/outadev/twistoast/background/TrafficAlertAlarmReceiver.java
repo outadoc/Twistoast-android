@@ -1,6 +1,6 @@
 /*
  * Twistoast - TrafficAlertAlarmReceiver
- * Copyright (C) 2013-2015 Baptiste Candellier
+ * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,116 +42,116 @@ import fr.outadev.twistoast.Utils;
  */
 public class TrafficAlertAlarmReceiver extends CommonAlarmReceiver {
 
-	private static final int ALARM_TYPE = AlarmManager.ELAPSED_REALTIME;
-	private static final long ALARM_FREQUENCY = AlarmManager.INTERVAL_HALF_HOUR;
+    private static final int ALARM_TYPE = AlarmManager.ELAPSED_REALTIME;
+    private static final long ALARM_FREQUENCY = AlarmManager.INTERVAL_HALF_HOUR;
 
-	@Override
-	public void onReceive(final Context context, Intent intent) {
+    /**
+     * Enables the regular checks performed every X minutes by this receiver.
+     * They should be disabled once not needed anymore, as they can be battery and network hungry.
+     *
+     * @param context a context
+     */
+    public static void enable(Context context) {
+        Log.d(Utils.TAG, "enabling " + TrafficAlertAlarmReceiver.class.getSimpleName());
 
-		(new AsyncTask<Void, Void, TimeoTrafficAlert>() {
+        AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmMgr.setInexactRepeating(ALARM_TYPE,
+                SystemClock.elapsedRealtime() + 60 * 1000, ALARM_FREQUENCY, getBroadcast(context));
+    }
 
-			private int lastTrafficId;
+    /**
+     * Disables the regular checks performed every X minutes by this receiver.
+     *
+     * @param context a context
+     */
+    public static void disable(Context context) {
+        Log.d(Utils.TAG, "disabling " + TrafficAlertAlarmReceiver.class.getSimpleName());
 
-			private SharedPreferences prefs;
-			private NotificationManager notificationManager;
+        AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmMgr.cancel(getBroadcast(context));
+    }
 
-			@Override
-			protected void onPreExecute() {
-				prefs = PreferenceManager.getDefaultSharedPreferences(context);
-				notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+    /**
+     * Returns the PendingIntent that will be called by the alarm every X minutes.
+     *
+     * @param context a context
+     * @return the PendingIntent corresponding to this class
+     */
+    protected static PendingIntent getBroadcast(Context context) {
+        Intent intent = new Intent(context, TrafficAlertAlarmReceiver.class);
+        return PendingIntent.getBroadcast(context, 0, intent, 0);
+    }
 
-				lastTrafficId = prefs.getInt("last_traffic_notif_id", -1);
+    @Override
+    public void onReceive(final Context context, Intent intent) {
 
-				Log.d(Utils.TAG, "checking traffic alert");
-			}
+        (new AsyncTask<Void, Void, TimeoTrafficAlert>() {
 
-			@Override
-			protected TimeoTrafficAlert doInBackground(Void... params) {
-				try {
-					return TimeoRequestHandler.getGlobalTrafficAlert(context.getString(R.string.url_pre_home_info));
-				} catch(Exception e) {
-					e.printStackTrace();
-					return null;
-				}
-			}
+            private int mLastTrafficId;
 
-			@Override
-			protected void onPostExecute(TimeoTrafficAlert trafficAlert) {
-				if(trafficAlert != null) {
-					Log.d(Utils.TAG, "found traffic alert #" + trafficAlert.getId());
+            private SharedPreferences mPreferences;
+            private NotificationManager mNotificationManager;
 
-					if(lastTrafficId != trafficAlert.getId()) {
-						Intent notificationIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(trafficAlert.getUrl()));
-						PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
+            @Override
+            protected TimeoTrafficAlert doInBackground(Void... params) {
+                try {
+                    return TimeoRequestHandler.getGlobalTrafficAlert(context.getString(R.string.url_pre_home_info));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
 
-						NotificationCompat.Builder mBuilder =
-								new NotificationCompat.Builder(context)
-										.setSmallIcon(R.drawable.ic_traffic_cone_white)
-										.setContentTitle(context.getString(R.string.notifs_traffic_title))
-										.setContentText(trafficAlert.getLabel())
-										.setStyle(new NotificationCompat.BigTextStyle()
-												.bigText(trafficAlert.getLabel()))
-										.setCategory(NotificationCompat.CATEGORY_MESSAGE)
-										.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-										.setPriority(NotificationCompat.PRIORITY_DEFAULT)
-										.setContentIntent(contentIntent)
-										.setAutoCancel(true)
-										.setOnlyAlertOnce(true)
-										.setDefaults(getNotificationDefaults(context));
+            @Override
+            protected void onPreExecute() {
+                mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+                mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-						notificationManager.notify(trafficAlert.getId(), mBuilder.build());
-						prefs.edit().putInt("last_traffic_notif_id", trafficAlert.getId()).apply();
-						return;
-					}
-				}
+                mLastTrafficId = mPreferences.getInt("last_traffic_notif_id", -1);
 
-				Log.d(Utils.TAG, "checked traffic: nothing new!");
-			}
+                Log.d(Utils.TAG, "checking traffic alert");
+            }
 
-		}).execute();
+            @Override
+            protected void onPostExecute(TimeoTrafficAlert trafficAlert) {
+                if (trafficAlert != null) {
+                    Log.d(Utils.TAG, "found traffic alert #" + trafficAlert.getId());
 
-	}
+                    if (mLastTrafficId != trafficAlert.getId()) {
+                        Intent notificationIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(trafficAlert.getUrl()));
+                        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
 
-	@Override
-	protected String getPreferencesKeyPrefix() {
-		return "traffic";
-	}
+                        NotificationCompat.Builder mBuilder =
+                                new NotificationCompat.Builder(context)
+                                        .setSmallIcon(R.drawable.ic_traffic_cone_white)
+                                        .setContentTitle(context.getString(R.string.notifs_traffic_title))
+                                        .setContentText(trafficAlert.getLabel())
+                                        .setStyle(new NotificationCompat.BigTextStyle()
+                                                .bigText(trafficAlert.getLabel()))
+                                        .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                                        .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                        .setContentIntent(contentIntent)
+                                        .setAutoCancel(true)
+                                        .setOnlyAlertOnce(true)
+                                        .setDefaults(getNotificationDefaults(context));
 
-	/**
-	 * Enables the regular checks performed every X minutes by this receiver.
-	 * They should be disabled once not needed anymore, as they can be battery and network hungry.
-	 *
-	 * @param context a context
-	 */
-	public static void enable(Context context) {
-		Log.d(Utils.TAG, "enabling " + TrafficAlertAlarmReceiver.class.getSimpleName());
+                        mNotificationManager.notify(trafficAlert.getId(), mBuilder.build());
+                        mPreferences.edit().putInt("last_traffic_notif_id", trafficAlert.getId()).apply();
+                        return;
+                    }
+                }
 
-		AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-		alarmMgr.setInexactRepeating(ALARM_TYPE,
-				SystemClock.elapsedRealtime() + 60 * 1000, ALARM_FREQUENCY, getBroadcast(context));
-	}
+                Log.d(Utils.TAG, "checked traffic: nothing new!");
+            }
 
-	/**
-	 * Disables the regular checks performed every X minutes by this receiver.
-	 *
-	 * @param context a context
-	 */
-	public static void disable(Context context) {
-		Log.d(Utils.TAG, "disabling " + TrafficAlertAlarmReceiver.class.getSimpleName());
+        }).execute();
 
-		AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-		alarmMgr.cancel(getBroadcast(context));
-	}
+    }
 
-	/**
-	 * Returns the PendingIntent that will be called by the alarm every X minutes.
-	 *
-	 * @param context a context
-	 * @return the PendingIntent corresponding to this class
-	 */
-	protected static PendingIntent getBroadcast(Context context) {
-		Intent intent = new Intent(context, TrafficAlertAlarmReceiver.class);
-		return PendingIntent.getBroadcast(context, 0, intent, 0);
-	}
+    @Override
+    protected String getPreferencesKeyPrefix() {
+        return "traffic";
+    }
 
 }

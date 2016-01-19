@@ -1,6 +1,6 @@
 /*
  * Twistoast - Colors
- * Copyright (C) 2013-2015 Baptiste Candellier
+ * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,43 +30,43 @@ import android.util.TypedValue;
  */
 public abstract class Colors {
 
-	public static int getColorPrimary(Context context) {
-		return getColorFromAttribute(context, R.attr.colorPrimary);
-	}
+    public static int getColorPrimary(Context context) {
+        return getColorFromAttribute(context, R.attr.colorPrimary);
+    }
 
-	public static int getColorPrimaryDark(Context context) {
-		return getColorFromAttribute(context, R.attr.colorPrimaryDark);
-	}
+    public static int getColorPrimaryDark(Context context) {
+        return getColorFromAttribute(context, R.attr.colorPrimaryDark);
+    }
 
-	public static int getColorAccent(Context context) {
-		return getColorFromAttribute(context, R.attr.colorAccent);
-	}
+    public static int getColorAccent(Context context) {
+        return getColorFromAttribute(context, R.attr.colorAccent);
+    }
 
-	private static int getColorFromAttribute(Context context, @AttrRes int attr) {
-		TypedValue a = new TypedValue();
-		context.getTheme().resolveAttribute(attr, a, true);
+    private static int getColorFromAttribute(Context context, @AttrRes int attr) {
+        TypedValue a = new TypedValue();
+        context.getTheme().resolveAttribute(attr, a, true);
 
-		if(a.type >= TypedValue.TYPE_FIRST_COLOR_INT && a.type <= TypedValue.TYPE_LAST_COLOR_INT) {
-			return a.data;
-		}
+        if (a.type >= TypedValue.TYPE_FIRST_COLOR_INT && a.type <= TypedValue.TYPE_LAST_COLOR_INT) {
+            return a.data;
+        }
 
-		throw new RuntimeException("Attribute is not a color.");
-	}
+        throw new RuntimeException("Attribute is not a color.");
+    }
 
-	public static int getBrighterColor(int color) {
-		int newColor;
-		float[] hsv = new float[3];
+    public static int getBrighterColor(int color) {
+        int newColor;
+        float[] hsv = new float[3];
 
-		if(color == Color.BLACK) {
-			color = Color.parseColor("#404040");
-		}
+        if (color == Color.BLACK) {
+            color = Color.parseColor("#404040");
+        }
 
-		Color.colorToHSV(color, hsv);
-		hsv[0] -= 35;
-		hsv[2] *= 1.8;
-		newColor = Color.HSVToColor(hsv);
+        Color.colorToHSV(color, hsv);
+        hsv[0] -= 35;
+        hsv[2] *= 1.8;
+        newColor = Color.HSVToColor(hsv);
 
-		return newColor;
-	}
+        return newColor;
+    }
 
 }

@@ -2,7 +2,7 @@
 
 <!--
   ~ Twistoast - AndroidManifest.xml
-  ~ Copyright (C) 2013-2015 Baptiste Candellier
+  ~ Copyright (C) 2013-2016 Baptiste Candellier
   ~
   ~ Twistoast is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -18,8 +18,9 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<manifest package="fr.outadev.twistoast"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest
+	package="fr.outadev.twistoast"
+	xmlns:android="http://schemas.android.com/apk/res/android">
 
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.INTERNET" />

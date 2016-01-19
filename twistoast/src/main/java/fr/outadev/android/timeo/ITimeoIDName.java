@@ -1,6 +1,6 @@
 /*
  * Twistoast - ITimeoIDName
- * Copyright (C) 2013-2015 Baptiste Candellier
+ * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,29 +23,32 @@ package fr.outadev.android.timeo;
  */
 public interface ITimeoIDName {
 
-	/**
-	 * Gets the identifier of this object.
-	 *
-	 * @return the id
-	 */
-	String getId();
+    /**
+     * Gets the identifier of this object.
+     *
+     * @return the id
+     */
+    String getId();
 
-	/**
-	 * Sets the identifier of this object.
-	 * @param id the id
-	 */
-	void setId(String id);
+    /**
+     * Sets the identifier of this object.
+     *
+     * @param id the id
+     */
+    void setId(String id);
 
-	/**
-	 * Gets the name of this object.
-	 * @return the name
-	 */
-	String getName();
+    /**
+     * Gets the name of this object.
+     *
+     * @return the name
+     */
+    String getName();
 
-	/**
-	 * Sets the name of this object.
-	 * @param name the name
-	 */
-	void setName(String name);
+    /**
+     * Sets the name of this object.
+     *
+     * @param name the name
+     */
+    void setName(String name);
 
 }

@@ -29,71 +29,72 @@ import android.view.View;
 
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
-	public static final int HORIZONTAL_LIST = LinearLayoutManager.HORIZONTAL;
-	public static final int VERTICAL_LIST = LinearLayoutManager.VERTICAL;
-	private static final int[] ATTRS = new int[]{
-			android.R.attr.listDivider
-	};
-	private final int leftAdditionalPadding;
-	private Drawable mDivider;
-	private int mOrientation;
+    public static final int HORIZONTAL_LIST = LinearLayoutManager.HORIZONTAL;
+    public static final int VERTICAL_LIST = LinearLayoutManager.VERTICAL;
+    private static final int[] ATTRS = new int[]{
+            android.R.attr.listDivider
+    };
 
-	public DividerItemDecoration(Context context, int orientation) {
-		Resources r = context.getResources();
-		leftAdditionalPadding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 95, r.getDisplayMetrics());
+    private final int mLeftAdditionalPadding;
+    private Drawable mDivider;
+    private int mOrientation;
 
-		final TypedArray a = context.obtainStyledAttributes(ATTRS);
-		mDivider = a.getDrawable(0);
-		a.recycle();
-		setOrientation(orientation);
-	}
+    public DividerItemDecoration(Context context, int orientation) {
+        Resources r = context.getResources();
+        mLeftAdditionalPadding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 95, r.getDisplayMetrics());
 
-	public void setOrientation(int orientation) {
-		if(orientation != HORIZONTAL_LIST && orientation != VERTICAL_LIST) {
-			throw new IllegalArgumentException("invalid orientation");
-		}
+        final TypedArray a = context.obtainStyledAttributes(ATTRS);
+        mDivider = a.getDrawable(0);
+        a.recycle();
+        setOrientation(orientation);
+    }
 
-		mOrientation = orientation;
-	}
+    public void setOrientation(int orientation) {
+        if (orientation != HORIZONTAL_LIST && orientation != VERTICAL_LIST) {
+            throw new IllegalArgumentException("invalid orientation");
+        }
 
-	@Override
-	public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-		if(mOrientation == VERTICAL_LIST) {
-			drawVertical(c, parent);
-		}
-	}
+        mOrientation = orientation;
+    }
 
-	@Override
-	public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-		if(mOrientation == VERTICAL_LIST) {
-			outRect.set(0, 0, 0, mDivider.getIntrinsicHeight());
-		} else {
-			outRect.set(0, 0, mDivider.getIntrinsicWidth(), 0);
-		}
-	}
+    @Override
+    public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+        if (mOrientation == VERTICAL_LIST) {
+            drawVertical(c, parent);
+        }
+    }
 
-	public void drawVertical(Canvas c, RecyclerView parent) {
-		final int left = parent.getPaddingLeft() + leftAdditionalPadding;
-		final int right = parent.getWidth() - parent.getPaddingRight();
+    @Override
+    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+        if (mOrientation == VERTICAL_LIST) {
+            outRect.set(0, 0, 0, mDivider.getIntrinsicHeight());
+        } else {
+            outRect.set(0, 0, mDivider.getIntrinsicWidth(), 0);
+        }
+    }
 
-		final int childCount = parent.getChildCount();
+    public void drawVertical(Canvas c, RecyclerView parent) {
+        final int left = parent.getPaddingLeft() + mLeftAdditionalPadding;
+        final int right = parent.getWidth() - parent.getPaddingRight();
 
-		for(int i = 0; i < childCount; i++) {
-			final View child = parent.getChildAt(i);
+        final int childCount = parent.getChildCount();
 
-			// Check if we should draw the separator or not
-			if(!((IRecyclerAdapterAccess) parent.getAdapter()).shouldItemHaveSeparator(parent.getChildAdapterPosition(child))) {
-				continue;
-			}
+        for (int i = 0; i < childCount; i++) {
+            final View child = parent.getChildAt(i);
 
-			final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child
-					.getLayoutParams();
-			final int top = child.getBottom() + params.bottomMargin;
-			final int bottom = top + mDivider.getIntrinsicHeight();
+            // Check if we should draw the separator or not
+            if (!((IRecyclerAdapterAccess) parent.getAdapter()).shouldItemHaveSeparator(parent.getChildAdapterPosition(child))) {
+                continue;
+            }
 
-			mDivider.setBounds(left, top, right, bottom);
-			mDivider.draw(c);
-		}
-	}
+            final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child
+                    .getLayoutParams();
+            final int top = child.getBottom() + params.bottomMargin;
+            final int bottom = top + mDivider.getIntrinsicHeight();
+
+            mDivider.setBounds(left, top, right, bottom);
+            mDivider.draw(c);
+        }
+    }
 
 }

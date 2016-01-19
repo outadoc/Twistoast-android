@@ -1,6 +1,6 @@
 /*
  * Twistoast - TimeoException
- * Copyright (C) 2013-2015 Baptiste Candellier
+ * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,28 +25,28 @@ package fr.outadev.android.timeo;
  */
 public class TimeoException extends Exception {
 
-	private String errorCode;
+    private String mErrorCode;
 
-	public TimeoException() {
-		this("");
-	}
+    public TimeoException() {
+        this("");
+    }
 
-	public TimeoException(String s) {
-		super(s);
-		this.errorCode = "";
-	}
+    public TimeoException(String s) {
+        super(s);
+        this.mErrorCode = "";
+    }
 
-	public TimeoException(String errorCode, String message) {
-		this(message);
-		this.errorCode = errorCode;
-	}
+    public TimeoException(String errorCode, String message) {
+        this(message);
+        this.mErrorCode = errorCode;
+    }
 
-	public String getErrorCode() {
-		return errorCode;
-	}
+    public String getErrorCode() {
+        return mErrorCode;
+    }
 
-	@Override
-	public String toString() {
-		return "TimeoException: [" + errorCode + "] " + getMessage();
-	}
+    @Override
+    public String toString() {
+        return "TimeoException: [" + mErrorCode + "] " + getMessage();
+    }
 }

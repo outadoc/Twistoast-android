@@ -1,6 +1,6 @@
 /*
  * Twistoast - CommonAlarmReceiver
- * Copyright (C) 2013-2015 Baptiste Candellier
+ * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,39 +29,39 @@ import android.support.v4.app.NotificationCompat;
  */
 public abstract class CommonAlarmReceiver extends BroadcastReceiver {
 
-	/**
-	 * Gets suitable notification defaults for the notifications of this receiver.
-	 * Use them with NotificationCompat.Builder.setDefaults().
-	 *
-	 * @param context a context
-	 * @return an integer to pass to the builder
-	 */
-	protected int getNotificationDefaults(Context context) {
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+    /**
+     * Gets suitable notification defaults for the notifications of this receiver.
+     * Use them with NotificationCompat.Builder.setDefaults().
+     *
+     * @param context a context
+     * @return an integer to pass to the builder
+     */
+    protected int getNotificationDefaults(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
-		boolean prefVibrate = prefs.getBoolean("pref_notif_" + getPreferencesKeyPrefix() + "_vibrate", true);
-		boolean prefRing = prefs.getBoolean("pref_notif_" + getPreferencesKeyPrefix() + "_ring", true);
+        boolean prefVibrate = prefs.getBoolean("pref_notif_" + getPreferencesKeyPrefix() + "_vibrate", true);
+        boolean prefRing = prefs.getBoolean("pref_notif_" + getPreferencesKeyPrefix() + "_ring", true);
 
-		int defaults = NotificationCompat.DEFAULT_LIGHTS;
+        int defaults = NotificationCompat.DEFAULT_LIGHTS;
 
-		if(prefVibrate) {
-			defaults = defaults | NotificationCompat.DEFAULT_VIBRATE;
-		}
+        if (prefVibrate) {
+            defaults = defaults | NotificationCompat.DEFAULT_VIBRATE;
+        }
 
-		if(prefRing) {
-			defaults = defaults | NotificationCompat.DEFAULT_SOUND;
-		}
+        if (prefRing) {
+            defaults = defaults | NotificationCompat.DEFAULT_SOUND;
+        }
 
-		return defaults;
-	}
+        return defaults;
+    }
 
-	/**
-	 * The prefix used by this receiver for its preference keys.
-	 *
-	 * @return the format of the preference keys must be of the form
-	 * "pref_notif_<prefix>_vibrate" and "pref_notif_<prefix>_ring",
-	 * where prefix is the value returned by this method
-	 */
-	protected abstract String getPreferencesKeyPrefix();
+    /**
+     * The prefix used by this receiver for its preference keys.
+     *
+     * @return the format of the preference keys must be of the form
+     * "pref_notif_<prefix>_vibrate" and "pref_notif_<prefix>_ring",
+     * where prefix is the value returned by this method
+     */
+    protected abstract String getPreferencesKeyPrefix();
 
 }

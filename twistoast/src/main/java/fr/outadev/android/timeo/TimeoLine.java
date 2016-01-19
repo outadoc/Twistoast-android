@@ -1,6 +1,6 @@
 /*
  * Twistoast - TimeoLine
- * Copyright (C) 2013-2015 Baptiste Candellier
+ * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,117 +25,117 @@ package fr.outadev.android.timeo;
  */
 public class TimeoLine implements ITimeoIDName {
 
-	private TimeoIDNameObject line;
-	private TimeoIDNameObject direction;
+    private TimeoIDNameObject mLine;
+    private TimeoIDNameObject mDirection;
 
-	private String color;
-	private int networkCode = TimeoRequestHandler.DEFAULT_NETWORK_CODE;
+    private String mColor;
+    private int mNetworkCode = TimeoRequestHandler.DEFAULT_NETWORK_CODE;
 
-	/**
-	 * Create a new line with line details, a direction, and a color.
-	 *
-	 * @param line        line details: id = line id, name = line name
-	 * @param direction   direction details
-	 * @param color       line color, as an HTML-like color string (e.g. #123456)
-	 * @param networkCode the identifier of the network this line is a part of (e.g. 147 for Twisto)
-	 */
-	public TimeoLine(TimeoIDNameObject line, TimeoIDNameObject direction, String color, int networkCode) {
-		this(line, direction, networkCode);
-		this.color = color;
-	}
+    /**
+     * Create a new line with line details, a direction, and a color.
+     *
+     * @param line        line details: id = line id, name = line name
+     * @param direction   direction details
+     * @param color       line color, as an HTML-like color string (e.g. #123456)
+     * @param networkCode the identifier of the network this line is a part of (e.g. 147 for Twisto)
+     */
+    public TimeoLine(TimeoIDNameObject line, TimeoIDNameObject direction, String color, int networkCode) {
+        this(line, direction, networkCode);
+        this.mColor = color;
+    }
 
-	/**
-	 * Create a new line with line details, a direction, and a color.
-	 *
-	 * @param line        line details: id = line id, name = line name
-	 * @param direction   direction details
-	 * @param networkCode the identifier of the network this line is a part of (e.g. 147 for Twisto)
-	 */
-	public TimeoLine(TimeoIDNameObject line, TimeoIDNameObject direction, int networkCode) {
-		this.line = line;
-		this.direction = direction;
-		this.networkCode = networkCode;
-	}
+    /**
+     * Create a new line with line details, a direction, and a color.
+     *
+     * @param line        line details: id = line id, name = line name
+     * @param direction   direction details
+     * @param networkCode the identifier of the network this line is a part of (e.g. 147 for Twisto)
+     */
+    public TimeoLine(TimeoIDNameObject line, TimeoIDNameObject direction, int networkCode) {
+        this.mLine = line;
+        this.mDirection = direction;
+        this.mNetworkCode = networkCode;
+    }
 
-	public TimeoIDNameObject getDetails() {
-		return line;
-	}
+    public TimeoIDNameObject getDetails() {
+        return mLine;
+    }
 
-	public void setDetails(TimeoIDNameObject line) {
-		this.line = line;
-	}
+    public void setDetails(TimeoIDNameObject line) {
+        this.mLine = line;
+    }
 
-	public TimeoIDNameObject getDirection() {
-		return direction;
-	}
+    public TimeoIDNameObject getDirection() {
+        return mDirection;
+    }
 
-	public void setDirection(TimeoIDNameObject direction) {
-		this.direction = direction;
-	}
+    public void setDirection(TimeoIDNameObject direction) {
+        this.mDirection = direction;
+    }
 
-	public String getColor() {
-		return (color == null) ? "#34495E" : color;
-	}
+    public String getColor() {
+        return (mColor == null) ? "#34495E" : mColor;
+    }
 
-	public void setColor(String color) {
-		this.color = color;
-	}
+    public void setColor(String color) {
+        this.mColor = color;
+    }
 
-	public int getNetworkCode() {
-		return networkCode;
-	}
+    public int getNetworkCode() {
+        return mNetworkCode;
+    }
 
-	public void setNetworkCode(int networkCode) {
-		this.networkCode = networkCode;
-	}
+    public void setNetworkCode(int networkCode) {
+        this.mNetworkCode = networkCode;
+    }
 
-	@Override
-	public String getId() {
-		return line.getId();
-	}
+    @Override
+    public String getId() {
+        return mLine.getId();
+    }
 
-	@Override
-	public void setId(String id) {
-		line.setId(id);
-	}
+    @Override
+    public void setId(String id) {
+        mLine.setId(id);
+    }
 
-	@Override
-	public String getName() {
-		return line.getName();
-	}
+    @Override
+    public String getName() {
+        return mLine.getName();
+    }
 
-	@Override
-	public void setName(String name) {
-		line.setName(name);
-	}
+    @Override
+    public void setName(String name) {
+        mLine.setName(name);
+    }
 
-	@Override
-	public boolean equals(Object o) {
-		if(this == o) {
-			return true;
-		}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
 
-		if(o == null || getClass() != o.getClass()) {
-			return false;
-		}
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-		TimeoLine timeoLine = (TimeoLine) o;
+        TimeoLine timeoLine = (TimeoLine) o;
 
-		if(networkCode != timeoLine.networkCode) {
-			return false;
-		}
+        if (mNetworkCode != timeoLine.mNetworkCode) {
+            return false;
+        }
 
-		if(direction != null ? !direction.equals(timeoLine.direction) : timeoLine.direction != null) {
-			return false;
-		}
+        if (mDirection != null ? !mDirection.equals(timeoLine.mDirection) : timeoLine.mDirection != null) {
+            return false;
+        }
 
-		return !(line != null ? !line.equals(timeoLine.line) : timeoLine.line != null);
+        return !(mLine != null ? !mLine.equals(timeoLine.mLine) : timeoLine.mLine != null);
 
-	}
+    }
 
-	@Override
-	public String toString() {
-		return line.getName();
-	}
+    @Override
+    public String toString() {
+        return mLine.getName();
+    }
 
 }

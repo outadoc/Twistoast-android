@@ -27,116 +27,116 @@ import org.joda.time.DateTime;
  */
 public class TimeoStop extends TimeoIDNameObject {
 
-	private String ref;
-	private TimeoLine line;
+    private String mReference;
+    private TimeoLine mLine;
 
-	private boolean isOutdated;
-	private boolean isWatched;
+    private boolean mIsOutdated;
+    private boolean mIsWatched;
 
-	private DateTime lastETA;
+    private DateTime mLastETA;
 
-	/**
-	 * Creates a stop.
-	 *
-	 * @param id   the id of the stop
-	 * @param name the name of the stop
-	 * @param ref  the reference of the stop
-	 */
-	public TimeoStop(String id, String name, String ref, TimeoLine line) {
-		super(id, name);
+    /**
+     * Creates a stop.
+     *
+     * @param id   the id of the stop
+     * @param name the name of the stop
+     * @param ref  the reference of the stop
+     */
+    public TimeoStop(String id, String name, String ref, TimeoLine line) {
+        super(id, name);
 
-		this.ref = ref;
-		this.line = line;
-		this.isWatched = false;
-		this.isOutdated = false;
-		this.lastETA = null;
-	}
+        this.mReference = ref;
+        this.mLine = line;
+        this.mIsWatched = false;
+        this.mIsOutdated = false;
+        this.mLastETA = null;
+    }
 
-	/**
-	 * Creates a stop, specifying if its notifications are active or not.
-	 *
-	 * @param id        the id of the stop
-	 * @param name      the name of the stop
-	 * @param ref       the reference of the stop
-	 * @param isWatched true if notifications are enabled for this stop, otherwise false
-	 */
-	public TimeoStop(String id, String name, String ref, TimeoLine line, boolean isWatched) {
-		this(id, name, ref, line);
-		this.isWatched = isWatched;
-	}
+    /**
+     * Creates a stop, specifying if its notifications are active or not.
+     *
+     * @param id        the id of the stop
+     * @param name      the name of the stop
+     * @param ref       the reference of the stop
+     * @param isWatched true if notifications are enabled for this stop, otherwise false
+     */
+    public TimeoStop(String id, String name, String ref, TimeoLine line, boolean isWatched) {
+        this(id, name, ref, line);
+        this.mIsWatched = isWatched;
+    }
 
-	/**
-	 * Creates a stop, specifying if its notifications are active or not.
-	 *
-	 * @param id        the id of the stop
-	 * @param name      the name of the stop
-	 * @param ref       the reference of the stop
-	 * @param isWatched true if notifications are enabled for this stop, otherwise false
-	 */
-	public TimeoStop(String id, String name, String ref, TimeoLine line, boolean isWatched, DateTime lastETA) {
-		this(id, name, ref, line, isWatched);
-		this.lastETA = lastETA;
-	}
+    /**
+     * Creates a stop, specifying if its notifications are active or not.
+     *
+     * @param id        the id of the stop
+     * @param name      the name of the stop
+     * @param ref       the reference of the stop
+     * @param isWatched true if notifications are enabled for this stop, otherwise false
+     */
+    public TimeoStop(String id, String name, String ref, TimeoLine line, boolean isWatched, DateTime lastETA) {
+        this(id, name, ref, line, isWatched);
+        this.mLastETA = lastETA;
+    }
 
-	public TimeoStop(TimeoLine line) {
-		this.line = line;
-	}
+    public TimeoStop(TimeoLine line) {
+        this.mLine = line;
+    }
 
-	public String getReference() {
-		return ref;
-	}
+    public String getReference() {
+        return mReference;
+    }
 
-	public void setReference(String ref) {
-		this.ref = ref;
-	}
+    public void setReference(String ref) {
+        this.mReference = ref;
+    }
 
-	public TimeoLine getLine() {
-		return line;
-	}
+    public TimeoLine getLine() {
+        return mLine;
+    }
 
-	public void setLine(TimeoLine line) {
-		this.line = line;
-	}
+    public void setLine(TimeoLine line) {
+        this.mLine = line;
+    }
 
-	@Override
-	public String toString() {
-		return getName();
-	}
+    @Override
+    public String toString() {
+        return getName();
+    }
 
-	/**
-	 * Checks if this stop is outdated and its reference needs to be updated.
-	 *
-	 * @return true if it needs to be updated, otherwise false
-	 */
-	public boolean isOutdated() {
-		return isOutdated;
-	}
+    /**
+     * Checks if this stop is outdated and its reference needs to be updated.
+     *
+     * @return true if it needs to be updated, otherwise false
+     */
+    public boolean isOutdated() {
+        return mIsOutdated;
+    }
 
-	public void setOutdated(boolean isOutdated) {
-		this.isOutdated = isOutdated;
-	}
+    public void setOutdated(boolean isOutdated) {
+        this.mIsOutdated = isOutdated;
+    }
 
-	/**
-	 * Checks if notifications are currently active for this bus stop.
-	 */
-	public boolean isWatched() {
-		return isWatched;
-	}
+    /**
+     * Checks if notifications are currently active for this bus stop.
+     */
+    public boolean isWatched() {
+        return mIsWatched;
+    }
 
-	public void setWatched(boolean isWatched) {
-		this.isWatched = isWatched;
-	}
+    public void setWatched(boolean isWatched) {
+        this.mIsWatched = isWatched;
+    }
 
-	/**
-	 * Gets the last estimated time of arrival for this bus stop.
-	 *
-	 * @return a timestamp of an approximation of the arrival of the next bus
-	 */
-	public DateTime getLastETA() {
-		return lastETA;
-	}
+    /**
+     * Gets the last estimated time of arrival for this bus stop.
+     *
+     * @return a timestamp of an approximation of the arrival of the next bus
+     */
+    public DateTime getLastETA() {
+        return mLastETA;
+    }
 
-	public void setLastETA(DateTime lastETA) {
-		this.lastETA = lastETA;
-	}
+    public void setLastETA(DateTime lastETA) {
+        this.mLastETA = lastETA;
+    }
 }
