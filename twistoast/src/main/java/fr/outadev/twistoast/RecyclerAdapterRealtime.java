@@ -29,7 +29,6 @@ import android.os.AsyncTask;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,26 +59,27 @@ public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapte
         IRecyclerAdapterAccess {
 
     public static final int NB_SCHEDULES_DISPLAYED = 2;
+    public final static String TAG = RecyclerAdapterRealtime.class.getName();
+
+    private final View mParentView;
+    private final Activity mActivity;
+
+    private final Database mDatabase;
+    private TimeoStopReferenceUpdater mReferenceUpdater;
 
     private final IStopsListContainer mStopsListContainer;
-    private final View mParentView;
 
-    private final Activity mActivity;
-    private final Database mDatabase;
-
-    private final List<TimeoStop> mTimeoStops;
+    private final List<TimeoStop> mStopsList;
     private final Map<TimeoStop, TimeoStopSchedule> mSchedules;
-    private final SparseArray<String> mNetworks;
 
     private int mNetworkCount = 0;
-    private int mNbOutdatedStops = 0;
 
     private ViewHolder.IOnLongClickListener mLongClickListener = new ViewHolder.IOnLongClickListener() {
 
         @Override
         public boolean onLongClick(View view, int position) {
             if (!mStopsListContainer.isRefreshing()) {
-                final TimeoStop currentStop = mTimeoStops.get(position);
+                final TimeoStop currentStop = mStopsList.get(position);
 
                 // Menu items
                 String contextualMenuItems[] = new String[]{
@@ -114,14 +114,14 @@ public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapte
         private void deleteStopAction(final TimeoStop stop, final int position) {
             // Remove from the database and the interface
             mDatabase.deleteStop(stop);
-            mTimeoStops.remove(stop);
+            mStopsList.remove(stop);
 
             if (stop.isWatched()) {
                 mDatabase.stopWatchingStop(stop);
                 stop.setWatched(false);
             }
 
-            if (mTimeoStops.isEmpty()) {
+            if (mStopsList.isEmpty()) {
                 mStopsListContainer.setNoContentViewVisible(true);
             }
 
@@ -135,7 +135,7 @@ public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapte
                             Log.i(Utils.TAG, "restoring stop " + stop);
 
                             mDatabase.addStopToDatabase(stop);
-                            mTimeoStops.add(position, stop);
+                            mStopsList.add(position, stop);
                             notifyDataSetChanged();
                         }
 
@@ -197,13 +197,13 @@ public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapte
     public RecyclerAdapterRealtime(Activity activity, List<TimeoStop> stops, IStopsListContainer stopsListContainer, View
             parentView) {
         this.mActivity = activity;
-        this.mTimeoStops = stops;
+        this.mStopsList = stops;
         this.mStopsListContainer = stopsListContainer;
         this.mParentView = parentView;
         this.mSchedules = new HashMap<>();
-        this.mNetworks = TimeoRequestHandler.getNetworksList();
         this.mDatabase = new Database(DatabaseOpenHelper.getInstance(activity));
         this.mNetworkCount = mDatabase.getNetworksCount();
+        this.mReferenceUpdater = new TimeoStopReferenceUpdater(getActivity());
     }
 
     /**
@@ -217,15 +217,29 @@ public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapte
             protected Map<TimeoStop, TimeoStopSchedule> doInBackground(Void... params) {
                 try {
                     // Get the schedules and put them in a list
-                    List<TimeoStopSchedule> schedulesList = TimeoRequestHandler.getMultipleSchedules(mTimeoStops);
+                    List<TimeoStopSchedule> schedulesList = TimeoRequestHandler.getMultipleSchedules(mStopsList);
                     Map<TimeoStop, TimeoStopSchedule> schedulesMap = new HashMap<>();
 
                     for (TimeoStopSchedule schedule : schedulesList) {
                         schedulesMap.put(schedule.getStop(), schedule);
                     }
 
-                    // Check the number of outdated stops we tried to fetch
-                    mNbOutdatedStops = TimeoRequestHandler.checkForOutdatedStops(mTimeoStops, schedulesList);
+                    int outdated = TimeoRequestHandler.checkForOutdatedStops(mStopsList, schedulesList);
+
+                    // If there are outdated reference numbers, update those stops
+                    if (outdated > 0) {
+                        Log.e(TAG, "Found " + outdated + " stops, trying to update references");
+                        mReferenceUpdater.updateAllStopReferences(mStopsList, null);
+
+                        // Reload with the updated stops
+                        schedulesList = TimeoRequestHandler.getMultipleSchedules(mStopsList);
+                        schedulesMap = new HashMap<>();
+
+                        for (TimeoStopSchedule schedule : schedulesList) {
+                            schedulesMap.put(schedule.getStop(), schedule);
+                        }
+                    }
+
                     return schedulesMap;
 
                 } catch (final Exception e) {
@@ -293,16 +307,6 @@ public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapte
         }).execute();
     }
 
-    /**
-     * Check if there's a mismatch between the number of bus stops requested and the
-     * number of schedules we got back from the API.
-     *
-     * @return 0 if everything is okay, otherwise the number of stops we didn't get back the data for.
-     */
-    public int checkSchedulesMismatchCount() {
-        return mNbOutdatedStops;
-    }
-
     @Override
     public RecyclerAdapterRealtime.ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.frag_schedule_row, parent, false);
@@ -312,7 +316,7 @@ public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapte
     @Override
     public void onBindViewHolder(RecyclerAdapterRealtime.ViewHolder view, final int position) {
         // Get the stop we're inflating
-        TimeoStop currentStop = mTimeoStops.get(position);
+        TimeoStop currentStop = mStopsList.get(position);
 
         view.mLineDrawable.setColor(Colors.getBrighterColor(Color.parseColor(currentStop.getLine().getColor())));
 
@@ -387,7 +391,7 @@ public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapte
 
     @Override
     public int getItemCount() {
-        return mTimeoStops.size();
+        return mStopsList.size();
     }
 
     public Activity getActivity() {
@@ -397,12 +401,12 @@ public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapte
     @Override
     public boolean shouldItemHaveSeparator(int position) {
         // If it's the last item, no separator
-        if (position == mTimeoStops.size() - 1) {
+        if (position == mStopsList.size() - 1) {
             return false;
         }
 
-        TimeoStop item = mTimeoStops.get(position);
-        TimeoStop nextItem = mTimeoStops.get(position + 1);
+        TimeoStop item = mStopsList.get(position);
+        TimeoStop nextItem = mStopsList.get(position + 1);
 
         // If the next item's line is the same as this one, don't draw a separator either
         return !item.getLine().getId().equals(nextItem.getLine().getId());

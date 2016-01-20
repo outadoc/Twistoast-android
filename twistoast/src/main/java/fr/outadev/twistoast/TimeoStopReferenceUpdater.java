@@ -59,7 +59,9 @@ public class TimeoStopReferenceUpdater {
             TimeoException {
         TimeoLine lastLine = null;
 
-        progressListener.onProgress(0, stops.size());
+        if (progressListener != null) {
+            progressListener.onProgress(0, stops.size());
+        }
 
         int i = 0;
 
@@ -71,7 +73,10 @@ public class TimeoStopReferenceUpdater {
 
             //update the progress
             Log.d(Utils.TAG, "updating stops for line " + stop.getLine());
-            progressListener.onProgress(i, stops.size());
+
+            if (progressListener != null) {
+                progressListener.onProgress(i, stops.size());
+            }
 
             //get the stops for the current line
             lastLine = stop.getLine();

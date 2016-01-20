@@ -515,6 +515,10 @@ public abstract class TimeoRequestHandler {
         for (TimeoStop stop : stops) {
             boolean outdated = true;
 
+            if (stop.getReference() == null) {
+                count++;
+            }
+
             for (TimeoStopSchedule schedule : schedules) {
                 if (schedule.getStop() == stop) {
                     outdated = false;

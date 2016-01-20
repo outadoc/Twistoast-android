@@ -19,15 +19,12 @@
 package fr.outadev.twistoast;
 
 import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.widget.GridLayoutManager;
@@ -46,7 +43,6 @@ import com.google.android.gms.common.GoogleApiAvailability;
 
 import java.util.List;
 
-import fr.outadev.android.timeo.IProgressListener;
 import fr.outadev.android.timeo.TimeoStop;
 import fr.outadev.twistoast.background.NextStopAlarmReceiver;
 
@@ -293,24 +289,7 @@ public class FragmentRealtime extends Fragment implements IStopsListContainer {
             mPeriodicRefreshHandler.postDelayed(mPeriodicRefreshRunnable, REFRESH_INTERVAL);
         }
 
-        if (success) {
-            int mismatch = mListAdapter.checkSchedulesMismatchCount();
-
-            Log.i(Utils.TAG, "refreshed, " + mListAdapter.getItemCount() + " stops in db");
-
-            if (mismatch > 0) {
-                Snackbar.make(mStopsRecyclerView, R.string.stop_ref_update_message_title, Snackbar.LENGTH_LONG)
-                        .setAction(R.string.stop_ref_update_message_action, new View.OnClickListener() {
-
-	                        @Override
-	                        public void onClick(View view) {
-		                        (new ReferenceUpdateTask()).execute();
-	                        }
-
-                        })
-                        .show();
-            }
-        }
+        Log.i(Utils.TAG, "refreshed, " + mListAdapter.getItemCount() + " stops in db");
     }
 
     @Override
@@ -326,64 +305,6 @@ public class FragmentRealtime extends Fragment implements IStopsListContainer {
     @Override
     public void loadFragmentForDrawerItem(int index) {
         ((ActivityRealtime) getActivity()).loadFragmentForDrawerItem(index);
-    }
-
-    private class ReferenceUpdateTask extends AsyncTask<Void, Void, Exception> {
-
-        private ProgressDialog mProgressDialog;
-        private TimeoStopReferenceUpdater mReferenceUpdater;
-
-        @Override
-        protected Exception doInBackground(Void... params) {
-            try {
-                mReferenceUpdater.updateAllStopReferences(mStopList, new IProgressListener() {
-
-                    @Override
-                    public void onProgress(int current, int total) {
-                        mProgressDialog.setIndeterminate(false);
-                        mProgressDialog.setMax(total);
-                        mProgressDialog.setProgress(current);
-                    }
-
-                });
-            } catch (Exception e) {
-                e.printStackTrace();
-                return e;
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            mReferenceUpdater = new TimeoStopReferenceUpdater(getActivity());
-            mProgressDialog = new ProgressDialog(getActivity());
-
-            mProgressDialog.setTitle(R.string.stop_ref_update_progress_title);
-            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-            mProgressDialog.setCancelable(false);
-            mProgressDialog.setIndeterminate(true);
-            mProgressDialog.show();
-        }
-
-        @Override
-        protected void onPostExecute(Exception e) {
-            mProgressDialog.hide();
-            refreshAllStopSchedules(true);
-
-            if (e != null) {
-                Snackbar.make(mStopsRecyclerView, R.string.stop_ref_update_error_text, Snackbar.LENGTH_LONG)
-                        .setAction(R.string.error_retry, new View.OnClickListener() {
-
-	                        @Override
-	                        public void onClick(View view) {
-		                        (new ReferenceUpdateTask()).execute();
-	                        }
-
-                        })
-                        .show();
-            }
-        }
     }
 
 }
