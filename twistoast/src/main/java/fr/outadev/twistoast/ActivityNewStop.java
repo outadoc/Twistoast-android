@@ -101,6 +101,7 @@ public class ActivityNewStop extends ThemedActivity {
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white);
 
         mDatabaseHandler = new Database(DatabaseOpenHelper.getInstance(this));
 
