@@ -26,11 +26,11 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.util.List;
 
-import fr.outadev.android.timeo.IProgressListener;
-import fr.outadev.android.timeo.TimeoException;
-import fr.outadev.android.timeo.TimeoLine;
-import fr.outadev.android.timeo.TimeoRequestHandler;
-import fr.outadev.android.timeo.TimeoStop;
+import fr.outadev.android.transport.timeo.IProgressListener;
+import fr.outadev.android.transport.timeo.TimeoException;
+import fr.outadev.android.transport.timeo.TimeoLine;
+import fr.outadev.android.transport.timeo.TimeoRequestHandler;
+import fr.outadev.android.transport.timeo.TimeoStop;
 
 /**
  * Fetches and updates all the references of the stops saved in our database.

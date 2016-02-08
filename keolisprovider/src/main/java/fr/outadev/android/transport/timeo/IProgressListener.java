@@ -1,5 +1,5 @@
 /*
- * Twistoast - IWatchedStopChangeListener
+ * Twistoast - IProgressListener
  * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -16,17 +16,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast;
-
-import fr.outadev.android.transport.timeo.TimeoStop;
+package fr.outadev.android.transport.timeo;
 
 /**
- * A listener that will send a message when a watched bus has just arrived.
- * This is used, for example, in the main list, to hide the little "watched" icon when the bus has arrived
- * and the notifications are now effectively turned off.
+ * Defines a progress listener.
+ * Current process and maximum progress will be updated at will.
  */
-public interface IWatchedStopChangeListener {
+public interface IProgressListener {
 
-    void onStopWatchingStateChanged(TimeoStop stop, boolean watched);
+    /**
+     * Updates the current progress.
+     *
+     * @param current current progress, can't be greater than total
+     * @param total   maximum progress
+     */
+    void onProgress(int current, int total);
 
 }

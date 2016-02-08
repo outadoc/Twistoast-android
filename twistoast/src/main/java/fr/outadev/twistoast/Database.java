@@ -29,9 +29,9 @@ import org.joda.time.DateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.outadev.android.timeo.TimeoIDNameObject;
-import fr.outadev.android.timeo.TimeoLine;
-import fr.outadev.android.timeo.TimeoStop;
+import fr.outadev.android.transport.timeo.TimeoIDNameObject;
+import fr.outadev.android.transport.timeo.TimeoLine;
+import fr.outadev.android.transport.timeo.TimeoStop;
 
 /**
  * Database management class.

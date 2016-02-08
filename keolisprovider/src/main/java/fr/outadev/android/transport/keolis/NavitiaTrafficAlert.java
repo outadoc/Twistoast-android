@@ -1,5 +1,5 @@
 /*
- * Twistoast - TimeoTrafficAlert
+ * Twistoast - NavitiaTrafficAlert
  * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -16,16 +16,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.android.timeo;
+package fr.outadev.android.transport.keolis;
 
 import java.io.Serializable;
+
+import fr.outadev.android.transport.INetwork;
+import fr.outadev.android.transport.ITrafficAlert;
 
 /**
  * Traffic alert. Used to inform the user of traffic perturbations.
  *
  * @author outadoc
  */
-public class TimeoTrafficAlert implements Serializable {
+public class NavitiaTrafficAlert implements ITrafficAlert, Serializable {
 
     private int mId;
     private String mLabel;
@@ -38,39 +41,53 @@ public class TimeoTrafficAlert implements Serializable {
      * @param label the label (title) of the alert
      * @param url   the URL to redirect to, to get more info
      */
-    public TimeoTrafficAlert(int id, String label, String url) {
+    public NavitiaTrafficAlert(int id, String label, String url) {
         this.mId = id;
         this.mLabel = label;
         this.mUrl = url;
+    }
+
+    @Override
+    public INetwork getNetwork() {
+        return null;
     }
 
     public int getId() {
         return mId;
     }
 
-    public void setId(int id) {
-        this.mId = id;
-    }
-
-    public String getLabel() {
+    @Override
+    public String getTitle() {
         return mLabel;
     }
 
-    public void setLabel(String label) {
-        this.mLabel = label;
+    @Override
+    public void setTitle(String title) {
+        mLabel = title;
     }
 
+    @Override
+    public String getDescription() {
+        return null;
+    }
+
+    @Override
+    public void setDescription(String description) {
+    }
+
+    @Override
     public String getUrl() {
         return mUrl;
     }
 
+    @Override
     public void setUrl(String url) {
         this.mUrl = url;
     }
 
     @Override
     public String toString() {
-        return "TimeoTrafficAlert{" +
+        return "NavitiaTrafficAlert{" +
                 "id=" + mId +
                 ", label='" + mLabel + '\'' +
                 ", url='" + mUrl + '\'' +

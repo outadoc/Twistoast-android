@@ -29,7 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import fr.outadev.android.timeo.TimeoRequestHandler;
+import fr.outadev.android.transport.timeo.TimeoRequestHandler;
 
 /**
  * Opens, creates and manages database versions.

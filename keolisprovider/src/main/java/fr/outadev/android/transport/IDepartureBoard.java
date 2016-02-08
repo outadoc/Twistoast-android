@@ -1,5 +1,5 @@
 /*
- * Twistoast - TimeoException
+ * Twistoast - IDepartureBoard
  * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -16,37 +16,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.android.timeo;
+package fr.outadev.android.transport;
+
+import org.joda.time.LocalDate;
 
 /**
- * Thrown when an error was encountered while fetching data from the API.
- *
- * @author outadoc
+ * Created by Baptiste on 2016-02-05.
  */
-public class TimeoException extends Exception {
+public interface IDepartureBoard {
 
-    private String mErrorCode;
+    INetwork getNetwork();
 
-    public TimeoException() {
-        this("");
-    }
+    IStopArea getStopArea();
+    LocalDate getDay();
+    Iterable<IStopTime> getStopTimes();
 
-    public TimeoException(String s) {
-        super(s);
-        this.mErrorCode = "";
-    }
-
-    public TimeoException(String errorCode, String message) {
-        this(message);
-        this.mErrorCode = errorCode;
-    }
-
-    public String getErrorCode() {
-        return mErrorCode;
-    }
-
-    @Override
-    public String toString() {
-        return "TimeoException: [" + mErrorCode + "] " + getMessage();
-    }
 }

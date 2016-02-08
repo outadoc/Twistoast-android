@@ -1,5 +1,5 @@
 /*
- * Twistoast - IWatchedStopChangeListener
+ * Twistoast - NavitiaNetwork
  * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -16,17 +16,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast;
+package fr.outadev.android.transport.keolis;
 
-import fr.outadev.android.transport.timeo.TimeoStop;
+import fr.outadev.android.transport.INetwork;
 
 /**
- * A listener that will send a message when a watched bus has just arrived.
- * This is used, for example, in the main list, to hide the little "watched" icon when the bus has arrived
- * and the notifications are now effectively turned off.
+ * Created by Baptiste on 2016-02-05.
  */
-public interface IWatchedStopChangeListener {
+public class NavitiaNetwork implements INetwork {
 
-    void onStopWatchingStateChanged(TimeoStop stop, boolean watched);
+    private static NavitiaNetwork instance;
+
+    private NavitiaNetwork() {
+    }
+
+    public static NavitiaNetwork getInstance() {
+        if (instance == null)
+            instance = new NavitiaNetwork();
+
+        return instance;
+    }
+
+    @Override
+    public int getCode() {
+        return 147;
+    }
 
 }

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.android.timeo;
+package fr.outadev.android.transport.timeo;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -86,7 +86,7 @@ public abstract class TimeoRequestHandler {
      * Fetches a schedule for a single bus stop from the API.
      *
      * @param stop the bus stop to fetch the schedule for
-     * @return a TimeoStopSchedule containing said schedule
+     * @return a NavitiaStopSchedule containing said schedule
      * @throws XmlPullParserException if a parsing exception occurred
      * @throws IOException            if an I/O exception occurred whilst parsing the XML
      * @throws TimeoException         if the API returned an error
@@ -101,7 +101,7 @@ public abstract class TimeoRequestHandler {
      * Fetches schedules for multiple bus stops from the API.
      *
      * @param stops a list of bus stops we should fetch the schedules for
-     * @return a list of TimeoStopSchedule containing said schedules
+     * @return a list of NavitiaStopSchedule containing said schedules
      * @throws XmlPullParserException if a parsing exception occurred
      * @throws IOException            if an I/O exception occurred whilst parsing the XML
      * @throws TimeoException         if the API returned an error
@@ -321,7 +321,7 @@ public abstract class TimeoRequestHandler {
      *
      * @param networkCode the code for the city's bus network
      * @param stop        the bus stop to fetch the schedule for
-     * @return a TimeoStopSchedule containing said schedule
+     * @return a NavitiaStopSchedule containing said schedule
      * @throws XmlPullParserException if a parsing exception occurred
      * @throws TimeoException         if the API returned an error
      */
@@ -344,7 +344,7 @@ public abstract class TimeoRequestHandler {
      *
      * @param networkCode the code for the city's bus network
      * @param stops       a list of bus stops we should fetch the schedules for
-     * @return a list of TimeoStopSchedule containing said schedules
+     * @return a list of NavitiaStopSchedule containing said schedules
      * @throws XmlPullParserException if a parsing exception occurred
      * @throws TimeoException         if the API returned an error
      */
@@ -536,7 +536,7 @@ public abstract class TimeoRequestHandler {
     /**
      * Fetches the current global traffic alert message. Might or might not be null.
      *
-     * @return a TimeoTrafficAlert if an alert is currently broadcasted on the website, else null
+     * @return a NavitiaTrafficAlert if an alert is currently broadcasted on the website, else null
      */
     @Nullable
     public static TimeoTrafficAlert getGlobalTrafficAlert(String preHomeUrl) {

@@ -34,13 +34,13 @@ import org.joda.time.DateTime;
 
 import java.util.UUID;
 
-import fr.outadev.android.timeo.ScheduleTime;
-import fr.outadev.android.timeo.TimeoRequestHandler;
-import fr.outadev.android.timeo.TimeoSingleSchedule;
-import fr.outadev.android.timeo.TimeoStop;
-import fr.outadev.android.timeo.TimeoStopSchedule;
+import fr.outadev.android.transport.timeo.TimeoRequestHandler;
+import fr.outadev.android.transport.timeo.TimeoSingleSchedule;
+import fr.outadev.android.transport.timeo.TimeoStop;
+import fr.outadev.android.transport.timeo.TimeoStopSchedule;
 import fr.outadev.twistoast.Database;
 import fr.outadev.twistoast.DatabaseOpenHelper;
+import fr.outadev.twistoast.TimeFormatter;
 
 /**
  * Receives and handles the Twistoast Pebble app requests in the background.
@@ -161,7 +161,7 @@ public class PebbleWatchReceiver extends PebbleDataReceiver {
             DateTime nextSchedule = schedule.getSchedules().get(0).getScheduleTime();
 
             // Convert to milliseconds and add to the buffer
-            response.addInt32(KEY_BUS_NEXT_SCHEDULE, (int) ScheduleTime.getDurationUntilBus(nextSchedule).getMillis());
+            response.addInt32(KEY_BUS_NEXT_SCHEDULE, (int) TimeFormatter.getDurationUntilBus(nextSchedule).getMillis());
             // Get a short version of the destination if required - e.g. A or B for the tram
             response.addString(KEY_BUS_NEXT_SCHEDULE_DIR, getOptionalShortDirection(schedule.getSchedules().get(0)));
         } else {
@@ -173,7 +173,7 @@ public class PebbleWatchReceiver extends PebbleDataReceiver {
         if (schedule.getSchedules().size() > 1) {
             DateTime nextSchedule = schedule.getSchedules().get(1).getScheduleTime();
 
-            response.addInt32(KEY_BUS_SECOND_SCHEDULE, (int) ScheduleTime.getDurationUntilBus(nextSchedule).getMillis());
+            response.addInt32(KEY_BUS_SECOND_SCHEDULE, (int) TimeFormatter.getDurationUntilBus(nextSchedule).getMillis());
             response.addString(KEY_BUS_SECOND_SCHEDULE_DIR, getOptionalShortDirection(schedule.getSchedules().get(1)));
         } else {
             response.addInt32(KEY_BUS_SECOND_SCHEDULE, -1);
@@ -182,10 +182,10 @@ public class PebbleWatchReceiver extends PebbleDataReceiver {
 
         if (!schedule.getSchedules().isEmpty()) {
             DateTime scheduleTime = schedule.getSchedules().get(0).getScheduleTime();
-            ScheduleTime.TimeDisplayMode displayMode = ScheduleTime.getTimeDisplayMode(scheduleTime, context);
+            TimeFormatter.TimeDisplayMode displayMode = TimeFormatter.getTimeDisplayMode(scheduleTime, context);
 
-            if (displayMode == ScheduleTime.TimeDisplayMode.ARRIVAL_IMMINENT
-                    || displayMode == ScheduleTime.TimeDisplayMode.CURRENTLY_AT_STOP) {
+            if (displayMode == TimeFormatter.TimeDisplayMode.ARRIVAL_IMMINENT
+                    || displayMode == TimeFormatter.TimeDisplayMode.CURRENTLY_AT_STOP) {
                 response.addInt8(KEY_SHOULD_VIBRATE, (byte) 1);
             }
         }

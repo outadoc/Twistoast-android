@@ -1,5 +1,5 @@
 /*
- * Twistoast - IWatchedStopChangeListener
+ * Twistoast - ExampleUnitTest
  * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -16,17 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast;
+package com.example.keolisprovider;
 
-import fr.outadev.android.transport.timeo.TimeoStop;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
- * A listener that will send a message when a watched bus has just arrived.
- * This is used, for example, in the main list, to hide the little "watched" icon when the bus has arrived
- * and the notifications are now effectively turned off.
+ * To work on unit tests, switch the Test Artifact in the Build Variants view.
  */
-public interface IWatchedStopChangeListener {
-
-    void onStopWatchingStateChanged(TimeoStop stop, boolean watched);
-
+public class ExampleUnitTest {
+    @Test
+    public void addition_isCorrect() throws Exception {
+        assertEquals(4, 2 + 2);
+    }
 }

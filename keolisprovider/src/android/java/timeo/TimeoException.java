@@ -1,5 +1,5 @@
 /*
- * Twistoast - IWatchedStopChangeListener
+ * Twistoast - TimeoException
  * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -16,17 +16,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast;
-
-import fr.outadev.android.transport.timeo.TimeoStop;
+package fr.outadev.android.timeo;
 
 /**
- * A listener that will send a message when a watched bus has just arrived.
- * This is used, for example, in the main list, to hide the little "watched" icon when the bus has arrived
- * and the notifications are now effectively turned off.
+ * Thrown when an error was encountered while fetching data from the API.
+ *
+ * @author outadoc
  */
-public interface IWatchedStopChangeListener {
+public class TimeoException extends Exception {
 
-    void onStopWatchingStateChanged(TimeoStop stop, boolean watched);
+    private String mErrorCode;
 
+    public TimeoException() {
+        this("");
+    }
+
+    public TimeoException(String s) {
+        super(s);
+        this.mErrorCode = "";
+    }
+
+    public TimeoException(String errorCode, String message) {
+        this(message);
+        this.mErrorCode = errorCode;
+    }
+
+    public String getErrorCode() {
+        return mErrorCode;
+    }
+
+    @Override
+    public String toString() {
+        return "NavitiaException: [" + mErrorCode + "] " + getMessage();
+    }
 }

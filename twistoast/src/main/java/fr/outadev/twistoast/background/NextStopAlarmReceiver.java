@@ -32,15 +32,16 @@ import org.joda.time.DateTime;
 
 import java.util.List;
 
-import fr.outadev.android.timeo.TimeoRequestHandler;
-import fr.outadev.android.timeo.TimeoSingleSchedule;
-import fr.outadev.android.timeo.TimeoStop;
-import fr.outadev.android.timeo.TimeoStopSchedule;
+import fr.outadev.android.transport.timeo.TimeoRequestHandler;
+import fr.outadev.android.transport.timeo.TimeoSingleSchedule;
+import fr.outadev.android.transport.timeo.TimeoStop;
+import fr.outadev.android.transport.timeo.TimeoStopSchedule;
 import fr.outadev.twistoast.ActivityRealtime;
 import fr.outadev.twistoast.Database;
 import fr.outadev.twistoast.DatabaseOpenHelper;
 import fr.outadev.twistoast.IWatchedStopChangeListener;
 import fr.outadev.twistoast.R;
+import fr.outadev.twistoast.TimeFormatter;
 import fr.outadev.twistoast.Utils;
 
 /**
@@ -205,7 +206,7 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
         String stop = schedule.getStop().getName();
         String direction = schedule.getStop().getLine().getDirection().getName();
         String lineName = schedule.getStop().getLine().getName();
-        String time = schedule.getSchedules().get(0).getFormattedTime(mContext);
+        String time = TimeFormatter.formatTime(mContext, schedule.getSchedules().get(0).getScheduleTime());
 
         // Make a nice notification to inform the user of the bus's imminence
         NotificationCompat.Builder builder =
@@ -254,7 +255,7 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
                 .setBigContentTitle(mContext.getString(R.string.stop_name, stop));
 
         for (TimeoSingleSchedule singleSchedule : schedule.getSchedules()) {
-            inboxStyle.addLine(singleSchedule.getFormattedTime(mContext) + " - " + singleSchedule.getDirection());
+            inboxStyle.addLine(TimeFormatter.formatTime(mContext, singleSchedule.getScheduleTime()) + " - " + singleSchedule.getDirection());
         }
 
         // Make a nice notification to inform the user of the bus's imminence
@@ -263,7 +264,7 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
                         .setSmallIcon(R.drawable.ic_directions_bus_white)
                         .setContentTitle(mContext.getString(R.string.notif_ongoing_content_title, stop, lineName))
                         .setContentText(mContext.getString(R.string.notif_ongoing_content_text,
-                                schedule.getSchedules().get(0).getFormattedTime(mContext)))
+                                TimeFormatter.formatTime(mContext, schedule.getSchedules().get(0).getScheduleTime())))
                         .setStyle(inboxStyle)
                         .setCategory(NotificationCompat.CATEGORY_EVENT)
                         .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)

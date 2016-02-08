@@ -42,12 +42,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import fr.outadev.android.timeo.TimeoBlockingMessageException;
-import fr.outadev.android.timeo.TimeoException;
-import fr.outadev.android.timeo.TimeoRequestHandler;
-import fr.outadev.android.timeo.TimeoSingleSchedule;
-import fr.outadev.android.timeo.TimeoStop;
-import fr.outadev.android.timeo.TimeoStopSchedule;
+import fr.outadev.android.transport.timeo.TimeoBlockingMessageException;
+import fr.outadev.android.transport.timeo.TimeoException;
+import fr.outadev.android.transport.timeo.TimeoRequestHandler;
+import fr.outadev.android.transport.timeo.TimeoSingleSchedule;
+import fr.outadev.android.transport.timeo.TimeoStop;
+import fr.outadev.android.transport.timeo.TimeoStopSchedule;
 import fr.outadev.twistoast.background.NextStopAlarmReceiver;
 
 /**
@@ -254,7 +254,7 @@ public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapte
                             } else {
                                 String message;
 
-                                // If the error is a TimeoException, we'll use a special formatting string
+                                // If the error is a NavitiaException, we'll use a special formatting string
                                 if (e instanceof TimeoException) {
                                     TimeoException e1 = (TimeoException) e;
 
@@ -349,7 +349,7 @@ public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapte
                         currentStop.setWatched(false);
                     }
 
-                    view.mLblScheduleTime[i].setText(currSched.getFormattedTime(view.mLblScheduleTime[i].getContext()));
+                    view.mLblScheduleTime[i].setText(TimeFormatter.formatTime(view.mLblScheduleTime[i].getContext(), currSched.getScheduleTime()));
                     view.mLblScheduleDirection[i].setText(" — " + currSched.getDirection());
                 }
 

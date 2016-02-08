@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.android.timeo;
+package fr.outadev.android.transport.timeo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +65,7 @@ public class TimeoStopSchedule {
 
     @Override
     public String toString() {
-        return "TimeoStopSchedule{" +
+        return "NavitiaStopSchedule{" +
                 "stop=" + mStop +
                 ", schedules=" + mSingleSchedules +
                 '}';

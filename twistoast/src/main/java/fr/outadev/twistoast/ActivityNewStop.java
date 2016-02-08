@@ -44,14 +44,14 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.outadev.android.timeo.TimeoBlockingMessageException;
-import fr.outadev.android.timeo.TimeoException;
-import fr.outadev.android.timeo.TimeoIDNameObject;
-import fr.outadev.android.timeo.TimeoLine;
-import fr.outadev.android.timeo.TimeoRequestHandler;
-import fr.outadev.android.timeo.TimeoSingleSchedule;
-import fr.outadev.android.timeo.TimeoStop;
-import fr.outadev.android.timeo.TimeoStopSchedule;
+import fr.outadev.android.transport.timeo.TimeoBlockingMessageException;
+import fr.outadev.android.transport.timeo.TimeoException;
+import fr.outadev.android.transport.timeo.TimeoIDNameObject;
+import fr.outadev.android.transport.timeo.TimeoLine;
+import fr.outadev.android.transport.timeo.TimeoRequestHandler;
+import fr.outadev.android.transport.timeo.TimeoSingleSchedule;
+import fr.outadev.android.transport.timeo.TimeoStop;
+import fr.outadev.android.transport.timeo.TimeoStopSchedule;
 
 /**
  * Activity that allows the user to add a bus stop to the app.
@@ -372,7 +372,7 @@ public class ActivityNewStop extends ThemedActivity {
                             TextView lbl_schedule_direction = (TextView) singleScheduleView.findViewById(R.id
                                     .lbl_schedule_direction);
 
-                            lbl_schedule.setText(currSched.getFormattedTime(ActivityNewStop.this));
+                            lbl_schedule.setText(TimeFormatter.formatTime(ActivityNewStop.this, currSched.getScheduleTime()));
                             lbl_schedule_direction.setText(" — " + currSched.getDirection());
 
                             mViewScheduleContainer.addView(singleScheduleView);

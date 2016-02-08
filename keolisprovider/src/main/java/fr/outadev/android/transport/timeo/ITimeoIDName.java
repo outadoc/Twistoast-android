@@ -1,5 +1,5 @@
 /*
- * Twistoast - IWatchedStopChangeListener
+ * Twistoast - ITimeoIDName
  * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -16,17 +16,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast;
-
-import fr.outadev.android.transport.timeo.TimeoStop;
+package fr.outadev.android.transport.timeo;
 
 /**
- * A listener that will send a message when a watched bus has just arrived.
- * This is used, for example, in the main list, to hide the little "watched" icon when the bus has arrived
- * and the notifications are now effectively turned off.
+ * Defines an object that possesses a name and an identifier.
  */
-public interface IWatchedStopChangeListener {
+public interface ITimeoIDName {
 
-    void onStopWatchingStateChanged(TimeoStop stop, boolean watched);
+    /**
+     * Gets the identifier of this object.
+     *
+     * @return the id
+     */
+    String getId();
+
+    /**
+     * Sets the identifier of this object.
+     *
+     * @param id the id
+     */
+    void setId(String id);
+
+    /**
+     * Gets the name of this object.
+     *
+     * @return the name
+     */
+    String getName();
+
+    /**
+     * Sets the name of this object.
+     *
+     * @param name the name
+     */
+    void setName(String name);
 
 }

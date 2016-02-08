@@ -43,7 +43,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 
 import java.util.List;
 
-import fr.outadev.android.timeo.TimeoStop;
+import fr.outadev.android.transport.timeo.TimeoStop;
 import fr.outadev.twistoast.background.NextStopAlarmReceiver;
 
 public class FragmentRealtime extends Fragment implements IStopsListContainer {

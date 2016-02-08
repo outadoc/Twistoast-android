@@ -41,8 +41,8 @@ import android.widget.TextView;
 
 import java.util.HashMap;
 
-import fr.outadev.android.timeo.TimeoRequestHandler;
-import fr.outadev.android.timeo.TimeoTrafficAlert;
+import fr.outadev.android.transport.timeo.TimeoRequestHandler;
+import fr.outadev.android.transport.timeo.TimeoTrafficAlert;
 import fr.outadev.twistoast.background.NextStopAlarmReceiver;
 import fr.outadev.twistoast.background.TrafficAlertAlarmReceiver;
 
