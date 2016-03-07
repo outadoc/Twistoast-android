@@ -36,13 +36,13 @@
 	</PreferenceCategory>
 	<PreferenceCategory android:title="@string/pref_cat_stops">
 
-		<CheckBoxPreference
+		<SwitchPreference
 			android:defaultValue="true"
 			android:key="pref_auto_refresh"
 			android:summary="@string/pref_auto_refresh_sum"
 			android:title="@string/pref_auto_refresh_title" />
 
-		<CheckBoxPreference
+		<SwitchPreference
 			android:defaultValue="true"
 			android:key="pref_relative_time"
 			android:summary="@string/pref_relative_time_sum"
@@ -59,7 +59,7 @@
 				android:data="pebble://appstore/53088e81ab1ae2f12900034e" />
 		</Preference>
 
-		<CheckBoxPreference
+		<SwitchPreference
 			android:defaultValue="true"
 			android:key="pref_pebble_use_color"
 			android:summaryOff="@string/pref_pebble_color_sum_off"
@@ -69,7 +69,7 @@
 	</PreferenceCategory>
 	<PreferenceCategory android:title="@string/pref_cat_notif_traffic">
 
-		<CheckBoxPreference
+		<SwitchPreference
 			android:defaultValue="true"
 			android:key="pref_enable_notif_traffic"
 			android:summary="@string/pref_enable_notif_traffic_sum"
