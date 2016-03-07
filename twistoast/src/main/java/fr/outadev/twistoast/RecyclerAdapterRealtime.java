@@ -402,7 +402,7 @@ public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapte
     @Override
     public boolean shouldItemHaveSeparator(int position) {
         // If it's the last item, no separator
-        if (position == mStopsList.size() - 1) {
+        if (position < 0 || position == mStopsList.size() - 1) {
             return false;
         }
 
