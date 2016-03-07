@@ -43,8 +43,7 @@ import java.util.HashMap;
 
 import fr.outadev.android.transport.timeo.TimeoRequestHandler;
 import fr.outadev.android.transport.timeo.TimeoTrafficAlert;
-import fr.outadev.twistoast.background.NextStopAlarmReceiver;
-import fr.outadev.twistoast.background.TrafficAlertAlarmReceiver;
+import fr.outadev.twistoast.background.BackgroundTasksManager;
 import fr.outadev.twistoast.utils.Utils;
 
 /**
@@ -114,11 +113,11 @@ public class ActivityRealtime extends ThemedActivity implements IStopsListContai
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         if (db.getWatchedStopsCount() > 0) {
-            NextStopAlarmReceiver.enable(getApplicationContext());
+            BackgroundTasksManager.enableStopAlarmJob(getApplicationContext());
         }
 
         if (prefs.getBoolean("pref_enable_notif_traffic", true)) {
-            TrafficAlertAlarmReceiver.enable(getApplicationContext());
+            BackgroundTasksManager.enableTrafficAlertJob(getApplicationContext());
         }
     }
 

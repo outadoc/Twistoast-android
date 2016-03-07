@@ -24,7 +24,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 
-import fr.outadev.twistoast.background.TrafficAlertAlarmReceiver;
+import fr.outadev.twistoast.background.BackgroundTasksManager;
 
 /**
  * A preferences fragment for the preferences of the app.
@@ -68,9 +68,9 @@ public class FragmentPreferences extends PreferenceFragment implements OnSharedP
                 break;
             case "pref_enable_notif_traffic":
                 if (sharedPreferences.getBoolean("pref_enable_notif_traffic", true)) {
-                    TrafficAlertAlarmReceiver.enable(getActivity().getApplicationContext());
+                    BackgroundTasksManager.enableTrafficAlertJob(getActivity().getApplicationContext());
                 } else {
-                    TrafficAlertAlarmReceiver.disable(getActivity().getApplicationContext());
+                    BackgroundTasksManager.disableTrafficAlertJob(getActivity().getApplicationContext());
                 }
 
                 updateDependentSwitchesState();

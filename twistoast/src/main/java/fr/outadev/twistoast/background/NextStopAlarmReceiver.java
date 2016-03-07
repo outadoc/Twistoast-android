@@ -21,6 +21,7 @@ package fr.outadev.twistoast.background;
 import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -48,7 +49,7 @@ import fr.outadev.twistoast.utils.Utils;
  * A broadcast receiver called at regular intervals to check
  * if watched buses are incoming and the user should be notified.
  */
-public class NextStopAlarmReceiver extends CommonAlarmReceiver {
+public class NextStopAlarmReceiver extends BroadcastReceiver {
 
     // If the bus is coming in less than ALARM_TIME_THRESHOLD_MS milliseconds, send a notification.
     public static final int ALARM_TIME_THRESHOLD_MS = 90 * 1000;
@@ -65,7 +66,7 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
      *
      * @param context a context
      */
-    public static void enable(Context context) {
+    static void enable(Context context) {
         Log.d(Utils.TAG, "enabling " + NextStopAlarmReceiver.class.getSimpleName());
 
         AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -78,7 +79,7 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
      *
      * @param context a context
      */
-    public static void disable(Context context) {
+    static void disable(Context context) {
         Log.d(Utils.TAG, "disabling " + NextStopAlarmReceiver.class.getSimpleName());
 
         AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -224,7 +225,7 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
                         .setContentIntent(contentIntent)
                         .setAutoCancel(true)
                         .setOnlyAlertOnce(true)
-                        .setDefaults(getNotificationDefaults(mContext));
+                        .setDefaults(NotificationSettings.getNotificationDefaults(mContext, "watched"));
 
         notificationManager.notify(Integer.valueOf(schedule.getStop().getId()), builder.build());
 
@@ -295,11 +296,6 @@ public class NextStopAlarmReceiver extends CommonAlarmReceiver {
                         .setAutoCancel(true);
 
         notificationManager.notify(NOTIFICATION_ID_ERROR, builder.build());
-    }
-
-    @Override
-    protected String getPreferencesKeyPrefix() {
-        return "watched";
     }
 
 }

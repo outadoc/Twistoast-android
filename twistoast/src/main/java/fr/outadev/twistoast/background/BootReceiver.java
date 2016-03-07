@@ -35,16 +35,16 @@ public class BootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
-            // Turn the notifications back off if necessary
+            // Turn the notifications back on if necessary
             Database db = new Database(DatabaseOpenHelper.getInstance(context));
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
             if (db.getWatchedStopsCount() > 0) {
-                NextStopAlarmReceiver.enable(context.getApplicationContext());
+                BackgroundTasksManager.enableStopAlarmJob(context.getApplicationContext());
             }
 
             if (prefs.getBoolean("pref_enable_notif_traffic", true)) {
-                TrafficAlertAlarmReceiver.enable(context.getApplicationContext());
+                BackgroundTasksManager.enableTrafficAlertJob(context.getApplicationContext());
             }
 
         }

@@ -48,7 +48,7 @@ import fr.outadev.android.transport.timeo.TimeoRequestHandler;
 import fr.outadev.android.transport.timeo.TimeoSingleSchedule;
 import fr.outadev.android.transport.timeo.TimeoStop;
 import fr.outadev.android.transport.timeo.TimeoStopSchedule;
-import fr.outadev.twistoast.background.NextStopAlarmReceiver;
+import fr.outadev.twistoast.background.BackgroundTasksManager;
 import fr.outadev.twistoast.utils.Utils;
 
 /**
@@ -151,7 +151,7 @@ public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapte
             notifyDataSetChanged();
 
             // Turn the notifications on
-            NextStopAlarmReceiver.enable(getActivity().getApplicationContext());
+            BackgroundTasksManager.enableStopAlarmJob(getActivity().getApplicationContext());
 
             Snackbar.make(mParentView, mParentView.getContext().getString(R.string.notifs_enable_toast, stop.getName()), Snackbar
                     .LENGTH_LONG)
@@ -165,7 +165,7 @@ public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapte
 
                             // Turn the notifications back off if necessary
                             if (mDatabase.getWatchedStopsCount() == 0) {
-                                NextStopAlarmReceiver.disable(getActivity().getApplicationContext());
+                                BackgroundTasksManager.disableStopAlarmJob(getActivity().getApplicationContext());
                             }
                         }
 
@@ -181,7 +181,7 @@ public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapte
 
             // Turn the notifications back off if necessary
             if (mDatabase.getWatchedStopsCount() == 0) {
-                NextStopAlarmReceiver.disable(getActivity().getApplicationContext());
+                BackgroundTasksManager.disableStopAlarmJob(getActivity().getApplicationContext());
             }
 
             NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context
