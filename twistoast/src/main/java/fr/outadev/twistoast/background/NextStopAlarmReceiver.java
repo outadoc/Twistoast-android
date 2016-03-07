@@ -42,7 +42,7 @@ import fr.outadev.twistoast.DatabaseOpenHelper;
 import fr.outadev.twistoast.IWatchedStopChangeListener;
 import fr.outadev.twistoast.R;
 import fr.outadev.twistoast.TimeFormatter;
-import fr.outadev.twistoast.Utils;
+import fr.outadev.twistoast.utils.Utils;
 
 /**
  * A broadcast receiver called at regular intervals to check

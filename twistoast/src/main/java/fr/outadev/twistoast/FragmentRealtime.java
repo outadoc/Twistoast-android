@@ -45,6 +45,7 @@ import java.util.List;
 
 import fr.outadev.android.transport.timeo.TimeoStop;
 import fr.outadev.twistoast.background.NextStopAlarmReceiver;
+import fr.outadev.twistoast.utils.Utils;
 
 public class FragmentRealtime extends Fragment implements IStopsListContainer {
 

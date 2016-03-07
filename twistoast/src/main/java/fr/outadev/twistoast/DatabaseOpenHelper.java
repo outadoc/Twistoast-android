@@ -30,6 +30,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import fr.outadev.android.transport.timeo.TimeoRequestHandler;
+import fr.outadev.twistoast.utils.Utils;
 
 /**
  * Opens, creates and manages database versions.

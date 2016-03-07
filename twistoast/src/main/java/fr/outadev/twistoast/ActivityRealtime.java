@@ -45,6 +45,7 @@ import fr.outadev.android.transport.timeo.TimeoRequestHandler;
 import fr.outadev.android.transport.timeo.TimeoTrafficAlert;
 import fr.outadev.twistoast.background.NextStopAlarmReceiver;
 import fr.outadev.twistoast.background.TrafficAlertAlarmReceiver;
+import fr.outadev.twistoast.utils.Utils;
 
 /**
  * The main activity of the app.

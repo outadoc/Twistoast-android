@@ -47,7 +47,7 @@
 			android:elevation="1dp"
 			android:padding="5dp">
 
-			<com.vj.widgets.AutoResizeTextView
+			<fr.outadev.twistoast.utils.AutoResizeTextView
 				android:id="@+id/lbl_line_id"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"

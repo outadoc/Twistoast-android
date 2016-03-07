@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast;
+package fr.outadev.twistoast.utils;
 
 /**
  * Miscellaneous methods.

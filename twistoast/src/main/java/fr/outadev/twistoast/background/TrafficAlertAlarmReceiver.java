@@ -34,7 +34,7 @@ import android.util.Log;
 import fr.outadev.android.transport.timeo.TimeoRequestHandler;
 import fr.outadev.android.transport.timeo.TimeoTrafficAlert;
 import fr.outadev.twistoast.R;
-import fr.outadev.twistoast.Utils;
+import fr.outadev.twistoast.utils.Utils;
 
 /**
  * A broadcast receiver called at regular intervals to check
