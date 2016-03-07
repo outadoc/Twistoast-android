@@ -410,7 +410,6 @@ public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapte
 
         // If the next item's line is the same as this one, don't draw a separator either
         return !item.getLine().getId().equals(nextItem.getLine().getId());
-
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
