@@ -19,7 +19,7 @@
 
 <resources>
 
-	<style name="Twistoast.Base.Theme" parent="Theme.AppCompat.Light.NoActionBar">
+	<style name="Twistoast.Base.Theme" parent="Theme.AppCompat.DayNight.NoActionBar">
 		<item name="colorPrimary">#0171BB</item>
 		<item name="colorPrimaryDark">#015ba4</item>
 		<item name="colorAccent">#ff01acff</item>

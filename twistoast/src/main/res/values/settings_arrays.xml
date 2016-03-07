@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string-array name="pref_night_mode_entries">
+		<item>Never enable</item>
+		<item>Always enable</item>
+		<item>Automatic</item>
+		<item>Default</item>
+	</string-array>
+
+	<string-array name="pref_night_mode_entry_values">
+		<item>day</item>
+		<item>night</item>
+		<item>auto</item>
+		<item>system</item>
+	</string-array>
+</resources>

@@ -62,6 +62,7 @@ public class FragmentPreferences extends PreferenceFragment implements OnSharedP
         // If we're changing the theme, automatically restart the app
         switch (key) {
             case "pref_app_theme":
+            case "pref_night_mode":
                 Intent i = getActivity().getPackageManager().getLaunchIntentForPackage(getActivity().getPackageName());
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
