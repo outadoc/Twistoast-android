@@ -31,6 +31,10 @@
 
 	<style name="Twistoast.Theme" parent="Twistoast.Base.Theme" />
 
+	<style name="Twistoast.Theme.Splash" parent="Twistoast.Base.Theme">
+		<item name="android:windowBackground">@drawable/splash_screen</item>
+	</style>
+
 	<style name="Twistoast.Theme.NewStopActivity" parent="Theme.AppCompat.DialogWhenLarge">
 		<item name="windowActionBar">false</item>
 		<item name="windowNoTitle">true</item>
