@@ -548,7 +548,9 @@ public abstract class TimeoRequestHandler {
 
                 if (obj.has("alerte")) {
                     JSONObject alert = obj.getJSONObject("alerte");
-                    return new TimeoTrafficAlert(alert.getInt("id_alerte"), alert.getString("libelle_alerte").trim(),
+                    return new TimeoTrafficAlert(
+                            alert.getInt("id_alerte"),
+                            alert.getString("libelle_alerte").trim().replaceAll("  ", " - "),
                             alert.getString("url_alerte"));
                 }
             }
