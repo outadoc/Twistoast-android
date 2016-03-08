@@ -48,8 +48,7 @@
 	<string name="schedule_time_arrival_imminent">Passage imminent</string>
 	<string name="schedule_time_countdown">%1$s minutes</string>
 
-	<string name="add_first_stop_title">Rien pour l\'instant !</string>
-	<string name="add_first_stop_instructions">Pour ajouter un arrêt, appuyez sur <b>+</b>.</string>
+	<string name="add_first_stop_title">Aucun arrêt de bus sauvegardé</string>
 
 	<string name="drawer_item_realtime">Temps réel</string>
 	<string name="drawer_item_timetables">Horaires à l\'arrêt</string>

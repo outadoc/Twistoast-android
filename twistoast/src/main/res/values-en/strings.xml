@@ -47,8 +47,7 @@
 	<string name="schedule_time_arrival_imminent">Now incoming</string>
 	<string name="schedule_time_countdown">%1$s minutes</string>
 
-	<string name="add_first_stop_title">Nothing here yet!</string>
-	<string name="add_first_stop_instructions">To add a bus stop, tap <b>+</b>.</string>
+	<string name="add_first_stop_title">No saved bus stops yet</string>
 
 	<string name="drawer_item_realtime">Real-time</string>
 	<string name="drawer_item_timetables">Timetables</string>
