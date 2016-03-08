@@ -75,4 +75,8 @@
 	<string name="drawer_action_open">Open drawer</string>
 	<string name="drawer_action_close">Close drawer</string>
 
+	<string name="sort_by_title">Sort by...</string>
+	<string name="sort_by_stop">Sort by stop</string>
+	<string name="sort_by_line">Sort by line</string>
+
 </resources>

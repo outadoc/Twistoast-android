@@ -23,9 +23,11 @@ import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -64,6 +66,7 @@ public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapte
 
     private final View mParentView;
     private final Activity mActivity;
+    private final SharedPreferences mSharedPreferences;
 
     private final Database mDatabase;
     private TimeoStopReferenceUpdater mReferenceUpdater;
@@ -197,14 +200,15 @@ public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapte
 
     public RecyclerAdapterRealtime(Activity activity, List<TimeoStop> stops, IStopsListContainer stopsListContainer, View
             parentView) {
-        this.mActivity = activity;
-        this.mStopsList = stops;
-        this.mStopsListContainer = stopsListContainer;
-        this.mParentView = parentView;
-        this.mSchedules = new HashMap<>();
-        this.mDatabase = new Database(DatabaseOpenHelper.getInstance(activity));
-        this.mNetworkCount = mDatabase.getNetworksCount();
-        this.mReferenceUpdater = new TimeoStopReferenceUpdater(getActivity());
+        mActivity = activity;
+        mStopsList = stops;
+        mStopsListContainer = stopsListContainer;
+        mParentView = parentView;
+        mSchedules = new HashMap<>();
+        mDatabase = new Database(DatabaseOpenHelper.getInstance(activity));
+        mNetworkCount = mDatabase.getNetworksCount();
+        mReferenceUpdater = new TimeoStopReferenceUpdater(getActivity());
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
     }
 
     /**
@@ -409,8 +413,15 @@ public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapte
         TimeoStop item = mStopsList.get(position);
         TimeoStop nextItem = mStopsList.get(position + 1);
 
-        // If the next item's line is the same as this one, don't draw a separator either
-        return !item.getLine().getId().equals(nextItem.getLine().getId());
+        Database.SortBy criteria = Utils.getSortCriteria(mSharedPreferences.getString("pref_list_sortby", "line"));
+
+        if (criteria == Database.SortBy.STOP) {
+            // If the next item's stop is the same as this one, don't draw a separator either
+            return !(item.getId().equals(nextItem.getId()) || item.getName().equals(nextItem.getName()));
+        } else {
+            // If the next item's line is the same as this one, don't draw a separator either
+            return !item.getLine().getId().equals(nextItem.getLine().getId());
+        }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

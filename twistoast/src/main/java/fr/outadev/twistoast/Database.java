@@ -40,7 +40,9 @@ import fr.outadev.android.transport.timeo.TimeoStop;
  */
 public class Database {
 
-	private final SQLiteOpenHelper mDatabaseOpenHelper;
+    public enum SortBy {LINE, STOP}
+
+    private final SQLiteOpenHelper mDatabaseOpenHelper;
 
 	public Database(SQLiteOpenHelper openHelper) {
         mDatabaseOpenHelper = openHelper;
@@ -130,11 +132,23 @@ public class Database {
 	 *
 	 * @return a list of all the stops
 	 */
-	public List<TimeoStop> getAllStops() {
+	public List<TimeoStop> getAllStops(SortBy sortCriteria) {
 		// Clean notification flags that have timed out so they don't interfere
 		cleanOutdatedWatchedStops();
 
 		SQLiteDatabase db = mDatabaseOpenHelper.getReadableDatabase();
+
+        String sortBy;
+
+        switch (sortCriteria) {
+            case STOP:
+                sortBy = "stop.stop_name, CAST(line.line_id AS INTEGER)";
+                break;
+            case LINE:
+            default:
+                sortBy = "CAST(line.line_id AS INTEGER), stop.stop_name";
+                break;
+        }
 
 		Cursor results = db
 				.rawQuery(
@@ -146,7 +160,7 @@ public class Database {
 								"LEFT JOIN twi_notification notif ON (notif.stop_id = stop.stop_id " +
 								"AND notif.line_id = line.line_id AND notif.dir_id = dir.dir_id " +
 								"AND notif.network_code = line.network_code AND notif.notif_active = 1) " +
-								"ORDER BY line.network_code, CAST(line.line_id AS INTEGER), stop.stop_name, dir.dir_name",
+								"ORDER BY line.network_code, " + sortBy + ", dir.dir_name",
 						null);
 
 		ArrayList<TimeoStop> stopsList = new ArrayList<>();
@@ -188,7 +202,7 @@ public class Database {
 	 * @return the corresponding stop object
 	 */
 	public TimeoStop getStopAtIndex(int index) {
-		List<TimeoStop> stopsList = getAllStops();
+		List<TimeoStop> stopsList = getAllStops(SortBy.STOP);
 
 		if(stopsList != null && stopsList.size() >= index + 1) {
 			return stopsList.get(index);

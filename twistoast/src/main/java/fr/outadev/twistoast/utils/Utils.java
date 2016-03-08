@@ -18,6 +18,8 @@
 
 package fr.outadev.twistoast.utils;
 
+import fr.outadev.twistoast.Database;
+
 /**
  * Miscellaneous methods.
  *
@@ -26,5 +28,15 @@ package fr.outadev.twistoast.utils;
 public class Utils {
 
     public static final String TAG = "Twistoast";
+
+    public static Database.SortBy getSortCriteria(String sortBy) {
+        switch (sortBy.toLowerCase()) {
+            case "stop":
+                return Database.SortBy.STOP;
+            case "line":
+            default:
+                return Database.SortBy.LINE;
+        }
+    }
 
 }

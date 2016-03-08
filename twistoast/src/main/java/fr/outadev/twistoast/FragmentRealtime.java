@@ -31,6 +31,9 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -54,6 +57,7 @@ public class FragmentRealtime extends Fragment implements IStopsListContainer {
 
     private final Handler mPeriodicRefreshHandler = new Handler();
     private Runnable mPeriodicRefreshRunnable;
+    private SharedPreferences mSharedPreferences;
 
     private RecyclerView mStopsRecyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -95,8 +99,8 @@ public class FragmentRealtime extends Fragment implements IStopsListContainer {
             }
         };
 
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        mAutoRefresh = sharedPref.getBoolean("pref_auto_refresh", true);
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        mAutoRefresh = mSharedPreferences.getBoolean("pref_auto_refresh", true);
 
         mIsRefreshing = false;
         mIsInBackground = false;
@@ -153,6 +157,26 @@ public class FragmentRealtime extends Fragment implements IStopsListContainer {
         setupListeners();
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.realtime_list, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.sortby_line:
+                mSharedPreferences.edit().putString("pref_list_sortby", "line").apply();
+                return true;
+            case R.id.sortby_stop:
+                mSharedPreferences.edit().putString("pref_list_sortby", "stop").apply();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -228,8 +252,7 @@ public class FragmentRealtime extends Fragment implements IStopsListContainer {
     }
 
     private void setupAdvertisement() {
-        if (!getActivity().getResources().getBoolean(R.bool.enableAds)
-                || PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("pref_disable_ads", false)) {
+        if (!getActivity().getResources().getBoolean(R.bool.enableAds) || mSharedPreferences.getBoolean("pref_disable_ads", false)) {
             // If we don't want ads, hide the view
             mAdView.setVisibility(View.GONE);
         } else {
@@ -265,7 +288,9 @@ public class FragmentRealtime extends Fragment implements IStopsListContainer {
         // if we don't do that, bugs will appear when the database has been
         // modified
         if (reloadFromDatabase) {
-            mStopList = mDatabaseHandler.getAllStops();
+            Database.SortBy criteria = Utils.getSortCriteria(mSharedPreferences.getString("pref_list_sortby", "line"));
+
+            mStopList = mDatabaseHandler.getAllStops(criteria);
             mListAdapter = new RecyclerAdapterRealtime(getActivity(), mStopList, this, mStopsRecyclerView);
             mStopsRecyclerView.setAdapter(mListAdapter);
         }
