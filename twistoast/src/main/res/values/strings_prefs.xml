@@ -63,7 +63,7 @@
 	<string name="pref_license_gnu_gpl_sum">Twistoast est fournie sous les termes de la GNU GPL v3. Tapez ici pour obtenir le code source.</string>
 	<string name="pref_license_ccbysa_sum">\"Traffic icon\" est une icône de Daniel Bruce disponible sur www.flaticon.com.</string>
 	<string name="pref_license_ccby_sum">\"Front of bus\" est une icône de Freepik disponible sur www.flaticon.com.</string>
-	<string name="pref_license_apache_sum">Apache Commons Lang\nOkHttp par Square\nColor Picker Collection par Gabriele Mariotti</string>
+	<string name="pref_license_apache_sum">Apache Commons Lang\nOkHttp par Square\nColor Picker Collection par Gabriele Mariotti\nJoda-Time</string>
 	<string name="prefs_ads_already_disabled">Vous avez déjà désactivé les pubs. Profitez-en !</string>
 	<string name="prefs_ads_disabled">Plus de pubs pour vous ! \\o/</string>
 	<string name="prefs_ads_step_count">Plus que %1$s étapes pour désactiver les pubs</string>
