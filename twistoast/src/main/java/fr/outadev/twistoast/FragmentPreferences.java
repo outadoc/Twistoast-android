@@ -27,6 +27,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
+import android.preference.ListPreference;
 import android.preference.PreferenceFragment;
 
 import fr.outadev.twistoast.background.BackgroundTasksManager;
@@ -51,7 +52,7 @@ public class FragmentPreferences extends PreferenceFragment implements OnSharedP
         super.onResume();
         // Set up a listener whenever a key changes
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
-        updateDependentSwitchesState();
+        updatePreferenceStates();
     }
 
     @Override
@@ -65,8 +66,9 @@ public class FragmentPreferences extends PreferenceFragment implements OnSharedP
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         // If we're changing the theme, automatically restart the app
         switch (key) {
-            case "pref_app_theme":
             case "pref_night_mode":
+                updatePreferenceStates();
+            case "pref_app_theme":
                 restartApp();
                 break;
             case "pref_enable_notif_traffic":
@@ -76,7 +78,7 @@ public class FragmentPreferences extends PreferenceFragment implements OnSharedP
                     BackgroundTasksManager.disableTrafficAlertJob(getActivity().getApplicationContext());
                 }
 
-                updateDependentSwitchesState();
+                updatePreferenceStates();
                 break;
         }
     }
@@ -107,11 +109,14 @@ public class FragmentPreferences extends PreferenceFragment implements OnSharedP
      * Updates the state of preferences that rely on other preferences.
      * For example, this will disable "ring" and "vibrate" options for traffic notifications if the latter are disabled.
      */
-    private void updateDependentSwitchesState() {
+    private void updatePreferenceStates() {
         boolean enabled = getPreferenceScreen().getSharedPreferences().getBoolean("pref_enable_notif_traffic", true);
 
         findPreference("pref_notif_traffic_ring").setEnabled(enabled);
         findPreference("pref_notif_traffic_vibrate").setEnabled(enabled);
+
+        ListPreference nmPref = (ListPreference)findPreference("pref_night_mode");
+        nmPref.setSummary(nmPref.getEntry());
     }
 
 }
