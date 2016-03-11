@@ -18,6 +18,7 @@
 
 package fr.outadev.twistoast;
 
+import android.Manifest;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
@@ -26,9 +27,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.PreferenceFragment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 
 import fr.outadev.twistoast.background.BackgroundTasksManager;
 
@@ -38,6 +42,8 @@ import fr.outadev.twistoast.background.BackgroundTasksManager;
  * @author outadoc
  */
 public class FragmentPreferences extends PreferenceFragment implements OnSharedPreferenceChangeListener {
+
+    public static final int PERM_REQUEST_LOCATION = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,6 +74,14 @@ public class FragmentPreferences extends PreferenceFragment implements OnSharedP
         switch (key) {
             case "pref_night_mode":
                 updatePreferenceStates();
+
+                if (sharedPreferences.getString("pref_night_mode", "system").equals("auto")) {
+                    int check = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION);
+                    if (check == PackageManager.PERMISSION_DENIED) {
+                        ActivityCompat.requestPermissions(
+                                getActivity(), new String[] {Manifest.permission.ACCESS_COARSE_LOCATION}, PERM_REQUEST_LOCATION);
+                    }
+                }
             case "pref_app_theme":
                 restartApp();
                 break;
