@@ -20,10 +20,8 @@ package fr.outadev.twistoast;
 
 import android.app.Fragment;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
@@ -57,7 +55,6 @@ public class FragmentRealtime extends Fragment implements IStopsListContainer {
 
     private final Handler mPeriodicRefreshHandler = new Handler();
     private Runnable mPeriodicRefreshRunnable;
-    private SharedPreferences mSharedPreferences;
 
     private RecyclerView mStopsRecyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -68,8 +65,8 @@ public class FragmentRealtime extends Fragment implements IStopsListContainer {
     private List<TimeoStop> mStopList;
 
     private Database mDatabaseHandler;
+    private ConfigurationManager mConfig;
     private RecyclerAdapterRealtime mListAdapter;
-    private boolean mAutoRefresh;
 
     private boolean mIsRefreshing;
     private boolean mIsInBackground;
@@ -93,14 +90,11 @@ public class FragmentRealtime extends Fragment implements IStopsListContainer {
         mPeriodicRefreshRunnable = new Runnable() {
             @Override
             public void run() {
-                if (mAutoRefresh) {
+                if (mConfig.getAutoRefresh()) {
                     refreshAllStopSchedules(false);
                 }
             }
         };
-
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        mAutoRefresh = mSharedPreferences.getBoolean("pref_auto_refresh", true);
 
         mIsRefreshing = false;
         mIsInBackground = false;
@@ -110,6 +104,7 @@ public class FragmentRealtime extends Fragment implements IStopsListContainer {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_realtime, container, false);
+        mConfig = new ConfigurationManager(getActivity());
 
         // get pull to refresh view
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.ptr_layout);
@@ -127,7 +122,6 @@ public class FragmentRealtime extends Fragment implements IStopsListContainer {
 
         mStopsRecyclerView = (RecyclerView) view.findViewById(R.id.stops_list);
         mNoContentView = view.findViewById(R.id.view_no_content);
-
         mFloatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab);
         mAdView = (AdView) view.findViewById(R.id.adView);
 
@@ -169,11 +163,11 @@ public class FragmentRealtime extends Fragment implements IStopsListContainer {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.sortby_line:
-                mSharedPreferences.edit().putString("pref_list_sortby", "line").apply();
+                mConfig.setListSortOrder("line");
                 refreshAllStopSchedules(true);
                 return true;
             case R.id.sortby_stop:
-                mSharedPreferences.edit().putString("pref_list_sortby", "stop").apply();
+                mConfig.setListSortOrder("stop");
                 refreshAllStopSchedules(true);
                 return true;
         }
@@ -254,7 +248,7 @@ public class FragmentRealtime extends Fragment implements IStopsListContainer {
     }
 
     private void setupAdvertisement() {
-        if (!getActivity().getResources().getBoolean(R.bool.enableAds) || mSharedPreferences.getBoolean("pref_disable_ads", false)) {
+        if (!getActivity().getResources().getBoolean(R.bool.enableAds) || mConfig.getAdsAreRemoved()) {
             // If we don't want ads, hide the view
             mAdView.setVisibility(View.GONE);
         } else {
@@ -290,7 +284,7 @@ public class FragmentRealtime extends Fragment implements IStopsListContainer {
         // if we don't do that, bugs will appear when the database has been
         // modified
         if (reloadFromDatabase) {
-            Database.SortBy criteria = Utils.getSortCriteria(mSharedPreferences.getString("pref_list_sortby", "line"));
+            Database.SortBy criteria = Utils.getSortCriteria(mConfig.getListSortOrder());
 
             mStopList = mDatabaseHandler.getAllStops(criteria);
             mListAdapter = new RecyclerAdapterRealtime(getActivity(), mStopList, this, mStopsRecyclerView);

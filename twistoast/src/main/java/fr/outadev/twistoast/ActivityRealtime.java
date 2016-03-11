@@ -21,12 +21,10 @@ package fr.outadev.twistoast;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -112,13 +110,13 @@ public class ActivityRealtime extends ThemedActivity implements IStopsListContai
 
         // Turn the notifications back off if necessary
         Database db = new Database(DatabaseOpenHelper.getInstance(this));
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        ConfigurationManager config = new ConfigurationManager(this);
 
         if (db.getWatchedStopsCount() > 0) {
             BackgroundTasksManager.enableStopAlarmJob(getApplicationContext());
         }
 
-        if (prefs.getBoolean("pref_enable_notif_traffic", true)) {
+        if (config.getTrafficNotificationsEnabled()) {
             BackgroundTasksManager.enableTrafficAlertJob(getApplicationContext());
         }
     }

@@ -38,6 +38,7 @@ import fr.outadev.android.transport.timeo.TimeoSingleSchedule;
 import fr.outadev.android.transport.timeo.TimeoStop;
 import fr.outadev.android.transport.timeo.TimeoStopSchedule;
 import fr.outadev.twistoast.ActivityRealtime;
+import fr.outadev.twistoast.ConfigurationManager;
 import fr.outadev.twistoast.Database;
 import fr.outadev.twistoast.DatabaseOpenHelper;
 import fr.outadev.twistoast.IWatchedStopChangeListener;
@@ -199,6 +200,7 @@ public class NextStopAlarmReceiver extends BroadcastReceiver {
      */
     private void notifyForIncomingBus(TimeoStopSchedule schedule) {
         NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        ConfigurationManager config = new ConfigurationManager(mContext);
 
         Intent notificationIntent = new Intent(mContext, ActivityRealtime.class);
         PendingIntent contentIntent = PendingIntent.getActivity(mContext, 0, notificationIntent, 0);
@@ -225,7 +227,8 @@ public class NextStopAlarmReceiver extends BroadcastReceiver {
                         .setContentIntent(contentIntent)
                         .setAutoCancel(true)
                         .setOnlyAlertOnce(true)
-                        .setDefaults(NotificationSettings.getNotificationDefaults(mContext, "watched"));
+                        .setDefaults(NotificationSettings.getNotificationDefaults(mContext,
+                                config.getWatchNotificationsVibrate(), config.getWatchNotificationsRing()));
 
         notificationManager.notify(Integer.valueOf(schedule.getStop().getId()), builder.build());
 

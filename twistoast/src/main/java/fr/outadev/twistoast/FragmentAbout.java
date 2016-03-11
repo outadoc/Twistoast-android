@@ -19,13 +19,11 @@
 package fr.outadev.twistoast;
 
 import android.annotation.SuppressLint;
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 /**
@@ -35,11 +33,13 @@ import android.widget.Toast;
  */
 public class FragmentAbout extends PreferenceFragment {
 
+    private ConfigurationManager mConfig;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        mConfig = new ConfigurationManager(getActivity());
 
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.about_prefs);
@@ -57,14 +57,14 @@ public class FragmentAbout extends PreferenceFragment {
                     mToast.cancel();
                 }
 
-                if (prefs.getBoolean("pref_disable_ads", false)) {
+                if (mConfig.getAdsAreRemoved()) {
                     // Already disabled the ads
                     (mToast = Toast.makeText(getActivity(), R.string.prefs_ads_already_disabled, Toast.LENGTH_SHORT))
                             .show();
 
                 } else if (mEasterEggCount == 0) {
                     // Ready to disable the ads
-                    prefs.edit().putBoolean("pref_disable_ads", true).apply();
+                    mConfig.setAdsAreRemoved(true);
                     (mToast = Toast.makeText(getActivity(), R.string.prefs_ads_disabled, Toast.LENGTH_SHORT)).show();
 
                 } else if (mEasterEggCount <= 3) {

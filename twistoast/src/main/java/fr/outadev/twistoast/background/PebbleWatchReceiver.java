@@ -19,11 +19,9 @@
 package fr.outadev.twistoast.background;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.getpebble.android.kit.PebbleKit;
@@ -38,6 +36,7 @@ import fr.outadev.android.transport.timeo.TimeoRequestHandler;
 import fr.outadev.android.transport.timeo.TimeoSingleSchedule;
 import fr.outadev.android.transport.timeo.TimeoStop;
 import fr.outadev.android.transport.timeo.TimeoStopSchedule;
+import fr.outadev.twistoast.ConfigurationManager;
 import fr.outadev.twistoast.Database;
 import fr.outadev.twistoast.DatabaseOpenHelper;
 import fr.outadev.twistoast.TimeFormatter;
@@ -72,8 +71,6 @@ public class PebbleWatchReceiver extends PebbleDataReceiver {
     private static final int KEY_SHOULD_VIBRATE = 0x30;
     private static final int KEY_BACKGROUND_COLOR = 0x31;
 
-    private SharedPreferences mPreferences;
-
     public PebbleWatchReceiver() {
         super(PEBBLE_UUID);
     }
@@ -81,8 +78,6 @@ public class PebbleWatchReceiver extends PebbleDataReceiver {
     @Override
     public void receiveData(final Context context, final int transactionId, PebbleDictionary data) {
         Log.d(TAG, "received a message from pebble " + PEBBLE_UUID);
-
-        mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         // open the database and count the stops
         Database databaseHandler = new Database(DatabaseOpenHelper.getInstance(context));
@@ -147,6 +142,7 @@ public class PebbleWatchReceiver extends PebbleDataReceiver {
      * @param schedule the schedule to send back
      */
     private void craftAndSendSchedulePacket(Context context, TimeoStopSchedule schedule) {
+        ConfigurationManager config = new ConfigurationManager(context);
         PebbleDictionary response = new PebbleDictionary();
 
         response.addInt8(KEY_TWISTOAST_MESSAGE_TYPE, BUS_STOP_DATA_RESPONSE);
@@ -192,7 +188,7 @@ public class PebbleWatchReceiver extends PebbleDataReceiver {
 
         int color = 0x0;
 
-        if (mPreferences.getBoolean("pref_pebble_use_color", true)) {
+        if (config.getUseColorInPebbleApp()) {
             color = Color.parseColor(schedule.getStop().getLine().getColor());
         }
 

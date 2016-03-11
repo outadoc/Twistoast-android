@@ -57,7 +57,7 @@ public abstract class ScheduleTime {
             case ARRIVAL_IMMINENT:
                 return context.getString(R.string.schedule_time_arrival_imminent);
             case COUNTDOWN:
-                if (isRelative(context)) {
+                if (isRelativeTimeUsed(context)) {
                     return context.getString(R.string.schedule_time_countdown, getDurationUntilBus(time).getStandardMinutes());
                 }
             default:
@@ -66,7 +66,7 @@ public abstract class ScheduleTime {
         }
     }
 
-    private static boolean isRelative(Context context) {
+    private static boolean isRelativeTimeUsed(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context).getBoolean("pref_relative_time", true);
     }
 
@@ -92,7 +92,7 @@ public abstract class ScheduleTime {
     public static TimeDisplayMode getTimeDisplayMode(DateTime schedule, Context context) {
         long offset = getDurationUntilBus(schedule).getMillis() / 1000 / 60;
 
-        if (!PreferenceManager.getDefaultSharedPreferences(context).getBoolean("pref_relative_time", true)) {
+        if (!isRelativeTimeUsed(context)) {
             return TimeDisplayMode.FULL;
         }
 

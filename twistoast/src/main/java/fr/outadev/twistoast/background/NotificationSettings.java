@@ -1,8 +1,24 @@
+/*
+ * Twistoast - NotificationSettings
+ * Copyright (C) 2013-2016 Baptiste Candellier
+ *
+ * Twistoast is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Twistoast is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package fr.outadev.twistoast.background;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 
 /**
@@ -17,19 +33,14 @@ public abstract class NotificationSettings {
      * @param context a context
      * @return an integer to pass to the builder
      */
-    public static int getNotificationDefaults(Context context, String prefix) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-
-        boolean prefVibrate = prefs.getBoolean("pref_notif_" + prefix + "_vibrate", true);
-        boolean prefRing = prefs.getBoolean("pref_notif_" + prefix + "_ring", true);
-
+    public static int getNotificationDefaults(Context context, boolean vibrate, boolean ring) {
         int defaults = NotificationCompat.DEFAULT_LIGHTS;
 
-        if (prefVibrate) {
+        if (vibrate) {
             defaults = defaults | NotificationCompat.DEFAULT_VIBRATE;
         }
 
-        if (prefRing) {
+        if (ring) {
             defaults = defaults | NotificationCompat.DEFAULT_SOUND;
         }
 

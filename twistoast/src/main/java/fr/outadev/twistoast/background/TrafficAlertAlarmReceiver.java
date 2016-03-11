@@ -76,7 +76,7 @@ public class TrafficAlertAlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context context, Intent intent) {
-        (new TrafficAlertTask(context, "traffic")).execute();
+        (new TrafficAlertTask(context)).execute();
     }
 
 

@@ -18,11 +18,9 @@
 
 package fr.outadev.twistoast;
 
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 
 import java.util.HashMap;
@@ -74,12 +72,9 @@ public class ThemedActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ConfigurationManager config = new ConfigurationManager(this);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
-        int themeColor = prefs.getInt("pref_app_theme", -1);
-        int themeRes = getThemeForColor(themeColor);
-
+        int themeRes = getThemeForColor(config.getApplicationThemeColor());
         setTheme(themeRes);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

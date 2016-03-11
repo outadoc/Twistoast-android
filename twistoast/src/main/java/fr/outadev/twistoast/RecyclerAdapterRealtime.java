@@ -23,11 +23,9 @@ import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -66,9 +64,9 @@ public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapte
 
     private final View mParentView;
     private final Activity mActivity;
-    private final SharedPreferences mSharedPreferences;
 
     private final Database mDatabase;
+    private final ConfigurationManager mConfig;
     private TimeoStopReferenceUpdater mReferenceUpdater;
 
     private final IStopsListContainer mStopsListContainer;
@@ -208,7 +206,7 @@ public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapte
         mDatabase = new Database(DatabaseOpenHelper.getInstance(activity));
         mNetworkCount = mDatabase.getNetworksCount();
         mReferenceUpdater = new TimeoStopReferenceUpdater(getActivity());
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
+        mConfig = new ConfigurationManager(activity);
     }
 
     /**
@@ -413,7 +411,7 @@ public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapte
         TimeoStop item = mStopsList.get(position);
         TimeoStop nextItem = mStopsList.get(position + 1);
 
-        Database.SortBy criteria = Utils.getSortCriteria(mSharedPreferences.getString("pref_list_sortby", "line"));
+        Database.SortBy criteria = Utils.getSortCriteria(mConfig.getListSortOrder());
 
         if (criteria == Database.SortBy.STOP) {
             // If the next item's stop is the same as this one, don't draw a separator either
