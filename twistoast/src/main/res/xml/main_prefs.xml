@@ -33,6 +33,13 @@
 			app:itemLayout="@layout/dash_grid_item_color"
 			app:numColumns="5" />
 
+		<ListPreference
+			android:key="pref_night_mode"
+		    android:title="Night mode"
+		    android:entries="@array/pref_night_mode_entries"
+		    android:entryValues="@array/pref_night_mode_entry_values"
+		    android:defaultValue="system" />
+
 	</PreferenceCategory>
 	<PreferenceCategory android:title="@string/pref_cat_stops">
 
