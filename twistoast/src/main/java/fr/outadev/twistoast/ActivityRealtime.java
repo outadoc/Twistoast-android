@@ -70,14 +70,15 @@ public class ActivityRealtime extends ThemedActivity implements IStopsListContai
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_realtime);
 
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mNavigationView = (NavigationView) findViewById(R.id.drawer_nav_view);
+
         // Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         // Drawer config
         mLoadedFragments = new HashMap<>();
-
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_action_open, R.string
                 .drawer_action_close) {
 
@@ -92,10 +93,11 @@ public class ActivityRealtime extends ThemedActivity implements IStopsListContai
             }
         };
 
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
 
-        mNavigationView = (NavigationView) findViewById(R.id.drawer_nav_view);
-        mNavigationView.setNavigationItemSelectedListener(this);
+        if (mNavigationView != null) {
+            mNavigationView.setNavigationItemSelectedListener(this);
+        }
 
         // Handle saved variables and check traffic info if needed
         if (savedInstanceState != null) {
