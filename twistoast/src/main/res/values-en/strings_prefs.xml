@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Twistoast - strings_prefs.xml
-  ~ Copyright (C) 2013-2015 Baptiste Candellier
+  ~ Copyright (C) 2013-2016 Baptiste Candellier
   ~
   ~ Twistoast is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@
 	<string name="pref_auto_refresh_sum">Allows you to automatically refresh the schedules when the app is in the foreground.</string>
 	<string name="pref_cat_stops">Stops List</string>
 	<string name="pref_legal_title">Legal</string>
-	<string name="pref_legal_sum">Twistoast is an application developed by Baptiste Candellier. © outa[dev] – 2013–2015.\n\nThe Twisto brand and logo are trademarks of Keolis Caen.\n\nThis app relies on Keolis\' Open-Data API and outa[dev] therefore disclaims any responsibility in the case of erroneous data.</string>
+	<string name="pref_legal_sum">Twistoast is an application developed by Baptiste Candellier. © outa[dev] – 2013–2016.\n\nThe Twisto brand and logo are trademarks of Keolis Caen.\n\nThis app relies on Keolis\' Open-Data API and outa[dev] therefore disclaims any responsibility in the case of erroneous data.</string>
 	<string name="pref_outadev_website_sum">Go to dev.outadoc.fr for more handy apps!</string>
 	<string name="pref_outadev_website_title">More applications</string>
 	<string name="pref_twisto_website_sum">Visit twisto.mobi, the official website for the Twisto network. (in French)</string>
@@ -35,10 +35,14 @@
 	<string name="pref_relative_time_title">Relative timestamps</string>
 	<string name="pref_links_title">Links</string>
 	<string name="pref_version_title">Version</string>
-	<string name="pref_app_theme_title">Application Theme</string>
-	<string name="pref_app_theme_sum">Restart Twistoast to apply.</string>
-	<string name="pref_enable_notif_traffic_sum">Stay informed of the traffic on the Twisto network without having to open the app.</string>
-	<string name="pref_enable_notif_traffic_title">Enable traffic notifications</string>
+	<string name="pref_app_theme_title">Application Theme Color</string>
+	<string name="pref_night_mode_title">Night Mode</string>
+    <string name="pref_night_mode_item_system">Default</string>
+    <string name="pref_night_mode_item_auto">Automatic</string>
+    <string name="pref_night_mode_item_night">Always</string>
+    <string name="pref_night_mode_item_day">Never</string>
+    <string name="pref_enable_notif_traffic_sum">Stay informed of the traffic on the Twisto network without having to open the app.</string>
+	<string name="pref_enable_notif_traffic_title">Traffic notifications</string>
 	<string name="pref_cat_notif_traffic">Traffic info notifications</string>
 	<string name="pref_cat_notif_watched">Watched buses notifications</string>
 	<string name="pref_notif_traffic_ring_sum">Play a notification sound when getting a traffic alert.</string>
@@ -56,9 +60,13 @@
 	<string name="pref_license_gnu_gpl_sum">Twistoast is provided under the terms of the GNU GPL v3. Tap here to get the source code.</string>
 	<string name="pref_license_ccbysa_sum">\"Traffic icon\" is an icon by Daniel Bruce available on www.flaticon.com.</string>
 	<string name="pref_license_ccby_sum">\"Front of bus\" is an icon by Freepik available on www.flaticon.com.</string>
-	<string name="pref_license_apache_sum">Apache Commons Lang\nOkHttp by Square\nColor Picker Collection by Gabriele Mariotti</string>
+	<string name="pref_license_apache_sum">Apache Commons Lang\nOkHttp by Square\nColor Picker Collection by Gabriele Mariotti\nJoda-Time</string>
 	<string name="prefs_ads_already_disabled">The ads are already disabled. Enjoy!</string>
-	<string name="prefs_ads_disabled">No more ads for you! \o/</string>
+	<string name="prefs_ads_disabled">No more ads for you! \\o/</string>
 	<string name="prefs_ads_step_count">Only %1$s more steps to disable the ads</string>
+    <string name="pref_restart_required_title">Restart required</string>
+    <string name="pref_restart_required_message">Twistoast must be restarted to apply your changes.</string>
+    <string name="pref_restart_required_positive">Restart now</string>
+    <string name="pref_restart_required_negative">Later</string>
 
 </resources>

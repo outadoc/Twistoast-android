@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Twistoast - strings_prefs.xml
-  ~ Copyright (C) 2013-2015 Baptiste Candellier
+  ~ Copyright (C) 2013-2016 Baptiste Candellier
   ~
   ~ Twistoast is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -33,14 +33,18 @@
 	<string name="pref_twisto_website_title">Site web Twisto</string>
 
 	<string name="pref_legal_title">Mentions légales</string>
-	<string name="pref_legal_sum">Twistoast est une application développée par Baptiste Candellier. © outa[dev] – 2013–2015.\n\nTwisto et le logo Twisto sont des marques déposées de Keolis Caen.\n\nCette application repose sur l\'API Open-Data de Keolis et outa[dev] décline donc toute responsabilité en cas de données erronées.</string>
+	<string name="pref_legal_sum">Twistoast est une application développée par Baptiste Candellier. © outa[dev] – 2013–2016.\n\nTwisto et le logo Twisto sont des marques déposées de Keolis Caen.\n\nCette application repose sur l\'API Open-Data de Keolis et outa[dev] décline donc toute responsabilité en cas de données erronées.</string>
 
 	<string name="pref_about_title">À propos</string>
 	<string name="pref_version_title">Version</string>
 
 	<string name="prefs_cat_global">Global</string>
-	<string name="pref_app_theme_title">Thème de l\'application</string>
-	<string name="pref_app_theme_sum">Relancez Twistoast pour l\'appliquer.</string>
+	<string name="pref_app_theme_title">Couleur du thème</string>
+	<string name="pref_night_mode_title">Mode nuit</string>
+	<string name="pref_night_mode_item_system">Par défaut</string>
+	<string name="pref_night_mode_item_auto">Automatique</string>
+	<string name="pref_night_mode_item_night">Toujours</string>
+	<string name="pref_night_mode_item_day">Jamais</string>
 
 	<string name="pref_cat_stops">Liste des arrêts</string>
 	<string name="pref_auto_refresh_title">Rafraîchissement automatique</string>
@@ -63,9 +67,14 @@
 	<string name="pref_license_gnu_gpl_sum">Twistoast est fournie sous les termes de la GNU GPL v3. Tapez ici pour obtenir le code source.</string>
 	<string name="pref_license_ccbysa_sum">\"Traffic icon\" est une icône de Daniel Bruce disponible sur www.flaticon.com.</string>
 	<string name="pref_license_ccby_sum">\"Front of bus\" est une icône de Freepik disponible sur www.flaticon.com.</string>
-	<string name="pref_license_apache_sum">Apache Commons Lang\nOkHttp par Square\nColor Picker Collection par Gabriele Mariotti</string>
+	<string name="pref_license_apache_sum">Apache Commons Lang\nOkHttp par Square\nColor Picker Collection par Gabriele Mariotti\nJoda-Time</string>
 	<string name="prefs_ads_already_disabled">Vous avez déjà désactivé les pubs. Profitez-en !</string>
 	<string name="prefs_ads_disabled">Plus de pubs pour vous ! \\o/</string>
 	<string name="prefs_ads_step_count">Plus que %1$s étapes pour désactiver les pubs</string>
+
+    <string name="pref_restart_required_title">Redémarrage requis</string>
+    <string name="pref_restart_required_message">Twistoast doit être relancée pour appliquer les changements.</string>
+    <string name="pref_restart_required_positive">Relancer</string>
+    <string name="pref_restart_required_negative">Plus tard</string>
 
 </resources>

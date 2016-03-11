@@ -1,6 +1,6 @@
 /*
  * Twistoast - IStopsListContainer
- * Copyright (C) 2013-2015 Baptiste Candellier
+ * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,20 +25,20 @@ package fr.outadev.twistoast;
  */
 public interface IStopsListContainer {
 
-	/**
-	 * Called when the list of bus stops is refreshed and the user should be notified.
-	 */
-	void endRefresh(boolean success);
+    /**
+     * Called when the list of bus stops is refreshed and the user should be notified.
+     */
+    void endRefresh(boolean success);
 
-	boolean isRefreshing();
+    boolean isRefreshing();
 
-	void setNoContentViewVisible(boolean visible);
+    void setNoContentViewVisible(boolean visible);
 
-	/**
-	 * Load the fragment at the specified drawer index.
-	 *
-	 * @param itemId The identifier of the menu item to load
-	 */
-	void loadFragmentForDrawerItem(int itemId);
+    /**
+     * Load the fragment at the specified drawer index.
+     *
+     * @param itemId The identifier of the menu item to load
+     */
+    void loadFragmentForDrawerItem(int itemId);
 
 }

@@ -2,7 +2,7 @@
 
 <!--
   ~ Twistoast - AndroidManifest.xml
-  ~ Copyright (C) 2013-2015 Baptiste Candellier
+  ~ Copyright (C) 2013-2016 Baptiste Candellier
   ~
   ~ Twistoast is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -18,26 +18,30 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<manifest package="fr.outadev.twistoast"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest
+	package="fr.outadev.twistoast"
+	xmlns:android="http://schemas.android.com/apk/res/android">
 
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 	<uses-permission android:name="android.permission.VIBRATE" />
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
 	<application
 		android:allowBackup="true"
 		android:icon="@drawable/ic_launcher"
 		android:label="@string/app_name"
-		android:theme="@style/Twistoast.Theme">
+		android:theme="@style/Twistoast.Theme"
+		android:name=".ApplicationTwistoast">
 		<meta-data
 			android:name="com.google.android.gms.version"
 			android:value="@integer/google_play_services_version" />
 
 		<activity
 			android:name=".ActivityRealtime"
-			android:label="@string/app_name">
+			android:label="@string/app_name"
+			android:theme="@style/Twistoast.Theme.Splash">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 
@@ -72,6 +76,10 @@
 			android:enabled="true"
 			android:exported="false">
 		</receiver>
+		<service
+			android:name=".background.TrafficAlertJobService"
+			android:permission="android.permission.BIND_JOB_SERVICE"
+			android:exported="true"/>
 	</application>
 
 </manifest>

@@ -1,6 +1,6 @@
 /*
  * Twistoast - BootReceiver
- * Copyright (C) 2013-2015 Baptiste Candellier
+ * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,9 +21,8 @@ package fr.outadev.twistoast.background;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
+import fr.outadev.twistoast.ConfigurationManager;
 import fr.outadev.twistoast.Database;
 import fr.outadev.twistoast.DatabaseOpenHelper;
 
@@ -32,22 +31,22 @@ import fr.outadev.twistoast.DatabaseOpenHelper;
  */
 public class BootReceiver extends BroadcastReceiver {
 
-	@Override
-	public void onReceive(Context context, Intent intent) {
-		if(intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
-			// Turn the notifications back off if necessary
-			Database db = new Database(DatabaseOpenHelper.getInstance(context));
-			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
+            // Turn the notifications back on if necessary
+            Database db = new Database(DatabaseOpenHelper.getInstance(context));
+            ConfigurationManager config = new ConfigurationManager(context);
 
-			if(db.getWatchedStopsCount() > 0) {
-				NextStopAlarmReceiver.enable(context.getApplicationContext());
-			}
+            if (db.getWatchedStopsCount() > 0) {
+                BackgroundTasksManager.enableStopAlarmJob(context.getApplicationContext());
+            }
 
-			if(prefs.getBoolean("pref_enable_notif_traffic", true)) {
-				TrafficAlertAlarmReceiver.enable(context.getApplicationContext());
-			}
+            if (config.getTrafficNotificationsEnabled()) {
+                BackgroundTasksManager.enableTrafficAlertJob(context.getApplicationContext());
+            }
 
-		}
-	}
+        }
+    }
 
 }

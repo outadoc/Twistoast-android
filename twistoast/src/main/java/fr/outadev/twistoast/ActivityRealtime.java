@@ -1,6 +1,6 @@
 /*
  * Twistoast - ActivityRealtime
- * Copyright (C) 2013-2015 Baptiste Candellier
+ * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,12 +21,10 @@ package fr.outadev.twistoast;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -41,245 +39,249 @@ import android.widget.TextView;
 
 import java.util.HashMap;
 
-import fr.outadev.android.timeo.TimeoRequestHandler;
-import fr.outadev.android.timeo.TimeoTrafficAlert;
-import fr.outadev.twistoast.background.NextStopAlarmReceiver;
-import fr.outadev.twistoast.background.TrafficAlertAlarmReceiver;
+import fr.outadev.android.transport.timeo.TimeoRequestHandler;
+import fr.outadev.android.transport.timeo.TimeoTrafficAlert;
+import fr.outadev.twistoast.background.BackgroundTasksManager;
+import fr.outadev.twistoast.utils.Utils;
 
 /**
  * The main activity of the app.
  *
  * @author outadoc
  */
-public class ActivityRealtime extends ThemedActivity implements IStopsListContainer, NavigationView.OnNavigationItemSelectedListener {
+public class ActivityRealtime extends ThemedActivity implements IStopsListContainer, NavigationView
+        .OnNavigationItemSelectedListener {
 
-	public static final int DEFAULT_DRAWER_ITEM = R.id.drawer_realtime;
+    public static final int DEFAULT_DRAWER_ITEM = R.id.drawer_realtime;
 
-	private DrawerLayout drawerLayout;
-	private ActionBarDrawerToggle drawerToggle;
-	private NavigationView navigationView;
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private NavigationView mNavigationView;
 
-	private int currentDrawerItem;
-	private HashMap<Integer, Fragment> loadedFragments;
+    private int mCurrentDrawerItem;
+    private HashMap<Integer, Fragment> mLoadedFragments;
 
-	private TimeoTrafficAlert trafficAlert;
+    private TimeoTrafficAlert mTrafficAlert;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_realtime);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_realtime);
 
-		// Toolbar
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-		setSupportActionBar(toolbar);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mNavigationView = (NavigationView) findViewById(R.id.drawer_nav_view);
 
-		// Drawer config
-		loadedFragments = new HashMap<>();
+        // Toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.action_ok, R.string.action_delete) {
+        // Drawer config
+        mLoadedFragments = new HashMap<>();
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_action_open, R.string
+                .drawer_action_close) {
 
-			@Override
-			public void onDrawerOpened(View drawerView) {
-				super.onDrawerOpened(drawerView);
-			}
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+            }
 
-			@Override
-			public void onDrawerClosed(View view) {
-				super.onDrawerClosed(view);
-			}
-		};
+            @Override
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+            }
+        };
 
-		drawerLayout.setDrawerListener(drawerToggle);
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
 
-		navigationView = (NavigationView) findViewById(R.id.drawer_nav_view);
-		navigationView.setNavigationItemSelectedListener(this);
+        if (mNavigationView != null) {
+            mNavigationView.setNavigationItemSelectedListener(this);
+        }
 
-		// Handle saved variables and check traffic info if needed
-		if(savedInstanceState != null) {
-			currentDrawerItem = savedInstanceState.getInt("key_current_drawer_item");
-			trafficAlert = (TimeoTrafficAlert) savedInstanceState.get("key_traffic_alert");
-			displayGlobalTrafficInfo();
-		} else {
-			currentDrawerItem = DEFAULT_DRAWER_ITEM;
-			loadFragmentForDrawerItem(currentDrawerItem);
-			checkForGlobalTrafficInfo();
-		}
+        // Handle saved variables and check traffic info if needed
+        if (savedInstanceState != null) {
+            mCurrentDrawerItem = savedInstanceState.getInt("key_current_drawer_item");
+            mTrafficAlert = (TimeoTrafficAlert) savedInstanceState.get("key_traffic_alert");
+            displayGlobalTrafficInfo();
+        } else {
+            mCurrentDrawerItem = DEFAULT_DRAWER_ITEM;
+            loadFragmentForDrawerItem(mCurrentDrawerItem);
+            checkForGlobalTrafficInfo();
+        }
 
-		// Turn the notifications back off if necessary
-		Database db = new Database(DatabaseOpenHelper.getInstance(this));
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        // Turn the notifications back off if necessary
+        Database db = new Database(DatabaseOpenHelper.getInstance(this));
+        ConfigurationManager config = new ConfigurationManager(this);
 
-		if(db.getWatchedStopsCount() > 0) {
-			NextStopAlarmReceiver.enable(getApplicationContext());
-		}
+        if (db.getWatchedStopsCount() > 0) {
+            BackgroundTasksManager.enableStopAlarmJob(getApplicationContext());
+        }
 
-		if(prefs.getBoolean("pref_enable_notif_traffic", true)) {
-			TrafficAlertAlarmReceiver.enable(getApplicationContext());
-		}
-	}
+        if (config.getTrafficNotificationsEnabled()) {
+            BackgroundTasksManager.enableTrafficAlertJob(getApplicationContext());
+        }
+    }
 
-	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
-		super.onPostCreate(savedInstanceState);
-		drawerToggle.syncState();
-	}
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mDrawerToggle.syncState();
+    }
 
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
-		drawerToggle.onConfigurationChanged(newConfig);
-	}
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
 
-	@Override
-	public void onBackPressed() {
-		Fragment frag = loadedFragments.get(currentDrawerItem);
+    @Override
+    public void onBackPressed() {
+        Fragment frag = mLoadedFragments.get(mCurrentDrawerItem);
 
-		if(frag instanceof FragmentWebView
-				&& ((FragmentWebView) frag).canGoBack()) {
-			// If we can move back of a page in the browser, do it
-			((FragmentWebView) frag).goBack();
-		} else if(currentDrawerItem == DEFAULT_DRAWER_ITEM) {
-			// If we're on the main screen, just exit
-			super.onBackPressed();
-		} else if(!drawerLayout.isDrawerOpen(GravityCompat.START)) {
-			// If the drawer isn't opened, open it
-			drawerLayout.openDrawer(GravityCompat.START);
-		} else {
-			// Otherwise, go back to the main screen
-			loadFragmentForDrawerItem(DEFAULT_DRAWER_ITEM);
-		}
-	}
+        if (frag instanceof FragmentWebView
+                && ((FragmentWebView) frag).canGoBack()) {
+            // If we can move back of a page in the browser, do it
+            ((FragmentWebView) frag).goBack();
+        } else if (mCurrentDrawerItem == DEFAULT_DRAWER_ITEM) {
+            // If we're on the main screen, just exit
+            super.onBackPressed();
+        } else if (!mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            // If the drawer isn't opened, open it
+            mDrawerLayout.openDrawer(GravityCompat.START);
+        } else {
+            // Otherwise, go back to the main screen
+            loadFragmentForDrawerItem(DEFAULT_DRAWER_ITEM);
+        }
+    }
 
-	@Override
-	protected void onSaveInstanceState(@NonNull Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putInt("key_current_drawer_item", currentDrawerItem);
-		outState.putSerializable("key_traffic_alert", trafficAlert);
-	}
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("key_current_drawer_item", mCurrentDrawerItem);
+        outState.putSerializable("key_traffic_alert", mTrafficAlert);
+    }
 
-	@Override
-	protected void onStart() {
-		super.onStart();
-		displayGlobalTrafficInfo();
-	}
+    @Override
+    protected void onStart() {
+        super.onStart();
+        displayGlobalTrafficInfo();
+    }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		return drawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
-	}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+    }
 
-	@Override
-	public void endRefresh(boolean success) {
-	}
+    @Override
+    public void endRefresh(boolean success) {
+    }
 
-	@Override
-	public boolean isRefreshing() {
-		return false;
-	}
+    @Override
+    public boolean isRefreshing() {
+        return false;
+    }
 
-	@Override
-	public void setNoContentViewVisible(boolean visible) {
-	}
+    @Override
+    public void setNoContentViewVisible(boolean visible) {
+    }
 
-	@Override
-	public void loadFragmentForDrawerItem(int itemId) {
-		currentDrawerItem = itemId;
-		Fragment fragmentToOpen;
+    @Override
+    public void loadFragmentForDrawerItem(int itemId) {
+        mCurrentDrawerItem = itemId;
+        Fragment fragmentToOpen;
 
-		if(loadedFragments.containsKey(itemId)) {
-			fragmentToOpen = loadedFragments.get(itemId);
-		} else {
-			fragmentToOpen = FragmentFactory.getFragmentFromMenuItem(this, itemId);
-		}
+        if (mLoadedFragments.containsKey(itemId)) {
+            fragmentToOpen = mLoadedFragments.get(itemId);
+        } else {
+            fragmentToOpen = FragmentFactory.getFragmentFromMenuItem(this, itemId);
+        }
 
-		// Insert the fragment by replacing any existing fragment
-		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.content_frame, fragmentToOpen).commit();
+        // Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.content_frame, fragmentToOpen).commit();
 
-		// Highlight the selected item, update the title, and close the drawer
-		refreshActionBarTitle();
-		navigationView.getMenu().findItem(currentDrawerItem).setChecked(true);
-		drawerLayout.closeDrawer(GravityCompat.START);
-	}
+        // Highlight the selected item, update the title, and close the drawer
+        refreshActionBarTitle();
+        mNavigationView.setCheckedItem(mCurrentDrawerItem);
+        mDrawerLayout.closeDrawer(GravityCompat.START);
+    }
 
 
-	public void refreshActionBarTitle() {
-		MenuItem item = navigationView.getMenu().findItem(currentDrawerItem);
+    public void refreshActionBarTitle() {
+        MenuItem item = mNavigationView.getMenu().findItem(mCurrentDrawerItem);
 
-		if(item == null) {
-			return;
-		}
+        if (item == null) {
+            return;
+        }
 
-		getSupportActionBar().setTitle(item.getTitle());
-	}
+        getSupportActionBar().setTitle(item.getTitle());
+    }
 
-	/**
-	 * Fetches and stores a global traffic info if there is one available.
-	 */
-	private void checkForGlobalTrafficInfo() {
-		(new AsyncTask<Void, Void, TimeoTrafficAlert>() {
+    /**
+     * Fetches and stores a global traffic info if there is one available.
+     */
+    private void checkForGlobalTrafficInfo() {
+        (new AsyncTask<Void, Void, TimeoTrafficAlert>() {
 
-			@Override
-			protected TimeoTrafficAlert doInBackground(Void... voids) {
-				try {
-					return TimeoRequestHandler.getGlobalTrafficAlert(getString(R.string.url_pre_home_info));
-				} catch(Exception e) {
-					e.printStackTrace();
-				}
+            @Override
+            protected TimeoTrafficAlert doInBackground(Void... voids) {
+                try {
+                    return TimeoRequestHandler.getGlobalTrafficAlert(getString(R.string.url_pre_home_info));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
-				return null;
-			}
+                return null;
+            }
 
-			@Override
-			protected void onPostExecute(TimeoTrafficAlert alert) {
-				trafficAlert = alert;
-				displayGlobalTrafficInfo();
-			}
+            @Override
+            protected void onPostExecute(TimeoTrafficAlert alert) {
+                mTrafficAlert = alert;
+                displayGlobalTrafficInfo();
+            }
 
-		}).execute();
-	}
+        }).execute();
+    }
 
-	/**
-	 * Displays a global traffic info if one was downloaded by checkForGlobalTrafficInfo.
-	 */
-	private void displayGlobalTrafficInfo() {
-		View trafficView = findViewById(R.id.view_global_traffic_alert);
-		TextView trafficLabel = (TextView) findViewById(R.id.lbl_traffic_info_string);
+    /**
+     * Displays a global traffic info if one was downloaded by checkForGlobalTrafficInfo.
+     */
+    private void displayGlobalTrafficInfo() {
+        View trafficView = findViewById(R.id.view_global_traffic_alert);
+        TextView trafficLabel = (TextView) findViewById(R.id.lbl_traffic_info_string);
 
-		if(trafficAlert != null && trafficView != null && trafficLabel != null) {
-			Log.i(Utils.TAG, trafficAlert.toString());
-			final String url = trafficAlert.getUrl();
+        if (mTrafficAlert != null && trafficView != null && trafficLabel != null) {
+            Log.i(Utils.TAG, mTrafficAlert.toString());
+            final String url = mTrafficAlert.getUrl();
 
-			trafficView.setOnClickListener(new View.OnClickListener() {
+            trafficView.setOnClickListener(new View.OnClickListener() {
 
-				@Override
-				public void onClick(View view) {
-					Intent intent = new Intent(Intent.ACTION_VIEW);
-					intent.setData(Uri.parse(url));
-					startActivity(intent);
-				}
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(url));
+                    startActivity(intent);
+                }
 
-			});
+            });
 
-			trafficLabel.setText(trafficAlert.getLabel().replace("Info Trafic", "").trim());
-			trafficView.setVisibility(View.VISIBLE);
-			trafficLabel.setSelected(true);
+            trafficLabel.setText(mTrafficAlert.getLabel().replace("Info Trafic", "").trim());
+            trafficView.setVisibility(View.VISIBLE);
+            trafficLabel.setSelected(true);
 
-			// Set toolbar elevation to 0, since we'll have the traffic alert just right under it
-			getSupportActionBar().setElevation(0);
-		} else if(trafficView != null) {
-			trafficView.setVisibility(View.GONE);
+            // Set toolbar elevation to 0, since we'll have the traffic alert just right under it
+            getSupportActionBar().setElevation(0);
+        } else if (trafficView != null) {
+            trafficView.setVisibility(View.GONE);
 
-			// Set toolbar elevation to 4 dp, not 4 px
-			float pixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
-			getSupportActionBar().setElevation(pixels);
-		}
-	}
+            // Set toolbar elevation to 4 dp, not 4 px
+            float pixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
+            getSupportActionBar().setElevation(pixels);
+        }
+    }
 
-	@Override
-	public boolean onNavigationItemSelected(MenuItem menuItem) {
-		loadFragmentForDrawerItem(menuItem.getItemId());
-		return true;
-	}
+    @Override
+    public boolean onNavigationItemSelected(MenuItem menuItem) {
+        loadFragmentForDrawerItem(menuItem.getItemId());
+        return true;
+    }
 }

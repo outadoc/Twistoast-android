@@ -1,6 +1,6 @@
 <!--
   ~ Twistoast - add_stop.xml
-  ~ Copyright (C) 2013-2015 Baptiste Candellier
+  ~ Copyright (C) 2013-2016 Baptiste Candellier
   ~
   ~ Twistoast is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -22,7 +22,6 @@
 	<item
 		android:id="@+id/action_ok"
 		android:enabled="false"
-		android:icon="@drawable/ic_action_accept"
 		android:title="@string/action_ok"
 		app:showAsAction="ifRoom" />
 

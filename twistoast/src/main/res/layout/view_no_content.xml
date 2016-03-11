@@ -31,6 +31,15 @@
 		android:layout_gravity="center"
 		android:orientation="vertical">
 
+		<ImageView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:layout_marginBottom="20dp"
+			android:src="@drawable/splash_bus"
+			android:tint="@android:color/secondary_text_dark"
+			android:contentDescription="@string/add_first_stop_title" />
+
 		<TextView
 			android:id="@+id/txt_no_skins_title"
 			android:layout_width="wrap_content"
@@ -38,16 +47,7 @@
 			android:layout_gravity="center_horizontal"
 			android:text="@string/add_first_stop_title"
 			android:textAppearance="?android:attr/textAppearanceLarge"
-			android:textColor="#ff5d5d5d" />
-
-		<TextView
-			android:id="@+id/txt_add_skin_instruction"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_gravity="center_horizontal"
-			android:text="@string/add_first_stop_instructions"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:textColor="#ff909090" />
+			android:textColor="@android:color/secondary_text_dark" />
 	</LinearLayout>
 
 </FrameLayout>

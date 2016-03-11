@@ -1,6 +1,6 @@
 /*
  * Twistoast - build.gradle
- * Copyright (C) 2013-2015 Baptiste Candellier
+ * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,12 +19,12 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion "21.1.2"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 22
+        minSdkVersion 15
+        targetSdkVersion 23
     }
 
     buildTypes {
@@ -35,5 +35,5 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:22.2.1'
+    compile 'com.android.support:support-v4:23.2.1'
 }

@@ -1,6 +1,6 @@
 /*
  * Twistoast - Database
- * Copyright (C) 2013-2015 Baptiste Candellier
+ * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,12 +24,14 @@ import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.outadev.android.timeo.TimeoIDNameObject;
-import fr.outadev.android.timeo.TimeoLine;
-import fr.outadev.android.timeo.TimeoStop;
+import fr.outadev.android.transport.timeo.TimeoIDNameObject;
+import fr.outadev.android.transport.timeo.TimeoLine;
+import fr.outadev.android.transport.timeo.TimeoStop;
 
 /**
  * Database management class.
@@ -38,19 +40,21 @@ import fr.outadev.android.timeo.TimeoStop;
  */
 public class Database {
 
-	private final SQLiteOpenHelper databaseOpenHelper;
+    public enum SortBy {LINE, STOP}
+
+    private final SQLiteOpenHelper mDatabaseOpenHelper;
 
 	public Database(SQLiteOpenHelper openHelper) {
-		databaseOpenHelper = openHelper;
+        mDatabaseOpenHelper = openHelper;
 	}
 
 	/**
-	 * Adds a bus stop to the database.
-	 *
-	 * @param stop the bus stop to add
-	 * @throws IllegalArgumentException  if the stop is not valid
-	 * @throws SQLiteConstraintException if a constraint failed
-	 */
+     * Adds a bus stop to the database.
+     *
+     * @param stop the bus stop to add
+     * @throws IllegalArgumentException  if the stop is not valid
+     * @throws SQLiteConstraintException if a constraint failed
+     */
 	public void addStopToDatabase(TimeoStop stop) throws IllegalArgumentException, SQLiteConstraintException {
 		if(stop != null) {
 			// when we want to add a stop, we add the line first, then the
@@ -59,7 +63,7 @@ public class Database {
 
 			// then, open the database, and start enumerating when we'll need to
 			// add
-			SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
+			SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
 			ContentValues values = new ContentValues();
 
 			values.put("stop_id", stop.getId());
@@ -88,7 +92,7 @@ public class Database {
 	 */
 	private void addLineToDatabase(TimeoLine line) {
 		if(line != null && line.getDetails() != null) {
-			SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
+			SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
 			ContentValues values = new ContentValues();
 
 			values.put("line_id", line.getId());
@@ -110,7 +114,7 @@ public class Database {
 	 */
 	private void addDirectionToDatabase(TimeoLine line) {
 		if(line != null && line.getDirection() != null) {
-			SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
+			SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
 			ContentValues values = new ContentValues();
 
 			values.put("dir_id", line.getDirection().getId());
@@ -128,11 +132,23 @@ public class Database {
 	 *
 	 * @return a list of all the stops
 	 */
-	public List<TimeoStop> getAllStops() {
+	public List<TimeoStop> getAllStops(SortBy sortCriteria) {
 		// Clean notification flags that have timed out so they don't interfere
 		cleanOutdatedWatchedStops();
 
-		SQLiteDatabase db = databaseOpenHelper.getReadableDatabase();
+		SQLiteDatabase db = mDatabaseOpenHelper.getReadableDatabase();
+
+        String sortBy;
+
+        switch (sortCriteria) {
+            case STOP:
+                sortBy = "stop.stop_name, CAST(line.line_id AS INTEGER)";
+                break;
+            case LINE:
+            default:
+                sortBy = "CAST(line.line_id AS INTEGER), stop.stop_name";
+                break;
+        }
 
 		Cursor results = db
 				.rawQuery(
@@ -144,7 +160,7 @@ public class Database {
 								"LEFT JOIN twi_notification notif ON (notif.stop_id = stop.stop_id " +
 								"AND notif.line_id = line.line_id AND notif.dir_id = dir.dir_id " +
 								"AND notif.network_code = line.network_code AND notif.notif_active = 1) " +
-								"ORDER BY line.network_code, CAST(line.line_id AS INTEGER), stop.stop_name, dir.dir_name",
+								"ORDER BY line.network_code, " + sortBy + ", dir.dir_name",
 						null);
 
 		ArrayList<TimeoStop> stopsList = new ArrayList<>();
@@ -186,7 +202,7 @@ public class Database {
 	 * @return the corresponding stop object
 	 */
 	public TimeoStop getStopAtIndex(int index) {
-		List<TimeoStop> stopsList = getAllStops();
+		List<TimeoStop> stopsList = getAllStops(SortBy.STOP);
 
 		if(stopsList != null && stopsList.size() >= index + 1) {
 			return stopsList.get(index);
@@ -204,7 +220,7 @@ public class Database {
 	 * @return the corresponding stop object
 	 */
 	public TimeoStop getStop(String stopId, String lineId, String dirId, int networkCode) {
-		SQLiteDatabase db = databaseOpenHelper.getReadableDatabase();
+		SQLiteDatabase db = mDatabaseOpenHelper.getReadableDatabase();
 		TimeoStop stop = null;
 
 		Cursor results = db.rawQuery(
@@ -246,7 +262,7 @@ public class Database {
 	 * @return the number of bus stops
 	 */
 	public int getStopsCount() {
-		SQLiteDatabase db = databaseOpenHelper.getReadableDatabase();
+		SQLiteDatabase db = mDatabaseOpenHelper.getReadableDatabase();
 
 		// that's a nice query you got tthhhere
 		Cursor results = db.rawQuery("SELECT stop_id FROM twi_stop", null);
@@ -261,7 +277,7 @@ public class Database {
 	}
 
 	public int getNetworksCount() {
-		SQLiteDatabase db = databaseOpenHelper.getReadableDatabase();
+		SQLiteDatabase db = mDatabaseOpenHelper.getReadableDatabase();
 
 		Cursor results = db.rawQuery("SELECT COUNT(*), network_code FROM twi_stop GROUP BY (network_code)", null);
 		results.moveToFirst();
@@ -280,7 +296,7 @@ public class Database {
 	 * @param stop the bus stop to delete
 	 */
 	public void deleteStop(TimeoStop stop) {
-		SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
+		SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
 
 		db.delete("twi_stop", "stop_id = ? AND line_id = ? AND dir_id = ? AND stop_ref = ? AND network_code = ?", new String[]{
 				stop.getId(),
@@ -299,7 +315,7 @@ public class Database {
 	 * @param stop the bus stop whose reference is to be updated
 	 */
 	public void updateStopReference(TimeoStop stop) {
-		SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
+		SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
 
 		ContentValues updateClause = new ContentValues();
 		updateClause.put("stop_ref", stop.getReference());
@@ -319,7 +335,7 @@ public class Database {
 	 * If a stop notification request was added more than three hours ago, it will be deleted.
 	 */
 	private void cleanOutdatedWatchedStops() {
-		SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
+		SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
 
 		ContentValues updateClause = new ContentValues();
 		updateClause.put("notif_active", 0);
@@ -337,7 +353,7 @@ public class Database {
 		// Clean notification flags that have timed out so they don't interfere
 		cleanOutdatedWatchedStops();
 
-		SQLiteDatabase db = databaseOpenHelper.getReadableDatabase();
+		SQLiteDatabase db = mDatabaseOpenHelper.getReadableDatabase();
 
 		Cursor results = db
 				.rawQuery(
@@ -371,7 +387,7 @@ public class Database {
 					results.getString(results.getColumnIndex("stop_ref")),
 					line,
 					true,
-					results.getLong(results.getColumnIndex("notif_last_estim")));
+					new DateTime(results.getLong(results.getColumnIndex("notif_last_estim"))));
 
 			// add it to the list
 			stopsList.add(stop);
@@ -390,7 +406,7 @@ public class Database {
 	 * @param stop the bus stop to add to the list
 	 */
 	public void addToWatchedStops(TimeoStop stop) {
-		SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
+		SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
 		ContentValues values = new ContentValues();
 
 		values.put("stop_id", stop.getId());
@@ -408,7 +424,7 @@ public class Database {
 	 * @param stop the bus stop that we should stop watching
 	 */
 	public void stopWatchingStop(TimeoStop stop) {
-		SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
+		SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
 
 		ContentValues updateClause = new ContentValues();
 		updateClause.put("notif_active", 0);
@@ -430,11 +446,11 @@ public class Database {
 	 * @param stop    the bus stop we want to update
 	 * @param lastETA a UNIX timestamp for the last know ETA for this bus
 	 */
-	public void updateWatchedStopETA(TimeoStop stop, long lastETA) {
-		SQLiteDatabase db = databaseOpenHelper.getWritableDatabase();
+	public void updateWatchedStopETA(TimeoStop stop, DateTime lastETA) {
+		SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
 
 		ContentValues updateClause = new ContentValues();
-		updateClause.put("notif_last_estim", lastETA);
+		updateClause.put("notif_last_estim", lastETA.getMillis());
 
 		db.update("twi_notification", updateClause,
 				"stop_id = ? AND line_id = ? AND dir_id = ? AND network_code = ? AND notif_active = 1", new String[]{
@@ -453,7 +469,7 @@ public class Database {
 	 * @return the number of watched stops in the database
 	 */
 	public int getWatchedStopsCount() {
-		SQLiteDatabase db = databaseOpenHelper.getReadableDatabase();
+		SQLiteDatabase db = mDatabaseOpenHelper.getReadableDatabase();
 
 		Cursor results = db.rawQuery("SELECT COUNT(*) as nb_watched FROM twi_notification WHERE notif_active = 1", null);
 		results.moveToFirst();

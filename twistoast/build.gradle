@@ -1,6 +1,6 @@
 /*
  * Twistoast - build.gradle
- * Copyright (C) 2013-2015 Baptiste Candellier
+ * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,15 +19,15 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion "21.1.2"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
 
     defaultConfig {
         applicationId "fr.outadev.twistoast"
         minSdkVersion 15
-        targetSdkVersion 22
-        versionCode 21
-        versionName "2.5-chromium"
+        targetSdkVersion 23
+        versionCode 23
+        versionName "2.7-chromium"
     }
 
     compileOptions {
@@ -35,22 +35,30 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
 
+    packagingOptions {
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/LICENSE.txt'
+    }
+
     buildTypes {
         release {
             minifyEnabled true
-            proguardFiles 'proguard-rules.txt'
+            proguardFiles 'proguard-rules.pro'
         }
     }
 }
 
 dependencies {
     compile project(':colorPicker')
-    compile 'com.google.android.gms:play-services-ads:7.5.0'
-    compile 'com.android.support:design:22.2.1'
-    compile 'com.android.support:appcompat-v7:22.2.1'
-    compile 'com.android.support:support-v4:22.2.1'
-    compile 'com.android.support:recyclerview-v7:22.2.1'
+    compile project(':keolisprovider')
+    compile 'com.google.android.gms:play-services-ads:8.4.0'
+    compile 'com.google.android.gms:play-services-base:8.4.0'
+    compile 'com.android.support:design:23.2.1'
+    compile 'com.android.support:appcompat-v7:23.2.1'
+    compile 'com.android.support:support-v4:23.2.1'
+    compile 'com.android.support:recyclerview-v7:23.2.1'
     compile 'com.getpebble:pebblekit:3.0.0'
     compile 'org.apache.commons:commons-lang3:3.3.2'
     compile 'com.squareup.okhttp:okhttp:2.2.0'
+    compile 'joda-time:joda-time:2.9.1'
 }

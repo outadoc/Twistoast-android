@@ -2,7 +2,7 @@
 
 <!--
   ~ Twistoast - frag_traffic_alert.xml
-  ~ Copyright (C) 2013-2015 Baptiste Candellier
+  ~ Copyright (C) 2013-2016 Baptiste Candellier
   ~
   ~ Twistoast is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -49,6 +49,6 @@
 		android:scrollHorizontally="true"
 		android:singleLine="true"
 		android:textColor="@color/traffic_alert_text_primary"
-		android:textSize="16sp"/>
+		android:textSize="16sp" />
 
 </LinearLayout>

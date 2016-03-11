@@ -1,6 +1,6 @@
 /*
  * Twistoast - ActivityNewStop
- * Copyright (C) 2013-2015 Baptiste Candellier
+ * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,14 +44,14 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.outadev.android.timeo.TimeoBlockingMessageException;
-import fr.outadev.android.timeo.TimeoException;
-import fr.outadev.android.timeo.TimeoIDNameObject;
-import fr.outadev.android.timeo.TimeoLine;
-import fr.outadev.android.timeo.TimeoRequestHandler;
-import fr.outadev.android.timeo.TimeoSingleSchedule;
-import fr.outadev.android.timeo.TimeoStop;
-import fr.outadev.android.timeo.TimeoStopSchedule;
+import fr.outadev.android.transport.timeo.TimeoBlockingMessageException;
+import fr.outadev.android.transport.timeo.TimeoException;
+import fr.outadev.android.transport.timeo.TimeoIDNameObject;
+import fr.outadev.android.transport.timeo.TimeoLine;
+import fr.outadev.android.transport.timeo.TimeoRequestHandler;
+import fr.outadev.android.transport.timeo.TimeoSingleSchedule;
+import fr.outadev.android.transport.timeo.TimeoStop;
+import fr.outadev.android.transport.timeo.TimeoStopSchedule;
 
 /**
  * Activity that allows the user to add a bus stop to the app.
@@ -60,496 +60,501 @@ import fr.outadev.android.timeo.TimeoStopSchedule;
  */
 public class ActivityNewStop extends ThemedActivity {
 
-	public static final int NO_STOP_ADDED = 0;
-	public static final int STOP_ADDED = 1;
+    public static final int NO_STOP_ADDED = 0;
+    public static final int STOP_ADDED = 1;
 
-	private Spinner spinLine;
-	private Spinner spinDirection;
-	private Spinner spinStop;
-
-	private List<TimeoLine> lineList;
-	private List<TimeoIDNameObject> directionList;
-	private List<TimeoStop> stopList;
-
-	private List<TimeoLine> filteredLineList;
-
-	private ArrayAdapter<TimeoLine> lineAdapter;
-	private ArrayAdapter<TimeoIDNameObject> directionAdapter;
-	private ArrayAdapter<TimeoStop> stopAdapter;
-
-	private TextView lbl_line;
-	private FrameLayout view_line_id;
-	private TextView lbl_stop;
-	private TextView lbl_direction;
-
-	private LinearLayout view_schedule_container;
-	private SwipeRefreshLayout swipeRefreshLayout;
-
-	private MenuItem item_next;
-
-	private Database databaseHandler;
-
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		// setup everything
-		setContentView(R.layout.activity_new_stop);
-		setResult(NO_STOP_ADDED);
-
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-		setSupportActionBar(toolbar);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-		databaseHandler = new Database(DatabaseOpenHelper.getInstance(this));
-
-		// get all the UI elements we'll need in the future
-
-		// spinners (dropdown menus)
-		spinLine = (Spinner) findViewById(R.id.spin_line);
-		spinDirection = (Spinner) findViewById(R.id.spin_direction);
-		spinStop = (Spinner) findViewById(R.id.spin_stop);
-
-		//lists
-		lineList = new ArrayList<>();
-		directionList = new ArrayList<>();
-		stopList = new ArrayList<>();
-
-		filteredLineList = new ArrayList<>(lineList);
-
-		// labels
-		lbl_line = (TextView) findViewById(R.id.lbl_line_id);
-		lbl_stop = (TextView) findViewById(R.id.lbl_stop_name);
-		lbl_direction = (TextView) findViewById(R.id.lbl_direction_name);
-
-		// line view (to set its background color)
-		view_line_id = (FrameLayout) findViewById(R.id.view_line_id);
-
-		view_schedule_container = (LinearLayout) findViewById(R.id.view_schedule_labels_container);
-
-		swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.ptr_layout);
-		swipeRefreshLayout.setColorSchemeResources(
-				R.color.twisto_primary, R.color.twisto_secondary,
-				R.color.twisto_primary, R.color.twisto_secondary);
-		swipeRefreshLayout.setRefreshing(true);
-
-		spinLine.setEnabled(false);
-		spinDirection.setEnabled(false);
-		spinStop.setEnabled(false);
-
-		//setup spinners here
-		setupLineSpinner();
-		setupDirectionSpinner();
-		setupStopSpinner();
-
-		getLinesFromAPI();
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.add_stop, menu);
-		item_next = menu.findItem(R.id.action_ok);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch(item.getItemId()) {
-			case R.id.action_ok:
-				// add the current stop to the database
-				registerStopToDatabase();
-				return true;
-			case android.R.id.home:
-				// go back
-				this.finish();
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
-		}
-	}
-
-	/**
-	 * Initialises, sets up the even listeners, and populates the line spinner.
-	 */
-	public void setupLineSpinner() {
-		lineAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, filteredLineList);
-		lineAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spinLine.setAdapter(lineAdapter);
-
-		// when a line has been selected
-		spinLine.setOnItemSelectedListener(new OnItemSelectedListener() {
-
-			@Override
-			public void onItemSelected(AdapterView<?> parentView, View view, int position, long id) {
-				// set loading labels
-				lbl_line.setText("");
-				lbl_direction.setText(getResources().getString(R.string.loading_data));
-				lbl_stop.setText(getResources().getString(R.string.loading_data));
-
-				view_schedule_container.removeAllViewsInLayout();
-				view_schedule_container.setVisibility(View.GONE);
-
-				spinStop.setEnabled(false);
-
-				if(item_next != null) {
-					item_next.setEnabled(false);
-				}
-
-				// get the selected line
-				TimeoLine item = getCurrentLine();
-
-				if(item != null && item.getId() != null) {
-					// set the line view
-					lbl_line.setText(item.getId());
-
-					GradientDrawable lineDrawable = (GradientDrawable) view_line_id.getBackground();
-					lineDrawable.setColor(Colors.getBrighterColor(Color.parseColor(item.getColor())));
-
-					spinDirection.setEnabled(true);
-
-					// adapt the size based on the size of the line ID
-					if(lbl_line.getText().length() > 3) {
-						lbl_line.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-					} else if(lbl_line.getText().length() > 2) {
-						lbl_line.setTextSize(TypedValue.COMPLEX_UNIT_SP, 23);
-					} else {
-						lbl_line.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
-					}
-
-					directionList.clear();
-					directionList.addAll(getDirectionsList());
-					setupDirectionSpinner();
-				}
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> parentView) {
-			}
-
-		});
-	}
-
-	/**
-	 * Initialises, sets up the even listeners, and populates the direction spinner.
-	 */
-	public void setupDirectionSpinner() {
-		directionAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, directionList);
-		directionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spinDirection.setAdapter(directionAdapter);
-
-		// when a line has been selected
-		spinDirection.setOnItemSelectedListener(new OnItemSelectedListener() {
-
-			@Override
-			public void onItemSelected(AdapterView<?> parentView, View view, int position, long id) {
-				// set loading labels
-				lbl_direction.setText(getResources().getString(R.string.loading_data));
-				view_schedule_container.removeAllViewsInLayout();
-				view_schedule_container.setVisibility(View.GONE);
-
-				item_next.setEnabled(false);
-				spinStop.setEnabled(false);
-
-				if(getCurrentLine() != null && getCurrentDirection() != null && getCurrentLine().getId() != null
-						&& getCurrentDirection().getId() != null) {
-					lbl_direction.setText(getResources().getString(R.string.direction_name, getCurrentDirection().getName()));
-
-					(new AsyncTask<Void, Void, List<TimeoStop>>() {
-
-						@Override
-						protected List<TimeoStop> doInBackground(Void... voids) {
-							try {
-								getCurrentLine().setDirection(getCurrentDirection());
-								return TimeoRequestHandler.getStops(getCurrentLine());
-							} catch(Exception e) {
-								handleAsyncExceptions(e);
-							}
-
-							return null;
-						}						@Override
-						protected void onPreExecute() {
-							swipeRefreshLayout.setEnabled(true);
-							swipeRefreshLayout.setRefreshing(true);
-						}
-
-
-
-						@Override
-						protected void onPostExecute(List<TimeoStop> timeoStops) {
-							if(timeoStops != null) {
-								spinStop.setEnabled(true);
-
-								stopList.clear();
-								stopList.addAll(timeoStops);
-								setupStopSpinner();
-							}
-						}
-
-					}).execute();
-				}
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> parentView) {
-			}
-
-		});
-	}
-
-	/**
-	 * Initialises, sets up the even listeners, and populates the stop spinner.
-	 */
-	public void setupStopSpinner() {
-		stopAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, stopList);
-		stopAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spinStop.setAdapter(stopAdapter);
-
-		// when a stop has been selected
-		spinStop.setOnItemSelectedListener(new OnItemSelectedListener() {
-
-			@Override
-			public void onItemSelected(AdapterView<?> parentView, View view, int position, long id) {
-				lbl_stop.setText(getResources().getString(R.string.loading_data));
-				view_schedule_container.removeAllViewsInLayout();
-				view_schedule_container.setVisibility(View.GONE);
-
-				TimeoIDNameObject stop = getCurrentStop();
-				item_next.setEnabled(true);
-
-				if(stop != null && stop.getId() != null) {
-					lbl_stop.setText(getResources().getString(R.string.stop_name, stop.getName()));
-					updateSchedulePreview();
-				}
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> parentView) {
-			}
-
-		});
-	}
-
-	public void updateSchedulePreview() {
-		(new AsyncTask<Void, Void, TimeoStopSchedule>() {
-
-			@Override
-			protected void onPreExecute() {
-				swipeRefreshLayout.setEnabled(true);
-				swipeRefreshLayout.setRefreshing(true);
-			}
-
-			@Override
-			protected TimeoStopSchedule doInBackground(Void... voids) {
-				try {
-					return TimeoRequestHandler.getSingleSchedule(getCurrentStop());
-				} catch(Exception e) {
-					handleAsyncExceptions(e);
-				}
-
-				return null;
-			}
-
-			@Override
-			protected void onPostExecute(TimeoStopSchedule schedule) {
-				LayoutInflater inflater = (LayoutInflater) ActivityNewStop.this
-						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-				swipeRefreshLayout.setEnabled(false);
-				swipeRefreshLayout.setRefreshing(false);
-
-				if(schedule != null) {
-					List<TimeoSingleSchedule> schedList = schedule.getSchedules();
-
-					// set the schedule labels, if we need to
-					if(schedList != null) {
-						for(TimeoSingleSchedule currSched : schedList) {
-							View singleScheduleView = inflater.inflate(R.layout.frag_single_schedule_label, null);
-
-							TextView lbl_schedule = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule);
-							TextView lbl_schedule_direction = (TextView) singleScheduleView.findViewById(R.id
-									.lbl_schedule_direction);
-
-							lbl_schedule.setText(currSched.getFormattedTime(ActivityNewStop.this));
-							lbl_schedule_direction.setText(" — " + currSched.getDirection());
-
-							view_schedule_container.addView(singleScheduleView);
-						}
-
-						if(schedList.size() > 0) {
-							view_schedule_container.setVisibility(View.VISIBLE);
-						}
-					}
-				}
-			}
-
-		}).execute();
-	}
-
-	/**
-	 * Fetches the bus lines from the API, and populates the line spinner when done.
-	 */
-	public void getLinesFromAPI() {
-
-		// fetch the directions
-		(new AsyncTask<Void, Void, List<TimeoLine>>() {
-
-			@Override
-			protected void onPreExecute() {
-				swipeRefreshLayout.setEnabled(true);
-				swipeRefreshLayout.setRefreshing(true);
-			}
-
-			@Override
-			protected List<TimeoLine> doInBackground(Void... voids) {
-				try {
-					return TimeoRequestHandler.getLines();
-				} catch(Exception e) {
-					handleAsyncExceptions(e);
-				}
-
-				return null;
-			}
-
-			@Override
-			protected void onPostExecute(List<TimeoLine> timeoLines) {
-				if(timeoLines != null) {
-					lineList.clear();
-					lineList.addAll(timeoLines);
-
-					filteredLineList.clear();
-					filteredLineList.addAll(lineList);
-
-					spinLine.setEnabled(true);
-					spinDirection.setEnabled(true);
-
-					for(int i = filteredLineList.size() - 1; i >= 0; i--) {
-						//if the last line in the list is the same line (but with a different direction)
-						if(i > 0 && filteredLineList.get(i).getId().equals(filteredLineList.get(i - 1).getDetails()
-								.getId())) {
-							filteredLineList.remove(i);
-						}
-					}
-
-					lineAdapter.notifyDataSetChanged();
-				}
-			}
-
-		}).execute();
-	}
-
-	/**
-	 * Displays an exception in a toast on the UI thread.
-	 *
-	 * @param e the exception to display
-	 */
-	public void handleAsyncExceptions(final Exception e) {
-		e.printStackTrace();
-
-		runOnUiThread(new Runnable() {
-
-			@Override
-			public void run() {
-				if(e instanceof TimeoBlockingMessageException) {
-					((TimeoBlockingMessageException) e).getAlertMessage(ActivityNewStop.this).show();
-				} else {
-					String message;
-
-					if(e instanceof TimeoException) {
-						if(e.getMessage() != null && !e.getMessage().trim().isEmpty()) {
-							message = getString(R.string.error_toast_twisto_detailed,
-									((TimeoException) e).getErrorCode(), e.getMessage());
-						} else {
-							message = getString(R.string.error_toast_twisto, ((TimeoException) e).getErrorCode());
-						}
-					} else {
-						message = getString(R.string.loading_error);
-					}
-
-					swipeRefreshLayout.setEnabled(false);
-					swipeRefreshLayout.setRefreshing(false);
-
-					Snackbar.make(findViewById(R.id.content), message, Snackbar.LENGTH_LONG)
-							.setAction(R.string.error_retry, new View.OnClickListener() {
-
-								@Override
-								public void onClick(View view) {
-									getLinesFromAPI();
-								}
-
-							})
-							.show();
-				}
-			}
-
-		});
-	}
-
-	/**
-	 * Stores the selected bus stop in the database.
-	 */
-	public void registerStopToDatabase() {
-		TimeoStop stop = getCurrentStop();
-
-		try {
-			databaseHandler.addStopToDatabase(stop);
-			Toast.makeText(this, getResources().getString(R.string.added_toast, stop.toString()), Toast.LENGTH_SHORT).show();
-			setResult(STOP_ADDED);
-			finish();
-		} catch(SQLiteConstraintException e) {
-			// stop already in database
-			Toast.makeText(this, getResources().getString(R.string.error_toast, getResources().getString(R.string
-					.add_error_duplicate)), Toast.LENGTH_LONG).show();
-		} catch(IllegalArgumentException e) {
-			// one of the fields was null
-			Toast.makeText(this, getResources().getString(R.string.error_toast, getResources().getString(R.string
-					.add_error_illegal_argument)), Toast.LENGTH_LONG).show();
-		}
-	}
-
-	/**
-	 * Gets a list of directions for the selected bus line, as they're stored in the same object.
-	 *
-	 * @return a list of ID/name objects containing the id and name of the directions to display
-	 */
-	private List<TimeoIDNameObject> getDirectionsList() {
-		List<TimeoIDNameObject> directionsList = new ArrayList<>();
-
-		for(TimeoLine line : lineList) {
-			if(line.getId().equals(getCurrentLine().getId())) {
-				directionsList.add(line.getDirection());
-			}
-		}
-
-		return directionsList;
-	}
-
-	/**
-	 * Gets the bus stop that's currently selected.
-	 *
-	 * @return a stop
-	 */
-	public TimeoStop getCurrentStop() {
-		return (TimeoStop) spinStop.getItemAtPosition(spinStop.getSelectedItemPosition());
-	}
-
-	/**
-	 * Gets the bus line direction that's currently selected.
-	 *
-	 * @return an ID/name object for the direction
-	 */
-	public TimeoIDNameObject getCurrentDirection() {
-		return (TimeoIDNameObject) spinDirection.getItemAtPosition(spinDirection.getSelectedItemPosition());
-	}
-
-	/**
-	 * Gets the bus line that's currently selected.
-	 *
-	 * @return a line
-	 */
-	public TimeoLine getCurrentLine() {
-		return (TimeoLine) spinLine.getItemAtPosition(spinLine.getSelectedItemPosition());
-	}
+    private Spinner mSpinLine;
+    private Spinner mSpinDirection;
+    private Spinner mSpinStop;
+
+    private List<TimeoLine> mLineList;
+    private List<TimeoIDNameObject> mDirectionList;
+    private List<TimeoStop> mStopList;
+
+    private List<TimeoLine> mFilteredLineList;
+
+    private ArrayAdapter<TimeoLine> mLineAdapter;
+    private ArrayAdapter<TimeoIDNameObject> mDirectionAdapter;
+    private ArrayAdapter<TimeoStop> mStopAdapter;
+
+    private TextView mLblLine;
+    private FrameLayout mViewLineId;
+    private TextView mLblStop;
+    private TextView mLblDirection;
+
+    private LinearLayout mViewScheduleContainer;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+
+    private MenuItem mItemNext;
+
+    private Database mDatabaseHandler;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // setup everything
+        setContentView(R.layout.activity_new_stop);
+        setResult(NO_STOP_ADDED);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white);
+
+        mDatabaseHandler = new Database(DatabaseOpenHelper.getInstance(this));
+
+        // get all the UI elements we'll need in the future
+
+        // spinners (dropdown menus)
+        mSpinLine = (Spinner) findViewById(R.id.spin_line);
+        mSpinDirection = (Spinner) findViewById(R.id.spin_direction);
+        mSpinStop = (Spinner) findViewById(R.id.spin_stop);
+
+        //lists
+        mLineList = new ArrayList<>();
+        mDirectionList = new ArrayList<>();
+        mStopList = new ArrayList<>();
+
+        mFilteredLineList = new ArrayList<>(mLineList);
+
+        // labels
+        mLblLine = (TextView) findViewById(R.id.lbl_line_id);
+        mLblStop = (TextView) findViewById(R.id.lbl_stop_name);
+        mLblDirection = (TextView) findViewById(R.id.lbl_direction_name);
+
+        // line view (to set its background color)
+        mViewLineId = (FrameLayout) findViewById(R.id.view_line_id);
+
+        mViewScheduleContainer = (LinearLayout) findViewById(R.id.view_schedule_labels_container);
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.ptr_layout);
+        mSwipeRefreshLayout.setColorSchemeResources(
+                R.color.twisto_primary, R.color.twisto_secondary,
+                R.color.twisto_primary, R.color.twisto_secondary);
+        mSwipeRefreshLayout.setRefreshing(true);
+
+        mSpinLine.setEnabled(false);
+        mSpinDirection.setEnabled(false);
+        mSpinStop.setEnabled(false);
+
+        //setup spinners here
+        setupLineSpinner();
+        setupDirectionSpinner();
+        setupStopSpinner();
+
+        getLinesFromAPI();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.add_stop, menu);
+        mItemNext = menu.findItem(R.id.action_ok);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_ok:
+                // add the current stop to the database
+                registerStopToDatabase();
+                return true;
+            case android.R.id.home:
+                // go back
+                this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /**
+     * Initialises, sets up the even listeners, and populates the line spinner.
+     */
+    public void setupLineSpinner() {
+        mLineAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mFilteredLineList);
+        mLineAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinLine.setAdapter(mLineAdapter);
+
+        // when a line has been selected
+        mSpinLine.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View view, int position, long id) {
+                // set loading labels
+                mLblLine.setText("");
+                mLblDirection.setText(getResources().getString(R.string.loading_data));
+                mLblStop.setText(getResources().getString(R.string.loading_data));
+
+                mViewScheduleContainer.removeAllViewsInLayout();
+                mViewScheduleContainer.setVisibility(View.GONE);
+
+                mSpinStop.setEnabled(false);
+
+                if (mItemNext != null) {
+                    mItemNext.setEnabled(false);
+                }
+
+                // get the selected line
+                TimeoLine item = getCurrentLine();
+
+                if (item != null && item.getId() != null) {
+                    // set the line view
+                    mLblLine.setText(item.getId());
+
+                    GradientDrawable lineDrawable = (GradientDrawable) mViewLineId.getBackground();
+                    lineDrawable.setColor(Colors.getBrighterColor(Color.parseColor(item.getColor())));
+
+                    mSpinDirection.setEnabled(true);
+
+                    // adapt the size based on the size of the line ID
+                    if (mLblLine.getText().length() > 3) {
+                        mLblLine.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                    } else if (mLblLine.getText().length() > 2) {
+                        mLblLine.setTextSize(TypedValue.COMPLEX_UNIT_SP, 23);
+                    } else {
+                        mLblLine.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
+                    }
+
+                    mDirectionList.clear();
+                    mDirectionList.addAll(getDirectionsList());
+                    setupDirectionSpinner();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+            }
+
+        });
+    }
+
+    /**
+     * Initialises, sets up the even listeners, and populates the direction spinner.
+     */
+    public void setupDirectionSpinner() {
+        mDirectionAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mDirectionList);
+        mDirectionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinDirection.setAdapter(mDirectionAdapter);
+
+        // when a line has been selected
+        mSpinDirection.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View view, int position, long id) {
+                // set loading labels
+                mLblDirection.setText(getResources().getString(R.string.loading_data));
+                mViewScheduleContainer.removeAllViewsInLayout();
+                mViewScheduleContainer.setVisibility(View.GONE);
+
+                mItemNext.setEnabled(false);
+                mSpinStop.setEnabled(false);
+
+                if (getCurrentLine() != null && getCurrentDirection() != null && getCurrentLine().getId() != null
+                        && getCurrentDirection().getId() != null) {
+                    mLblDirection.setText(getResources().getString(R.string.direction_name, getCurrentDirection().getName()));
+
+                    (new AsyncTask<Void, Void, List<TimeoStop>>() {
+
+                        @Override
+                        protected List<TimeoStop> doInBackground(Void... voids) {
+                            try {
+                                getCurrentLine().setDirection(getCurrentDirection());
+                                return TimeoRequestHandler.getStops(getCurrentLine());
+                            } catch (Exception e) {
+                                handleAsyncExceptions(e);
+                            }
+
+                            return null;
+                        }
+                        
+                        @Override
+                        protected void onPreExecute() {
+                            mSwipeRefreshLayout.setEnabled(true);
+                            mSwipeRefreshLayout.setRefreshing(true);
+                        }
+
+
+
+
+
+                        @Override
+                        protected void onPostExecute(List<TimeoStop> timeoStops) {
+                            if (timeoStops != null) {
+                                mSpinStop.setEnabled(true);
+
+                                mStopList.clear();
+                                mStopList.addAll(timeoStops);
+                                setupStopSpinner();
+                            }
+                        }
+
+                    }).execute();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+            }
+
+        });
+    }
+
+    /**
+     * Initialises, sets up the even listeners, and populates the stop spinner.
+     */
+    public void setupStopSpinner() {
+        mStopAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mStopList);
+        mStopAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinStop.setAdapter(mStopAdapter);
+
+        // when a stop has been selected
+        mSpinStop.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View view, int position, long id) {
+                mLblStop.setText(getResources().getString(R.string.loading_data));
+                mViewScheduleContainer.removeAllViewsInLayout();
+                mViewScheduleContainer.setVisibility(View.GONE);
+
+                TimeoIDNameObject stop = getCurrentStop();
+                mItemNext.setEnabled(true);
+
+                if (stop != null && stop.getId() != null) {
+                    mLblStop.setText(getResources().getString(R.string.stop_name, stop.getName()));
+                    updateSchedulePreview();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+            }
+
+        });
+    }
+
+    public void updateSchedulePreview() {
+        (new AsyncTask<Void, Void, TimeoStopSchedule>() {
+
+            @Override
+            protected void onPreExecute() {
+                mSwipeRefreshLayout.setEnabled(true);
+                mSwipeRefreshLayout.setRefreshing(true);
+            }
+
+            @Override
+            protected TimeoStopSchedule doInBackground(Void... voids) {
+                try {
+                    return TimeoRequestHandler.getSingleSchedule(getCurrentStop());
+                } catch (Exception e) {
+                    handleAsyncExceptions(e);
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(TimeoStopSchedule schedule) {
+                LayoutInflater inflater = (LayoutInflater) ActivityNewStop.this
+                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+                mSwipeRefreshLayout.setEnabled(false);
+                mSwipeRefreshLayout.setRefreshing(false);
+
+                if (schedule != null) {
+                    List<TimeoSingleSchedule> schedList = schedule.getSchedules();
+
+                    // set the schedule labels, if we need to
+                    if (schedList != null) {
+                        for (TimeoSingleSchedule currSched : schedList) {
+                            View singleScheduleView = inflater.inflate(R.layout.frag_single_schedule_label, null);
+
+                            TextView lbl_schedule = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule);
+                            TextView lbl_schedule_direction = (TextView) singleScheduleView.findViewById(R.id
+                                    .lbl_schedule_direction);
+
+                            lbl_schedule.setText(TimeFormatter.formatTime(ActivityNewStop.this, currSched.getScheduleTime()));
+                            lbl_schedule_direction.setText(" — " + currSched.getDirection());
+
+                            mViewScheduleContainer.addView(singleScheduleView);
+                        }
+
+                        if (schedList.size() > 0) {
+                            mViewScheduleContainer.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+            }
+
+        }).execute();
+    }
+
+    /**
+     * Fetches the bus lines from the API, and populates the line spinner when done.
+     */
+    public void getLinesFromAPI() {
+
+        // fetch the directions
+        (new AsyncTask<Void, Void, List<TimeoLine>>() {
+
+            @Override
+            protected void onPreExecute() {
+                mSwipeRefreshLayout.setEnabled(true);
+                mSwipeRefreshLayout.setRefreshing(true);
+            }
+
+            @Override
+            protected List<TimeoLine> doInBackground(Void... voids) {
+                try {
+                    return TimeoRequestHandler.getLines();
+                } catch (Exception e) {
+                    handleAsyncExceptions(e);
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(List<TimeoLine> timeoLines) {
+                if (timeoLines != null) {
+                    mLineList.clear();
+                    mLineList.addAll(timeoLines);
+
+                    mFilteredLineList.clear();
+                    mFilteredLineList.addAll(mLineList);
+
+                    mSpinLine.setEnabled(true);
+                    mSpinDirection.setEnabled(true);
+
+                    for (int i = mFilteredLineList.size() - 1; i >= 0; i--) {
+                        //if the last line in the list is the same line (but with a different direction)
+                        if (i > 0 && mFilteredLineList.get(i).getId().equals(mFilteredLineList.get(i - 1).getDetails()
+                                .getId())) {
+                            mFilteredLineList.remove(i);
+                        }
+                    }
+
+                    mLineAdapter.notifyDataSetChanged();
+                }
+            }
+
+        }).execute();
+    }
+
+    /**
+     * Displays an exception in a toast on the UI thread.
+     *
+     * @param e the exception to display
+     */
+    public void handleAsyncExceptions(final Exception e) {
+        e.printStackTrace();
+
+        runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+                if (e instanceof TimeoBlockingMessageException) {
+                    ((TimeoBlockingMessageException) e).getAlertMessage(ActivityNewStop.this).show();
+                } else {
+                    String message;
+
+                    if (e instanceof TimeoException) {
+                        if (e.getMessage() != null && !e.getMessage().trim().isEmpty()) {
+                            message = getString(R.string.error_toast_twisto_detailed,
+                                    ((TimeoException) e).getErrorCode(), e.getMessage());
+                        } else {
+                            message = getString(R.string.error_toast_twisto, ((TimeoException) e).getErrorCode());
+                        }
+                    } else {
+                        message = getString(R.string.loading_error);
+                    }
+
+                    mSwipeRefreshLayout.setEnabled(false);
+                    mSwipeRefreshLayout.setRefreshing(false);
+
+                    Snackbar.make(findViewById(R.id.content), message, Snackbar.LENGTH_LONG)
+                            .setAction(R.string.error_retry, new View.OnClickListener() {
+
+	                            @Override
+	                            public void onClick(View view) {
+		                            getLinesFromAPI();
+	                            }
+
+                            })
+                            .show();
+                }
+            }
+
+        });
+    }
+
+    /**
+     * Stores the selected bus stop in the database.
+     */
+    public void registerStopToDatabase() {
+        TimeoStop stop = getCurrentStop();
+
+        try {
+            mDatabaseHandler.addStopToDatabase(stop);
+            Toast.makeText(this, getResources().getString(R.string.added_toast, stop.toString()), Toast.LENGTH_SHORT).show();
+            setResult(STOP_ADDED);
+            finish();
+        } catch (SQLiteConstraintException e) {
+            // stop already in database
+            Toast.makeText(this, getResources().getString(R.string.error_toast, getResources().getString(R.string
+                    .add_error_duplicate)), Toast.LENGTH_LONG).show();
+        } catch (IllegalArgumentException e) {
+            // one of the fields was null
+            Toast.makeText(this, getResources().getString(R.string.error_toast, getResources().getString(R.string
+                    .add_error_illegal_argument)), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /**
+     * Gets a list of directions for the selected bus line, as they're stored in the same object.
+     *
+     * @return a list of ID/name objects containing the id and name of the directions to display
+     */
+    private List<TimeoIDNameObject> getDirectionsList() {
+        List<TimeoIDNameObject> directionsList = new ArrayList<>();
+
+        for (TimeoLine line : mLineList) {
+            if (line.getId().equals(getCurrentLine().getId())) {
+                directionsList.add(line.getDirection());
+            }
+        }
+
+        return directionsList;
+    }
+
+    /**
+     * Gets the bus stop that's currently selected.
+     *
+     * @return a stop
+     */
+    public TimeoStop getCurrentStop() {
+        return (TimeoStop) mSpinStop.getItemAtPosition(mSpinStop.getSelectedItemPosition());
+    }
+
+    /**
+     * Gets the bus line direction that's currently selected.
+     *
+     * @return an ID/name object for the direction
+     */
+    public TimeoIDNameObject getCurrentDirection() {
+        return (TimeoIDNameObject) mSpinDirection.getItemAtPosition(mSpinDirection.getSelectedItemPosition());
+    }
+
+    /**
+     * Gets the bus line that's currently selected.
+     *
+     * @return a line
+     */
+    public TimeoLine getCurrentLine() {
+        return (TimeoLine) mSpinLine.getItemAtPosition(mSpinLine.getSelectedItemPosition());
+    }
 
 }

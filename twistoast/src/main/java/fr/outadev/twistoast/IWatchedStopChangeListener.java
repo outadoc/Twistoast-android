@@ -1,6 +1,6 @@
 /*
  * Twistoast - IWatchedStopChangeListener
- * Copyright (C) 2013-2015 Baptiste Candellier
+ * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 package fr.outadev.twistoast;
 
-import fr.outadev.android.timeo.TimeoStop;
+import fr.outadev.android.transport.timeo.TimeoStop;
 
 /**
  * A listener that will send a message when a watched bus has just arrived.
@@ -27,6 +27,6 @@ import fr.outadev.android.timeo.TimeoStop;
  */
 public interface IWatchedStopChangeListener {
 
-	void onStopWatchingStateChanged(TimeoStop stop, boolean watched);
+    void onStopWatchingStateChanged(TimeoStop stop, boolean watched);
 
 }

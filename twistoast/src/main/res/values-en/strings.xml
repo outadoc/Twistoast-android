@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Twistoast - strings.xml
-  ~ Copyright (C) 2013-2015 Baptiste Candellier
+  ~ Copyright (C) 2013-2016 Baptiste Candellier
   ~
   ~ Twistoast is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -47,8 +47,7 @@
 	<string name="schedule_time_arrival_imminent">Now incoming</string>
 	<string name="schedule_time_countdown">%1$s minutes</string>
 
-	<string name="add_first_stop_title">Nothing here yet!</string>
-	<string name="add_first_stop_instructions">To add a bus stop, tap <b>+</b>.</string>
+	<string name="add_first_stop_title">No saved bus stops yet</string>
 
 	<string name="drawer_item_realtime">Real-time</string>
 	<string name="drawer_item_timetables">Timetables</string>
@@ -73,5 +72,11 @@
 	<string name="error_toast_twisto_detailed">Erreur Twisto %1$s (%2$s). Réessayez plus tard.</string>
 	<string name="drawer_section_more_twisto_info">Learn more</string>
 	<string name="drawer_section_misc">More</string>
+	<string name="drawer_action_open">Open drawer</string>
+	<string name="drawer_action_close">Close drawer</string>
+
+	<string name="sort_by_title">Sort by...</string>
+	<string name="sort_by_stop">Sort by stop</string>
+	<string name="sort_by_line">Sort by line</string>
 
 </resources>

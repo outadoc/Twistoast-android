@@ -1,6 +1,6 @@
 /*
  * Twistoast - FragmentAbout
- * Copyright (C) 2013-2015 Baptiste Candellier
+ * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,13 +19,11 @@
 package fr.outadev.twistoast;
 
 import android.annotation.SuppressLint;
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 /**
@@ -35,60 +33,62 @@ import android.widget.Toast;
  */
 public class FragmentAbout extends PreferenceFragment {
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    private ConfigurationManager mConfig;
 
-		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		// Load the preferences from an XML resource
-		addPreferencesFromResource(R.xml.about_prefs);
-		findPreference("version").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        mConfig = new ConfigurationManager(getActivity());
 
-			private int count = 5;
-			private Toast toast;
+        // Load the preferences from an XML resource
+        addPreferencesFromResource(R.xml.about_prefs);
+        findPreference("version").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 
-			@SuppressLint("ShowToast")
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				count--;
+            private int mEasterEggCount = 5;
+            private Toast mToast;
 
-				if(toast != null) {
-					toast.cancel();
-				}
+            @SuppressLint("ShowToast")
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                mEasterEggCount--;
 
-				if(prefs.getBoolean("pref_disable_ads", false)) {
-					// Already disabled the ads
-					(toast = Toast.makeText(getActivity(), R.string.prefs_ads_already_disabled, Toast.LENGTH_SHORT))
-							.show();
+                if (mToast != null) {
+                    mToast.cancel();
+                }
 
-				} else if(count == 0) {
-					// Ready to disable the ads
-					prefs.edit().putBoolean("pref_disable_ads", true).apply();
-					(toast = Toast.makeText(getActivity(), R.string.prefs_ads_disabled, Toast.LENGTH_SHORT)).show();
+                if (mConfig.getAdsAreRemoved()) {
+                    // Already disabled the ads
+                    (mToast = Toast.makeText(getActivity(), R.string.prefs_ads_already_disabled, Toast.LENGTH_SHORT))
+                            .show();
 
-				} else if(count <= 3) {
-					// Decrement teh counter
-					(toast = Toast.makeText(getActivity(),
-							getActivity().getString(R.string.prefs_ads_step_count, count), Toast.LENGTH_SHORT)).show();
-				}
+                } else if (mEasterEggCount == 0) {
+                    // Ready to disable the ads
+                    mConfig.setAdsAreRemoved(true);
+                    (mToast = Toast.makeText(getActivity(), R.string.prefs_ads_disabled, Toast.LENGTH_SHORT)).show();
 
-				return true;
-			}
+                } else if (mEasterEggCount <= 3) {
+                    // Decrement teh counter
+                    (mToast = Toast.makeText(getActivity(),
+                            getActivity().getString(R.string.prefs_ads_step_count, mEasterEggCount), Toast.LENGTH_SHORT)).show();
+                }
 
-		});
-	}
+                return true;
+            }
 
-	@Override
-	public void onResume() {
-		super.onResume();
+        });
+    }
 
-		try {
-			PackageInfo info = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
-			findPreference("version").setSummary(getString(R.string.app_name) + " v" + info.versionName);
-		} catch(NameNotFoundException e1) {
-			e1.printStackTrace();
-		}
-	}
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        try {
+            PackageInfo info = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+            findPreference("version").setSummary(getString(R.string.app_name) + " v" + info.versionName);
+        } catch (NameNotFoundException e1) {
+            e1.printStackTrace();
+        }
+    }
 
 }
