@@ -35,10 +35,14 @@
 	<string name="pref_relative_time_title">Relative timestamps</string>
 	<string name="pref_links_title">Links</string>
 	<string name="pref_version_title">Version</string>
-	<string name="pref_app_theme_title">Application Theme</string>
-	<string name="pref_app_theme_sum">Restart Twistoast to apply.</string>
-	<string name="pref_enable_notif_traffic_sum">Stay informed of the traffic on the Twisto network without having to open the app.</string>
-	<string name="pref_enable_notif_traffic_title">Enable traffic notifications</string>
+	<string name="pref_app_theme_title">Application Theme Color</string>
+	<string name="pref_night_mode_title">Night Mode</string>
+    <string name="pref_night_mode_item_system">Default</string>
+    <string name="pref_night_mode_item_auto">Automatic</string>
+    <string name="pref_night_mode_item_night">Always</string>
+    <string name="pref_night_mode_item_day">Never</string>
+    <string name="pref_enable_notif_traffic_sum">Stay informed of the traffic on the Twisto network without having to open the app.</string>
+	<string name="pref_enable_notif_traffic_title">Traffic notifications</string>
 	<string name="pref_cat_notif_traffic">Traffic info notifications</string>
 	<string name="pref_cat_notif_watched">Watched buses notifications</string>
 	<string name="pref_notif_traffic_ring_sum">Play a notification sound when getting a traffic alert.</string>
@@ -60,5 +64,9 @@
 	<string name="prefs_ads_already_disabled">The ads are already disabled. Enjoy!</string>
 	<string name="prefs_ads_disabled">No more ads for you! \o/</string>
 	<string name="prefs_ads_step_count">Only %1$s more steps to disable the ads</string>
+    <string name="pref_restart_required_title">Restart required</string>
+    <string name="pref_restart_required_message">Twistoast must be restarted to apply your changes.</string>
+    <string name="pref_restart_required_positive">Restart now</string>
+    <string name="pref_restart_required_negative">Later</string>
 
 </resources>

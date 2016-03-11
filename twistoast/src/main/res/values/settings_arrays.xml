@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string-array name="pref_night_mode_entries">
-		<item>Never enable</item>
-		<item>Always enable</item>
-		<item>Automatic</item>
-		<item>Default</item>
+		<item>@string/pref_night_mode_item_system</item>
+		<item>@string/pref_night_mode_item_auto</item>
+		<item>@string/pref_night_mode_item_day</item>
+		<item>@string/pref_night_mode_item_night</item>
 	</string-array>
 
 	<string-array name="pref_night_mode_entry_values">
+		<item>system</item>
+		<item>auto</item>
 		<item>day</item>
 		<item>night</item>
-		<item>auto</item>
-		<item>system</item>
 	</string-array>
 </resources>

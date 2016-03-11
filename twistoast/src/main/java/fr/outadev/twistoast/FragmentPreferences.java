@@ -85,9 +85,9 @@ public class FragmentPreferences extends PreferenceFragment implements OnSharedP
 
     private void restartApp() {
         (new AlertDialog.Builder(getActivity())
-            .setTitle("Restart required")
-            .setMessage("Twistoast must be restarted to apply your changes.")
-            .setPositiveButton("Restart now", new DialogInterface.OnClickListener() {
+            .setTitle(R.string.pref_restart_required_title)
+            .setMessage(R.string.pref_restart_required_message)
+            .setPositiveButton(R.string.pref_restart_required_positive, new DialogInterface.OnClickListener() {
 
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -101,7 +101,7 @@ public class FragmentPreferences extends PreferenceFragment implements OnSharedP
                 }
 
             })
-            .setNegativeButton("Later", null)
+            .setNegativeButton(R.string.pref_restart_required_negative, null)
             .create()).show();
     }
 
