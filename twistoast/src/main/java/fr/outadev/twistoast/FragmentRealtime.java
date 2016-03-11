@@ -170,9 +170,11 @@ public class FragmentRealtime extends Fragment implements IStopsListContainer {
         switch (item.getItemId()) {
             case R.id.sortby_line:
                 mSharedPreferences.edit().putString("pref_list_sortby", "line").apply();
+                refreshAllStopSchedules(true);
                 return true;
             case R.id.sortby_stop:
                 mSharedPreferences.edit().putString("pref_list_sortby", "stop").apply();
+                refreshAllStopSchedules(true);
                 return true;
         }
 
