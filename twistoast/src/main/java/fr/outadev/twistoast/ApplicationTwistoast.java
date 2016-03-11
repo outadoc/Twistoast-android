@@ -18,7 +18,7 @@ public class ApplicationTwistoast extends Application {
         String nightMode = prefs.getString("pref_night_mode", "system");
         int nightModeCode = getNightModeForPref(nightMode);
 
-        //noinspection WrongConstant
+        //noinspection WrongConstant,ResourceType
         AppCompatDelegate.setDefaultNightMode(nightModeCode);
     }
 

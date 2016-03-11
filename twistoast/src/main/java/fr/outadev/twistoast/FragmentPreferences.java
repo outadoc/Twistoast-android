@@ -18,6 +18,11 @@
 
 package fr.outadev.twistoast;
 
+import android.app.AlarmManager;
+import android.app.AlertDialog;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -46,7 +51,6 @@ public class FragmentPreferences extends PreferenceFragment implements OnSharedP
         super.onResume();
         // Set up a listener whenever a key changes
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
-
         updateDependentSwitchesState();
     }
 
@@ -63,9 +67,7 @@ public class FragmentPreferences extends PreferenceFragment implements OnSharedP
         switch (key) {
             case "pref_app_theme":
             case "pref_night_mode":
-                Intent i = getActivity().getPackageManager().getLaunchIntentForPackage(getActivity().getPackageName());
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
+                restartApp();
                 break;
             case "pref_enable_notif_traffic":
                 if (sharedPreferences.getBoolean("pref_enable_notif_traffic", true)) {
@@ -77,6 +79,28 @@ public class FragmentPreferences extends PreferenceFragment implements OnSharedP
                 updateDependentSwitchesState();
                 break;
         }
+    }
+
+    private void restartApp() {
+        (new AlertDialog.Builder(getActivity())
+            .setTitle("Restart required")
+            .setMessage("Twistoast must be restarted to apply your changes.")
+            .setPositiveButton("Restart now", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    int mPendingIntentId = 1;
+                    Intent i = getActivity().getPackageManager().getLaunchIntentForPackage(getActivity().getPackageName());
+                    PendingIntent mPendingIntent = PendingIntent.getActivity(getActivity(), mPendingIntentId, i, PendingIntent.FLAG_CANCEL_CURRENT);
+                    AlarmManager mgr = (AlarmManager)getActivity().getSystemService(Context.ALARM_SERVICE);
+                    mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
+
+                    System.exit(0);
+                }
+
+            })
+            .setNegativeButton("Later", null)
+            .create()).show();
     }
 
     /**
