@@ -1,42 +1,45 @@
 # Twistoast
 
 ## Présentation
-
 Twistoast est une application Android de consultation des horaires des bus & trams Twisto.
 
-L'application est conçue pour améliorer l'expérience quotidienne des utilisateurs du réseau de transports en commun de Caen.
-Malgré l'existence d'une application officielle, je ressentais le besoin de l'améliorer pour qu'elle puisse :
+L'application est conçue pour améliorer l'expérience quotidienne des utilisateurs du réseau de
+transports en commun de Caen.
+L'existence d'une application officielle bien en-dessous de mes standards d'acceptabilité m'a poussé
+au développement d'une alternative répondant aux critères suivants :
 
-- Être native, et pas une simple application web lente en peu intégrée au système
-- Être élégante et bien conçue : malgré que je ne sois pas designer, je pense pouvoir faire facilement mieux que
-l'application existante
-- Améliorer le service proposé, avec par exemple la possibilité de mettre plus d'arrêts en favoris que la limite
-de 5 arrêts imposée par le site et l'application officiels
-- Proposer des fonctionnalités supplémentaires, comme le [support des montres Pebble](https://github.com/outadoc/Twistoast-pebble)
+- Native, pas une simple application web lente, peu intégrée au système et peu fiable
+- Design agréable à l'oeil et à l'utilisation
+- Support des fonctionnalités déjà existantes dans l'application officielle
+- Amélioration du service existant, avec par exemple la possibilité de mettre plus d'arrêts en
+favoris que la limite de 5 arrêts imposée par le site et l'application officiels
+- Fonctionnalités supplémentaires, comme le [support des montres Pebble](https://github.com/outadoc/Twistoast-pebble)
 ou la réception de notifications pour informer de l'arrivée des bus
 
-Ces fonctionnalités sont aujourd'hui toutes implémentées, et l'application est surtout mise à jour pour corriger les bugs ou
-améliorer l'existant. N'hésitez cependant pas à contribuer et soumettre des pull requests si l'envie ou le besoin vous en prend !
+Ces fonctionnalités sont aujourd'hui toutes implémentées, et l'application est mise à jour
+régulièrement pour corriger les bugs ou améliorer l'existant en ajoutant de nouvelles fonctionnalités
+et en exploitant de nouvelles API. Il n'est également pas exclu de réimplémenter la récupération des
+données si une API alternative se trouve être plus complète, plus stable ou plus adaptée.
+
+N'hésitez pas à contribuer et à soumettre des pull requests si l'envie ou le besoin vous en prend !
 
 ## Obtenir Twistoast
-
 Twistoast est disponible sur le [Google Play Store](https://play.google.com/store/apps/details?id=fr.outadev.twistoast) et
 le [Chrome Web Store](https://chrome.google.com/webstore/detail/twistoast/olecaebebjbkmcnmobbdhgeicjfhidll?hl=fr).
 
-Pour compiler à partir des sources, clonez simplement le projet, et importez-le dans Android Studio. Vous devrez ajouter une ressource
-string admob_adunitid et admob_test_device, qui correspondent respectivement à la clé privée AdMob et l'identifiant AdMob d'un appareil de test.
-Vous devriez pouvoir les laisser vides.
+Pour compiler à partir des sources, clonez simplement le projet, et importez-le dans Android Studio.
+Vous devrez ajouter une ressource string admob_adunitid et admob_test_device, qui correspondent
+respectivement à la clé privée AdMob et l'identifiant AdMob d'un appareil de test.
 
-## Documentation de l'API utilisée
-
-Twistoast utilise vraisemblablement les mêmes APIs que les services officiels. Vous pouvez trouver plus de détails sur
+## Documentation sur les APIs utilisées
+Twistoast utilise les mêmes APIs que les services officiels. Vous pouvez trouver plus de détails sur
 [ce gist](https://gist.github.com/outadoc/40060db45c436977a912) et [ce post de blog](https://outadoc.fr/2014/11/keolis-open-data-api/).
 
 ## Licence
+Twistoast is released under the GNU GPL v3 license. Feel free to fork it and build upon it, as long
+as you follow the rules!
 
-Twistoast is released under the GNU GPL v3 license. Feel free to fork it and stuff, as long as you follow the rules!
-
-    Copyright (C) 2013-2015  Baptiste Candellier
+    Copyright (C) 2013-2016 Baptiste Candellier
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
