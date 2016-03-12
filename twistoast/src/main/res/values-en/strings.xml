@@ -48,11 +48,11 @@
 
 	<string name="add_first_stop_title">No saved bus stops yet</string>
 
-	<string name="drawer_item_realtime">Real-time</string>
+	<string name="drawer_item_realtime">Live arrivals</string>
 	<string name="drawer_item_timetables">Timetables</string>
 	<string name="drawer_item_routes">Routes</string>
-	<string name="drawer_item_map">Network Map</string>
-	<string name="drawer_item_traffic">Traffic Reports</string>
+	<string name="drawer_item_map">Network map</string>
+	<string name="drawer_item_traffic">Traffic reports</string>
 	<string name="drawer_item_news">News</string>
 	<string name="drawer_item_pricing">Pricing</string>
 	<string name="drawer_item_preferences">Preferences</string>
