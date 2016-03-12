@@ -41,7 +41,6 @@
 	<string name="add_error_duplicate">This stop is already in your list.</string>
 	<string name="add_error_illegal_argument">Something\'s wrong, check the values of the line, direction and stop.</string>
 	<string name="action_open_website">Open in Browser</string>
-	<string name="traffic_info">Traffic Info</string>
 
 	<string name="schedule_time_currently_at_stop">Currently at stop</string>
 	<string name="schedule_time_arrival_imminent">Now incoming</string>
@@ -53,7 +52,7 @@
 	<string name="drawer_item_timetables">Timetables</string>
 	<string name="drawer_item_routes">Routes</string>
 	<string name="drawer_item_map">Network Map</string>
-	<string name="drawer_item_traffic">Traffic Info</string>
+	<string name="drawer_item_traffic">Traffic Reports</string>
 	<string name="drawer_item_news">News</string>
 	<string name="drawer_item_pricing">Pricing</string>
 	<string name="drawer_item_preferences">Preferences</string>
@@ -70,12 +69,11 @@
 	<string name="fab_add_stop_description">Add a stop</string>
 	<string name="error_toast_twisto">Twisto error %1$s. Try again later.</string>
 	<string name="error_toast_twisto_detailed">Erreur Twisto %1$s (%2$s). Réessayez plus tard.</string>
-	<string name="drawer_section_more_twisto_info">Learn more</string>
-	<string name="drawer_section_misc">More</string>
+	<string name="drawer_section_more_twisto_info">Network Info</string>
 	<string name="drawer_action_open">Open drawer</string>
 	<string name="drawer_action_close">Close drawer</string>
 
-	<string name="sort_by_title">Sort by...</string>
+	<string name="sort_by_title">Sort by…</string>
 	<string name="sort_by_stop">Sort by stop</string>
 	<string name="sort_by_line">Sort by line</string>
 
