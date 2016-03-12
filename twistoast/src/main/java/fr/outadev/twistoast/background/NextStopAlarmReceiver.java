@@ -37,7 +37,7 @@ import fr.outadev.android.transport.timeo.TimeoRequestHandler;
 import fr.outadev.android.transport.timeo.TimeoSingleSchedule;
 import fr.outadev.android.transport.timeo.TimeoStop;
 import fr.outadev.android.transport.timeo.TimeoStopSchedule;
-import fr.outadev.twistoast.ActivityRealtime;
+import fr.outadev.twistoast.ActivityMain;
 import fr.outadev.twistoast.ConfigurationManager;
 import fr.outadev.twistoast.Database;
 import fr.outadev.twistoast.DatabaseOpenHelper;
@@ -201,7 +201,7 @@ public class NextStopAlarmReceiver extends BroadcastReceiver {
         NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         ConfigurationManager config = new ConfigurationManager(mContext);
 
-        Intent notificationIntent = new Intent(mContext, ActivityRealtime.class);
+        Intent notificationIntent = new Intent(mContext, ActivityMain.class);
         PendingIntent contentIntent = PendingIntent.getActivity(mContext, 0, notificationIntent, 0);
 
         // Get the data we need for the notification
@@ -245,7 +245,7 @@ public class NextStopAlarmReceiver extends BroadcastReceiver {
     private void updateStopTimeNotification(TimeoStopSchedule schedule) {
         NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        Intent notificationIntent = new Intent(mContext, ActivityRealtime.class);
+        Intent notificationIntent = new Intent(mContext, ActivityMain.class);
         PendingIntent contentIntent = PendingIntent.getActivity(mContext, 0, notificationIntent, 0);
 
         // Get the data we need for the notification
@@ -283,7 +283,7 @@ public class NextStopAlarmReceiver extends BroadcastReceiver {
     private void notifyNetworkError() {
         NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        Intent notificationIntent = new Intent(mContext, ActivityRealtime.class);
+        Intent notificationIntent = new Intent(mContext, ActivityMain.class);
         PendingIntent contentIntent = PendingIntent.getActivity(mContext, 0, notificationIntent, 0);
 
         // Make a nice notification to inform the user of an error

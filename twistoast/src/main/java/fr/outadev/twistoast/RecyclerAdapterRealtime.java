@@ -312,7 +312,7 @@ public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapte
 
     @Override
     public RecyclerAdapterRealtime.ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.frag_schedule_row, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_schedule_row, parent, false);
         return new ViewHolder(v);
     }
 
@@ -456,7 +456,7 @@ public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapte
 
             for (int i = 0; i < NB_SCHEDULES_DISPLAYED; i++) {
                 // Display the current schedule
-                View singleScheduleView = inflater.inflate(R.layout.frag_single_schedule_label, null);
+                View singleScheduleView = inflater.inflate(R.layout.view_single_schedule_label, null);
 
                 mLblScheduleTime[i] = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule);
                 mLblScheduleDirection[i] = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule_direction);

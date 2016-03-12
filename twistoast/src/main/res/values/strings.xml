@@ -30,7 +30,7 @@
 	<string name="action_delete">Supprimer</string>
 	<string name="action_refresh">Rafraîchir</string>
 	<string name="action_cancel">Annuler</string>
-	<string name="loading_data">Chargement&#8230;</string>
+	<string name="loading_data">Chargement…</string>
 	<string name="loading_error">Erreur lors du chargement des données.</string>
 	<string name="no_upcoming_stops">Pas d\'arrêts prévus.</string>
 	<string name="confirm_delete_success">Succès de la suppression !</string>
@@ -42,7 +42,6 @@
 	<string name="add_error_duplicate">Cet arrêt a déjà été ajouté dans l\'application</string>
 	<string name="add_error_illegal_argument">Quelque-chose ne va pas, vérifiez les valeurs de la ligne, direction et arrêt.</string>
 	<string name="action_open_website">Ouvrir dans le navigateur</string>
-	<string name="traffic_info">Info trafic</string>
 
 	<string name="schedule_time_currently_at_stop">Passage en cours</string>
 	<string name="schedule_time_arrival_imminent">Passage imminent</string>
@@ -74,11 +73,11 @@
 	<string name="fab_add_stop_description">Ajouter un arrêt</string>
 	<string name="error_toast_twisto">Erreur Twisto %1$s. Réessayez plus tard.</string>
 	<string name="error_toast_twisto_detailed">Erreur Twisto %1$s (%2$s). Réessayez plus tard.</string>
-	<string name="drawer_section_more_twisto_info">Plus d\'infos</string>
-	<string name="drawer_section_misc">Autres</string>
+	<string name="drawer_section_more_twisto_info">Informations réseau</string>
 	<string name="drawer_action_open">Ouvrir le menu</string>
 	<string name="drawer_action_close">Fermer le menu</string>
-	<string name="sort_by_title">Tri</string>
+
+	<string name="sort_by_title">Trier</string>
 	<string name="sort_by_stop">Trier par arrêt</string>
 	<string name="sort_by_line">Trier par ligne</string>
 

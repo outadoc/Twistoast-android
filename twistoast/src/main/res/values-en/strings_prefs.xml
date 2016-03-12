@@ -21,7 +21,7 @@
 
 	<string name="pref_pebble_dl_title">Download the Pebble watchapp</string>
 	<string name="pref_pebble_dl_sum">You can download the Twistoast Pebble watchapp from the Pebble appstore.</string>
-	<string name="pref_auto_refresh_title">Auto-Refresh</string>
+	<string name="pref_auto_refresh_title">Refresh automatically</string>
 	<string name="pref_auto_refresh_sum">Allows you to automatically refresh the schedules when the app is in the foreground.</string>
 	<string name="pref_cat_stops">Stops List</string>
 	<string name="pref_legal_title">Legal</string>
@@ -35,8 +35,8 @@
 	<string name="pref_relative_time_title">Relative timestamps</string>
 	<string name="pref_links_title">Links</string>
 	<string name="pref_version_title">Version</string>
-	<string name="pref_app_theme_title">Application Theme Color</string>
-	<string name="pref_night_mode_title">Night Mode</string>
+	<string name="pref_app_theme_title">Application theme color</string>
+	<string name="pref_night_mode_title">Night mode</string>
     <string name="pref_night_mode_item_system">Default</string>
     <string name="pref_night_mode_item_auto">Automatic</string>
     <string name="pref_night_mode_item_night">Always</string>

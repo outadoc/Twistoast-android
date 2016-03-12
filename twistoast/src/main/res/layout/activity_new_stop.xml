@@ -1,6 +1,6 @@
 <!--
   ~ Twistoast - activity_new_stop.xml
-  ~ Copyright (C) 2013-2015 Baptiste Candellier
+  ~ Copyright (C) 2013-2016 Baptiste Candellier
   ~
   ~ Twistoast is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@
 	android:orientation="vertical"
 	tools:context=".AddStopActivity">
 
-	<include layout="@layout/toolbar" />
+	<include layout="@layout/view_toolbar" />
 
 	<android.support.v4.widget.SwipeRefreshLayout
 		android:id="@+id/ptr_layout"
@@ -107,7 +107,7 @@
 					android:layout_height="wrap_content"
 					android:layout_marginTop="10dp">
 
-					<include layout="@layout/frag_schedule_row" />
+					<include layout="@layout/view_schedule_row" />
 				</LinearLayout>
 			</LinearLayout>
 		</ScrollView>

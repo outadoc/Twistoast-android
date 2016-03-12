@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Twistoast - fragment_realtime.xml
-  ~ Copyright (C) 2013-2015 Baptiste Candellier
+  ~ Copyright (C) 2013-2016 Baptiste Candellier
   ~
   ~ Twistoast is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@
 	android:background="?android:attr/colorBackground"
 	android:orientation="vertical">
 
-	<include layout="@layout/frag_traffic_alert" />
+	<include layout="@layout/view_traffic_alert" />
 
 	<RelativeLayout
 		android:layout_width="match_parent"
@@ -37,7 +37,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="match_parent">
 
-			<include layout="@layout/list_view_realtime" />
+			<include layout="@layout/view_realtime_list" />
 
 		</android.support.v4.widget.SwipeRefreshLayout>
 

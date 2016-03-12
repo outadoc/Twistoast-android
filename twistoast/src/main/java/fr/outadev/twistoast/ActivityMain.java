@@ -1,5 +1,5 @@
 /*
- * Twistoast - ActivityRealtime
+ * Twistoast - ActivityMain
  * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -49,7 +49,7 @@ import fr.outadev.twistoast.utils.Utils;
  *
  * @author outadoc
  */
-public class ActivityRealtime extends ThemedActivity implements IStopsListContainer, NavigationView
+public class ActivityMain extends ThemedActivity implements IStopsListContainer, NavigationView
         .OnNavigationItemSelectedListener {
 
     public static final int DEFAULT_DRAWER_ITEM = R.id.drawer_realtime;
@@ -66,7 +66,7 @@ public class ActivityRealtime extends ThemedActivity implements IStopsListContai
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_realtime);
+        setContentView(R.layout.activity_main);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavigationView = (NavigationView) findViewById(R.id.drawer_nav_view);
@@ -268,12 +268,12 @@ public class ActivityRealtime extends ThemedActivity implements IStopsListContai
             trafficView.setVisibility(View.VISIBLE);
             trafficLabel.setSelected(true);
 
-            // Set toolbar elevation to 0, since we'll have the traffic alert just right under it
+            // Set view_toolbar elevation to 0, since we'll have the traffic alert just right under it
             getSupportActionBar().setElevation(0);
         } else if (trafficView != null) {
             trafficView.setVisibility(View.GONE);
 
-            // Set toolbar elevation to 4 dp, not 4 px
+            // Set view_toolbar elevation to 4 dp, not 4 px
             float pixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
             getSupportActionBar().setElevation(pixels);
         }
