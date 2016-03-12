@@ -366,7 +366,7 @@ public class ActivityNewStop extends ThemedActivity {
                     // set the schedule labels, if we need to
                     if (schedList != null) {
                         for (TimeoSingleSchedule currSched : schedList) {
-                            View singleScheduleView = inflater.inflate(R.layout.frag_single_schedule_label, null);
+                            View singleScheduleView = inflater.inflate(R.layout.view_single_schedule_label, null);
 
                             TextView lbl_schedule = (TextView) singleScheduleView.findViewById(R.id.lbl_schedule);
                             TextView lbl_schedule_direction = (TextView) singleScheduleView.findViewById(R.id

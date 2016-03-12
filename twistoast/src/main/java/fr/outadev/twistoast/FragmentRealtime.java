@@ -326,7 +326,7 @@ public class FragmentRealtime extends Fragment implements IStopsListContainer {
 
     @Override
     public void loadFragmentForDrawerItem(int index) {
-        ((ActivityRealtime) getActivity()).loadFragmentForDrawerItem(index);
+        ((ActivityMain) getActivity()).loadFragmentForDrawerItem(index);
     }
 
 }

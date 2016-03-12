@@ -42,7 +42,7 @@
 			android:value="@integer/google_play_services_version" />
 
 		<activity
-			android:name=".ActivityRealtime"
+			android:name=".ActivityMain"
 			android:label="@string/app_name"
 			android:theme="@style/Twistoast.Theme.Splash">
 			<intent-filter>
