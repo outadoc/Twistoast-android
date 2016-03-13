@@ -19,13 +19,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion "android-N"
     buildToolsVersion "23.0.2"
 
     defaultConfig {
         applicationId "fr.outadev.twistoast"
         minSdkVersion 15
-        targetSdkVersion 23
+        targetSdkVersion "android-N"
         versionCode 22
         versionName "2.6"
     }
@@ -53,10 +53,10 @@ dependencies {
     compile project(':keolisprovider')
     compile 'com.google.android.gms:play-services-ads:8.4.0'
     compile 'com.google.android.gms:play-services-base:8.4.0'
-    compile 'com.android.support:design:23.2.1'
-    compile 'com.android.support:appcompat-v7:23.2.1'
-    compile 'com.android.support:support-v4:23.2.1'
-    compile 'com.android.support:recyclerview-v7:23.2.1'
+    compile 'com.android.support:design:24.0.0-alpha1'
+    compile 'com.android.support:appcompat-v7:24.0.0-alpha1'
+    compile 'com.android.support:support-v4:24.0.0-alpha1'
+    compile 'com.android.support:recyclerview-v7:24.0.0-alpha1'
     compile 'com.getpebble:pebblekit:3.0.0'
     compile 'org.apache.commons:commons-lang3:3.3.2'
     compile 'com.squareup.okhttp:okhttp:2.2.0'
