@@ -86,6 +86,7 @@ public class TrafficAlertTask extends AsyncTask<Void, Void, TimeoTrafficAlert> {
                                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                .setColor(mContext.getResources().getColor(R.color.icon_color))
                                 .setContentIntent(contentIntent)
                                 .setAutoCancel(true)
                                 .setOnlyAlertOnce(true)

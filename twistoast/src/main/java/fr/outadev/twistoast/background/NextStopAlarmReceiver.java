@@ -175,11 +175,13 @@ public class NextStopAlarmReceiver extends BroadcastReceiver {
                     }
                 } else {
                     // A network error occurred, or something ;-;
-                    NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context
-                            .NOTIFICATION_SERVICE);
+                    if (mStopsToCheck != null) {
+                        NotificationManager notificationManager =
+                                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-                    for (TimeoStop stop : mStopsToCheck) {
-                        notificationManager.cancel(Integer.valueOf(stop.getId()));
+                        for (TimeoStop stop : mStopsToCheck) {
+                            notificationManager.cancel(Integer.valueOf(stop.getId()));
+                        }
                     }
 
                     notifyNetworkError();
@@ -224,6 +226,7 @@ public class NextStopAlarmReceiver extends BroadcastReceiver {
                         .setCategory(NotificationCompat.CATEGORY_EVENT)
                         .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                         .setPriority(NotificationCompat.PRIORITY_MAX)
+                        .setColor(mContext.getResources().getColor(R.color.icon_color))
                         .setContentIntent(contentIntent)
                         .setAutoCancel(true)
                         .setOnlyAlertOnce(true)
@@ -272,6 +275,7 @@ public class NextStopAlarmReceiver extends BroadcastReceiver {
                         .setStyle(inboxStyle)
                         .setCategory(NotificationCompat.CATEGORY_EVENT)
                         .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                        .setColor(mContext.getResources().getColor(R.color.icon_color))
                         .setContentIntent(contentIntent)
                         .setOngoing(true);
 
@@ -293,6 +297,7 @@ public class NextStopAlarmReceiver extends BroadcastReceiver {
                         .setSmallIcon(R.drawable.ic_directions_bus_white)
                         .setContentTitle(mContext.getString(R.string.notif_error_content_title))
                         .setContentText(mContext.getString(R.string.notif_error_content_text))
+                        .setColor(mContext.getResources().getColor(R.color.icon_color))
                         .setCategory(NotificationCompat.CATEGORY_ERROR)
                         .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                         .setContentIntent(contentIntent)

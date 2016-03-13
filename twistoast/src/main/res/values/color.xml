@@ -19,10 +19,12 @@
 
 <resources>
 
-	<color name="twisto_primary">#00A885</color>
-	<color name="twisto_secondary">#FCB840</color>
+    <color name="icon_color">#37c3e2</color>
 
-	<color name="traffic_alert_background">#F5A400</color>
-	<color name="traffic_alert_text_primary">#fff1a4</color>
+    <color name="twisto_primary">#00A885</color>
+    <color name="twisto_secondary">#FCB840</color>
+
+    <color name="traffic_alert_background">#F5A400</color>
+    <color name="traffic_alert_text_primary">#fff1a4</color>
 
 </resources>
