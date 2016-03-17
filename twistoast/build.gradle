@@ -26,8 +26,8 @@ android {
         applicationId "fr.outadev.twistoast"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 22
-        versionName "2.6"
+        versionCode 23
+        versionName "2.6.1"
     }
 
     compileOptions {
