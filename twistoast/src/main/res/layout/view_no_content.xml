@@ -37,7 +37,7 @@
 			android:layout_gravity="center"
 			android:layout_marginBottom="20dp"
 			android:src="@drawable/splash_bus"
-			android:tint="@android:color/secondary_text_dark"
+			android:tint="#bebebe"
 			android:contentDescription="@string/add_first_stop_title" />
 
 		<TextView
@@ -47,7 +47,7 @@
 			android:layout_gravity="center_horizontal"
 			android:text="@string/add_first_stop_title"
 			android:textAppearance="?android:attr/textAppearanceLarge"
-			android:textColor="@android:color/secondary_text_dark" />
+			android:textColor="#bebebe" />
 	</LinearLayout>
 
 </FrameLayout>
