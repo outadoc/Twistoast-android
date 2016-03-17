@@ -23,6 +23,11 @@ données si une API alternative se trouve être plus complète, plus stable ou p
 
 N'hésitez pas à contribuer et à soumettre des pull requests si l'envie ou le besoin vous en prend !
 
+## Captures d'écran
+<img src="/../master/screenshots/fr_FR/screen_main.png?raw=true" width="280">
+<img src="/../master/screenshots/fr_FR/screen_drawer.png?raw=true" width="280">
+<img src="/../master/screenshots/fr_FR/screen_map.png?raw=true" width="280">
+
 ## Obtenir Twistoast
 Twistoast est disponible sur le [Google Play Store](https://play.google.com/store/apps/details?id=fr.outadev.twistoast) et
 le [Chrome Web Store](https://chrome.google.com/webstore/detail/twistoast/olecaebebjbkmcnmobbdhgeicjfhidll?hl=fr).
