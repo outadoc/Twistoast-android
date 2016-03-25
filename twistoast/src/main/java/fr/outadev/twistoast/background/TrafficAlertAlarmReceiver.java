@@ -48,7 +48,7 @@ public class TrafficAlertAlarmReceiver extends BroadcastReceiver {
 
         AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmMgr.setInexactRepeating(ALARM_TYPE,
-                SystemClock.elapsedRealtime() + 60 * 1000, ALARM_FREQUENCY, getBroadcast(context));
+                SystemClock.elapsedRealtime() + 10 * 1000, ALARM_FREQUENCY, getBroadcast(context));
     }
 
     /**
