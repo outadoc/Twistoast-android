@@ -26,13 +26,13 @@ import android.content.Intent;
 import android.os.SystemClock;
 import android.util.Log;
 
-import fr.outadev.twistoast.utils.Utils;
-
 /**
  * A broadcast receiver called at regular intervals to check
  * if there are traffic problems and the user should be notified.
  */
 public class TrafficAlertAlarmReceiver extends BroadcastReceiver {
+
+    private static final String TAG = TrafficAlertAlarmReceiver.class.getSimpleName();
 
     private static final int ALARM_TYPE = AlarmManager.ELAPSED_REALTIME;
     private static final long ALARM_FREQUENCY = AlarmManager.INTERVAL_HALF_HOUR;
@@ -44,7 +44,7 @@ public class TrafficAlertAlarmReceiver extends BroadcastReceiver {
      * @param context a context
      */
     static void enable(Context context) {
-        Log.d(Utils.TAG, "enabling " + TrafficAlertAlarmReceiver.class.getSimpleName());
+        Log.d(TAG, "enabling " + TrafficAlertAlarmReceiver.class.getSimpleName());
 
         AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmMgr.setInexactRepeating(ALARM_TYPE,
@@ -57,7 +57,7 @@ public class TrafficAlertAlarmReceiver extends BroadcastReceiver {
      * @param context a context
      */
     static void disable(Context context) {
-        Log.d(Utils.TAG, "disabling " + TrafficAlertAlarmReceiver.class.getSimpleName());
+        Log.d(TAG, "disabling " + TrafficAlertAlarmReceiver.class.getSimpleName());
 
         AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmMgr.cancel(getBroadcast(context));

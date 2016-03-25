@@ -27,11 +27,11 @@ import java.io.IOException;
 import java.util.List;
 
 import fr.outadev.android.transport.timeo.IProgressListener;
+import fr.outadev.android.transport.timeo.ITimeoRequestHandler;
 import fr.outadev.android.transport.timeo.TimeoException;
 import fr.outadev.android.transport.timeo.TimeoLine;
 import fr.outadev.android.transport.timeo.TimeoRequestHandler;
 import fr.outadev.android.transport.timeo.TimeoStop;
-import fr.outadev.twistoast.utils.Utils;
 
 /**
  * Fetches and updates all the references of the stops saved in our database.
@@ -40,10 +40,14 @@ import fr.outadev.twistoast.utils.Utils;
  */
 public class TimeoStopReferenceUpdater {
 
-    private Database mDatabase;
+    private static final String TAG = TimeoStopReferenceUpdater.class.getSimpleName();
+
+    private final Database mDatabase;
+    private final ITimeoRequestHandler mRequestHandler;
 
     public TimeoStopReferenceUpdater(Context context) {
-        this.mDatabase = new Database(DatabaseOpenHelper.getInstance(context));
+        mDatabase = new Database(DatabaseOpenHelper.getInstance(context));
+        mRequestHandler = new TimeoRequestHandler();
     }
 
     /**
@@ -53,7 +57,6 @@ public class TimeoStopReferenceUpdater {
      * @param progressListener a progress listener that will be notified of the progress, line by line.
      * @throws XmlPullParserException
      * @throws IOException
-     * @throws fr.outadev.android.timeo.TimeoException
      */
     public void updateAllStopReferences(List<TimeoStop> stops, IProgressListener progressListener) throws XmlPullParserException,
             IOException,
@@ -73,7 +76,7 @@ public class TimeoStopReferenceUpdater {
             }
 
             //update the progress
-            Log.d(Utils.TAG, "updating stops for line " + stop.getLine());
+            Log.d(TAG, "updating stops for line " + stop.getLine());
 
             if (progressListener != null) {
                 progressListener.onProgress(i, stops.size());
@@ -81,7 +84,7 @@ public class TimeoStopReferenceUpdater {
 
             //get the stops for the current line
             lastLine = stop.getLine();
-            List<TimeoStop> newStops = TimeoRequestHandler.getStops(lastLine);
+            List<TimeoStop> newStops = mRequestHandler.getStops(lastLine);
 
             //update all the stops we received.
             //obviously, only the ones existing in the database will be updated.

@@ -46,12 +46,13 @@ import java.util.List;
 
 import fr.outadev.android.transport.timeo.TimeoStop;
 import fr.outadev.twistoast.background.NextStopAlarmReceiver;
-import fr.outadev.twistoast.utils.Utils;
+import fr.outadev.twistoast.utils.Util;
 
 public class FragmentRealtime extends Fragment implements IStopsListContainer {
 
     //Refresh automatically every 60 seconds.
     private static final long REFRESH_INTERVAL = 60000L;
+    private static final String TAG = FragmentRealtime.class.getSimpleName();
 
     private final Handler mPeriodicRefreshHandler = new Handler();
     private Runnable mPeriodicRefreshRunnable;
@@ -193,8 +194,10 @@ public class FragmentRealtime extends Fragment implements IStopsListContainer {
     @Override
     public void onPause() {
         super.onPause();
+
         // when the activity is pausing, stop refreshing automatically
-        Log.i(Utils.TAG, "stopping automatic refresh, app paused");
+        Log.i(TAG, "stopping automatic refresh, app paused");
+
         mIsInBackground = true;
         mPeriodicRefreshHandler.removeCallbacks(mPeriodicRefreshRunnable);
     }
@@ -284,7 +287,7 @@ public class FragmentRealtime extends Fragment implements IStopsListContainer {
         // if we don't do that, bugs will appear when the database has been
         // modified
         if (reloadFromDatabase) {
-            Database.SortBy criteria = Utils.getSortCriteria(mConfig.getListSortOrder());
+            Database.SortBy criteria = Util.getSortCriteria(mConfig.getListSortOrder());
 
             mStopList = mDatabaseHandler.getAllStops(criteria);
             mListAdapter = new RecyclerAdapterRealtime(getActivity(), mStopList, this, mStopsRecyclerView);
@@ -311,7 +314,7 @@ public class FragmentRealtime extends Fragment implements IStopsListContainer {
             mPeriodicRefreshHandler.postDelayed(mPeriodicRefreshRunnable, REFRESH_INTERVAL);
         }
 
-        Log.i(Utils.TAG, "refreshed, " + mListAdapter.getItemCount() + " stops in db");
+        Log.i(TAG, "refreshed, " + mListAdapter.getItemCount() + " stops in db");
     }
 
     @Override

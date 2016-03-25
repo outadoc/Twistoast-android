@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Twistoast - strings_urls.xml
-  ~ Copyright (C) 2013-2015 Baptiste Candellier
+  ~ Copyright (C) 2013-2016 Baptiste Candellier
   ~
   ~ Twistoast is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -25,6 +25,5 @@
 	<string name="url_drawer_map" translatable="false">http://twisto.fr/module/mobile/App2014/leaflet/?ios=true</string>
 	<string name="url_drawer_news" translatable="false">http://twisto.mobi/module/mobile/App/actus/</string>
 	<string name="url_drawer_pricing" translatable="false">http://twisto.fr/module/mobile/App2014/tarifs/index.php?ios=true</string>
-	<string name="url_pre_home_info" translatable="false">http://twisto.fr/module/mobile/App2014/utils/getPreHome.php</string>
 
 </resources>

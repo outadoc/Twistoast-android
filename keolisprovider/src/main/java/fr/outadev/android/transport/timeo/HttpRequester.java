@@ -32,10 +32,13 @@ import java.io.IOException;
  */
 public class HttpRequester {
 
-    public final static String TAG = HttpRequester.class.getName();
+    public final static String TAG = HttpRequester.class.getSimpleName();
     private static HttpRequester sInstance;
 
+    private final OkHttpClient mHttpClient;
+
     private HttpRequester() {
+        mHttpClient = new OkHttpClient();
     }
 
     public static HttpRequester getInstance() {
@@ -56,10 +59,8 @@ public class HttpRequester {
      * @throws IOException if an HTTP error occurred
      */
     public String requestWebPage(String url, String params, boolean useCaches) throws IOException {
-        String finalUrl = url + "?" + params;
+        String finalUrl = (params == null || params.isEmpty()) ? url : url + "?" + params;
         Log.i(TAG, "requesting " + finalUrl);
-
-        OkHttpClient client = new OkHttpClient();
 
         Request.Builder builder = new Request.Builder()
                 .url(finalUrl);
@@ -68,7 +69,7 @@ public class HttpRequester {
             builder.cacheControl(CacheControl.FORCE_NETWORK);
         }
 
-        Response response = client.newCall(builder.build()).execute();
+        Response response = mHttpClient.newCall(builder.build()).execute();
         return response.body().string();
     }
 

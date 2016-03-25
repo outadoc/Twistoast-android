@@ -30,7 +30,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import fr.outadev.android.transport.timeo.TimeoRequestHandler;
-import fr.outadev.twistoast.utils.Utils;
 
 /**
  * Opens, creates and manages database versions.
@@ -39,9 +38,13 @@ import fr.outadev.twistoast.utils.Utils;
  */
 public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
+    private static final String TAG = DatabaseOpenHelper.class.getSimpleName();
+
     private static final int DATABASE_VERSION = 3;
     private static final String DATABASE_NAME = "twistoast.db";
+
     private static final String DATABASE_V2_UPGRADE_NAME = "db_upgrade_v2.db";
+
     private static final String LINES_TABLE_CREATE =
             "CREATE TABLE twi_line(" +
                     "line_id TEXT, " +
@@ -49,6 +52,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
                     "line_color TEXT, " +
                     "network_code INTEGER DEFAULT " + TimeoRequestHandler.DEFAULT_NETWORK_CODE + ", " +
                     "PRIMARY KEY (line_id, network_code))";
+
     private static final String DIRECTIONS_TABLE_CREATE =
             "CREATE TABLE twi_direction(" +
                     "dir_id TEXT, " +
@@ -57,6 +61,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
                     "network_code INTEGER DEFAULT " + TimeoRequestHandler.DEFAULT_NETWORK_CODE + ", " +
                     "PRIMARY KEY(dir_id, line_id, network_code), " +
                     "FOREIGN KEY(line_id, network_code) REFERENCES twi_line(line_id, network_code))";
+
     private static final String STOPS_TABLE_CREATE =
             "CREATE TABLE twi_stop(" +
                     "stop_id INTEGER, " +
@@ -67,6 +72,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
                     "network_code INTEGER DEFAULT " + TimeoRequestHandler.DEFAULT_NETWORK_CODE + ", " +
                     "PRIMARY KEY(stop_id, line_id, dir_id, network_code), " +
                     "FOREIGN KEY(dir_id, line_id, network_code) REFERENCES twi_direction(dir_id, line_id, network_code))";
+
     private static final String NOTIFICATIONS_TABLE_CREATE =
             "CREATE TABLE twi_notification(" +
                     "stop_id INTEGER," +
@@ -79,9 +85,9 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
                     "PRIMARY KEY(stop_id, line_id, dir_id, network_code, notif_active, notif_creation_time), " +
                     "FOREIGN KEY(stop_id, line_id, dir_id, network_code) " +
                     "REFERENCES twi_stop(stop_id, line_id, dir_id, network_code))";
+
     private static DatabaseOpenHelper sInstance;
     private Context mContext;
-
 
     private DatabaseOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -106,7 +112,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(final SQLiteDatabase db, int oldVersion, int newVersion) {
-        Log.i(Utils.TAG, "upgrading database to v" + newVersion + ", was v" + oldVersion);
+        Log.i(TAG, "upgrading database to v" + newVersion + ", was v" + oldVersion);
 
         switch (oldVersion) {
             case 1:
@@ -115,7 +121,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
                 upgradeToV3(db);
         }
 
-        Log.i(Utils.TAG, "successful database upgrade!");
+        Log.i(TAG, "successful database upgrade!");
     }
 
     /**

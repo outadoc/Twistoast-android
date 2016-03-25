@@ -28,13 +28,13 @@ import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 
-import fr.outadev.twistoast.utils.Utils;
-
 /**
  * A more efficient version of TrafficAlertAlarmReceiver, only compatible with Lollipop+.
  */
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class TrafficAlertJobService extends JobService {
+
+    private static final String TAG = TrafficAlertJobService.class.getSimpleName();
 
     public static final int TRAFFIC_ALERT_JOB_ID = 1;
     private static final long JOB_FREQUENCY = 30 * 60 * 1000;
@@ -46,7 +46,7 @@ public class TrafficAlertJobService extends JobService {
      * @param context a context
      */
     static void enable(Context context) {
-        Log.d(Utils.TAG, "enabling " + TrafficAlertTask.class.getSimpleName());
+        Log.d(TAG, "enabling " + TrafficAlertTask.class.getSimpleName());
 
         JobScheduler scheduler = (JobScheduler)context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
         scheduler.schedule(new JobInfo.Builder(TRAFFIC_ALERT_JOB_ID, new ComponentName(context, TrafficAlertJobService.class))
@@ -62,7 +62,7 @@ public class TrafficAlertJobService extends JobService {
      * @param context a context
      */
     static void disable(Context context) {
-        Log.d(Utils.TAG, "disabling " + TrafficAlertTask.class.getSimpleName());
+        Log.d(TAG, "disabling " + TrafficAlertTask.class.getSimpleName());
 
         JobScheduler scheduler = (JobScheduler)context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
         scheduler.cancel(TRAFFIC_ALERT_JOB_ID);

@@ -27,33 +27,36 @@ import android.os.AsyncTask;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import fr.outadev.android.transport.timeo.ITimeoRequestHandler;
 import fr.outadev.android.transport.timeo.TimeoRequestHandler;
 import fr.outadev.android.transport.timeo.TimeoTrafficAlert;
 import fr.outadev.twistoast.ConfigurationManager;
 import fr.outadev.twistoast.R;
-import fr.outadev.twistoast.utils.Utils;
 
 /**
  * Created by outadoc on 2016-03-07.
  */
 public class TrafficAlertTask extends AsyncTask<Void, Void, TimeoTrafficAlert> {
 
-    private int mLastTrafficId;
+    private static final String TAG = TrafficAlertTask.class.getSimpleName();
 
     private final Context mContext;
     private final ConfigurationManager mConfig;
-
     private NotificationManager mNotificationManager;
+    private final ITimeoRequestHandler mRequestHandler;
+
+    private int mLastTrafficId;
 
     public TrafficAlertTask(Context context) {
         mContext = context;
         mConfig = new ConfigurationManager(mContext);
+        mRequestHandler = new TimeoRequestHandler();
     }
 
     @Override
     protected TimeoTrafficAlert doInBackground(Void... params) {
         try {
-            return TimeoRequestHandler.getGlobalTrafficAlert(mContext.getString(R.string.url_pre_home_info));
+            return mRequestHandler.getGlobalTrafficAlert();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -64,13 +67,13 @@ public class TrafficAlertTask extends AsyncTask<Void, Void, TimeoTrafficAlert> {
     protected void onPreExecute() {
         mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         mLastTrafficId = mConfig.getLastTrafficNotificationId();
-        Log.d(Utils.TAG, "checking traffic alert");
+        Log.d(TAG, "checking traffic alert");
     }
 
     @Override
     protected void onPostExecute(TimeoTrafficAlert trafficAlert) {
         if (trafficAlert != null) {
-            Log.d(Utils.TAG, "found traffic alert #" + trafficAlert.getId());
+            Log.d(TAG, "found traffic alert #" + trafficAlert.getId());
 
             if (mLastTrafficId != trafficAlert.getId()) {
                 Intent notificationIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(trafficAlert.getUrl()));
@@ -100,7 +103,7 @@ public class TrafficAlertTask extends AsyncTask<Void, Void, TimeoTrafficAlert> {
             }
         }
 
-        Log.d(Utils.TAG, "checked traffic: nothing new!");
+        Log.d(TAG, "checked traffic: nothing new!");
     }
 
 }

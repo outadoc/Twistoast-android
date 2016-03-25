@@ -64,7 +64,7 @@ public abstract class Util {
      * @param str The text to capitalize.
      * @return The capitalized text.
      */
-    private static String smartCapitalize(String str) {
+    public static String smartCapitalize(String str) {
         String newStr = "";
         str = str.toLowerCase().trim();
 

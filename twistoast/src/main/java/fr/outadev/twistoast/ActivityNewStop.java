@@ -44,6 +44,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.outadev.android.transport.timeo.ITimeoRequestHandler;
 import fr.outadev.android.transport.timeo.TimeoBlockingMessageException;
 import fr.outadev.android.transport.timeo.TimeoException;
 import fr.outadev.android.transport.timeo.TimeoIDNameObject;
@@ -88,6 +89,7 @@ public class ActivityNewStop extends ThemedActivity {
     private MenuItem mItemNext;
 
     private Database mDatabaseHandler;
+    private ITimeoRequestHandler mRequestHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +106,7 @@ public class ActivityNewStop extends ThemedActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white);
 
         mDatabaseHandler = new Database(DatabaseOpenHelper.getInstance(this));
+        mRequestHandler = new TimeoRequestHandler();
 
         // get all the UI elements we'll need in the future
 
@@ -263,7 +266,7 @@ public class ActivityNewStop extends ThemedActivity {
                         protected List<TimeoStop> doInBackground(Void... voids) {
                             try {
                                 getCurrentLine().setDirection(getCurrentDirection());
-                                return TimeoRequestHandler.getStops(getCurrentLine());
+                                return mRequestHandler.getStops(getCurrentLine());
                             } catch (Exception e) {
                                 handleAsyncExceptions(e);
                             }
@@ -344,7 +347,7 @@ public class ActivityNewStop extends ThemedActivity {
             @Override
             protected TimeoStopSchedule doInBackground(Void... voids) {
                 try {
-                    return TimeoRequestHandler.getSingleSchedule(getCurrentStop());
+                    return mRequestHandler.getSingleSchedule(getCurrentStop());
                 } catch (Exception e) {
                     handleAsyncExceptions(e);
                 }
@@ -405,7 +408,7 @@ public class ActivityNewStop extends ThemedActivity {
             @Override
             protected List<TimeoLine> doInBackground(Void... voids) {
                 try {
-                    return TimeoRequestHandler.getLines();
+                    return mRequestHandler.getLines();
                 } catch (Exception e) {
                     handleAsyncExceptions(e);
                 }

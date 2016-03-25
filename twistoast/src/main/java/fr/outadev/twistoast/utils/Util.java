@@ -1,5 +1,5 @@
 /*
- * Twistoast - Utils
+ * Twistoast - Util
  * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -25,9 +25,7 @@ import fr.outadev.twistoast.Database;
  *
  * @author outadoc
  */
-public class Utils {
-
-    public static final String TAG = "Twistoast";
+public class Util {
 
     public static Database.SortBy getSortCriteria(String sortBy) {
         switch (sortBy.toLowerCase()) {

@@ -48,7 +48,7 @@ import fr.outadev.android.transport.transport.ITransportDataProvider;
  */
 public class TimeoRequestHandler implements ITransportDataProvider {
 
-    public final static String TAG = TimeoRequestHandler.class.getName();
+    public final static String TAG = TimeoRequestHandler.class.getSimpleName();
 
     public final static int DEFAULT_NETWORK_CODE = 147;
     public final static String API_BASE_URL = "http://timeo3.keolis.com/relais/";

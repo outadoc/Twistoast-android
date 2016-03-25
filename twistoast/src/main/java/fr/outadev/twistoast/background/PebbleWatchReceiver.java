@@ -32,6 +32,7 @@ import org.joda.time.DateTime;
 
 import java.util.UUID;
 
+import fr.outadev.android.transport.timeo.ITimeoRequestHandler;
 import fr.outadev.android.transport.timeo.TimeoRequestHandler;
 import fr.outadev.android.transport.timeo.TimeoSingleSchedule;
 import fr.outadev.android.transport.timeo.TimeoStop;
@@ -71,8 +72,12 @@ public class PebbleWatchReceiver extends PebbleDataReceiver {
     private static final int KEY_SHOULD_VIBRATE = 0x30;
     private static final int KEY_BACKGROUND_COLOR = 0x31;
 
+    private ITimeoRequestHandler mRequestHandler;
+    private Database mDatabase;
+
     public PebbleWatchReceiver() {
         super(PEBBLE_UUID);
+        mRequestHandler = new TimeoRequestHandler();
     }
 
     @Override
@@ -80,8 +85,8 @@ public class PebbleWatchReceiver extends PebbleDataReceiver {
         Log.d(TAG, "received a message from pebble " + PEBBLE_UUID);
 
         // open the database and count the stops
-        Database databaseHandler = new Database(DatabaseOpenHelper.getInstance(context));
-        int stopsCount = databaseHandler.getStopsCount();
+        mDatabase = new Database(DatabaseOpenHelper.getInstance(context));
+        int stopsCount = mDatabase.getStopsCount();
 
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -96,7 +101,7 @@ public class PebbleWatchReceiver extends PebbleDataReceiver {
             final short busIndex = (short) (data.getInteger(KEY_STOP_INDEX).shortValue() % stopsCount);
 
             // get the stop that interests us
-            final TimeoStop stop = databaseHandler.getStopAtIndex(busIndex);
+            final TimeoStop stop = mDatabase.getStopAtIndex(busIndex);
 
             Log.d(TAG, "loading data for stop #" + busIndex + "...");
 
@@ -108,7 +113,7 @@ public class PebbleWatchReceiver extends PebbleDataReceiver {
                     TimeoStop stop = params[0];
 
                     try {
-                        return TimeoRequestHandler.getSingleSchedule(stop);
+                        return mRequestHandler.getSingleSchedule(stop);
                     } catch (Exception e) {
                         PebbleKit.sendNackToPebble(context, transactionId);
                         e.printStackTrace();

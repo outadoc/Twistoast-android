@@ -34,80 +34,51 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
+
+import fr.outadev.android.transport.Util;
 
 /**
  * Handles all connections to the Twisto Realtime API.
  *
  * @author outadoc
  */
-public abstract class TimeoRequestHandler {
+public class TimeoRequestHandler implements ITimeoRequestHandler {
 
-    public final static String TAG = TimeoRequestHandler.class.getName();
+    public final static String TAG = TimeoRequestHandler.class.getSimpleName();
 
     public final static int DEFAULT_NETWORK_CODE = 147;
+
     public final static String API_BASE_URL = "http://timeo3.keolis.com/relais/";
+    public final static String PRE_HOME_URL = "http://twisto.fr/module/mobile/App2014/utils/getPreHome.php";
 
     /**
      * Shorthand methods for requesting data from the default city's API (Twisto/Caen)
      */
 
-    /**
-     * Fetch the bus lines from the API.
-     *
-     * @return a list of lines
-     * @throws XmlPullParserException if a parsing exception occurred
-     * @throws IOException            if an I/O exception occurred whilst parsing the XML
-     * @throws TimeoException         if the API returned an error
-     */
+    @Override
     @NonNull
-    public static List<TimeoLine> getLines() throws XmlPullParserException, IOException, TimeoException {
+    public List<TimeoLine> getLines() throws XmlPullParserException, IOException, TimeoException {
         return getLines(DEFAULT_NETWORK_CODE);
     }
 
-    /**
-     * Fetch a list of bus stops from the API.
-     *
-     * @param line the line for which we should fetch the stops
-     * @return a list of bus stops
-     * @throws XmlPullParserException if a parsing exception occurred
-     * @throws IOException            if an I/O exception occurred whilst parsing the XML
-     * @throws TimeoException         if the API returned an error
-     */
+    @Override
     @NonNull
-    public static List<TimeoStop> getStops(TimeoLine line) throws XmlPullParserException, IOException,
+    public List<TimeoStop> getStops(TimeoLine line) throws XmlPullParserException, IOException,
             TimeoException {
         return getStops(line.getNetworkCode(), line);
     }
 
-    /**
-     * Fetches a schedule for a single bus stop from the API.
-     *
-     * @param stop the bus stop to fetch the schedule for
-     * @return a NavitiaStopSchedule containing said schedule
-     * @throws XmlPullParserException if a parsing exception occurred
-     * @throws IOException            if an I/O exception occurred whilst parsing the XML
-     * @throws TimeoException         if the API returned an error
-     */
+    @Override
     @NonNull
-    public static TimeoStopSchedule getSingleSchedule(TimeoStop stop) throws TimeoException, IOException,
+    public TimeoStopSchedule getSingleSchedule(TimeoStop stop) throws TimeoException, IOException,
             XmlPullParserException {
         return getSingleSchedule(stop.getLine().getNetworkCode(), stop);
     }
 
-    /**
-     * Fetches schedules for multiple bus stops from the API.
-     *
-     * @param stops a list of bus stops we should fetch the schedules for
-     * @return a list of NavitiaStopSchedule containing said schedules
-     * @throws XmlPullParserException if a parsing exception occurred
-     * @throws IOException            if an I/O exception occurred whilst parsing the XML
-     * @throws TimeoException         if the API returned an error
-     */
+    @Override
     @NonNull
-    public static List<TimeoStopSchedule> getMultipleSchedules(List<TimeoStop> stops) throws
+    public List<TimeoStopSchedule> getMultipleSchedules(List<TimeoStop> stops) throws
             TimeoException, XmlPullParserException, IOException {
         //if we don't specify any network code when calling getMultipleSchedules, we'll have to figure them out ourselves.
         //we can only fetch a list of schedules that are all part of the same network.
@@ -146,16 +117,9 @@ public abstract class TimeoRequestHandler {
     }
 
 
-    /**
-     * Fetch the bus lines from the API.
-     *
-     * @param networkCode the code for the city's bus network
-     * @return a list of lines
-     * @throws XmlPullParserException if a parsing exception occurred
-     * @throws TimeoException         if the API returned an error
-     */
+    @Override
     @NonNull
-    public static List<TimeoLine> getLines(int networkCode) throws XmlPullParserException, IOException,
+    public List<TimeoLine> getLines(int networkCode) throws XmlPullParserException, IOException,
             TimeoException {
         String params = "xml=1";
         String result = HttpRequester.getInstance().requestWebPage(getEndpointUrl(networkCode),
@@ -206,13 +170,13 @@ public abstract class TimeoRequestHandler {
                         tmpLine.getDetails().setId(text);
 
                     } else if (tmpLine != null && tagname.equals("nom") && isInLineTag) {
-                        tmpLine.getDetails().setName(smartCapitalize(text));
+                        tmpLine.getDetails().setName(Util.smartCapitalize(text));
 
                     } else if (tmpLine != null && tagname.equals("sens") && isInLineTag) {
                         tmpLine.getDirection().setId(text);
 
                     } else if (tmpLine != null && tagname.equals("vers") && isInLineTag) {
-                        tmpLine.getDirection().setName(smartCapitalize(text));
+                        tmpLine.getDirection().setName(Util.smartCapitalize(text));
 
                     } else if (tmpLine != null && tagname.equals("couleur") && isInLineTag) {
                         tmpLine.setColor("#" + StringUtils.leftPad(Integer.toHexString(Integer.valueOf(text)), 6, '0'));
@@ -235,17 +199,9 @@ public abstract class TimeoRequestHandler {
         return lines;
     }
 
-    /**
-     * Fetch a list of bus stops from the API.
-     *
-     * @param networkCode the code for the city's bus network
-     * @param line        the line for which we should fetch the stops
-     * @return a list of bus stops
-     * @throws XmlPullParserException if a parsing exception occurred
-     * @throws TimeoException         if the API returned an error
-     */
+    @Override
     @NonNull
-    public static List<TimeoStop> getStops(int networkCode, TimeoLine line) throws XmlPullParserException,
+    public List<TimeoStop> getStops(int networkCode, TimeoLine line) throws XmlPullParserException,
             IOException, TimeoException {
         String params = "xml=1&ligne=" + line.getId() + "&sens=" + line.getDirection().getId();
         String result = HttpRequester.getInstance().requestWebPage(getEndpointUrl(networkCode),
@@ -293,7 +249,7 @@ public abstract class TimeoRequestHandler {
                         tmpStop.setId(text);
 
                     } else if (tmpStop != null && tagname.equals("nom") && isInStopTag) {
-                        tmpStop.setName(smartCapitalize(text));
+                        tmpStop.setName(Util.smartCapitalize(text));
 
                     } else if (tmpStop != null && tagname.equals("refs")) {
                         tmpStop.setReference(text);
@@ -316,17 +272,9 @@ public abstract class TimeoRequestHandler {
         return stops;
     }
 
-    /**
-     * Fetches a schedule for a single bus stop from the API.
-     *
-     * @param networkCode the code for the city's bus network
-     * @param stop        the bus stop to fetch the schedule for
-     * @return a NavitiaStopSchedule containing said schedule
-     * @throws XmlPullParserException if a parsing exception occurred
-     * @throws TimeoException         if the API returned an error
-     */
+    @Override
     @NonNull
-    public static TimeoStopSchedule getSingleSchedule(int networkCode, TimeoStop stop) throws
+    public TimeoStopSchedule getSingleSchedule(int networkCode, TimeoStop stop) throws
             TimeoException, IOException, XmlPullParserException {
         List<TimeoStop> list = new ArrayList<>();
         list.add(stop);
@@ -339,17 +287,9 @@ public abstract class TimeoRequestHandler {
         }
     }
 
-    /**
-     * Fetches schedules for multiple bus stops from the API.
-     *
-     * @param networkCode the code for the city's bus network
-     * @param stops       a list of bus stops we should fetch the schedules for
-     * @return a list of NavitiaStopSchedule containing said schedules
-     * @throws XmlPullParserException if a parsing exception occurred
-     * @throws TimeoException         if the API returned an error
-     */
+    @Override
     @NonNull
-    public static List<TimeoStopSchedule> getMultipleSchedules(int networkCode, List<TimeoStop> stops)
+    public List<TimeoStopSchedule> getMultipleSchedules(int networkCode, List<TimeoStop> stops)
             throws TimeoException, XmlPullParserException, IOException {
         //final schedules to return
         List<TimeoStopSchedule> schedules = new ArrayList<>();
@@ -453,7 +393,7 @@ public abstract class TimeoRequestHandler {
                         tmpSingleSchedule.setScheduleTime(text);
 
                     } else if (tmpSingleSchedule != null && tagname.equals("destination")) {
-                        tmpSingleSchedule.setDirection(smartCapitalize(text));
+                        tmpSingleSchedule.setDirection(Util.smartCapitalize(text));
 
                     } else if (tmpSingleSchedule != null && tmpSchedule != null && tagname.equals("passage")) {
                         tmpSchedule.getSchedules().add(tmpSingleSchedule);
@@ -489,18 +429,8 @@ public abstract class TimeoRequestHandler {
         return schedules;
     }
 
-    /**
-     * Checks if there are outdated stops amongst those in the database,
-     * by comparing them to a list of schedules returned by the API.
-     * <p/>
-     * The isOutdated property of the bus stops will be set accordingly.
-     *
-     * @param stops     a list of bus stops to check. their isOutdated property may be modified
-     * @param schedules a list of schedules returned by the API and corresponding to the stops
-     * @return the number of outdated stops that have been found
-     * @throws TimeoException if stops or schedules is null
-     */
-    public static int checkForOutdatedStops(List<TimeoStop> stops, List<TimeoStopSchedule> schedules) throws
+    @Override
+    public int checkForOutdatedStops(List<TimeoStop> stops, List<TimeoStopSchedule> schedules) throws
             TimeoException {
         if (stops == null || schedules == null) {
             throw new TimeoException();
@@ -533,15 +463,11 @@ public abstract class TimeoRequestHandler {
         return count;
     }
 
-    /**
-     * Fetches the current global traffic alert message. Might or might not be null.
-     *
-     * @return a NavitiaTrafficAlert if an alert is currently broadcasted on the website, else null
-     */
+    @Override
     @Nullable
-    public static TimeoTrafficAlert getGlobalTrafficAlert(String preHomeUrl) {
+    public TimeoTrafficAlert getGlobalTrafficAlert() {
         try {
-            String source = HttpRequester.getInstance().requestWebPage(preHomeUrl, true);
+            String source = HttpRequester.getInstance().requestWebPage(PRE_HOME_URL, true);
 
             if (!source.isEmpty()) {
                 JSONObject obj = (JSONObject) new JSONTokener(source).nextValue();
@@ -564,56 +490,12 @@ public abstract class TimeoRequestHandler {
     }
 
     /**
-     * Capitalizes the first letter of every word, like WordUtils.capitalize(); except it does it WELL.
-     * The determinants will not be capitalized, whereas some acronyms will.
-     *
-     * @param str The text to capitalize.
-     * @return The capitalized text.
-     */
-    public static String smartCapitalize(String str) {
-        String newStr = "";
-        str = str.toLowerCase().trim();
-
-        //these words will never be capitalized
-        String[] determinants = new String[]{"de", "du", "des", "au", "aux", "à", "la", "le", "les", "d", "et", "l"};
-        //these words will always be capitalized
-        String[] specialWords = new String[]{"sncf", "chu", "chr", "chs", "crous", "suaps", "fpa", "za", "zi", "zac", "cpam",
-                "efs", "mjc"};
-
-        //explode the string with both spaces and apostrophes
-        String[] words = str.split("( |\\-|'|\\/)");
-
-        for (String word : words) {
-            if (Arrays.asList(determinants).contains(word)) {
-                //if the word should not be capitalized, just append it to the new string
-                newStr += word;
-            } else if (Arrays.asList(specialWords).contains(word)) {
-                //if the word should be in upper case, do eet
-                newStr += word.toUpperCase(Locale.FRENCH);
-            } else {
-                //if it's a normal word, just capitalize it
-                newStr += StringUtils.capitalize(word);
-            }
-
-            try {
-                //we don't know if the next character is a blank space or an apostrophe, so we check that
-                char delimiter = str.charAt(newStr.length());
-                newStr += delimiter;
-            } catch (StringIndexOutOfBoundsException ignored) {
-                //will be thrown for the last word of the string
-            }
-        }
-
-        return StringUtils.capitalize(newStr);
-    }
-
-    /**
      * Gets an XmlPullParser for an XML string.
      *
      * @param xml an xml document in a String, sexy
      * @return an XmlPullParser ready to parse the document
      */
-    private static XmlPullParser getParserForXMLString(String xml) throws XmlPullParserException, IOException {
+    private XmlPullParser getParserForXMLString(String xml) throws XmlPullParserException, IOException {
         XmlPullParser parser = Xml.newPullParser();
 
         parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
@@ -623,12 +505,8 @@ public abstract class TimeoRequestHandler {
         return parser;
     }
 
-    /**
-     * Gets the list of the supported bus networks.
-     *
-     * @return an array containing the network names; the index is their code, and they're associated with their name
-     */
-    public static SparseArray<String> getNetworksList() {
+    @Override
+    public SparseArray<String> getNetworksList() {
         SparseArray<String> networks = new SparseArray<>();
 
         networks.put(105, "Le Mans");

@@ -42,6 +42,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fr.outadev.android.transport.timeo.ITimeoRequestHandler;
 import fr.outadev.android.transport.timeo.TimeoBlockingMessageException;
 import fr.outadev.android.transport.timeo.TimeoException;
 import fr.outadev.android.transport.timeo.TimeoRequestHandler;
@@ -49,7 +50,7 @@ import fr.outadev.android.transport.timeo.TimeoSingleSchedule;
 import fr.outadev.android.transport.timeo.TimeoStop;
 import fr.outadev.android.transport.timeo.TimeoStopSchedule;
 import fr.outadev.twistoast.background.BackgroundTasksManager;
-import fr.outadev.twistoast.utils.Utils;
+import fr.outadev.twistoast.utils.Util;
 
 /**
  * An array adapter for the main list of bus stops.
@@ -59,15 +60,17 @@ import fr.outadev.twistoast.utils.Utils;
 public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapterRealtime.ViewHolder> implements
         IRecyclerAdapterAccess {
 
+    public final static String TAG = RecyclerAdapterRealtime.class.getSimpleName();
+
     public static final int NB_SCHEDULES_DISPLAYED = 2;
-    public final static String TAG = RecyclerAdapterRealtime.class.getName();
 
     private final View mParentView;
     private final Activity mActivity;
 
     private final Database mDatabase;
     private final ConfigurationManager mConfig;
-    private TimeoStopReferenceUpdater mReferenceUpdater;
+    private final TimeoStopReferenceUpdater mReferenceUpdater;
+    private final ITimeoRequestHandler mRequestHandler;
 
     private final IStopsListContainer mStopsListContainer;
 
@@ -134,7 +137,7 @@ public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapte
 
                         @Override
                         public void onClick(View view) {
-                            Log.i(Utils.TAG, "restoring stop " + stop);
+                            Log.i(TAG, "restoring stop " + stop);
 
                             mDatabase.addStopToDatabase(stop);
                             mStopsList.add(position, stop);
@@ -207,6 +210,7 @@ public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapte
         mNetworkCount = mDatabase.getNetworksCount();
         mReferenceUpdater = new TimeoStopReferenceUpdater(getActivity());
         mConfig = new ConfigurationManager(activity);
+        mRequestHandler = new TimeoRequestHandler();
     }
 
     /**
@@ -220,14 +224,14 @@ public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapte
             protected Map<TimeoStop, TimeoStopSchedule> doInBackground(Void... params) {
                 try {
                     // Get the schedules and put them in a list
-                    List<TimeoStopSchedule> schedulesList = TimeoRequestHandler.getMultipleSchedules(mStopsList);
+                    List<TimeoStopSchedule> schedulesList = mRequestHandler.getMultipleSchedules(mStopsList);
                     Map<TimeoStop, TimeoStopSchedule> schedulesMap = new HashMap<>();
 
                     for (TimeoStopSchedule schedule : schedulesList) {
                         schedulesMap.put(schedule.getStop(), schedule);
                     }
 
-                    int outdated = TimeoRequestHandler.checkForOutdatedStops(mStopsList, schedulesList);
+                    int outdated = mRequestHandler.checkForOutdatedStops(mStopsList, schedulesList);
 
                     // If there are outdated reference numbers, update those stops
                     if (outdated > 0) {
@@ -235,7 +239,7 @@ public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapte
                         mReferenceUpdater.updateAllStopReferences(mStopsList, null);
 
                         // Reload with the updated stops
-                        schedulesList = TimeoRequestHandler.getMultipleSchedules(mStopsList);
+                        schedulesList = mRequestHandler.getMultipleSchedules(mStopsList);
                         schedulesMap = new HashMap<>();
 
                         for (TimeoStopSchedule schedule : schedulesList) {
@@ -374,7 +378,7 @@ public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapte
         } else {
             // If we can't find the schedules we asked for in the hashmap, something went wrong. :c
             // It should be noted that it normally happens the first time the list is loaded, since no data was downloaded yet.
-            Log.e(Utils.TAG, "missing stop schedule for " + currentStop +
+            Log.e(TAG, "missing stop schedule for " + currentStop +
                     " (ref=" + currentStop.getReference() + "); ref outdated?");
 
             // Make the row look a bit translucent to make it stand out
@@ -411,7 +415,7 @@ public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapte
         TimeoStop item = mStopsList.get(position);
         TimeoStop nextItem = mStopsList.get(position + 1);
 
-        Database.SortBy criteria = Utils.getSortCriteria(mConfig.getListSortOrder());
+        Database.SortBy criteria = Util.getSortCriteria(mConfig.getListSortOrder());
 
         if (criteria == Database.SortBy.STOP) {
             // If the next item's stop is the same as this one, don't draw a separator either

@@ -33,6 +33,7 @@ import org.joda.time.DateTime;
 
 import java.util.List;
 
+import fr.outadev.android.transport.timeo.ITimeoRequestHandler;
 import fr.outadev.android.transport.timeo.TimeoRequestHandler;
 import fr.outadev.android.transport.timeo.TimeoSingleSchedule;
 import fr.outadev.android.transport.timeo.TimeoStop;
@@ -44,7 +45,6 @@ import fr.outadev.twistoast.DatabaseOpenHelper;
 import fr.outadev.twistoast.IWatchedStopChangeListener;
 import fr.outadev.twistoast.R;
 import fr.outadev.twistoast.TimeFormatter;
-import fr.outadev.twistoast.utils.Utils;
 
 /**
  * A broadcast receiver called at regular intervals to check
@@ -52,14 +52,19 @@ import fr.outadev.twistoast.utils.Utils;
  */
 public class NextStopAlarmReceiver extends BroadcastReceiver {
 
+    private static final String TAG = NextStopAlarmReceiver.class.getSimpleName();
+
     // If the bus is coming in less than ALARM_TIME_THRESHOLD_MS milliseconds, send a notification.
     public static final int ALARM_TIME_THRESHOLD_MS = 90 * 1000;
     private static final int ALARM_FREQUENCY = 60 * 1000;
     private static final int ALARM_TYPE = AlarmManager.ELAPSED_REALTIME_WAKEUP;
 
     private static final int NOTIFICATION_ID_ERROR = 42;
+
     private static IWatchedStopChangeListener sWatchedStopStateListener = null;
     private Context mContext;
+
+    private ITimeoRequestHandler mRequestHandler;
 
     /**
      * Enables the regular checks performed every minute by this receiver.
@@ -68,7 +73,7 @@ public class NextStopAlarmReceiver extends BroadcastReceiver {
      * @param context a context
      */
     static void enable(Context context) {
-        Log.d(Utils.TAG, "enabling " + NextStopAlarmReceiver.class.getSimpleName());
+        Log.d(TAG, "enabling " + NextStopAlarmReceiver.class.getSimpleName());
 
         AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmMgr.setInexactRepeating(ALARM_TYPE,
@@ -81,7 +86,7 @@ public class NextStopAlarmReceiver extends BroadcastReceiver {
      * @param context a context
      */
     static void disable(Context context) {
-        Log.d(Utils.TAG, "disabling " + NextStopAlarmReceiver.class.getSimpleName());
+        Log.d(TAG, "disabling " + NextStopAlarmReceiver.class.getSimpleName());
 
         AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmMgr.cancel(getBroadcast(context));
@@ -104,7 +109,8 @@ public class NextStopAlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context context, Intent intent) {
-        this.mContext = context;
+        mContext = context;
+        mRequestHandler = new TimeoRequestHandler();
 
         (new AsyncTask<Void, Void, List<TimeoStopSchedule>>() {
 
@@ -115,7 +121,7 @@ public class NextStopAlarmReceiver extends BroadcastReceiver {
             protected List<TimeoStopSchedule> doInBackground(Void... params) {
                 try {
                     mStopsToCheck = mDatabase.getWatchedStops();
-                    return TimeoRequestHandler.getMultipleSchedules(mStopsToCheck);
+                    return mRequestHandler.getMultipleSchedules(mStopsToCheck);
                 } catch (Exception e) {
                     e.printStackTrace();
                     return null;
@@ -125,7 +131,7 @@ public class NextStopAlarmReceiver extends BroadcastReceiver {
             @Override
             protected void onPreExecute() {
                 mDatabase = new Database(DatabaseOpenHelper.getInstance(context));
-                Log.d(Utils.TAG, "checking stop schedules for notifications");
+                Log.d(TAG, "checking stop schedules for notifications");
             }
 
             @Override
@@ -148,7 +154,7 @@ public class NextStopAlarmReceiver extends BroadcastReceiver {
                                 mDatabase.stopWatchingStop(schedule.getStop());
                                 schedule.getStop().setWatched(false);
 
-                                Log.d(Utils.TAG, "less than two minutes till " + busTime.toString() + ": " + schedule.getStop());
+                                Log.d(TAG, "less than two minutes till " + busTime.toString() + ": " + schedule.getStop());
                             } else if (schedule.getStop().getLastETA() != null) {
                                 // Check if there's more than five minutes of difference between the last estimation and the new
                                 // one. If that's the case, send the notification anyways; it may already be too late!
@@ -163,7 +169,7 @@ public class NextStopAlarmReceiver extends BroadcastReceiver {
                                     mDatabase.stopWatchingStop(schedule.getStop());
                                     schedule.getStop().setWatched(false);
 
-                                    Log.d(Utils.TAG, "last time we saw " + schedule.getStop() + " the bus was scheduled for " +
+                                    Log.d(TAG, "last time we saw " + schedule.getStop() + " the bus was scheduled for " +
                                             schedule.getStop().getLastETA() + ", but now the ETA is " + busTime + ", so we're " +
                                             "notifying");
                                 }

@@ -39,10 +39,10 @@ import android.widget.TextView;
 
 import java.util.HashMap;
 
+import fr.outadev.android.transport.timeo.ITimeoRequestHandler;
 import fr.outadev.android.transport.timeo.TimeoRequestHandler;
 import fr.outadev.android.transport.timeo.TimeoTrafficAlert;
 import fr.outadev.twistoast.background.BackgroundTasksManager;
-import fr.outadev.twistoast.utils.Utils;
 
 /**
  * The main activity of the app.
@@ -51,6 +51,8 @@ import fr.outadev.twistoast.utils.Utils;
  */
 public class ActivityMain extends ThemedActivity implements IStopsListContainer, NavigationView
         .OnNavigationItemSelectedListener {
+
+    private static final String TAG = ActivityMain.class.getSimpleName();
 
     public static final int DEFAULT_DRAWER_ITEM = R.id.drawer_realtime;
 
@@ -62,6 +64,7 @@ public class ActivityMain extends ThemedActivity implements IStopsListContainer,
     private HashMap<Integer, Fragment> mLoadedFragments;
 
     private TimeoTrafficAlert mTrafficAlert;
+    private ITimeoRequestHandler mRequestHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +110,8 @@ public class ActivityMain extends ThemedActivity implements IStopsListContainer,
             loadFragmentForDrawerItem(mCurrentDrawerItem);
             checkForGlobalTrafficInfo();
         }
+
+        mRequestHandler = new TimeoRequestHandler();
 
         // Turn the notifications back off if necessary
         Database db = new Database(DatabaseOpenHelper.getInstance(this));
@@ -225,7 +230,7 @@ public class ActivityMain extends ThemedActivity implements IStopsListContainer,
             @Override
             protected TimeoTrafficAlert doInBackground(Void... voids) {
                 try {
-                    return TimeoRequestHandler.getGlobalTrafficAlert(getString(R.string.url_pre_home_info));
+                    return mRequestHandler.getGlobalTrafficAlert();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -250,7 +255,7 @@ public class ActivityMain extends ThemedActivity implements IStopsListContainer,
         TextView trafficLabel = (TextView) findViewById(R.id.lbl_traffic_info_string);
 
         if (mTrafficAlert != null && trafficView != null && trafficLabel != null) {
-            Log.i(Utils.TAG, mTrafficAlert.toString());
+            Log.i(TAG, mTrafficAlert.toString());
             final String url = mTrafficAlert.getUrl();
 
             trafficView.setOnClickListener(new View.OnClickListener() {
