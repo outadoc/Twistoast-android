@@ -55,21 +55,12 @@ public class FragmentWebView extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mWebView = new TwistoastWebView(getActivity());
-
-        if (savedInstanceState != null) {
-            mWebView.loadUrl(savedInstanceState.getString("url"));
-        } else {
+        if (mWebView == null) {
+            mWebView = new TwistoastWebView(getActivity());
             mWebView.loadUrl(getArguments().getString("url"));
         }
 
         return mWebView;
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putCharSequence("url", mWebView.getUrl());
     }
 
     @Override

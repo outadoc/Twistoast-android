@@ -200,6 +200,8 @@ public class ActivityMain extends ThemedActivity implements IStopsListContainer,
             fragmentToOpen = FragmentFactory.getFragmentFromMenuItem(this, itemId);
         }
 
+        mLoadedFragments.put(itemId, fragmentToOpen);
+
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragmentToOpen).commit();
