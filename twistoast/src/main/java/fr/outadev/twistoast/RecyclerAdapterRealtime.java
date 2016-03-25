@@ -50,7 +50,6 @@ import fr.outadev.android.transport.timeo.TimeoSingleSchedule;
 import fr.outadev.android.transport.timeo.TimeoStop;
 import fr.outadev.android.transport.timeo.TimeoStopSchedule;
 import fr.outadev.twistoast.background.BackgroundTasksManager;
-import fr.outadev.twistoast.utils.Util;
 
 /**
  * An array adapter for the main list of bus stops.
@@ -415,7 +414,7 @@ public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapte
         TimeoStop item = mStopsList.get(position);
         TimeoStop nextItem = mStopsList.get(position + 1);
 
-        Database.SortBy criteria = Util.getSortCriteria(mConfig.getListSortOrder());
+        Database.SortBy criteria = mConfig.getListSortOrder();
 
         if (criteria == Database.SortBy.STOP) {
             // If the next item's stop is the same as this one, don't draw a separator either

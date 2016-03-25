@@ -46,7 +46,6 @@ import java.util.List;
 
 import fr.outadev.android.transport.timeo.TimeoStop;
 import fr.outadev.twistoast.background.NextStopAlarmReceiver;
-import fr.outadev.twistoast.utils.Util;
 
 public class FragmentRealtime extends Fragment implements IStopsListContainer {
 
@@ -164,11 +163,11 @@ public class FragmentRealtime extends Fragment implements IStopsListContainer {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.sortby_line:
-                mConfig.setListSortOrder("line");
+                mConfig.setListSortOrder(Database.SortBy.LINE);
                 refreshAllStopSchedules(true);
                 return true;
             case R.id.sortby_stop:
-                mConfig.setListSortOrder("stop");
+                mConfig.setListSortOrder(Database.SortBy.STOP);
                 refreshAllStopSchedules(true);
                 return true;
         }
@@ -287,7 +286,7 @@ public class FragmentRealtime extends Fragment implements IStopsListContainer {
         // if we don't do that, bugs will appear when the database has been
         // modified
         if (reloadFromDatabase) {
-            Database.SortBy criteria = Util.getSortCriteria(mConfig.getListSortOrder());
+            Database.SortBy criteria = mConfig.getListSortOrder();
 
             mStopList = mDatabaseHandler.getAllStops(criteria);
             mListAdapter = new RecyclerAdapterRealtime(getActivity(), mStopList, this, mStopsRecyclerView);

@@ -86,12 +86,26 @@ public class ConfigurationManager {
         mPreferences.edit().putInt("last_traffic_notif_id", id).apply();
     }
 
-    public String getListSortOrder() {
-        return mPreferences.getString("pref_list_sortby", "line");
+    public Database.SortBy getListSortOrder() {
+        return stringToSortCriteria(mPreferences.getString("pref_list_sortby", "line"));
     }
 
-    public void setListSortOrder(String sortOrder) {
-        mPreferences.edit().putString("pref_list_sortby", sortOrder).apply();
+    public void setListSortOrder(Database.SortBy sortOrder) {
+        mPreferences.edit().putString("pref_list_sortby", sortCriteriaToString(sortOrder)).apply();
+    }
+
+    private static Database.SortBy stringToSortCriteria(String sortBy) {
+        switch (sortBy.toLowerCase()) {
+            case "stop":
+                return Database.SortBy.STOP;
+            case "line":
+            default:
+                return Database.SortBy.LINE;
+        }
+    }
+
+    private static String sortCriteriaToString(Database.SortBy sortBy) {
+        return sortBy.name().toLowerCase();
     }
 
 }
