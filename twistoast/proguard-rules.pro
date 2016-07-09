@@ -19,6 +19,10 @@
 -keep class android.support.design.** { *; }
 -keep interface android.support.design.** { *; }
 
+-dontwarn android.support.customtabs.**
+-keep class android.support.customtabs.** { *; }
+-keep interface android.support.customtabs.** { *; }
+
 ## 3rd party libs
 -dontwarn com.google.common.**
 -dontwarn okio.**
