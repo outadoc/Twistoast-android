@@ -357,6 +357,8 @@ public class TimeoRequestHandler implements ITimeoRequestHandler {
                     } else if (tagname.equals("erreur")) {
                         //if this is an API error, remember the error code
                         errorCode = parser.getAttributeValue(null, "code");
+                    } else if (tmpSchedule != null && tagname.equals("message")) {
+                        tmpSchedule.setStopTrafficAlert(new TimeoStopTrafficAlert());
                     }
 
                     break;
@@ -406,15 +408,32 @@ public class TimeoRequestHandler implements ITimeoRequestHandler {
                             throw new TimeoException(errorCode, text);
                         }
 
-                    } else if (tmpBlockingException != null && tagname.equals("titre") && !text.isEmpty()) {
-                        tmpBlockingException.setMessageTitle(text);
+                    } else if (tagname.equals("titre") && !text.isEmpty()) {
+                        if (tmpBlockingException != null) {
+                            // global network-wide message
+                            tmpBlockingException.setMessageTitle(text);
+                        } else {
+                            // traffic alert localised to this stop
+                            tmpSchedule.getStopTrafficAlert().setMessageTitle(text);
+                        }
 
-                    } else if (tmpBlockingException != null && tagname.equals("texte") && !text.isEmpty()) {
-                        tmpBlockingException.setMessageBody(text);
+                    } else if (tagname.equals("texte") && !text.isEmpty()) {
+                        if (tmpBlockingException != null) {
+                            // global network-wide message
+                            tmpBlockingException.setMessageBody(text);
+                        } else {
+                            // traffic alert localised to this stop
+                            tmpSchedule.getStopTrafficAlert().setMessageBody(text);
+                        }
 
-                    } else if (tmpBlockingException != null && tagname.equals("bloquant") && text.equals("true")) {
-                        //if we met with a blocking network-wide traffic message
-                        throw tmpBlockingException;
+                    } else if (tmpBlockingException != null && tagname.equals("bloquant")) {
+                        if (text.equals("true")) {
+                            //if we met with a blocking network-wide traffic message
+                            throw tmpBlockingException;
+                        } else {
+                            // reset the message to make place for more processing
+                            tmpBlockingException = null;
+                        }
                     }
 
                     break;

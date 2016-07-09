@@ -31,6 +31,7 @@ public class TimeoStopSchedule {
 
     private TimeoStop mStop;
     private List<TimeoSingleSchedule> mSingleSchedules;
+    private TimeoStopTrafficAlert mStopTrafficAlert;
 
     /**
      * Create a new schedule.
@@ -61,6 +62,14 @@ public class TimeoStopSchedule {
 
     public void setSchedules(List<TimeoSingleSchedule> schedules) {
         this.mSingleSchedules = schedules;
+    }
+
+    public TimeoStopTrafficAlert getStopTrafficAlert() {
+        return mStopTrafficAlert;
+    }
+
+    public void setStopTrafficAlert(TimeoStopTrafficAlert stopTrafficAlert) {
+        mStopTrafficAlert = stopTrafficAlert;
     }
 
     @Override
