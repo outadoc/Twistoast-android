@@ -27,6 +27,7 @@ import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.util.Log
+import android.util.SparseArray
 import android.util.TypedValue
 import android.view.MenuItem
 import android.view.View
@@ -38,7 +39,6 @@ import kotlinx.android.synthetic.main.view_toolbar.*
 import kotlinx.android.synthetic.main.view_traffic_alert.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
-import java.util.*
 
 /**
  * The main activity of the app.
@@ -49,7 +49,7 @@ class ActivityMain : ThemedActivity(), IStopsListContainer, NavigationView.OnNav
 
     private var drawerToggle: ActionBarDrawerToggle? = null
     private var currentDrawerItem = 0
-    private val loadedFragments = HashMap<Int, Fragment>()
+    private val loadedFragments = SparseArray<Fragment>()
 
     private var trafficAlert: TimeoTrafficAlert? = null
     private val requestHandler = TimeoRequestHandler()
