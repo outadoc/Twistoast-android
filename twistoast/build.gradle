@@ -17,6 +17,8 @@
  */
 
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 24
@@ -46,19 +48,29 @@ android {
             proguardFiles 'proguard-rules.pro'
         }
     }
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
 }
 
 dependencies {
     compile project(':colorPicker')
     compile project(':keolisprovider')
-    compile 'com.google.android.gms:play-services-ads:9.2.0'
-    compile 'com.google.android.gms:play-services-base:9.2.0'
-    compile 'com.android.support:design:24.0.0'
-    compile 'com.android.support:appcompat-v7:24.0.0'
-    compile 'com.android.support:support-v4:24.0.0'
-    compile 'com.android.support:recyclerview-v7:24.0.0'
+    compile 'com.google.android.gms:play-services-ads:9.4.0'
+    compile 'com.google.android.gms:play-services-base:9.4.0'
+    compile 'com.android.support:design:24.2.0'
+    compile 'com.android.support:appcompat-v7:24.2.0'
+    compile 'com.android.support:support-v4:24.2.0'
+    compile 'com.android.support:recyclerview-v7:24.2.0'
     compile 'com.getpebble:pebblekit:3.0.0'
     compile 'org.apache.commons:commons-lang3:3.3.2'
     compile 'com.squareup.okhttp:okhttp:2.2.0'
     compile 'joda-time:joda-time:2.9.1'
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile 'org.jetbrains.anko:anko-sdk15:0.9'
+    compile 'org.jetbrains.anko:anko-support-v4:0.9'
+    compile 'org.jetbrains.anko:anko-appcompat-v7:0.9'
+}
+repositories {
+    mavenCentral()
 }
