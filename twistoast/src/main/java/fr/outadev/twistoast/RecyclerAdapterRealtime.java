@@ -453,7 +453,7 @@ public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapte
             mLblStop = (TextView) v.findViewById(R.id.rowStopName);
             mLblDirection = (TextView) v.findViewById(R.id.rowDirectionName);
 
-            mViewScheduleContainer = (LinearLayout) v.findViewById(R.id.view_schedule_labels_container);
+            mViewScheduleContainer = (LinearLayout) v.findViewById(R.id.viewScheduleContainer);
             mImgStopWatched = (ImageView) v.findViewById(R.id.img_stop_watched);
             mLineDrawable = (GradientDrawable) mViewLineId.getBackground();
 
