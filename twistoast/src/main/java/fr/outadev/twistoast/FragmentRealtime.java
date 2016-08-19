@@ -107,7 +107,7 @@ public class FragmentRealtime extends Fragment implements IStopsListContainer {
         mConfig = new ConfigurationManager(getActivity());
 
         // get pull to refresh view
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.ptr_layout);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshContainer);
         mSwipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
 
             @Override

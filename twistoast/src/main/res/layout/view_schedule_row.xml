@@ -37,7 +37,7 @@
 		android:paddingBottom="7dp">
 
 		<FrameLayout
-			android:id="@+id/view_line_id"
+			android:id="@+id/rowLineIdContainer"
 			android:layout_width="60dp"
 			android:layout_height="60dp"
 			android:layout_gravity="center"
@@ -48,7 +48,7 @@
 			android:padding="5dp">
 
 			<fr.outadev.twistoast.utils.AutoResizeTextView
-				android:id="@+id/lbl_line_id"
+				android:id="@+id/rowLineId"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
 				android:ellipsize="none"
@@ -88,7 +88,7 @@
 					android:visibility="gone" />
 
 				<TextView
-					android:id="@+id/lbl_stop_name"
+					android:id="@+id/rowStopName"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:singleLine="true"
@@ -98,7 +98,7 @@
 			</LinearLayout>
 
 			<TextView
-				android:id="@+id/lbl_direction_name"
+				android:id="@+id/rowDirectionName"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:singleLine="true"

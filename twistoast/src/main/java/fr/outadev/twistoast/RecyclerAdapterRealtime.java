@@ -447,11 +447,11 @@ public class RecyclerAdapterRealtime extends RecyclerView.Adapter<RecyclerAdapte
             mContainer = (LinearLayout) v;
 
             // Get references to the views
-            mViewLineId = (FrameLayout) v.findViewById(R.id.view_line_id);
+            mViewLineId = (FrameLayout) v.findViewById(R.id.rowLineIdContainer);
 
-            mLblLine = (TextView) v.findViewById(R.id.lbl_line_id);
-            mLblStop = (TextView) v.findViewById(R.id.lbl_stop_name);
-            mLblDirection = (TextView) v.findViewById(R.id.lbl_direction_name);
+            mLblLine = (TextView) v.findViewById(R.id.rowLineId);
+            mLblStop = (TextView) v.findViewById(R.id.rowStopName);
+            mLblDirection = (TextView) v.findViewById(R.id.rowDirectionName);
 
             mViewScheduleContainer = (LinearLayout) v.findViewById(R.id.view_schedule_labels_container);
             mImgStopWatched = (ImageView) v.findViewById(R.id.img_stop_watched);

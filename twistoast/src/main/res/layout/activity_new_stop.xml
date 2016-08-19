@@ -28,7 +28,7 @@
 	<include layout="@layout/view_toolbar" />
 
 	<android.support.v4.widget.SwipeRefreshLayout
-		android:id="@+id/ptr_layout"
+		android:id="@+id/swipeRefreshContainer"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent">
 
@@ -49,52 +49,52 @@
 				android:orientation="vertical">
 
 				<TextView
-					android:id="@+id/lbl_line"
+					android:id="@+id/lblLine"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:labelFor="@+id/spin_line"
+					android:labelFor="@+id/spinLine"
 					android:text="@string/lbl_line"
 					android:textSize="13sp" />
 
 				<Spinner
-					android:id="@+id/spin_line"
+					android:id="@+id/spinLine"
 					style="@style/Widget.AppCompat.Spinner"
 					android:layout_width="match_parent"
 					android:layout_height="40dp"
 					android:layout_marginBottom="20dp" />
 
 				<TextView
-					android:id="@+id/lbl_direction"
+					android:id="@+id/lblDirection"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:labelFor="@+id/spin_direction"
+					android:labelFor="@+id/spinDirection"
 					android:text="@string/lbl_direction"
 					android:textSize="13sp" />
 
 				<Spinner
-					android:id="@+id/spin_direction"
+					android:id="@+id/spinDirection"
 					style="@style/Widget.AppCompat.Spinner"
 					android:layout_width="match_parent"
 					android:layout_height="40dp"
 					android:layout_marginBottom="20dp" />
 
 				<TextView
-					android:id="@+id/lbl_stop"
+					android:id="@+id/lblStop"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:labelFor="@+id/spin_stop"
+					android:labelFor="@+id/spinStop"
 					android:text="@string/lbl_stop"
 					android:textSize="13sp" />
 
 				<Spinner
-					android:id="@+id/spin_stop"
+					android:id="@+id/spinStop"
 					style="@style/Widget.AppCompat.Spinner"
 					android:layout_width="match_parent"
 					android:layout_height="40dp"
 					android:layout_marginBottom="20dp" />
 
 				<TextView
-					android:id="@+id/lbl_preview"
+					android:id="@+id/lblPreview"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:labelFor="@+id/view_preview"
