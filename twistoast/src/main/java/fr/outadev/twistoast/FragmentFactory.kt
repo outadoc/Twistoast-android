@@ -46,9 +46,8 @@ object FragmentFactory {
             R.id.drawer_pricing -> return getWebViewFragment(context.getString(R.string.url_drawer_pricing))
             R.id.drawer_settings -> return FragmentPreferences()
             R.id.drawer_about -> return FragmentAbout()
+            else -> return null
         }
-
-        return null
     }
 
     private fun getWebViewFragment(url: String): Fragment {

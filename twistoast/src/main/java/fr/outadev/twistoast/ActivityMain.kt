@@ -149,9 +149,8 @@ class ActivityMain : ThemedActivity(), IStopsListContainer, NavigationView.OnNav
     override fun endRefresh(success: Boolean) {
     }
 
-    override fun isRefreshing(): Boolean {
-        return false
-    }
+    override val isRefreshing: Boolean
+        get() = false
 
     override fun setNoContentViewVisible(visible: Boolean) {
     }
@@ -160,7 +159,7 @@ class ActivityMain : ThemedActivity(), IStopsListContainer, NavigationView.OnNav
         currentDrawerItem = itemId
         val fragmentToOpen: Fragment
 
-        fragmentToOpen = loadedFragments[itemId] ?: FragmentFactory.getFragmentFromMenuItem(this, itemId)
+        fragmentToOpen = loadedFragments[itemId] ?: FragmentFactory.getFragmentFromMenuItem(this, itemId)!!
 
         loadedFragments.put(itemId, fragmentToOpen)
 

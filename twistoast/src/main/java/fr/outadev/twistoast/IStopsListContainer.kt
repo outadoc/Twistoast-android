@@ -1,5 +1,5 @@
 /*
- * Twistoast - IWatchedStopChangeListener
+ * Twistoast - IStopsListContainer
  * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -16,17 +16,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast;
-
-import fr.outadev.android.transport.timeo.TimeoStop;
+package fr.outadev.twistoast
 
 /**
- * A listener that will send a message when a watched bus has just arrived.
- * This is used, for example, in the main list, to hide the little "watched" icon when the bus has arrived
- * and the notifications are now effectively turned off.
- */
-public interface IWatchedStopChangeListener {
+ * Implements methods a stops list container activity/fragment should have.
 
-    void onStopWatchingStateChanged(TimeoStop stop, boolean watched);
+ * @author outadoc
+ */
+interface IStopsListContainer {
+
+    val isRefreshing: Boolean
+
+    /**
+     * Called when the list of bus stops is refreshed and the user should be notified.
+     */
+    fun endRefresh(success: Boolean)
+
+    fun setNoContentViewVisible(visible: Boolean)
+
+    /**
+     * Load the fragment at the specified drawer index.
+
+     * @param itemId The identifier of the menu item to load
+     */
+    fun loadFragmentForDrawerItem(itemId: Int)
 
 }

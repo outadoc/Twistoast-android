@@ -1,5 +1,5 @@
 /*
- * Twistoast - IStopsListContainer
+ * Twistoast - IRecyclerAdapterAccess
  * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -16,29 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast;
+package fr.outadev.twistoast
 
 /**
- * Implements methods a stops list container activity/fragment should have.
- *
- * @author outadoc
+ * Created by outadoc on 14/08/15.
  */
-public interface IStopsListContainer {
+interface IRecyclerAdapterAccess {
 
-    /**
-     * Called when the list of bus stops is refreshed and the user should be notified.
-     */
-    void endRefresh(boolean success);
-
-    boolean isRefreshing();
-
-    void setNoContentViewVisible(boolean visible);
-
-    /**
-     * Load the fragment at the specified drawer index.
-     *
-     * @param itemId The identifier of the menu item to load
-     */
-    void loadFragmentForDrawerItem(int itemId);
+    fun shouldItemHaveSeparator(position: Int): Boolean
 
 }
