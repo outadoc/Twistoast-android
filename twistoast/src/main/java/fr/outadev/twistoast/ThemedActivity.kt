@@ -22,6 +22,7 @@ import android.graphics.Color.parseColor
 import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import fr.outadev.twistoast.extensions.getColorPrimaryDark
 
 /**
  * Created by outadoc on 1/2/15.
@@ -72,7 +73,7 @@ open class ThemedActivity : AppCompatActivity() {
         setTheme(getThemeForColor(config.applicationThemeColor))
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.statusBarColor = Colors.getColorPrimaryDark(this)
+            window.statusBarColor = getColorPrimaryDark()
         }
     }
 

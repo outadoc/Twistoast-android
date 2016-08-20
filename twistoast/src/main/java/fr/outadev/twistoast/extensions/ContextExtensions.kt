@@ -16,31 +16,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast;
+package fr.outadev.twistoast.extensions
 
-import android.graphics.Color;
+import android.content.Context
+import android.support.annotation.AttrRes
+import android.util.TypedValue
+import fr.outadev.twistoast.R
 
 /**
  * Miscellaneous methods used to manipulate colours.
- *
+
  * @author outadoc
  */
-public abstract class Colors {
 
-    public static int getBrighterColor(int color) {
-        int newColor;
-        float[] hsv = new float[3];
+fun Context.getColorPrimary(): Int = getColorFromAttribute(this, R.attr.colorPrimary)
 
-        if (color == Color.BLACK) {
-            color = Color.parseColor("#404040");
-        }
+fun Context.getColorPrimaryDark(): Int = getColorFromAttribute(this, R.attr.colorPrimaryDark)
 
-        Color.colorToHSV(color, hsv);
-        hsv[0] -= 35;
-        hsv[2] *= 1.8;
-        newColor = Color.HSVToColor(hsv);
+fun Context.getColorAccent(): Int = getColorFromAttribute(this, R.attr.colorAccent)
 
-        return newColor;
+private fun getColorFromAttribute(context: Context, @AttrRes attr: Int): Int {
+    val a = TypedValue()
+    context.theme.resolveAttribute(attr, a, true)
+
+    if (a.type >= TypedValue.TYPE_FIRST_COLOR_INT && a.type <= TypedValue.TYPE_LAST_COLOR_INT) {
+        return a.data
     }
 
+    throw RuntimeException("Attribute is not a color.")
 }
+
