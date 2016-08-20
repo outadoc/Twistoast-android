@@ -29,7 +29,7 @@ import fr.outadev.twistoast.extensions.getColorPrimaryDark
  */
 open class ThemedActivity : AppCompatActivity() {
 
-    private val sThemes = mapOf(
+    private val themes = mapOf(
             Pair(parseColor("#C41915"), R.style.Twistoast_Theme_Red1),
             Pair(parseColor("#CA4318"), R.style.Twistoast_Theme_Red2),
             Pair(parseColor("#EC6C20"), R.style.Twistoast_Theme_Orange1),
@@ -78,6 +78,6 @@ open class ThemedActivity : AppCompatActivity() {
     }
 
     private fun getThemeForColor(themeColor: Int): Int {
-        return sThemes[themeColor] ?: R.style.Twistoast_Theme
+        return themes[themeColor] ?: R.style.Twistoast_Theme
     }
 }
