@@ -16,46 +16,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast.background;
+package fr.outadev.twistoast.background
 
-import android.content.Context;
+import android.content.Context
 
 /**
  * Manages the enabled/disable state of the background jobs ran by the application.
  * This proxy will run the correct, most efficient job depending on the version of Android running.
  */
-public class BackgroundTasksManager {
+object BackgroundTasksManager {
 
     /**
      * Enables the periodic background traffic alert job/receiver.
      * @param context
      */
-    public static void enableTrafficAlertJob(Context context) {
-        TrafficAlertAlarmReceiver.enable(context);
-    }
+    fun enableTrafficAlertJob(context: Context) = TrafficAlertAlarmReceiver.enable(context)
 
     /**
      * Disables the periodic background traffic alert job/receiver.
      * @param context
      */
-    public static void disableTrafficAlertJob(Context context) {
-        TrafficAlertAlarmReceiver.disable(context);
-    }
+    fun disableTrafficAlertJob(context: Context) = TrafficAlertAlarmReceiver.disable(context)
 
     /**
      * Enables the periodic stop arrival time alarm receiver.
      * @param context
      */
-    public static void enableStopAlarmJob(Context context) {
-        NextStopAlarmReceiver.enable(context);
-    }
+    fun enableStopAlarmJob(context: Context) = NextStopAlarmReceiver.enable(context)
 
     /**
      * Disables the periodic stop arrival time alarm receiver.
      * @param context
      */
-    public static void disableStopAlarmJob(Context context) {
-        NextStopAlarmReceiver.disable(context);
-    }
+    fun disableStopAlarmJob(context: Context) = NextStopAlarmReceiver.disable(context)
 
 }
