@@ -24,7 +24,6 @@ import android.app.NotificationManager
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
-import android.os.AsyncTask
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -39,7 +38,8 @@ import android.widget.TextView
 import fr.outadev.android.transport.timeo.*
 import fr.outadev.twistoast.background.BackgroundTasksManager
 import fr.outadev.twistoast.uiutils.Colors
-import java.util.*
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 
 /**
  * An array adapter for the main list of bus stops.
@@ -71,83 +71,71 @@ class RecyclerAdapterRealtime(val activity: Activity, private val mStopsList: Mu
      */
     fun updateScheduleData() {
         // start refreshing schedules
-        object : AsyncTask<Void, Void, Map<TimeoStop, TimeoStopSchedule>>() {
+        doAsync {
+            try {
+                // Get the schedules and put them in a list
+                var schedulesList: List<TimeoStopSchedule>?
+                var scheduleMap: Map<TimeoStop, TimeoStopSchedule>?
 
-            override fun doInBackground(vararg params: Void): Map<TimeoStop, TimeoStopSchedule>? {
-                try {
-                    // Get the schedules and put them in a list
-                    var schedulesList = requestHandler.getMultipleSchedules(mStopsList)
-                    var schedulesMap: MutableMap<TimeoStop, TimeoStopSchedule> = HashMap()
+                schedulesList = requestHandler.getMultipleSchedules(mStopsList)
+                scheduleMap = schedulesList.associateBy({ it.stop }, { it })
 
-                    for (schedule in schedulesList) {
-                        schedulesMap.put(schedule.stop, schedule)
-                    }
+                val outdated = requestHandler.checkForOutdatedStops(mStopsList, schedulesList)
 
-                    val outdated = requestHandler.checkForOutdatedStops(mStopsList, schedulesList)
+                // If there are outdated reference numbers, update those stops
+                if (outdated > 0) {
+                    Log.e(TAG, "Found $outdated stops, trying to update references")
+                    referenceUpdater.updateAllStopReferences(mStopsList, null)
 
-                    // If there are outdated reference numbers, update those stops
-                    if (outdated > 0) {
-                        Log.e(TAG, "Found $outdated stops, trying to update references")
-                        referenceUpdater.updateAllStopReferences(mStopsList, null)
-
-                        // Reload with the updated stops
-                        schedulesList = requestHandler.getMultipleSchedules(mStopsList)
-                        schedulesMap = HashMap<TimeoStop, TimeoStopSchedule>()
-
-                        for (schedule in schedulesList) {
-                            schedulesMap.put(schedule.stop, schedule)
-                        }
-                    }
-
-                    return schedulesMap
-
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    activity.runOnUiThread {
-                        // It's it's a blocking message, display it in a dialog
-                        if (e is TimeoBlockingMessageException) {
-                            e.getAlertMessage(activity).show()
-                        } else {
-                            val message: String
-
-                            // If the error is a NavitiaException, we'll use a special formatting string
-                            if (e is TimeoException) {
-
-                                // If there are details to the error, display them. Otherwise, only display the error code
-                                if (!e.message?.trim { it <= ' ' }!!.isEmpty()) {
-                                    message = activity.getString(R.string.error_toast_twisto_detailed,
-                                            e.errorCode, e.message)
-                                } else {
-                                    message = activity.getString(R.string.error_toast_twisto,
-                                            e.errorCode)
-                                }
-                            } else {
-                                // If it's a simple error, just display a generic error message
-                                message = activity.getString(R.string.loading_error)
-                            }
-
-                            Snackbar.make(mParentView, message, Snackbar.LENGTH_LONG).setAction(R.string.error_retry) { updateScheduleData() }.show()
-                        }
-                    }
+                    // Reload with the updated stops
+                    schedulesList = requestHandler.getMultipleSchedules(mStopsList)
+                    scheduleMap = schedulesList.associateBy({ it.stop }, { it })
                 }
 
-                return null
-            }
+                uiThread {
+                    schedules.clear()
 
-            override fun onPostExecute(scheduleMap: Map<TimeoStop, TimeoStopSchedule>?) {
-                schedules.clear()
+                    if (scheduleMap != null) {
+                        schedules.putAll(scheduleMap!!)
+                    }
 
-                if (scheduleMap != null) {
-                    schedules.putAll(scheduleMap)
+                    networkCount = database.networksCount
+
+                    notifyDataSetChanged()
+                    mStopsListContainer.endRefresh(scheduleMap != null)
                 }
 
-                networkCount = database.networksCount
+            } catch (e: TimeoBlockingMessageException) {
+                e.printStackTrace()
+                uiThread {
+                    // It's it's a blocking message, display it in a dialog
+                    e.getAlertMessage(activity).show()
+                }
 
-                notifyDataSetChanged()
-                mStopsListContainer.endRefresh(scheduleMap != null)
+            } catch (e: TimeoException) {
+                e.printStackTrace()
+                uiThread {
+                    val message: String
+
+                    // If there are details to the error, display them. Otherwise, only display the error code
+                    if (!e.message?.trim { it <= ' ' }!!.isEmpty()) {
+                        message = activity.getString(R.string.error_toast_twisto_detailed, e.errorCode, e.message)
+                    } else {
+                        message = activity.getString(R.string.error_toast_twisto, e.errorCode)
+                    }
+
+                    Snackbar.make(mParentView, message, Snackbar.LENGTH_LONG)
+                            .setAction(R.string.error_retry) { updateScheduleData() }.show()
+                }
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                uiThread {
+                    Snackbar.make(mParentView, R.string.loading_error, Snackbar.LENGTH_LONG)
+                            .setAction(R.string.error_retry) { updateScheduleData() }.show()
+                }
             }
-
-        }.execute()
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, i: Int): RecyclerAdapterRealtime.ViewHolder {
@@ -161,9 +149,9 @@ class RecyclerAdapterRealtime(val activity: Activity, private val mStopsList: Mu
 
         view.lineDrawable.setColor(Colors.getBrighterColor(Color.parseColor(currentStop.line.color)))
 
-        view.lblLine.text = currentStop.line.id
-        view.lblStop.text = view.lblStop.context.getString(R.string.stop_name, currentStop.name)
-        view.lblDirection.text = view.lblDirection.context.getString(R.string.direction_name, currentStop.line.direction.name)
+        view.rowLineId.text = currentStop.line.id
+        view.rowStopName.text = view.rowStopName.context.getString(R.string.stop_name, currentStop.name)
+        view.rowDirectionName.text = view.rowDirectionName.context.getString(R.string.direction_name, currentStop.line.direction.name)
 
         // Clear labels
         for (i in 0..NB_SCHEDULES_DISPLAYED - 1) {
@@ -190,7 +178,7 @@ class RecyclerAdapterRealtime(val activity: Activity, private val mStopsList: Mu
                         currentStop.isWatched = false
                     }
 
-                    view.lblScheduleTime[i]?.text = TimeFormatter.formatTime(view.lblScheduleTime[i]?.context, currSched.scheduleTime)
+                    view.lblScheduleTime[i]?.text = TimeFormatter.formatTime(view.lblScheduleTime[i]!!.context, currSched.scheduleTime)
                     view.lblScheduleDirection[i]?.text = " — " + currSched.direction
                     i++
                 }
@@ -347,11 +335,11 @@ class RecyclerAdapterRealtime(val activity: Activity, private val mStopsList: Mu
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
         var container: LinearLayout
-        var viewLineId: FrameLayout
+        var rowLineIdContainer: FrameLayout
 
-        var lblLine: TextView
-        var lblStop: TextView
-        var lblDirection: TextView
+        var rowLineId: TextView
+        var rowStopName: TextView
+        var rowDirectionName: TextView
         var viewScheduleContainer: LinearLayout
         var imgStopWatched: ImageView
         var lineDrawable: GradientDrawable
@@ -365,15 +353,15 @@ class RecyclerAdapterRealtime(val activity: Activity, private val mStopsList: Mu
             container = v as LinearLayout
 
             // Get references to the views
-            viewLineId = v.findViewById(R.id.rowLineIdContainer) as FrameLayout
+            rowLineIdContainer = v.findViewById(R.id.rowLineIdContainer) as FrameLayout
 
-            lblLine = v.findViewById(R.id.rowLineId) as TextView
-            lblStop = v.findViewById(R.id.rowStopName) as TextView
-            lblDirection = v.findViewById(R.id.rowDirectionName) as TextView
+            rowLineId = v.findViewById(R.id.rowLineId) as TextView
+            rowStopName = v.findViewById(R.id.rowStopName) as TextView
+            rowDirectionName = v.findViewById(R.id.rowDirectionName) as TextView
 
             viewScheduleContainer = v.findViewById(R.id.viewScheduleContainer) as LinearLayout
-            imgStopWatched = v.findViewById(R.id.img_stop_watched) as ImageView
-            lineDrawable = viewLineId.background as GradientDrawable
+            imgStopWatched = v.findViewById(R.id.imgStopWatched) as ImageView
+            lineDrawable = rowLineIdContainer.background as GradientDrawable
 
             for (i in 0..NB_SCHEDULES_DISPLAYED - 1) {
                 // Display the current schedule
