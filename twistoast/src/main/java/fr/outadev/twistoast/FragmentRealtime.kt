@@ -41,7 +41,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
     private val periodicRefreshHandler = Handler()
     private var periodicRefreshRunnable: Runnable? = null
 
-    private var stopList: List<TimeoStop>? = null
+    private var stopList: MutableList<TimeoStop>? = null
 
     private var databaseHandler: Database? = null
     private var config: ConfigurationManager? = null
@@ -50,7 +50,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
     override var isRefreshing: Boolean = false
     private var isInBackground: Boolean = false
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == 0 && resultCode == ActivityNewStop.STOP_ADDED) {
             refreshAllStopSchedules(true)
         }
@@ -227,7 +227,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
             val criteria = config!!.listSortOrder
 
             stopList = databaseHandler!!.getAllStops(criteria)
-            listAdapter = RecyclerAdapterRealtime(activity, stopList, this, stopsRecyclerView)
+            listAdapter = RecyclerAdapterRealtime(activity, stopList!!, this, stopsRecyclerView)
             stopsRecyclerView.adapter = listAdapter
         }
 
