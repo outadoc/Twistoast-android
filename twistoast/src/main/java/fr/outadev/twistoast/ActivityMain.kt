@@ -116,7 +116,7 @@ class ActivityMain : ThemedActivity(), IStopsListContainer, NavigationView.OnNav
     override fun onBackPressed() {
         val frag = loadedFragments[currentDrawerItem]
 
-        if (frag is FragmentWebView && frag.canGoBack()) {
+        if (frag is FragmentWebView && frag.canGoBack) {
             // If we can move back of a page in the browser, do it
             frag.goBack()
         } else if (currentDrawerItem == DEFAULT_DRAWER_ITEM) {
