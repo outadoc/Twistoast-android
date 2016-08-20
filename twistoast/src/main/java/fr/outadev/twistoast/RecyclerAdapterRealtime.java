@@ -50,6 +50,7 @@ import fr.outadev.android.transport.timeo.TimeoSingleSchedule;
 import fr.outadev.android.transport.timeo.TimeoStop;
 import fr.outadev.android.transport.timeo.TimeoStopSchedule;
 import fr.outadev.twistoast.background.BackgroundTasksManager;
+import fr.outadev.twistoast.uiutils.Colors;
 
 /**
  * An array adapter for the main list of bus stops.

@@ -47,7 +47,7 @@
 			android:elevation="1dp"
 			android:padding="5dp">
 
-			<fr.outadev.twistoast.utils.AutoResizeTextView
+			<fr.outadev.twistoast.uiutils.AutoResizeTextView
 				android:id="@+id/rowLineId"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"

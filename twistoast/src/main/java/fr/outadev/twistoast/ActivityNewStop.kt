@@ -33,6 +33,7 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import fr.outadev.android.transport.timeo.*
+import fr.outadev.twistoast.uiutils.Colors
 import kotlinx.android.synthetic.main.activity_new_stop.*
 import kotlinx.android.synthetic.main.view_schedule_row.*
 import kotlinx.android.synthetic.main.view_single_schedule_label.view.*

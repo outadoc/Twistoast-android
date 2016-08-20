@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package fr.outadev.twistoast;
+package fr.outadev.twistoast.uiutils;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -26,6 +26,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.View;
+
+import fr.outadev.twistoast.IRecyclerAdapterAccess;
 
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 

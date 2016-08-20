@@ -3,7 +3,7 @@
  * Source https://stackoverflow.com/questions/5033012/auto-scale-textview-text-to-fit-within-bounds/17782522#17782522
  */
 
-package fr.outadev.twistoast.utils;
+package fr.outadev.twistoast.uiutils;
 
 import android.annotation.TargetApi;
 import android.content.Context;
