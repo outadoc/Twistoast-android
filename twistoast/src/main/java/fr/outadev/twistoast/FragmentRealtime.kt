@@ -230,7 +230,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
         if (reloadFromDatabase) {
             val criteria = config!!.listSortOrder
 
-            stopList = databaseHandler!!.getAllStops(criteria)
+            stopList = databaseHandler!!.getAllStops(criteria).toMutableList()
             listAdapter = RecyclerAdapterRealtime(activity, stopList!!, this, stopsRecyclerView)
             stopsRecyclerView.adapter = listAdapter
         }
