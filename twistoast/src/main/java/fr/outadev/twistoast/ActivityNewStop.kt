@@ -51,12 +51,15 @@ import java.util.*
  */
 class ActivityNewStop : ThemedActivity() {
 
-    private var lineList = listOf<TimeoLine>()
-
+    private var lineList: List<TimeoLine>
     private var itemNext: MenuItem? = null
-
     private var databaseHandler: Database? = null
-    private var requestHandler = TimeoRequestHandler()
+    private var requestHandler: TimeoRequestHandler
+
+    init {
+        lineList = listOf<TimeoLine>()
+        requestHandler = TimeoRequestHandler()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

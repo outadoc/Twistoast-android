@@ -24,7 +24,6 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.os.AsyncTask
 import android.os.SystemClock
 import android.support.v4.app.NotificationCompat
 import android.util.Log
@@ -33,6 +32,7 @@ import fr.outadev.android.transport.timeo.TimeoRequestHandler
 import fr.outadev.android.transport.timeo.TimeoStop
 import fr.outadev.android.transport.timeo.TimeoStopSchedule
 import fr.outadev.twistoast.*
+import org.jetbrains.anko.doAsync
 import org.joda.time.DateTime
 
 /**
@@ -40,98 +40,79 @@ import org.joda.time.DateTime
  * if watched buses are incoming and the user should be notified.
  */
 class NextStopAlarmReceiver : BroadcastReceiver() {
-    private var mContext: Context? = null
-
-    private var mRequestHandler: ITimeoRequestHandler? = null
+    private var context: Context? = null
+    private var requestHandler: ITimeoRequestHandler? = null
 
     override fun onReceive(context: Context, intent: Intent) {
-        mContext = context
-        mRequestHandler = TimeoRequestHandler()
+        this.context = context
+        requestHandler = TimeoRequestHandler()
 
-        object : AsyncTask<Void, Void, List<TimeoStopSchedule>>() {
+        var stopsToCheck: List<TimeoStop>? = null
+        val database: Database = Database(DatabaseOpenHelper.getInstance(context))
 
-            private var mDatabase: Database? = null
-            private var mStopsToCheck: List<TimeoStop>? = null
+        Log.d(TAG, "checking stop schedules for notifications")
 
-            override fun doInBackground(vararg params: Void): List<TimeoStopSchedule>? {
-                try {
-                    mStopsToCheck = mDatabase!!.watchedStops
-                    return mRequestHandler!!.getMultipleSchedules(mStopsToCheck)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    return null
-                }
+        doAsync {
+            try {
+                stopsToCheck = database.watchedStops
+                val stopSchedules = requestHandler!!.getMultipleSchedules(stopsToCheck)
 
-            }
+                // Look through each schedule
+                stopSchedules.filter { it.schedules != null && it.schedules.isNotEmpty() }.forEach {
+                    schedule ->
+                    // If there are stops scheduled for this bus
+                    val busTime = schedule.schedules[0].scheduleTime
+                    updateStopTimeNotification(schedule)
 
-            override fun onPreExecute() {
-                mDatabase = Database(DatabaseOpenHelper.getInstance(context))
-                Log.d(TAG, "checking stop schedules for notifications")
-            }
+                    // THE BUS IS COMIIIING
+                    if (busTime.isBefore(DateTime.now().plus(ALARM_TIME_THRESHOLD_MS.toLong()))) {
+                        // Remove from database, and send a notification
+                        notifyForIncomingBus(schedule)
+                        database.stopWatchingStop(schedule.stop)
+                        schedule.stop.isWatched = false
 
-            override fun onPostExecute(stopSchedules: List<TimeoStopSchedule>?) {
-                if (stopSchedules != null) {
+                        Log.d(TAG, "less than two minutes till " + busTime.toString() + ": " + schedule.stop)
+                    } else if (schedule.stop.lastETA != null) {
+                        // Check if there's more than five minutes of difference between the last estimation and the new
+                        // one. If that's the case, send the notification anyways; it may already be too late!
 
-                    // Look through each schedule
-                    for (schedule in stopSchedules) {
+                        // This is to work around the fact that we actually can't know if a bus has passed already,
+                        // we have to make assumptions instead; if a bus is announced for 3 minutes, and then for 10
+                        // minutes the next time we check, it most likely has passed.
 
-                        // If there are stops scheduled for this bus
-                        if (schedule.schedules != null && !schedule.schedules.isEmpty()) {
-                            val busTime = schedule.schedules[0].scheduleTime
+                        if (busTime.isBefore(schedule.stop.lastETA.plus(5 * 60 * 1000.toLong()))) {
+                            // Remove from database, and send a notification
+                            notifyForIncomingBus(schedule)
+                            database.stopWatchingStop(schedule.stop)
+                            schedule.stop.isWatched = false
 
-                            updateStopTimeNotification(schedule)
-
-                            // THE BUS IS COMIIIING
-                            if (busTime.isBefore(DateTime.now().plus(ALARM_TIME_THRESHOLD_MS.toLong()))) {
-                                // Remove from database, and send a notification
-                                notifyForIncomingBus(schedule)
-                                mDatabase!!.stopWatchingStop(schedule.stop)
-                                schedule.stop.isWatched = false
-
-                                Log.d(TAG, "less than two minutes till " + busTime.toString() + ": " + schedule.stop)
-                            } else if (schedule.stop.lastETA != null) {
-                                // Check if there's more than five minutes of difference between the last estimation and the new
-                                // one. If that's the case, send the notification anyways; it may already be too late!
-
-                                // This is to work around the fact that we actually can't know if a bus has passed already,
-                                // we have to make assumptions instead; if a bus is announced for 3 minutes, and then for 10
-                                // minutes the next time we check, it most likely has passed.
-
-                                if (busTime.isBefore(schedule.stop.lastETA.plus(5 * 60 * 1000.toLong()))) {
-                                    // Remove from database, and send a notification
-                                    notifyForIncomingBus(schedule)
-                                    mDatabase!!.stopWatchingStop(schedule.stop)
-                                    schedule.stop.isWatched = false
-
-                                    Log.d(TAG, "last time we saw " + schedule.stop + " the bus was scheduled for " +
-                                            schedule.stop.lastETA + ", but now the ETA is " + busTime + ", so we're " +
-                                            "notifying")
-                                }
-
-                            } else {
-                                mDatabase!!.updateWatchedStopETA(schedule.stop, busTime)
-                            }
+                            Log.d(TAG, "last time we saw " + schedule.stop + " the bus was scheduled for " +
+                                    schedule.stop.lastETA + ", but now the ETA is " + busTime + ", so we're " +
+                                    "notifying")
                         }
+                    } else {
+                        database.updateWatchedStopETA(schedule.stop, busTime)
                     }
-                } else {
-                    // A network error occurred, or something ;-;
-                    if (mStopsToCheck != null) {
-                        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
 
-                        for (stop in mStopsToCheck!!) {
-                            notificationManager.cancel(Integer.valueOf(stop.id)!!)
-                        }
+                // A network error occurred, or something ;-;
+                if (stopsToCheck != null) {
+                    val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+                    for (stop in stopsToCheck!!) {
+                        notificationManager.cancel(Integer.valueOf(stop.id)!!)
                     }
-
-                    notifyNetworkError()
                 }
 
-                if (mDatabase!!.watchedStopsCount == 0) {
-                    NextStopAlarmReceiver.disable(context.applicationContext)
-                }
+                notifyNetworkError()
             }
 
-        }.execute()
+            if (database.watchedStopsCount == 0) {
+                NextStopAlarmReceiver.disable(context.applicationContext)
+            }
+        }
     }
 
     /**
@@ -140,27 +121,41 @@ class NextStopAlarmReceiver : BroadcastReceiver() {
      * @param schedule the schedule to notify about
      */
     private fun notifyForIncomingBus(schedule: TimeoStopSchedule) {
-        val notificationManager = mContext!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val config = ConfigurationManager(mContext!!)
+        val notificationManager = context!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val config = ConfigurationManager(context!!)
 
-        val notificationIntent = Intent(mContext, ActivityMain::class.java)
-        val contentIntent = PendingIntent.getActivity(mContext, 0, notificationIntent, 0)
+        val notificationIntent = Intent(context, ActivityMain::class.java)
+        val contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0)
 
         // Get the data we need for the notification
         val stop = schedule.stop.name
         val direction = schedule.stop.line.direction.name
         val lineName = schedule.stop.line.name
-        val time = TimeFormatter.formatTime(mContext!!, schedule.schedules[0].scheduleTime)
+        val time = TimeFormatter.formatTime(context!!, schedule.schedules[0].scheduleTime)
 
         // Make a nice notification to inform the user of the bus's imminence
-        val builder = NotificationCompat.Builder(mContext).setSmallIcon(R.drawable.ic_directions_bus_white).setContentTitle(mContext!!.getString(R.string.notif_watched_content_title, lineName)).setContentText(mContext!!.getString(R.string.notif_watched_content_text, stop, direction)).setStyle(NotificationCompat.InboxStyle().addLine(mContext!!.getString(R.string.notif_watched_line_stop, stop)).addLine(mContext!!.getString(R.string.notif_watched_line_direction, direction)).setSummaryText(mContext!!.getString(R.string.notif_watched_summary_text, time))).setCategory(NotificationCompat.CATEGORY_EVENT).setVisibility(NotificationCompat.VISIBILITY_PUBLIC).setPriority(NotificationCompat.PRIORITY_MAX).setColor(mContext!!.resources.getColor(R.color.icon_color)).setContentIntent(contentIntent).setAutoCancel(true).setOnlyAlertOnce(true).setDefaults(NotificationSettings.getNotificationDefaults(mContext,
-                config.watchNotificationsVibrate, config.watchNotificationsRing))
+        val builder = NotificationCompat.Builder(context)
+                .setSmallIcon(R.drawable.ic_directions_bus_white)
+                .setContentTitle(context!!.getString(R.string.notif_watched_content_title, lineName))
+                .setContentText(context!!.getString(R.string.notif_watched_content_text, stop, direction))
+                .setStyle(NotificationCompat.InboxStyle()
+                        .addLine(context!!.getString(R.string.notif_watched_line_stop, stop))
+                        .addLine(context!!.getString(R.string.notif_watched_line_direction, direction))
+                        .setSummaryText(context!!.getString(R.string.notif_watched_summary_text, time)))
+                .setCategory(NotificationCompat.CATEGORY_EVENT)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setColor(context!!.resources.getColor(R.color.icon_color))
+                .setContentIntent(contentIntent)
+                .setAutoCancel(true)
+                .setOnlyAlertOnce(true)
+                .setDefaults(NotificationSettings.getNotificationDefaults(context!!, config.watchNotificationsVibrate, config.watchNotificationsRing))
 
         notificationManager.notify(Integer.valueOf(schedule.stop.id)!!, builder.build())
 
         // We want the rest of the application to know that this stop is not being watched anymore
-        if (sWatchedStopStateListener != null) {
-            sWatchedStopStateListener!!.onStopWatchingStateChanged(schedule.stop, false)
+        if (watchedStopStateListener != null) {
+            watchedStopStateListener!!.onStopWatchingStateChanged(schedule.stop, false)
         }
     }
 
@@ -170,25 +165,35 @@ class NextStopAlarmReceiver : BroadcastReceiver() {
      * @param schedule the bus schedule that will be included in the notification
      */
     private fun updateStopTimeNotification(schedule: TimeoStopSchedule) {
-        val notificationManager = mContext!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager = context!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        val notificationIntent = Intent(mContext, ActivityMain::class.java)
-        val contentIntent = PendingIntent.getActivity(mContext, 0, notificationIntent, 0)
+        val notificationIntent = Intent(context, ActivityMain::class.java)
+        val contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0)
 
         // Get the data we need for the notification
         val stop = schedule.stop.name
         val direction = schedule.stop.line.direction.name
         val lineName = schedule.stop.line.name
 
-        val inboxStyle = NotificationCompat.InboxStyle().setSummaryText(mContext!!.getString(R.string.notif_watched_content_text, lineName, direction)).setBigContentTitle(mContext!!.getString(R.string.stop_name, stop))
+        val inboxStyle = NotificationCompat.InboxStyle()
+                .setSummaryText(context!!.getString(R.string.notif_watched_content_text, lineName, direction))
+                .setBigContentTitle(context!!.getString(R.string.stop_name, stop))
 
         for (singleSchedule in schedule.schedules) {
-            inboxStyle.addLine(TimeFormatter.formatTime(mContext!!, singleSchedule.scheduleTime) + " - " + singleSchedule.direction)
+            inboxStyle.addLine(TimeFormatter.formatTime(context!!, singleSchedule.scheduleTime) + " - " + singleSchedule.direction)
         }
 
         // Make a nice notification to inform the user of the bus's imminence
-        val builder = NotificationCompat.Builder(mContext).setSmallIcon(R.drawable.ic_directions_bus_white).setContentTitle(mContext!!.getString(R.string.notif_ongoing_content_title, stop, lineName)).setContentText(mContext!!.getString(R.string.notif_ongoing_content_text,
-                TimeFormatter.formatTime(mContext!!, schedule.schedules[0].scheduleTime))).setStyle(inboxStyle).setCategory(NotificationCompat.CATEGORY_EVENT).setVisibility(NotificationCompat.VISIBILITY_PUBLIC).setColor(mContext!!.resources.getColor(R.color.icon_color)).setContentIntent(contentIntent).setOngoing(true)
+        val builder = NotificationCompat.Builder(context)
+                .setSmallIcon(R.drawable.ic_directions_bus_white)
+                .setContentTitle(context!!.getString(R.string.notif_ongoing_content_title, stop, lineName))
+                .setContentText(context!!.getString(R.string.notif_ongoing_content_text, TimeFormatter.formatTime(context!!, schedule.schedules[0].scheduleTime)))
+                .setStyle(inboxStyle)
+                .setCategory(NotificationCompat.CATEGORY_EVENT)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setColor(context!!.resources.getColor(R.color.icon_color))
+                .setContentIntent(contentIntent)
+                .setOngoing(true)
 
         notificationManager.notify(Integer.valueOf(schedule.stop.id)!!, builder.build())
     }
@@ -197,13 +202,20 @@ class NextStopAlarmReceiver : BroadcastReceiver() {
      * Updates the schedule notification to the user, informing him that there's something wrong with the network.
      */
     private fun notifyNetworkError() {
-        val notificationManager = mContext!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager = context!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        val notificationIntent = Intent(mContext, ActivityMain::class.java)
-        val contentIntent = PendingIntent.getActivity(mContext, 0, notificationIntent, 0)
+        val notificationIntent = Intent(context, ActivityMain::class.java)
+        val contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0)
 
         // Make a nice notification to inform the user of an error
-        val builder = NotificationCompat.Builder(mContext).setSmallIcon(R.drawable.ic_directions_bus_white).setContentTitle(mContext!!.getString(R.string.notif_error_content_title)).setContentText(mContext!!.getString(R.string.notif_error_content_text)).setColor(mContext!!.resources.getColor(R.color.icon_color)).setCategory(NotificationCompat.CATEGORY_ERROR).setVisibility(NotificationCompat.VISIBILITY_PUBLIC).setContentIntent(contentIntent).setAutoCancel(true)
+        val builder = NotificationCompat.Builder(context)
+                .setSmallIcon(R.drawable.ic_directions_bus_white)
+                .setContentTitle(context!!.getString(R.string.notif_error_content_title))
+                .setContentText(context!!.getString(R.string.notif_error_content_text))
+                .setColor(context!!.resources.getColor(R.color.icon_color))
+                .setCategory(NotificationCompat.CATEGORY_ERROR)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setContentIntent(contentIntent).setAutoCancel(true)
 
         notificationManager.notify(NOTIFICATION_ID_ERROR, builder.build())
     }
@@ -213,13 +225,14 @@ class NextStopAlarmReceiver : BroadcastReceiver() {
         private val TAG = NextStopAlarmReceiver::class.java.simpleName
 
         // If the bus is coming in less than ALARM_TIME_THRESHOLD_MS milliseconds, send a notification.
-        val ALARM_TIME_THRESHOLD_MS = 90 * 1000
-        private val ALARM_FREQUENCY = 60 * 1000
-        private val ALARM_TYPE = AlarmManager.ELAPSED_REALTIME_WAKEUP
+        const val ALARM_TIME_THRESHOLD_MS = 90 * 1000
 
-        private val NOTIFICATION_ID_ERROR = 42
+        const val ALARM_FREQUENCY = 60 * 1000
+        const val ALARM_TYPE = AlarmManager.ELAPSED_REALTIME_WAKEUP
 
-        private var sWatchedStopStateListener: IWatchedStopChangeListener? = null
+        const val NOTIFICATION_ID_ERROR = 42
+
+        private var watchedStopStateListener: IWatchedStopChangeListener? = null
 
         /**
          * Enables the regular checks performed every minute by this receiver.
@@ -260,7 +273,7 @@ class NextStopAlarmReceiver : BroadcastReceiver() {
         }
 
         fun setWatchedStopDismissalListener(watchedStopStateListener: IWatchedStopChangeListener) {
-            NextStopAlarmReceiver.sWatchedStopStateListener = watchedStopStateListener
+            NextStopAlarmReceiver.watchedStopStateListener = watchedStopStateListener
         }
     }
 

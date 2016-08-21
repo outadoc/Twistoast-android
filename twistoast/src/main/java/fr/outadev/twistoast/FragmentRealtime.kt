@@ -38,7 +38,7 @@ import kotlinx.android.synthetic.main.view_realtime_list.*
 
 class FragmentRealtime : Fragment(), IStopsListContainer {
 
-    private val periodicRefreshHandler = Handler()
+    private val periodicRefreshHandler: Handler
     private var periodicRefreshRunnable: Runnable? = null
 
     private var stopList: MutableList<TimeoStop>? = null
@@ -49,6 +49,10 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
 
     override var isRefreshing: Boolean = false
     private var isInBackground: Boolean = false
+
+    init {
+        periodicRefreshHandler = Handler()
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == 0 && resultCode == ActivityNewStop.STOP_ADDED) {

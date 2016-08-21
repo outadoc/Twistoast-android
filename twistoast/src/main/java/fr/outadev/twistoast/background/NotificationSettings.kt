@@ -16,35 +16,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast.background;
+package fr.outadev.twistoast.background
 
-import android.content.Context;
-import android.support.v4.app.NotificationCompat;
+import android.content.Context
+import android.support.v4.app.NotificationCompat
 
 /**
  * Created by outadoc on 2016-03-07.
  */
-public abstract class NotificationSettings {
+object NotificationSettings {
 
     /**
      * Gets suitable notification defaults for the notifications of this receiver.
      * Use them with NotificationCompat.Builder.setDefaults().
-     *
+
      * @param context a context
+     * *
      * @return an integer to pass to the builder
      */
-    public static int getNotificationDefaults(Context context, boolean vibrate, boolean ring) {
-        int defaults = NotificationCompat.DEFAULT_LIGHTS;
+    fun getNotificationDefaults(context: Context, vibrate: Boolean, ring: Boolean): Int {
+        var defaults = NotificationCompat.DEFAULT_LIGHTS
 
         if (vibrate) {
-            defaults = defaults | NotificationCompat.DEFAULT_VIBRATE;
+            defaults = defaults or NotificationCompat.DEFAULT_VIBRATE
         }
 
         if (ring) {
-            defaults = defaults | NotificationCompat.DEFAULT_SOUND;
+            defaults = defaults or NotificationCompat.DEFAULT_SOUND
         }
 
-        return defaults;
+        return defaults
     }
 
 }

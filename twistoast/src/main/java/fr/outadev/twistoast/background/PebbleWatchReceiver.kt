@@ -21,16 +21,19 @@ package fr.outadev.twistoast.background
 import android.content.Context
 import android.graphics.Color
 import android.net.ConnectivityManager
-import android.os.AsyncTask
 import android.util.Log
 import com.getpebble.android.kit.PebbleKit
 import com.getpebble.android.kit.PebbleKit.PebbleDataReceiver
 import com.getpebble.android.kit.util.PebbleDictionary
-import fr.outadev.android.transport.timeo.*
+import fr.outadev.android.transport.timeo.ITimeoRequestHandler
+import fr.outadev.android.transport.timeo.TimeoRequestHandler
+import fr.outadev.android.transport.timeo.TimeoSingleSchedule
+import fr.outadev.android.transport.timeo.TimeoStopSchedule
 import fr.outadev.twistoast.ConfigurationManager
 import fr.outadev.twistoast.Database
 import fr.outadev.twistoast.DatabaseOpenHelper
 import fr.outadev.twistoast.TimeFormatter
+import org.jetbrains.anko.doAsync
 import java.util.*
 
 /**
@@ -48,13 +51,14 @@ class PebbleWatchReceiver : PebbleDataReceiver(PebbleWatchReceiver.PEBBLE_UUID) 
     }
 
     override fun receiveData(context: Context, transactionId: Int, data: PebbleDictionary) {
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
         Log.d(TAG, "received a message from pebble " + PEBBLE_UUID)
 
         // open the database and count the stops
         mDatabase = Database(DatabaseOpenHelper.getInstance(context))
-        val stopsCount = mDatabase!!.stopsCount
 
-        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val stopsCount = mDatabase!!.stopsCount
         val messageType : Byte = data.getInteger(KEY_TWISTOAST_MESSAGE_TYPE).toByte()
 
         // if we want a schedule and we have buses in the database
@@ -73,31 +77,16 @@ class PebbleWatchReceiver : PebbleDataReceiver(PebbleWatchReceiver.PEBBLE_UUID) 
             Log.d(TAG, "loading data for stop #$busIndex...")
 
             // fetch schedule
-            object : AsyncTask<TimeoStop, Void, TimeoStopSchedule>() {
-
-                override fun doInBackground(vararg params: TimeoStop): TimeoStopSchedule? {
-                    val stop = params[0]
-
-                    try {
-                        return mRequestHandler.getSingleSchedule(stop)
-                    } catch (e: Exception) {
-                        PebbleKit.sendNackToPebble(context, transactionId)
-                        e.printStackTrace()
-                    }
-
-                    return null
+            doAsync {
+                try {
+                    val schedule = mRequestHandler.getSingleSchedule(stop)
+                    Log.d(TAG, "got data for stop: " + schedule)
+                    craftAndSendSchedulePacket(context, schedule)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    PebbleKit.sendNackToPebble(context, transactionId)
                 }
-
-                override fun onPostExecute(schedule: TimeoStopSchedule?) {
-                    if (schedule != null) {
-                        Log.d(TAG, "got data for stop: " + schedule)
-                        craftAndSendSchedulePacket(context, schedule)
-                    } else {
-                        PebbleKit.sendNackToPebble(context, transactionId)
-                    }
-                }
-
-            }.execute(stop)
+            }
 
         } else {
             PebbleKit.sendNackToPebble(context, transactionId)
@@ -114,13 +103,12 @@ class PebbleWatchReceiver : PebbleDataReceiver(PebbleWatchReceiver.PEBBLE_UUID) 
      */
     private fun craftAndSendSchedulePacket(context: Context, schedule: TimeoStopSchedule) {
         val config = ConfigurationManager(context)
-        val response = PebbleDictionary()
+        val res = PebbleDictionary()
 
-        response.addInt8(KEY_TWISTOAST_MESSAGE_TYPE, BUS_STOP_DATA_RESPONSE)
-        response.addString(KEY_BUS_LINE_NAME, processStringForPebble(schedule.stop.line.name, 10))
-        response.addString(KEY_BUS_DIRECTION_NAME,
-                processStringForPebble(schedule.stop.line.direction.name, 15))
-        response.addString(KEY_BUS_STOP_NAME, processStringForPebble(schedule.stop.name, 15))
+        res.addInt8(KEY_TWISTOAST_MESSAGE_TYPE, BUS_STOP_DATA_RESPONSE)
+        res.addString(KEY_BUS_LINE_NAME, processStringForPebble(schedule.stop.line.name, 10))
+        res.addString(KEY_BUS_DIRECTION_NAME, processStringForPebble(schedule.stop.line.direction.name, 15))
+        res.addString(KEY_BUS_STOP_NAME, processStringForPebble(schedule.stop.name, 15))
 
         // Add first schedule time and direction to the buffer
         if (!schedule.schedules.isEmpty()) {
@@ -128,31 +116,32 @@ class PebbleWatchReceiver : PebbleDataReceiver(PebbleWatchReceiver.PEBBLE_UUID) 
             val nextSchedule = schedule.schedules[0].scheduleTime
 
             // Convert to milliseconds and add to the buffer
-            response.addInt32(KEY_BUS_NEXT_SCHEDULE, TimeFormatter.getDurationUntilBus(nextSchedule).millis.toInt())
+            res.addInt32(KEY_BUS_NEXT_SCHEDULE, TimeFormatter.getDurationUntilBus(nextSchedule).millis.toInt())
             // Get a short version of the destination if required - e.g. A or B for the tram
-            response.addString(KEY_BUS_NEXT_SCHEDULE_DIR, getOptionalShortDirection(schedule.schedules[0]))
+            res.addString(KEY_BUS_NEXT_SCHEDULE_DIR, getOptionalShortDirection(schedule.schedules[0]))
         } else {
-            response.addInt32(KEY_BUS_NEXT_SCHEDULE, -1)
-            response.addString(KEY_BUS_NEXT_SCHEDULE_DIR, " ")
+            res.addInt32(KEY_BUS_NEXT_SCHEDULE, -1)
+            res.addString(KEY_BUS_NEXT_SCHEDULE_DIR, " ")
         }
 
         // Add the second schedule, same process
         if (schedule.schedules.size > 1) {
             val nextSchedule = schedule.schedules[1].scheduleTime
 
-            response.addInt32(KEY_BUS_SECOND_SCHEDULE, TimeFormatter.getDurationUntilBus(nextSchedule).millis.toInt())
-            response.addString(KEY_BUS_SECOND_SCHEDULE_DIR, getOptionalShortDirection(schedule.schedules[1]))
+            res.addInt32(KEY_BUS_SECOND_SCHEDULE, TimeFormatter.getDurationUntilBus(nextSchedule).millis.toInt())
+            res.addString(KEY_BUS_SECOND_SCHEDULE_DIR, getOptionalShortDirection(schedule.schedules[1]))
         } else {
-            response.addInt32(KEY_BUS_SECOND_SCHEDULE, -1)
-            response.addString(KEY_BUS_SECOND_SCHEDULE_DIR, " ")
+            res.addInt32(KEY_BUS_SECOND_SCHEDULE, -1)
+            res.addString(KEY_BUS_SECOND_SCHEDULE_DIR, " ")
         }
 
         if (!schedule.schedules.isEmpty()) {
             val scheduleTime = schedule.schedules[0].scheduleTime
             val displayMode = TimeFormatter.getTimeDisplayMode(scheduleTime, context)
 
-            if (displayMode === TimeFormatter.TimeDisplayMode.ARRIVAL_IMMINENT || displayMode === TimeFormatter.TimeDisplayMode.CURRENTLY_AT_STOP) {
-                response.addInt8(KEY_SHOULD_VIBRATE, 1.toByte())
+            if (displayMode === TimeFormatter.TimeDisplayMode.ARRIVAL_IMMINENT
+                    || displayMode === TimeFormatter.TimeDisplayMode.CURRENTLY_AT_STOP) {
+                res.addInt8(KEY_SHOULD_VIBRATE, 1.toByte())
             }
         }
 
@@ -162,10 +151,10 @@ class PebbleWatchReceiver : PebbleDataReceiver(PebbleWatchReceiver.PEBBLE_UUID) 
             color = Color.parseColor(schedule.stop.line.color)
         }
 
-        response.addInt32(KEY_BACKGROUND_COLOR, color)
+        res.addInt32(KEY_BACKGROUND_COLOR, color)
 
-        Log.d(TAG, "sending back: " + response)
-        PebbleKit.sendDataToPebble(context, PEBBLE_UUID, response)
+        Log.d(TAG, "sending back: " + res)
+        PebbleKit.sendDataToPebble(context, PEBBLE_UUID, res)
     }
 
     private fun getOptionalShortDirection(schedule: TimeoSingleSchedule): String {
@@ -190,40 +179,43 @@ class PebbleWatchReceiver : PebbleDataReceiver(PebbleWatchReceiver.PEBBLE_UUID) 
             return ""
         }
 
+        if (str.length <= maxLength) {
+            //if the string is shorter than the max length, just return the string untouched
+            return str
+        }
+
         try {
             //truncate the string to [maxLength] characters, and add an ellipsis character at the end
             return str.substring(0, maxLength).trim { it <= ' ' } + "…"
         } catch (e: IndexOutOfBoundsException) {
-            //if the string is shorter than the max length, just return the string untouched
             return str
         }
 
     }
 
     companion object {
-
-        private val TAG = "TwistoastPebbleReceiver"
+        val TAG: String = PebbleWatchReceiver::class.java.simpleName
         private val PEBBLE_UUID = UUID.fromString("020f9398-c407-454b-996c-6ac341337281")
 
         // message type key
-        private val KEY_TWISTOAST_MESSAGE_TYPE = 0x00
+        const val KEY_TWISTOAST_MESSAGE_TYPE = 0x00
 
         // message type value
-        private val BUS_STOP_REQUEST: Byte = 0x10
-        private val BUS_STOP_DATA_RESPONSE: Byte = 0x11
+        const val BUS_STOP_REQUEST: Byte = 0x10
+        const val BUS_STOP_DATA_RESPONSE: Byte = 0x11
 
         // message keys
-        private val KEY_STOP_INDEX = 0x20
-        private val KEY_BUS_STOP_NAME = 0x21
-        private val KEY_BUS_DIRECTION_NAME = 0x22
-        private val KEY_BUS_LINE_NAME = 0x23
-        private val KEY_BUS_NEXT_SCHEDULE = 0x24
-        private val KEY_BUS_NEXT_SCHEDULE_DIR = 0x25
-        private val KEY_BUS_SECOND_SCHEDULE = 0x26
-        private val KEY_BUS_SECOND_SCHEDULE_DIR = 0x27
+        const val KEY_STOP_INDEX = 0x20
+        const val KEY_BUS_STOP_NAME = 0x21
+        const val KEY_BUS_DIRECTION_NAME = 0x22
+        const val KEY_BUS_LINE_NAME = 0x23
+        const val KEY_BUS_NEXT_SCHEDULE = 0x24
+        const val KEY_BUS_NEXT_SCHEDULE_DIR = 0x25
+        const val KEY_BUS_SECOND_SCHEDULE = 0x26
+        const val KEY_BUS_SECOND_SCHEDULE_DIR = 0x27
 
-        private val KEY_SHOULD_VIBRATE = 0x30
-        private val KEY_BACKGROUND_COLOR = 0x31
+        const val KEY_SHOULD_VIBRATE = 0x30
+        const val KEY_BACKGROUND_COLOR = 0x31
     }
 
 }

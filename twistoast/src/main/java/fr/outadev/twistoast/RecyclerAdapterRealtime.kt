@@ -46,7 +46,7 @@ import org.jetbrains.anko.uiThread
 
  * @author outadoc
  */
-class RecyclerAdapterRealtime(val activity: Activity, private val mStopsList: MutableList<TimeoStop>, private val mStopsListContainer: IStopsListContainer, private val mParentView: View) : RecyclerView.Adapter<RecyclerAdapterRealtime.ViewHolder>(), IRecyclerAdapterAccess {
+class RecyclerAdapterRealtime(val activity: Activity, private val stopsList: MutableList<TimeoStop>, private val mStopsListContainer: IStopsListContainer, private val mParentView: View) : RecyclerView.Adapter<RecyclerAdapterRealtime.ViewHolder>(), IRecyclerAdapterAccess {
 
     private val database: Database
     private val config: ConfigurationManager
@@ -77,18 +77,18 @@ class RecyclerAdapterRealtime(val activity: Activity, private val mStopsList: Mu
                 var schedulesList: List<TimeoStopSchedule>?
                 var scheduleMap: Map<TimeoStop, TimeoStopSchedule>?
 
-                schedulesList = requestHandler.getMultipleSchedules(mStopsList)
+                schedulesList = requestHandler.getMultipleSchedules(stopsList)
                 scheduleMap = schedulesList.associateBy({ it.stop }, { it })
 
-                val outdated = requestHandler.checkForOutdatedStops(mStopsList, schedulesList)
+                val outdated = requestHandler.checkForOutdatedStops(stopsList, schedulesList)
 
                 // If there are outdated reference numbers, update those stops
                 if (outdated > 0) {
                     Log.e(TAG, "Found $outdated stops, trying to update references")
-                    referenceUpdater.updateAllStopReferences(mStopsList, null)
+                    referenceUpdater.updateAllStopReferences(stopsList, null)
 
                     // Reload with the updated stops
-                    schedulesList = requestHandler.getMultipleSchedules(mStopsList)
+                    schedulesList = requestHandler.getMultipleSchedules(stopsList)
                     scheduleMap = schedulesList.associateBy({ it.stop }, { it })
                 }
 
@@ -145,7 +145,7 @@ class RecyclerAdapterRealtime(val activity: Activity, private val mStopsList: Mu
 
     override fun onBindViewHolder(view: RecyclerAdapterRealtime.ViewHolder, position: Int) {
         // Get the stop we're inflating
-        val currentStop = mStopsList[position]
+        val currentStop = stopsList[position]
 
         view.lineDrawable.setColor(Colors.getBrighterColor(Color.parseColor(currentStop.line.color)))
 
@@ -161,7 +161,6 @@ class RecyclerAdapterRealtime(val activity: Activity, private val mStopsList: Mu
 
         // Add the new schedules one by one
         if (schedules.containsKey(currentStop) && schedules[currentStop] != null) {
-
             // If there are schedules
             if (schedules[currentStop]!!.schedules != null) {
                 // Get the schedules for this stop
@@ -201,8 +200,7 @@ class RecyclerAdapterRealtime(val activity: Activity, private val mStopsList: Mu
         } else {
             // If we can't find the schedules we asked for in the hashmap, something went wrong. :c
             // It should be noted that it normally happens the first time the list is loaded, since no data was downloaded yet.
-            Log.e(TAG, "missing stop schedule for " + currentStop +
-                    " (ref=" + currentStop.reference + "); ref outdated?")
+            Log.e(TAG, "missing stop schedule for $currentStop (ref=${currentStop.reference}); ref outdated?")
 
             // Make the row look a bit translucent to make it stand out
             view.lblScheduleTime[0]?.setText(R.string.no_upcoming_stops)
@@ -214,17 +212,17 @@ class RecyclerAdapterRealtime(val activity: Activity, private val mStopsList: Mu
     }
 
     override fun getItemCount(): Int {
-        return mStopsList.size
+        return stopsList.size
     }
 
     override fun shouldItemHaveSeparator(position: Int): Boolean {
         // If it's the last item, no separator
-        if (position < 0 || position == mStopsList.size - 1) {
+        if (position < 0 || position == stopsList.size - 1) {
             return false
         }
 
-        val item = mStopsList[position]
-        val nextItem = mStopsList[position + 1]
+        val item = stopsList[position]
+        val nextItem = stopsList[position + 1]
 
         val criteria = config.listSortOrder
 
@@ -241,13 +239,12 @@ class RecyclerAdapterRealtime(val activity: Activity, private val mStopsList: Mu
 
         override fun onLongClick(view: View, position: Int): Boolean {
             if (!mStopsListContainer.isRefreshing) {
-                val currentStop = mStopsList[position]
+                val currentStop = stopsList[position]
 
                 // Menu items
-                val contextualMenuItems = arrayOf(view.context.getString(R.string.stop_action_delete), view.context.getString(if (!currentStop.isWatched)
-                    R.string.stop_action_watch
-                else
-                    R.string.stop_action_unwatch))
+                val contextualMenuItems = arrayOf(
+                        view.context.getString(R.string.stop_action_delete),
+                        view.context.getString(if (!currentStop.isWatched) R.string.stop_action_watch else R.string.stop_action_unwatch))
 
                 // Build the long click contextual menu
                 val builder = AlertDialog.Builder(activity)
@@ -270,14 +267,14 @@ class RecyclerAdapterRealtime(val activity: Activity, private val mStopsList: Mu
         private fun deleteStopAction(stop: TimeoStop, position: Int) {
             // Remove from the database and the interface
             database.deleteStop(stop)
-            mStopsList.remove(stop)
+            stopsList.remove(stop)
 
             if (stop.isWatched) {
                 database.stopWatchingStop(stop)
                 stop.isWatched = false
             }
 
-            if (mStopsList.isEmpty()) {
+            if (stopsList.isEmpty()) {
                 mStopsListContainer.setNoContentViewVisible(true)
             }
 
@@ -287,7 +284,7 @@ class RecyclerAdapterRealtime(val activity: Activity, private val mStopsList: Mu
                 Log.i(TAG, "restoring stop " + stop)
 
                 database.addStopToDatabase(stop)
-                mStopsList.add(position, stop)
+                stopsList.add(position, stop)
                 notifyDataSetChanged()
             }.show()
         }

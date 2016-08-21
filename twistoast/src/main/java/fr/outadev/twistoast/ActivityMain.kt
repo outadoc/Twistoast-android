@@ -49,10 +49,15 @@ class ActivityMain : ThemedActivity(), IStopsListContainer, NavigationView.OnNav
 
     private var drawerToggle: ActionBarDrawerToggle? = null
     private var currentDrawerItem = 0
-    private val loadedFragments = SparseArray<Fragment>()
+    private val loadedFragments: SparseArray<Fragment>
 
     private var trafficAlert: TimeoTrafficAlert? = null
-    private val requestHandler = TimeoRequestHandler()
+    private val requestHandler: TimeoRequestHandler
+
+    init {
+        requestHandler = TimeoRequestHandler()
+        loadedFragments = SparseArray<Fragment>()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
