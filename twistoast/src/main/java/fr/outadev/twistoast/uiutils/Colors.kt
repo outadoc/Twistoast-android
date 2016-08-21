@@ -16,31 +16,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast.uiutils;
+package fr.outadev.twistoast.uiutils
 
-import android.graphics.Color;
+import android.graphics.Color
 
 /**
  * Miscellaneous methods used to manipulate colours.
- *
+
  * @author outadoc
  */
-public abstract class Colors {
+object Colors {
 
-    public static int getBrighterColor(int color) {
-        int newColor;
-        float[] hsv = new float[3];
+    fun getBrighterColor(srcColor: Int): Int {
+        var color = srcColor
+        val newColor: Int
+        val hsv = FloatArray(3)
 
         if (color == Color.BLACK) {
-            color = Color.parseColor("#404040");
+            color = Color.parseColor("#404040")
         }
 
-        Color.colorToHSV(color, hsv);
-        hsv[0] -= 35;
-        hsv[2] *= 1.8;
-        newColor = Color.HSVToColor(hsv);
+        Color.colorToHSV(color, hsv)
+        hsv[0] -= 35f
+        hsv[2] *= 1.8f
+        newColor = Color.HSVToColor(hsv)
 
-        return newColor;
+        return newColor
     }
 
 }
