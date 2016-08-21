@@ -55,6 +55,7 @@
 	<string name="drawer_item_map">Plan du réseau</string>
 	<string name="drawer_item_traffic">Info trafic</string>
 	<string name="drawer_item_news">Actualités</string>
+	<string name="drawer_item_social">Twitter</string>
 	<string name="drawer_item_pricing">Tarifs</string>
 	<string name="drawer_item_preferences">Paramètres</string>
 	<string name="drawer_item_about">À propos</string>

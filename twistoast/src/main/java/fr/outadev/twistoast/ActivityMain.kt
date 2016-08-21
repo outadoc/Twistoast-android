@@ -162,14 +162,11 @@ class ActivityMain : ThemedActivity(), IStopsListContainer, NavigationView.OnNav
 
     override fun loadFragmentForDrawerItem(itemId: Int) {
         currentDrawerItem = itemId
-        val fragmentToOpen: Fragment
 
-        fragmentToOpen = loadedFragments[itemId] ?: FragmentFactory.getFragmentFromMenuItem(this, itemId)!!
-
+        val fragmentToOpen = loadedFragments[itemId] ?: FragmentFactory.getFragmentFromMenuItem(this, itemId)!!
         loadedFragments.put(itemId, fragmentToOpen)
 
         // Insert the fragment by replacing any existing fragment
-        val fragmentManager = fragmentManager
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragmentToOpen).commit()
 
         // Highlight the selected item, update the title, and close the drawer

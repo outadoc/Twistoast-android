@@ -43,6 +43,7 @@ object FragmentFactory {
             R.id.drawer_map -> return getWebViewFragment(context.getString(R.string.url_drawer_map))
             R.id.drawer_traffic -> return getWebViewFragment(context.getString(R.string.url_drawer_traffic))
             R.id.drawer_news -> return getWebViewFragment(context.getString(R.string.url_drawer_news))
+            R.id.drawer_social -> return getWebViewFragment(context.getString(R.string.url_drawer_social))
             R.id.drawer_pricing -> return getWebViewFragment(context.getString(R.string.url_drawer_pricing))
             R.id.drawer_settings -> return FragmentPreferences()
             R.id.drawer_about -> return FragmentAbout()

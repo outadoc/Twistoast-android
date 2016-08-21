@@ -55,6 +55,10 @@
                     android:icon="@drawable/ic_books"
                     android:title="@string/drawer_item_news"/>
                 <item
+                    android:id="@+id/drawer_social"
+                    android:icon="@drawable/ic_twitter"
+                    android:title="@string/drawer_item_social"/>
+                <item
                     android:id="@+id/drawer_pricing"
                     android:icon="@drawable/ic_payment"
                     android:title="@string/drawer_item_pricing"/>

@@ -54,6 +54,7 @@
 	<string name="drawer_item_map">Network map</string>
 	<string name="drawer_item_traffic">Traffic reports</string>
 	<string name="drawer_item_news">News</string>
+	<string name="drawer_item_social">Twitter</string>
 	<string name="drawer_item_pricing">Pricing</string>
 	<string name="drawer_item_preferences">Preferences</string>
 	<string name="drawer_item_about">About</string>
