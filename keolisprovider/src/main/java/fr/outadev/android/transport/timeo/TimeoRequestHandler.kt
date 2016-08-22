@@ -21,6 +21,7 @@ package fr.outadev.android.transport.timeo
 import android.util.Log
 import fr.outadev.android.transport.getNextDateForTime
 import fr.outadev.android.transport.smartCapitalize
+import fr.outadev.android.transport.timeo.dto.ErreurDTO
 import fr.outadev.android.transport.timeo.dto.ListeHorairesDTO
 import fr.outadev.android.transport.timeo.dto.ListeLignesDTO
 import org.apache.commons.lang3.StringUtils.leftPad
@@ -82,17 +83,24 @@ class TimeoRequestHandler {
         val result = HttpRequester.instance.requestWebPage(getEndpointUrl(networkCode), params, true)
         val res: ListeLignesDTO = serializer.read(ListeLignesDTO::class.java, result) ?: throw TimeoException("Service returned invalid data")
 
-        val linesList = mutableListOf<TimeoLine>()
+        checkForErrors(res.erreur)
 
-        res.alss.mapTo(linesList) {
-            als ->
-            TimeoLine(
-                id = als.ligne!!.code!!,
-                name = als.ligne!!.nom!!.smartCapitalize(),
-                direction = TimeoDirection(als.ligne!!.sens!!, als.ligne!!.vers!!.smartCapitalize()),
-                color = "#" + leftPad(Integer.toHexString(Integer.valueOf(als.ligne!!.couleur!!)), 6, '0'),
-                networkCode = networkCode)
-        }
+        val linesList = res.alss
+                .filter {
+                    it.ligne != null
+                            && it.ligne!!.code != null
+                            && it.ligne!!.nom != null
+                            && it.ligne!!.sens != null
+                            && it.ligne!!.vers != null
+                }.map {
+                    als ->
+                    TimeoLine(
+                        id = als.ligne!!.code!!,
+                        name = als.ligne!!.nom!!.smartCapitalize(),
+                        direction = TimeoDirection(als.ligne!!.sens!!, als.ligne!!.vers!!.smartCapitalize()),
+                        color = "#" + leftPad(Integer.toHexString(Integer.valueOf(als.ligne!!.couleur)), 6, '0'),
+                        networkCode = networkCode)
+                }
 
         return linesList
     }
@@ -104,17 +112,28 @@ class TimeoRequestHandler {
         val result = HttpRequester.instance.requestWebPage(getEndpointUrl(networkCode), params, true)
         val res: ListeLignesDTO = serializer.read(ListeLignesDTO::class.java, result) ?: throw TimeoException("Service returned invalid data")
 
-        val stopsList = res.alss.map {
+        checkForErrors(res.erreur)
+
+        val stopsList = res.alss.filter {
+            it.arret != null
+                    && it.arret!!.code != null
+                    && it.arret!!.nom != null
+                    && it.ligne != null
+                    && it.ligne!!.code != null
+                    && it.ligne!!.nom != null
+                    && it.ligne!!.sens != null
+                    && it.ligne!!.vers != null
+        }.map {
             als ->
             TimeoStop(
-                    id = als.arret!!.code.toInt(),
-                    name = als.arret!!.nom.smartCapitalize(),
+                    id = als.arret!!.code!!.toInt(),
+                    name = als.arret!!.nom!!.smartCapitalize(),
                     reference = als.refs,
                     line = TimeoLine(
                             id = als.ligne!!.code!!,
                             name = als.ligne!!.nom!!.smartCapitalize(),
                             direction = TimeoDirection(als.ligne!!.sens!!, als.ligne!!.vers!!.smartCapitalize()),
-                            color = "#" + leftPad(Integer.toHexString(Integer.valueOf(als.ligne!!.couleur!!)), 6, '0'),
+                            color = "#" + leftPad(Integer.toHexString(Integer.valueOf(als.ligne!!.couleur)), 6, '0'),
                             networkCode = networkCode))
         }
 
@@ -123,9 +142,7 @@ class TimeoRequestHandler {
 
     @Throws(TimeoException::class, IOException::class, XmlPullParserException::class)
     fun getSingleSchedule(networkCode: Int, stop: TimeoStop): TimeoStopSchedule {
-        val list = ArrayList<TimeoStop>()
-        list.add(stop)
-        val schedules = getMultipleSchedules(networkCode, list)
+        val schedules = getMultipleSchedules(networkCode, listOf(stop))
 
         if (schedules.size > 0) {
             return schedules[0]
@@ -152,6 +169,8 @@ class TimeoRequestHandler {
 
         val result = HttpRequester.instance.requestWebPage(getEndpointUrl(networkCode), params, false)
         val res: ListeHorairesDTO = serializer.read(ListeHorairesDTO::class.java, result) ?: throw TimeoException("Service returned invalid data")
+
+        checkForErrors(res.erreur)
 
         val schedules = res.horaires.map {
             horaire ->
@@ -189,8 +208,8 @@ class TimeoRequestHandler {
                 count++
             }
 
-            for (schedule in schedules.filter { schedule -> schedule.stop === stop }) {
-                if (schedule.stop === stop) {
+            for (schedule in schedules.filter { schedule -> schedule.stop.id == stop.id }) {
+                if (schedule.stop.id == stop.id) {
                     outdated = false
                     count++
                     break
@@ -201,6 +220,13 @@ class TimeoRequestHandler {
         }
 
         return count
+    }
+
+    @Throws(TimeoException::class)
+    private fun checkForErrors(error: ErreurDTO?) {
+        if (error?.code != "000") {
+            throw TimeoException(errorCode = error!!.code, message = error.message)
+        }
     }
 
     val globalTrafficAlert: TimeoTrafficAlert?
@@ -252,7 +278,7 @@ class TimeoRequestHandler {
 
     companion object {
 
-        val TAG = TimeoRequestHandler::class.java.simpleName
+        val TAG = TimeoRequestHandler::class.java.simpleName!!
 
         val DEFAULT_NETWORK_CODE = 147
 

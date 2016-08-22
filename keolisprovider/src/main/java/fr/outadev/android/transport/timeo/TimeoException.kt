@@ -23,14 +23,9 @@ package fr.outadev.android.transport.timeo
 
  * @author outadoc
  */
-open class TimeoException @JvmOverloads constructor(s: String = "") : Exception(s) {
+open class TimeoException constructor(s: String = "") : Exception(s) {
 
-    var errorCode: String? = null
-        private set
-
-    init {
-        this.errorCode = ""
-    }
+    var errorCode: String = ""
 
     constructor(errorCode: String, message: String) : this(message) {
         this.errorCode = errorCode
