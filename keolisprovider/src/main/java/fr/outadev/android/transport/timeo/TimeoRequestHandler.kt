@@ -87,20 +87,13 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) {
 
         checkForErrors(res.erreur)
 
-        val linesList = res.alss
-                .filter {
-                    it.ligne != null
-                            && it.ligne!!.code != null
-                            && it.ligne!!.nom != null
-                            && it.ligne!!.sens != null
-                            && it.ligne!!.vers != null
-                }.map {
+        val linesList = res.alss.map {
                     als ->
                     TimeoLine(
-                        id = als.ligne!!.code!!,
-                        name = als.ligne!!.nom!!.smartCapitalize(),
-                        direction = TimeoDirection(als.ligne!!.sens!!, als.ligne!!.vers!!.smartCapitalize()),
-                        color = "#" + leftPad(Integer.toHexString(Integer.valueOf(als.ligne!!.couleur)), 6, '0'),
+                        id = als.ligne.code,
+                        name = als.ligne.nom.smartCapitalize(),
+                        direction = TimeoDirection(als.ligne.sens, als.ligne.vers.smartCapitalize()),
+                        color = "#" + leftPad(Integer.toHexString(Integer.valueOf(als.ligne.couleur)), 6, '0'),
                         networkCode = networkCode)
                 }
 
@@ -116,26 +109,17 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) {
 
         checkForErrors(res.erreur)
 
-        val stopsList = res.alss.filter {
-            it.arret != null
-                    && it.arret!!.code != null
-                    && it.arret!!.nom != null
-                    && it.ligne != null
-                    && it.ligne!!.code != null
-                    && it.ligne!!.nom != null
-                    && it.ligne!!.sens != null
-                    && it.ligne!!.vers != null
-        }.map {
+        val stopsList = res.alss.filter { it.arret.code != null && it.arret.nom != null }.map {
             als ->
             TimeoStop(
-                    id = als.arret!!.code!!.toInt(),
-                    name = als.arret!!.nom!!.smartCapitalize(),
+                    id = als.arret.code!!.toInt(),
+                    name = als.arret.nom!!.smartCapitalize(),
                     reference = als.refs,
                     line = TimeoLine(
-                            id = als.ligne!!.code!!,
-                            name = als.ligne!!.nom!!.smartCapitalize(),
-                            direction = TimeoDirection(als.ligne!!.sens!!, als.ligne!!.vers!!.smartCapitalize()),
-                            color = "#" + leftPad(Integer.toHexString(Integer.valueOf(als.ligne!!.couleur)), 6, '0'),
+                            id = als.ligne.code,
+                            name = als.ligne.nom.smartCapitalize(),
+                            direction = TimeoDirection(als.ligne.sens, als.ligne.vers.smartCapitalize()),
+                            color = "#" + leftPad(Integer.toHexString(Integer.valueOf(als.ligne.couleur)), 6, '0'),
                             networkCode = networkCode))
         }
 
@@ -179,9 +163,9 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) {
             TimeoStopSchedule(
                     stop = stops.filter {
                         stop ->
-                        stop.id == horaire.description?.code
-                                && stop.line.id == horaire.description?.ligne
-                                && stop.line.direction.id == horaire.description?.sens
+                        stop.id == horaire.description.code
+                                && stop.line.id == horaire.description.ligne
+                                && stop.line.direction.id == horaire.description.sens
                     }.first(),
                     schedules = horaire.passages.map {
                         passage ->

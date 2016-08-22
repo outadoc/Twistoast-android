@@ -7,11 +7,11 @@ import org.simpleframework.xml.Element
  */
 class DescriptionDTO {
     @field:Element var code: Int = -1
-    @field:Element var arret: String? = null
-    @field:Element var ligne: String? = null
-    @field:Element var ligne_nom: String? = null
-    @field:Element var sens: String? = null
-    @field:Element var vers: String? = null
+    @field:Element lateinit var arret: String
+    @field:Element lateinit var ligne: String
+    @field:Element lateinit var ligne_nom: String
+    @field:Element lateinit var sens: String
+    @field:Element lateinit var vers: String
     @field:Element var couleur: String? = null
 }
 

@@ -8,8 +8,8 @@ import org.simpleframework.xml.Element
  */
 class AlsDTO {
     @field:Attribute var id: Int = -1
-    @field:Element var arret: ArretDTO? = null
-    @field:Element var ligne: LigneDTO? = null
+    @field:Element lateinit var arret: ArretDTO
+    @field:Element lateinit var ligne: LigneDTO
     @field:Element(required = false) var refs: String? = null
 }
 

@@ -9,7 +9,7 @@ import org.simpleframework.xml.ElementList
  */
 class HoraireDTO {
     @field:Attribute var id: Int = -1
-    @field:Element var description: DescriptionDTO? = null
+    @field:Element lateinit var description: DescriptionDTO
     @field:ElementList var passages: List<PassageDTO> = mutableListOf()
     @field:ElementList var messages: List<MessageDTO> = mutableListOf()
 }
