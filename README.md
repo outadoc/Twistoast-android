@@ -36,6 +36,12 @@ Pour compiler à partir des sources, clonez simplement le projet, et importez-le
 Vous devrez ajouter une ressource string admob_adunitid et admob_test_device, qui correspondent
 respectivement à la clé privée AdMob et l'identifiant AdMob d'un appareil de test.
 
+## Développement
+Twistoast a été porté depuis Java vers Kotlin afin de profiter des tas de features géniales de ce langage, et améliorer
+la stabilité de l'application au passage.
+Si vous ne connaissez pas encore Kotlin, je vous invite à vous familiariser un peu avec le langage
+avant d'essayer de contribuer au projet. Il sera assez familier aux développeurs Java.
+
 ## Documentation sur les APIs utilisées
 Twistoast utilise les mêmes APIs que les services officiels. Vous pouvez trouver plus de détails sur
 [ce gist](https://gist.github.com/outadoc/40060db45c436977a912) et [ce post de blog](https://outadoc.fr/2014/11/keolis-open-data-api/).
