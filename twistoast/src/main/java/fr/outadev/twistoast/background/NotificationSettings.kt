@@ -1,5 +1,5 @@
 /*
- * Twistoast - NotificationSettings
+ * Twistoast - NotificationSettings.kt
  * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
