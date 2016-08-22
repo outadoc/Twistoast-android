@@ -209,9 +209,9 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
 
     /**
      * Refreshes the list's schedules and displays them to the user.
-
+     *
      * @param reloadFromDatabase true if we want to reload the stops completely, or false if we only want
-     * *                           to update the schedules
+     * to update the schedules
      */
     fun refreshAllStopSchedules(reloadFromDatabase: Boolean) {
         // we don't want to try to refresh if we're already refreshing (causes bugs)

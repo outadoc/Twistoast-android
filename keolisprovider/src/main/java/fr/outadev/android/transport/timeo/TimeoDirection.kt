@@ -1,7 +1,8 @@
 package fr.outadev.android.transport.timeo
 
 /**
- * Created by outadoc on 22/08/16.
+ * Represents the direction of a bus line.
+ * Id can be either A or R (in theory, but it's not restricted).
  */
 data class TimeoDirection (var id: String, var name: String) {
 

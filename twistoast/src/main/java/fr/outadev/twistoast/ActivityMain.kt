@@ -42,7 +42,7 @@ import org.jetbrains.anko.uiThread
 
 /**
  * The main activity of the app.
-
+ *
  * @author outadoc
  */
 class ActivityMain : ThemedActivity(), IStopsListContainer, NavigationView.OnNavigationItemSelectedListener {

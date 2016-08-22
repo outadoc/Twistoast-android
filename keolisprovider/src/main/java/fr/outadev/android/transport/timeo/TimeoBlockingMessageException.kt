@@ -24,7 +24,7 @@ import android.content.Context
 /**
  * A blocking message thrown by the API.
  * Should be displayed in an alert dialog.
-
+ *
  * @author outadoc
  */
 class TimeoBlockingMessageException : TimeoException() {

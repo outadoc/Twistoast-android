@@ -3,7 +3,9 @@ package fr.outadev.android.transport.timeo.dto
 import org.simpleframework.xml.Element
 
 /**
- * Created by outadoc on 21/08/16.
+ * Represents the details of a stop and line in the XML API.
+ *
+ * @author outadoc
  */
 class DescriptionDTO {
     @field:Element var code: Int = -1

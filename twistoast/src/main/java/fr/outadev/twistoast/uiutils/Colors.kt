@@ -22,7 +22,7 @@ import android.graphics.Color
 
 /**
  * Miscellaneous methods used to manipulate colours.
-
+ *
  * @author outadoc
  */
 object Colors {

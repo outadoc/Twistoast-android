@@ -35,7 +35,7 @@ import fr.outadev.twistoast.background.BackgroundTasksManager
 
 /**
  * A preferences fragment for the preferences of the app.
-
+ *
  * @author outadoc
  */
 class FragmentPreferences : PreferenceFragment(), OnSharedPreferenceChangeListener {

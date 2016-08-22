@@ -4,7 +4,9 @@ import org.simpleframework.xml.Attribute
 import org.simpleframework.xml.Element
 
 /**
- * Created by outadoc on 21/08/16.
+ * Represents a traffic info message in the XML API.
+ *
+ * @author outadoc
  */
 class MessageDTO {
     @field:Attribute(required = false) var id: Int = -1

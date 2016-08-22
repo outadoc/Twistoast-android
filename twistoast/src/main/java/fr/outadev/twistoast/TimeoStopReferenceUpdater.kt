@@ -42,11 +42,10 @@ class TimeoStopReferenceUpdater(context: Context = ApplicationTwistoast.instance
     /**
      * Updates all the references of the bus stops in the database.
      * Read the classe's Javadoc for some more context.
-
+     *
      * @param progressListener a progress listener that will be notified of the progress, line by line.
-     * *
+     *
      * @throws XmlPullParserException
-     * *
      * @throws IOException
      */
     @Throws(XmlPullParserException::class, IOException::class, TimeoException::class)

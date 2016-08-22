@@ -25,7 +25,9 @@ import com.squareup.okhttp.Request
 import java.io.IOException
 
 /**
- * Created by Baptiste on 2016-01-18.
+ * An implementation for the IHttpRequester.
+ *
+ * @author outadoc
  */
 class HttpRequester : IHttpRequester {
 
@@ -35,11 +37,9 @@ class HttpRequester : IHttpRequester {
      * Requests a web page via an HTTP GET request.
 
      * @param url       URL to fetch
-     * *
      * @param useCaches true if the client can cache the request
-     * *
      * @return the raw body of the page
-     * *
+     *
      * @throws IOException if an HTTP error occurred
      */
     @Throws(IOException::class)

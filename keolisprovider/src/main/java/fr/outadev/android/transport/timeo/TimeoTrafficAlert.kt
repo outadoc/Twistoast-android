@@ -22,7 +22,7 @@ import java.io.Serializable
 
 /**
  * Traffic alert. Used to inform the user of traffic perturbations.
-
+ *
  * @author outadoc
  */
 data class TimeoTrafficAlert (var id: Int, var label: String?, var url: String?) : Serializable

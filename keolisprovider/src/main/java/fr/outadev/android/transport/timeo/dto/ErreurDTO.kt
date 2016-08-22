@@ -4,7 +4,9 @@ import org.simpleframework.xml.Attribute
 import org.simpleframework.xml.Text
 
 /**
- * Created by outadoc on 21/08/16.
+ * Represents an error returned by the XML API.
+ *
+ * @author outadoc
  */
 class ErreurDTO {
     @field:Attribute var code: String = "000"

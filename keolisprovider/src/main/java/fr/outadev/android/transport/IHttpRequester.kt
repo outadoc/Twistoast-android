@@ -3,7 +3,9 @@ package fr.outadev.android.transport
 import java.io.IOException
 
 /**
- * Created by outadoc on 22/08/16.
+ * An interface defining functions for requesting a web page.
+ *
+ * @author outadoc
  */
 interface IHttpRequester {
 

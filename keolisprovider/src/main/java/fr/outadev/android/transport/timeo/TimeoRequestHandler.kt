@@ -37,7 +37,7 @@ import java.util.*
 
 /**
  * Handles all connections to the Twisto Realtime API.
-
+ *
  * @author outadoc
  */
 class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) {
@@ -45,18 +45,24 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) {
     private val serializer: Persister = Persister()
 
     /**
-     * Shorthand methods for requesting data from the default city's API (Twisto/Caen)
+     * Fetches the bus stops for the specified line.
      */
     @Throws(IOException::class, TimeoException::class)
     fun getStops(line: TimeoLine): List<TimeoStop> {
         return getStops(line.networkCode, line)
     }
 
+    /**
+     * Fetches the next bus schedules for the specified bus stop.
+     */
     @Throws(TimeoException::class, IOException::class, XmlPullParserException::class)
     fun getSingleSchedule(stop: TimeoStop): TimeoStopSchedule {
         return getSingleSchedule(stop.line.networkCode, stop)
     }
 
+    /**
+     * Fetches the next bus schedules for the specified list of bus stops.
+     */
     @Throws(TimeoException::class, IOException::class)
     fun getMultipleSchedules(stops: List<TimeoStop>): List<TimeoStopSchedule> {
         //if we don't specify any network code when calling getMultipleSchedules, we'll have to figure them out ourselves.
@@ -126,6 +132,9 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) {
         return stopsList
     }
 
+    /**
+     * Fetches the next bus schedules for the specified bus stop.
+     */
     @Throws(TimeoException::class, IOException::class, XmlPullParserException::class)
     fun getSingleSchedule(networkCode: Int, stop: TimeoStop): TimeoStopSchedule {
         val schedules = getMultipleSchedules(networkCode, listOf(stop))
@@ -137,6 +146,9 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) {
         }
     }
 
+    /**
+     * Fetches the next bus schedules for the specified list of bus stops.
+     */
     @Throws(TimeoException::class, IOException::class)
     fun getMultipleSchedules(networkCode: Int, stops: List<TimeoStop>): List<TimeoStopSchedule> {
         // If no stops are in the list or all refs are null
@@ -180,6 +192,10 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) {
         return schedules
     }
 
+    /**
+     * Checks if there are outdated stops amongst those in the database,
+     * by comparing them to a list of schedules returned by the API.
+     */
     @Throws(TimeoException::class)
     fun checkForOutdatedStops(stops: List<TimeoStop>, schedules: List<TimeoStopSchedule>): Int {
         if (stops.size === schedules.size) {
@@ -208,6 +224,10 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) {
         return count
     }
 
+    /**
+     * Checks the DTO returned by the API for eventual server-side errors.
+     * Throws an exception if one is encountered.
+     */
     @Throws(TimeoException::class)
     private fun checkForErrors(error: ErreurDTO?) {
         if (error?.code != "000") {
@@ -215,6 +235,9 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) {
         }
     }
 
+    /**
+     * Fetches the current global traffic alert message.
+     */
     val globalTrafficAlert: TimeoTrafficAlert?
         get() {
             try {
@@ -240,6 +263,9 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) {
             return null
         }
 
+    /**
+     * Gets the list of the supported bus networks.
+     */
     val networksList: Map<Int, String>
         get() {
             return mapOf(
@@ -273,9 +299,8 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) {
 
         /**
          * Returns the API endpoint for a given network code.
-
+         *
          * @param networkCode the code for the city's bus network
-         * *
          * @return the name of the page that has to be called for this specific network
          */
         private fun getEndpointUrl(networkCode: Int): String {

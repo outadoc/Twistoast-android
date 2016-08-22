@@ -21,6 +21,8 @@ package fr.outadev.android.transport.timeo
 /**
  * Defines a progress listener.
  * Current process and maximum progress will be updated at will.
+ *
+ * @author outadoc
  */
 interface IProgressListener {
 
@@ -28,7 +30,6 @@ interface IProgressListener {
      * Updates the current progress.
 
      * @param current current progress, can't be greater than total
-     * *
      * @param total   maximum progress
      */
     fun onProgress(current: Int, total: Int)

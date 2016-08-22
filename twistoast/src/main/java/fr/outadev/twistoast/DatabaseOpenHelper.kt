@@ -28,7 +28,7 @@ import java.io.IOException
 
 /**
  * Opens, creates and manages database versions.
-
+ *
  * @author outadoc
  */
 class DatabaseOpenHelper (private val context: Context = ApplicationTwistoast.instance) : SQLiteOpenHelper(context, DatabaseOpenHelper.DATABASE_NAME, null, DatabaseOpenHelper.DATABASE_VERSION) {
@@ -56,7 +56,7 @@ class DatabaseOpenHelper (private val context: Context = ApplicationTwistoast.in
 
     /**
      * Upgrade the database to version 2.
-
+     *
      * @param db the database to upgrade
      */
     private fun upgradeToV2(db: SQLiteDatabase) {
@@ -114,9 +114,8 @@ class DatabaseOpenHelper (private val context: Context = ApplicationTwistoast.in
 
     /**
      * Get the v2 upgrade database.
-
+     *
      * @return a database containing the info necessary for a v1 -> v2 upgrade
-     * *
      * @throws IOException if we couldn't copy the database to the databases folder
      */
     private // Check if the database exists before copying

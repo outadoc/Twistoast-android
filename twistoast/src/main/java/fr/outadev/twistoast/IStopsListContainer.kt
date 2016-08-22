@@ -20,7 +20,7 @@ package fr.outadev.twistoast
 
 /**
  * Implements methods a stops list container activity/fragment should have.
-
+ *
  * @author outadoc
  */
 interface IStopsListContainer {

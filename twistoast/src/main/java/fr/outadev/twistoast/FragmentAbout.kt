@@ -26,7 +26,7 @@ import android.widget.Toast
 
 /**
  * A preferences fragment for the preferences of the app.
-
+ *
  * @author outadoc
  */
 class FragmentAbout : PreferenceFragment() {

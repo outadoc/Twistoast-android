@@ -4,7 +4,9 @@ import org.simpleframework.xml.Element
 import org.simpleframework.xml.ElementList
 
 /**
- * Created by outadoc on 21/08/16.
+ * Represents a list of lines or stops in the XML API (xml=1 root node).
+ *
+ * @author outadoc
  */
 class ListeLignesDTO {
     @field:Element var erreur: ErreurDTO? = null

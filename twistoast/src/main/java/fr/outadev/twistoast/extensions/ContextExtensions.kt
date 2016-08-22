@@ -25,7 +25,7 @@ import fr.outadev.twistoast.R
 
 /**
  * Miscellaneous methods used to manipulate colours.
-
+ *
  * @author outadoc
  */
 

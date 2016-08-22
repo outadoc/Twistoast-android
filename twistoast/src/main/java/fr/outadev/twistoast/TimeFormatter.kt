@@ -29,7 +29,7 @@ import org.joda.time.format.DateTimeFormat
 /**
  * Time formatter class. Used to turn strings returned by the API (e.g. "13:42") into readable Calendar objects and/or
  * processed strings to display information to the user.
-
+ *
  * @author outadoc
  */
 object TimeFormatter {
@@ -43,11 +43,10 @@ object TimeFormatter {
      * or messages that warn the user the time has almost come (no, that's not a threat).
 
      * @param context a context (used to fetch strings and prefs)
-     * *
      * @param time    a time in a string: e.g. "14:53"
-     * *
+
      * @return if time is less than one minute in the future: "imminent arrival"-ish, if less than 45 minutes in the future: "in
-     * * xx minutes", if more than that: the untouched time parameter
+     * xx minutes", if more than that: the untouched time parameter
      */
     fun formatTime(context: Context, time: DateTime): String {
         when (getTimeDisplayMode(time, context)) {
@@ -70,9 +69,8 @@ object TimeFormatter {
 
     /**
      * Computes the interval of time after which the bus shall arrive.
-
+     *
      * @param schedule the time at which the bus will arrive
-     * *
      * @return the difference between now and then
      */
     fun getDurationUntilBus(schedule: DateTime): Duration {
@@ -82,12 +80,10 @@ object TimeFormatter {
     /**
      * Decides which mode the app should use to show the time to the user.
      *
-     *
      * If time is less than one minute in the future: ARRIVAL_IMMINENT; if less than 45 minutes in the future: COUNTDOWN; if
      * more than that: FULL; if it was in the past, CURRENTLY_AT_STOP
-
+     *
      * @param schedule the time at which the bus will arrive
-     * *
      * @return a TimeDisplayMode constant to tell you the right mode
      */
     fun getTimeDisplayMode(schedule: DateTime, context: Context): TimeDisplayMode {

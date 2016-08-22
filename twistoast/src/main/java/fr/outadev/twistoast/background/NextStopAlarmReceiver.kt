@@ -116,7 +116,7 @@ class NextStopAlarmReceiver : BroadcastReceiver() {
 
     /**
      * Sends a notification to the user informing them that their bus is incoming.
-
+     *
      * @param schedule the schedule to notify about
      */
     private fun notifyForIncomingBus(schedule: TimeoStopSchedule) {
@@ -160,7 +160,7 @@ class NextStopAlarmReceiver : BroadcastReceiver() {
 
     /**
      * Sends a notification to the user and keeps it updated with the latest bus schedules.
-
+     *
      * @param schedule the bus schedule that will be included in the notification
      */
     private fun updateStopTimeNotification(schedule: TimeoStopSchedule) {
@@ -236,7 +236,7 @@ class NextStopAlarmReceiver : BroadcastReceiver() {
         /**
          * Enables the regular checks performed every minute by this receiver.
          * They should be disabled once not needed anymore, as they can be battery and network hungry.
-
+         *
          * @param context a context
          */
         internal fun enable(context: Context) {
@@ -249,7 +249,7 @@ class NextStopAlarmReceiver : BroadcastReceiver() {
 
         /**
          * Disables the regular checks performed every minute by this receiver.
-
+         *
          * @param context a context
          */
         internal fun disable(context: Context) {
@@ -261,9 +261,8 @@ class NextStopAlarmReceiver : BroadcastReceiver() {
 
         /**
          * Returns the PendingIntent that will be called by the alarm every minute.
-
+         *
          * @param context a context
-         * *
          * @return the PendingIntent corresponding to this class
          */
         fun getBroadcast(context: Context): PendingIntent {

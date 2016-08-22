@@ -45,7 +45,7 @@ import org.jetbrains.anko.uiThread
 
 /**
  * Activity that allows the user to add a bus stop to the app.
-
+ *
  * @author outadoc
  */
 class ActivityNewStop : ThemedActivity() {

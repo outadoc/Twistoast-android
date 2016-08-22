@@ -21,7 +21,7 @@ package fr.outadev.android.transport.timeo
 /**
  * Used to store a list of schedules, with their corresponding line, direction, and stop
  * objects.
-
+ *
  * @author outadoc
  */
 data class TimeoStopSchedule (var stop: TimeoStop, var schedules: List<TimeoSingleSchedule> = listOf())

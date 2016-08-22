@@ -4,7 +4,9 @@ import org.simpleframework.xml.Element
 import org.simpleframework.xml.ElementList
 
 /**
- * Created by outadoc on 21/08/16.
+ * Represents a list of schedules in the XML API (xml=3 root node).
+ *
+ * @author outadoc
  */
 class ListeHorairesDTO {
     @field:Element var erreur: ErreurDTO? = null

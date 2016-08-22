@@ -43,7 +43,7 @@ import org.jetbrains.anko.uiThread
 
 /**
  * An array adapter for the main list of bus stops.
-
+ *
  * @author outadoc
  */
 class RecyclerAdapterRealtime(val activity: Activity, private val stopsList: MutableList<TimeoStop>, private val mStopsListContainer: IStopsListContainer, private val mParentView: View) : RecyclerView.Adapter<RecyclerAdapterRealtime.ViewHolder>(), IRecyclerAdapterAccess {

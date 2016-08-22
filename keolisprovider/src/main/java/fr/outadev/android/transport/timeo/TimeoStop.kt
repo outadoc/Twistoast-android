@@ -22,7 +22,7 @@ import org.joda.time.DateTime
 
 /**
  * A bus stop.
-
+ *
  * @author outadoc
  */
 data class TimeoStop(val id: Int, val name: String, var line: TimeoLine, var reference: String? = null) {

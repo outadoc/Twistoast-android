@@ -20,7 +20,7 @@ package fr.outadev.android.transport.timeo
 
 /**
  * Stores a bus line and its direction.
-
+ *
  * @author outadoc
  */
 data class TimeoLine (val id: String, val name: String, val direction: TimeoDirection, val networkCode: Int = TimeoRequestHandler.DEFAULT_NETWORK_CODE, val color: String = "#34495E") {

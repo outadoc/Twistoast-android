@@ -29,7 +29,7 @@ import java.util.*
 
 /**
  * Database management class.
-
+ *
  * @author outadoc
  */
 class Database(private val databaseOpenHelper: SQLiteOpenHelper) {
@@ -185,7 +185,6 @@ class Database(private val databaseOpenHelper: SQLiteOpenHelper) {
      * Gets a bus stop at a specific index. Useful for Pebble, for example.
 
      * @param index the index of the stop in the database, sorted by line id, stop name, and direction name
-     * *
      * @return the corresponding stop object
      */
     fun getStopAtIndex(index: Int): TimeoStop? {
@@ -202,11 +201,9 @@ class Database(private val databaseOpenHelper: SQLiteOpenHelper) {
      * Gets a bus stop with the corresponding primary key.
 
      * @param stopId the ID of the stop to get
-     * *
      * @param lineId the ID of the line of the stop to get
-     * *
      * @param dirId the ID of the direction of the stop to get
-     * *
+     *
      * @return the corresponding stop object
      */
     fun getStop(stopId: String, lineId: String, dirId: String, networkCode: Int): TimeoStop? {
@@ -248,11 +245,9 @@ class Database(private val databaseOpenHelper: SQLiteOpenHelper) {
 
     /**
      * Gets the number of stops in the database.
-
+     *
      * @return the number of bus stops
      */
-    // that's a nice query you got tthhhere
-    // close the cursor and the database
     val stopsCount: Int
         get() {
             val db = databaseOpenHelper.readableDatabase
@@ -282,7 +277,6 @@ class Database(private val databaseOpenHelper: SQLiteOpenHelper) {
 
     /**
      * Deletes a bus stop from the database.
-
      * @param stop the bus stop to delete
      */
     fun deleteStop(stop: TimeoStop) {
@@ -296,7 +290,6 @@ class Database(private val databaseOpenHelper: SQLiteOpenHelper) {
 
     /**
      * Update the reference of a stop in the database.
-
      * @param stop the bus stop whose reference is to be updated
      */
     fun updateStopReference(stop: TimeoStop) {
@@ -327,7 +320,6 @@ class Database(private val databaseOpenHelper: SQLiteOpenHelper) {
 
     /**
      * Fetches the list of stops that we are currently watching (that is to say, we wanted to be notified when they're incoming).
-
      * @return a list containing the stops to process
      */
     // Clean notification flags that have timed out so they don't interfere
@@ -382,7 +374,6 @@ class Database(private val databaseOpenHelper: SQLiteOpenHelper) {
 
     /**
      * Registers a stop to be watched for notifications.
-
      * @param stop the bus stop to add to the list
      */
     fun addToWatchedStops(stop: TimeoStop) {
@@ -400,7 +391,6 @@ class Database(private val databaseOpenHelper: SQLiteOpenHelper) {
     /**
      * Unregisters a stop from the list of watched stops.
      * No notifications should be sent for this stop anymore, until it's been added back in.
-
      * @param stop the bus stop that we should stop watching
      */
     fun stopWatchingStop(stop: TimeoStop) {
@@ -418,9 +408,8 @@ class Database(private val databaseOpenHelper: SQLiteOpenHelper) {
 
     /**
      * Updated the last time of arrival returned by the API for this bus.
-
+     *
      * @param stop    the bus stop we want to update
-     * *
      * @param lastETA a UNIX timestamp for the last know ETA for this bus
      */
     fun updateWatchedStopETA(stop: TimeoStop, lastETA: DateTime) {
@@ -438,7 +427,6 @@ class Database(private val databaseOpenHelper: SQLiteOpenHelper) {
 
     /**
      * Counts the number of bus stops we are currently watching.
-
      * @return the number of watched stops in the database
      */
     val watchedStopsCount: Int

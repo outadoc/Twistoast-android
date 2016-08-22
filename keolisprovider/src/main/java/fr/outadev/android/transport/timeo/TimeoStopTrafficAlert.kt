@@ -19,6 +19,8 @@
 package fr.outadev.android.transport.timeo
 
 /**
- * Created by outadoc on 2016-07-09.
+ * A traffic alert specific to a stop.
+ *
+ * @author outadoc
  */
 data class TimeoStopTrafficAlert (val title: String, val body: String)

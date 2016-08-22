@@ -28,9 +28,8 @@ import java.util.*
  * Converts a time string to a Calendar object.
  * This method will return a calendar of the next day this time will occur; for example, if the string is "13:37" but it's
  * currently 15:45, the method will assume this time is tomorrow's, and set the date of the calendar object in consequence.
-
+ *
  * @param time a time in a string, separated with a colon: e.g. "14:53"
- * *
  * @return a calendar object, with the time in the string set for the next valid day
  */
 fun String.getNextDateForTime(): DateTime {
@@ -54,9 +53,8 @@ fun String.getNextDateForTime(): DateTime {
 /**
  * Capitalizes the first letter of every word, like WordUtils.capitalize(); except it does it WELL.
  * The determinants will not be capitalized, whereas some acronyms will.
-
+ *
  * @param str The text to capitalize.
- * *
  * @return The capitalized text.
  */
 fun String.smartCapitalize(): String {

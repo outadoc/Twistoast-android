@@ -4,7 +4,9 @@ import org.simpleframework.xml.Attribute
 import org.simpleframework.xml.Element
 
 /**
- * Created by outadoc on 21/08/16.
+ * Represents a bus schedule time in the XML API.
+ *
+ * @author outadoc
  */
 class PassageDTO {
     @field:Attribute var id: Int = -1

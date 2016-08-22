@@ -37,7 +37,7 @@ import java.util.*
 
 /**
  * Receives and handles the Twistoast Pebble app requests in the background.
-
+ *
  * @author outadoc
  */
 class PebbleWatchReceiver : PebbleDataReceiver(PebbleWatchReceiver.PEBBLE_UUID) {
@@ -95,9 +95,8 @@ class PebbleWatchReceiver : PebbleDataReceiver(PebbleWatchReceiver.PEBBLE_UUID) 
 
     /**
      * Sens a response packet to the Pebble.
-
+     *
      * @param context  a context
-     * *
      * @param schedule the schedule to send back
      */
     private fun craftAndSendSchedulePacket(context: Context, schedule: TimeoStopSchedule) {
@@ -166,11 +165,10 @@ class PebbleWatchReceiver : PebbleDataReceiver(PebbleWatchReceiver.PEBBLE_UUID) 
 
     /**
      * Processes a string for the Pebble's screen.
-
+     *
      * @param str       the string to process
-     * *
      * @param maxLength the max length of the string
-     * *
+     *
      * @return the processed string, or the original string if no action was required
      */
     private fun processStringForPebble(str: String?, maxLength: Int): String {

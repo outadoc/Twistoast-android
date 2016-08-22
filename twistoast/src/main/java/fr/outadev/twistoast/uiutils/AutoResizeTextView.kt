@@ -42,12 +42,11 @@ class AutoResizeTextView @JvmOverloads constructor(context: Context, attrs: Attr
     private interface SizeTester {
         /**
          * @param suggestedSize  Size of text to be tested
-         * *
          * @param availableSpace available space in which text must fit
-         * *
+         *
          * @return an integer < 0 if after applying `suggestedSize` to
-         * * text, it takes less space than `availableSpace`, > 0
-         * * otherwise
+         *  text, it takes less space than `availableSpace`, > 0
+         *  otherwise
          */
         fun onTestSize(suggestedSize: Int, availableSpace: RectF): Int
     }

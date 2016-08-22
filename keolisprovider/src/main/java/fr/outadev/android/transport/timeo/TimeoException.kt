@@ -20,7 +20,7 @@ package fr.outadev.android.transport.timeo
 
 /**
  * Thrown when an error was encountered while fetching data from the API.
-
+ *
  * @author outadoc
  */
 open class TimeoException constructor(s: String = "") : Exception(s) {

@@ -22,7 +22,7 @@ import org.joda.time.DateTime
 
 /**
  * Stores a single schedule, containing a time and a direction.
-
+ *
  * @author outadoc
  */
 data class TimeoSingleSchedule(val scheduleTime: DateTime, val direction: String?)

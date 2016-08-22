@@ -70,9 +70,8 @@ class TrafficAlertAlarmReceiver : BroadcastReceiver() {
 
         /**
          * Returns the PendingIntent that will be called by the alarm every X minutes.
-
+         *
          * @param context a context
-         * *
          * @return the PendingIntent corresponding to this class
          */
         private fun getBroadcast(context: Context): PendingIntent {
