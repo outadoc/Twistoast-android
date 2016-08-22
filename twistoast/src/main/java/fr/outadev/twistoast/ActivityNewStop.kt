@@ -69,7 +69,7 @@ class ActivityNewStop : ThemedActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_close_white)
 
-        databaseHandler = Database(DatabaseOpenHelper.getInstance(this))
+        databaseHandler = Database(DatabaseOpenHelper())
 
         swipeRefreshContainer.setColorSchemeResources(
                 R.color.twisto_primary, R.color.twisto_secondary,

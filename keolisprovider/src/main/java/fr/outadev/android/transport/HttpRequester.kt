@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.android.transport.timeo
+package fr.outadev.android.transport
 
 import android.util.Log
 import com.squareup.okhttp.CacheControl
@@ -27,13 +27,9 @@ import java.io.IOException
 /**
  * Created by Baptiste on 2016-01-18.
  */
-class HttpRequester private constructor() {
+class HttpRequester : IHttpRequester {
 
-    private val mHttpClient: OkHttpClient
-
-    init {
-        mHttpClient = OkHttpClient()
-    }
+    private val httpClient = OkHttpClient()
 
     /**
      * Requests a web page via an HTTP GET request.
@@ -47,7 +43,7 @@ class HttpRequester private constructor() {
      * @throws IOException if an HTTP error occurred
      */
     @Throws(IOException::class)
-    fun requestWebPage(url: String, params: String = "", useCaches: Boolean): String {
+    override fun requestWebPage(url: String, params: String, useCaches: Boolean): String {
         val finalUrl = if (params.isEmpty()) url else url + "?" + params
         Log.i(TAG, "requesting " + finalUrl)
 
@@ -57,23 +53,13 @@ class HttpRequester private constructor() {
             builder.cacheControl(CacheControl.FORCE_NETWORK)
         }
 
-        val response = mHttpClient.newCall(builder.build()).execute()
+        val response = httpClient.newCall(builder.build()).execute()
         return response.body().string()
     }
 
     companion object {
 
-        val TAG = HttpRequester::class.java.simpleName
-        private var _instance: HttpRequester? = null
-
-        val instance: HttpRequester
-            get() {
-                if (_instance == null) {
-                    _instance = HttpRequester()
-                }
-
-                return _instance!!
-            }
+        val TAG = HttpRequester::class.java.simpleName!!
     }
 
 }

@@ -34,7 +34,7 @@ class BootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
             // Turn the notifications back on if necessary
-            val db = Database(DatabaseOpenHelper.getInstance(context))
+            val db = Database(DatabaseOpenHelper(context))
             val config = ConfigurationManager(context)
 
             if (db.watchedStopsCount > 0) {

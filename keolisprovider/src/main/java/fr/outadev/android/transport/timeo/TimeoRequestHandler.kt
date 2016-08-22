@@ -19,6 +19,8 @@
 package fr.outadev.android.transport.timeo
 
 import android.util.Log
+import fr.outadev.android.transport.HttpRequester
+import fr.outadev.android.transport.IHttpRequester
 import fr.outadev.android.transport.getNextDateForTime
 import fr.outadev.android.transport.smartCapitalize
 import fr.outadev.android.transport.timeo.dto.ErreurDTO
@@ -38,7 +40,7 @@ import java.util.*
 
  * @author outadoc
  */
-class TimeoRequestHandler {
+class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) {
 
     private val serializer: Persister = Persister()
 
@@ -80,7 +82,7 @@ class TimeoRequestHandler {
     fun getLines(networkCode: Int = DEFAULT_NETWORK_CODE): List<TimeoLine> {
         val params = "xml=1"
 
-        val result = HttpRequester.instance.requestWebPage(getEndpointUrl(networkCode), params, true)
+        val result = http.requestWebPage(getEndpointUrl(networkCode), params, true)
         val res: ListeLignesDTO = serializer.read(ListeLignesDTO::class.java, result) ?: throw TimeoException("Service returned invalid data")
 
         checkForErrors(res.erreur)
@@ -109,7 +111,7 @@ class TimeoRequestHandler {
     fun getStops(networkCode: Int, line: TimeoLine): List<TimeoStop> {
         val params = "xml=1&ligne=${line.id}&sens=${line.direction.id}"
 
-        val result = HttpRequester.instance.requestWebPage(getEndpointUrl(networkCode), params, true)
+        val result = http.requestWebPage(getEndpointUrl(networkCode), params, true)
         val res: ListeLignesDTO = serializer.read(ListeLignesDTO::class.java, result) ?: throw TimeoException("Service returned invalid data")
 
         checkForErrors(res.erreur)
@@ -167,7 +169,7 @@ class TimeoRequestHandler {
 
         val params = "xml=3&refs=${URLEncoder.encode(refs, "UTF-8")}&ran=1"
 
-        val result = HttpRequester.instance.requestWebPage(getEndpointUrl(networkCode), params, false)
+        val result = http.requestWebPage(getEndpointUrl(networkCode), params, false)
         val res: ListeHorairesDTO = serializer.read(ListeHorairesDTO::class.java, result) ?: throw TimeoException("Service returned invalid data")
 
         checkForErrors(res.erreur)
@@ -232,7 +234,7 @@ class TimeoRequestHandler {
     val globalTrafficAlert: TimeoTrafficAlert?
         get() {
             try {
-                val source = HttpRequester.instance.requestWebPage(PRE_HOME_URL, useCaches = true)
+                val source = http.requestWebPage(PRE_HOME_URL, useCaches = true)
 
                 if (!source.isEmpty()) {
                     val obj = JSONTokener(source).nextValue() as JSONObject

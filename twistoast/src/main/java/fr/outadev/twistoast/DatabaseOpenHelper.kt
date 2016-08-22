@@ -31,7 +31,7 @@ import java.io.IOException
 
  * @author outadoc
  */
-class DatabaseOpenHelper private constructor(private val context: Context) : SQLiteOpenHelper(context, DatabaseOpenHelper.DATABASE_NAME, null, DatabaseOpenHelper.DATABASE_VERSION) {
+class DatabaseOpenHelper (private val context: Context = ApplicationTwistoast.instance) : SQLiteOpenHelper(context, DatabaseOpenHelper.DATABASE_NAME, null, DatabaseOpenHelper.DATABASE_VERSION) {
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(LINES_TABLE_CREATE)
@@ -219,14 +219,5 @@ class DatabaseOpenHelper private constructor(private val context: Context) : SQL
                         "FOREIGN KEY(stop_id, line_id, dir_id, network_code) " +
                         "REFERENCES twi_stop(stop_id, line_id, dir_id, network_code))"
 
-        private var instance: DatabaseOpenHelper? = null
-
-        fun getInstance(context: Context): DatabaseOpenHelper {
-            if (instance == null) {
-                instance = DatabaseOpenHelper(context)
-            }
-
-            return instance!!
-        }
     }
 }

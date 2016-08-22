@@ -29,13 +29,13 @@ import java.io.IOException
  * Useful since they periodically change, and this class should allow the user
  * to update his list of stops without having to delete/re-add them.
  */
-class TimeoStopReferenceUpdater(context: Context) {
+class TimeoStopReferenceUpdater(context: Context = ApplicationTwistoast.instance) {
 
     private val database: Database
     private val requestHandler: TimeoRequestHandler
 
     init {
-        database = Database(DatabaseOpenHelper.getInstance(context))
+        database = Database(DatabaseOpenHelper(context))
         requestHandler = TimeoRequestHandler()
     }
 

@@ -55,7 +55,7 @@ class PebbleWatchReceiver : PebbleDataReceiver(PebbleWatchReceiver.PEBBLE_UUID) 
         Log.d(TAG, "received a message from pebble " + PEBBLE_UUID)
 
         // open the database and count the stops
-        mDatabase = Database(DatabaseOpenHelper.getInstance(context))
+        mDatabase = Database(DatabaseOpenHelper(context))
 
         val stopsCount = mDatabase!!.stopsCount
         val messageType : Byte = data.getInteger(KEY_TWISTOAST_MESSAGE_TYPE).toByte()

@@ -96,8 +96,8 @@ class ActivityMain : ThemedActivity(), IStopsListContainer, NavigationView.OnNav
         }
 
         // Turn the notifications back off if necessary
-        val db = Database(DatabaseOpenHelper.getInstance(this))
-        val config = ConfigurationManager(this)
+        val db = Database(DatabaseOpenHelper())
+        val config = ConfigurationManager()
 
         if (db.watchedStopsCount > 0) {
             BackgroundTasksManager.enableStopAlarmJob(applicationContext)

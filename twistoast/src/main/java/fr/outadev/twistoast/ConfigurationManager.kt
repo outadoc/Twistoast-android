@@ -26,7 +26,7 @@ import android.preference.PreferenceManager
  * Manages application preferences. Use this to read or write application settings instead
  * of directly calling SharedPreferences.get*.
  */
-class ConfigurationManager(context: Context) {
+class ConfigurationManager(context: Context = ApplicationTwistoast.instance) {
 
     private val preferences: SharedPreferences
 

@@ -28,8 +28,9 @@ class ApplicationTwistoast : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        instance = this
 
-        val config = ConfigurationManager(this)
+        val config = ConfigurationManager()
         val nightModeCode = getNightModeForPref(config.nightMode)
 
         //noinspection WrongConstant,ResourceType
@@ -44,6 +45,11 @@ class ApplicationTwistoast : Application() {
             "system" -> return AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
             else -> return AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
         }
+    }
+
+    companion object {
+        lateinit var instance: ApplicationTwistoast
+            private set
     }
 
 }

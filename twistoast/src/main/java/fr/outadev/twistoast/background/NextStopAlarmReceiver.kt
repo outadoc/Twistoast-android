@@ -47,7 +47,7 @@ class NextStopAlarmReceiver : BroadcastReceiver() {
         requestHandler = TimeoRequestHandler()
 
         var stopsToCheck: List<TimeoStop>? = null
-        val database: Database = Database(DatabaseOpenHelper.getInstance(context))
+        val database: Database = Database(DatabaseOpenHelper(context))
 
         Log.d(TAG, "checking stop schedules for notifications")
 

@@ -66,8 +66,8 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
         // yes hello please, I'd like to be inflated?
         setHasOptionsMenu(true)
 
-        config = ConfigurationManager(activity)
-        databaseHandler = Database(DatabaseOpenHelper.getInstance(activity))
+        config = ConfigurationManager()
+        databaseHandler = Database(DatabaseOpenHelper())
 
         periodicRefreshRunnable = Runnable {
             if (config!!.autoRefresh) {

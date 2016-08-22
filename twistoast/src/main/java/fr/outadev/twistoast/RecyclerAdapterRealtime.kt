@@ -57,9 +57,9 @@ class RecyclerAdapterRealtime(val activity: Activity, private val stopsList: Mut
     private var networkCount = 0
 
     init {
-        database = Database(DatabaseOpenHelper.getInstance(activity))
-        referenceUpdater = TimeoStopReferenceUpdater(activity)
-        config = ConfigurationManager(activity)
+        database = Database(DatabaseOpenHelper())
+        referenceUpdater = TimeoStopReferenceUpdater()
+        config = ConfigurationManager()
         requestHandler = TimeoRequestHandler()
 
         schedules = mutableMapOf<TimeoStop, TimeoStopSchedule>()
