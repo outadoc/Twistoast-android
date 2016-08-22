@@ -1,5 +1,5 @@
 /*
- * Twistoast - TransportAPIException
+ * Twistoast - TimeoTrafficAlert
  * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -16,25 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.android.transport;
+package fr.outadev.android.transport.timeo
+
+import java.io.Serializable
 
 /**
- * Created by Baptiste on 2016-02-05.
+ * Traffic alert. Used to inform the user of traffic perturbations.
+
+ * @author outadoc
  */
-public class TransportAPIException extends Exception {
-
-    public TransportAPIException() {
-    }
-
-    public TransportAPIException(String detailMessage) {
-        super(detailMessage);
-    }
-
-    public TransportAPIException(String detailMessage, Throwable throwable) {
-        super(detailMessage, throwable);
-    }
-
-    public TransportAPIException(Throwable throwable) {
-        super(throwable);
-    }
-}
+data class TimeoTrafficAlert (var id: Int, var label: String?, var url: String?) : Serializable

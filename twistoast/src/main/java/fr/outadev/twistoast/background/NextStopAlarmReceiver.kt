@@ -27,7 +27,6 @@ import android.content.Intent
 import android.os.SystemClock
 import android.support.v4.app.NotificationCompat
 import android.util.Log
-import fr.outadev.android.transport.timeo.ITimeoRequestHandler
 import fr.outadev.android.transport.timeo.TimeoRequestHandler
 import fr.outadev.android.transport.timeo.TimeoStop
 import fr.outadev.android.transport.timeo.TimeoStopSchedule
@@ -41,7 +40,7 @@ import org.joda.time.DateTime
  */
 class NextStopAlarmReceiver : BroadcastReceiver() {
     private var context: Context? = null
-    private var requestHandler: ITimeoRequestHandler? = null
+    private var requestHandler: TimeoRequestHandler? = null
 
     override fun onReceive(context: Context, intent: Intent) {
         this.context = context
@@ -55,10 +54,10 @@ class NextStopAlarmReceiver : BroadcastReceiver() {
         doAsync {
             try {
                 stopsToCheck = database.watchedStops
-                val stopSchedules = requestHandler!!.getMultipleSchedules(stopsToCheck)
+                val stopSchedules = requestHandler!!.getMultipleSchedules(stopsToCheck!!)
 
                 // Look through each schedule
-                stopSchedules.filter { it.schedules != null && it.schedules.isNotEmpty() }.forEach {
+                stopSchedules.filter { it.schedules.isNotEmpty() }.forEach {
                     schedule ->
                     // If there are stops scheduled for this bus
                     val busTime = schedule.schedules[0].scheduleTime
@@ -80,7 +79,7 @@ class NextStopAlarmReceiver : BroadcastReceiver() {
                         // we have to make assumptions instead; if a bus is announced for 3 minutes, and then for 10
                         // minutes the next time we check, it most likely has passed.
 
-                        if (busTime.isBefore(schedule.stop.lastETA.plus(5 * 60 * 1000.toLong()))) {
+                        if (busTime.isBefore(schedule.stop.lastETA?.plus(5 * 60 * 1000.toLong()))) {
                             // Remove from database, and send a notification
                             notifyForIncomingBus(schedule)
                             database.stopWatchingStop(schedule.stop)

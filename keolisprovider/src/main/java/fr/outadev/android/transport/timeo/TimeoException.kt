@@ -1,5 +1,5 @@
 /*
- * Twistoast - INetwork
+ * Twistoast - TimeoException
  * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -16,13 +16,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.android.transport;
+package fr.outadev.android.transport.timeo
 
 /**
- * Created by Baptiste on 2016-02-05.
+ * Thrown when an error was encountered while fetching data from the API.
+
+ * @author outadoc
  */
-public interface INetwork {
+open class TimeoException @JvmOverloads constructor(s: String = "") : Exception(s) {
 
-    int getCode();
+    var errorCode: String? = null
+        private set
 
+    init {
+        this.errorCode = ""
+    }
+
+    constructor(errorCode: String, message: String) : this(message) {
+        this.errorCode = errorCode
+    }
+
+    override fun toString(): String {
+        return "NavitiaException: [$errorCode] $message"
+    }
 }

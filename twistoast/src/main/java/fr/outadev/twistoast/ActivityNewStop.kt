@@ -42,7 +42,6 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.longToast
 import org.jetbrains.anko.toast
 import org.jetbrains.anko.uiThread
-import java.util.*
 
 /**
  * Activity that allows the user to add a bus stop to the app.
@@ -128,7 +127,7 @@ class ActivityNewStop : ThemedActivity() {
                 // get the selected line
                 val item = currentLine
 
-                if (item != null && item.id != null) {
+                if (item != null) {
                     // set the line view
                     rowLineId.text = item.id
 
@@ -169,18 +168,18 @@ class ActivityNewStop : ThemedActivity() {
 
                 if (currentLine != null
                         && currentDirection != null
-                        && currentLine!!.id != null
-                        && currentDirection!!.id != null) {
+                        && currentLine != null
+                        && currentDirection != null) {
 
                     swipeRefreshContainer.isEnabled = true
                     swipeRefreshContainer.isRefreshing = true
 
                     rowDirectionName.text = resources.getString(R.string.direction_name, currentDirection!!.name)
-                    currentLine!!.direction = currentDirection
+                    currentLine = currentLine!!.copy(direction = currentDirection!!)
 
                     doAsync {
                         try {
-                            val timeoStops = requestHandler.getStops(currentLine)
+                            val timeoStops = requestHandler.getStops(currentLine!!)
 
                             uiThread {
                                 spinStop.isEnabled = true
@@ -208,7 +207,7 @@ class ActivityNewStop : ThemedActivity() {
                 val stop = currentStop
                 itemNext?.isEnabled = true
 
-                if (stop != null && stop.id != null) {
+                if (stop != null && true) {
                     rowStopName.text = resources.getString(R.string.stop_name, stop.name)
                     updateSchedulePreview()
                 }
@@ -225,7 +224,7 @@ class ActivityNewStop : ThemedActivity() {
 
         doAsync {
             try {
-                val schedule = requestHandler.getSingleSchedule(currentStop)
+                val schedule = requestHandler.getSingleSchedule(currentStop!!)
 
                 uiThread {
                     val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -236,19 +235,17 @@ class ActivityNewStop : ThemedActivity() {
                     val schedList = schedule.schedules
 
                     // set the schedule labels, if we need to
-                    if (schedList != null) {
-                        for (currSched in schedList) {
-                            val singleScheduleView = inflater.inflate(R.layout.view_single_schedule_label, null)
+                    for (currSched in schedList) {
+                        val singleScheduleView = inflater.inflate(R.layout.view_single_schedule_label, null)
 
-                            singleScheduleView.lbl_schedule.text = TimeFormatter.formatTime(this@ActivityNewStop, currSched.scheduleTime)
-                            singleScheduleView.lbl_schedule_direction.text = " — " + currSched.direction
+                        singleScheduleView.lbl_schedule.text = TimeFormatter.formatTime(this@ActivityNewStop, currSched.scheduleTime)
+                        singleScheduleView.lbl_schedule_direction.text = " — " + currSched.direction
 
-                            viewScheduleContainer.addView(singleScheduleView)
-                        }
+                        viewScheduleContainer.addView(singleScheduleView)
+                    }
 
-                        if (schedList.size > 0) {
-                            viewScheduleContainer.visibility = View.VISIBLE
-                        }
+                    if (schedList.isNotEmpty()) {
+                        viewScheduleContainer.visibility = View.VISIBLE
                     }
                 }
             } catch (e: Exception) {
@@ -266,7 +263,7 @@ class ActivityNewStop : ThemedActivity() {
 
         doAsync {
             try {
-                val timeoLines = requestHandler.lines
+                val timeoLines = requestHandler.getLines()
 
                 uiThread {
                     lineList = timeoLines
@@ -337,10 +334,8 @@ class ActivityNewStop : ThemedActivity() {
 
      * @return a list of ID/name objects containing the id and name of the directions to display
      */
-    private fun getDirectionsList(): List<TimeoIDNameObject> {
-        val directionsList = ArrayList<TimeoIDNameObject>()
-        lineList.filter { line -> line.id == currentLine?.id }.forEach { line -> directionsList.add(line.direction) }
-        return directionsList
+    private fun getDirectionsList(): List<TimeoDirection> {
+        return lineList.filter { line -> line.id == currentLine?.id }.map { line -> line.direction }
     }
 
     /**
@@ -356,15 +351,15 @@ class ActivityNewStop : ThemedActivity() {
 
      * @return an ID/name object for the direction
      */
-    val currentDirection: TimeoIDNameObject?
-        get() = spinDirection!!.getItemAtPosition(spinDirection!!.selectedItemPosition) as TimeoIDNameObject
+    val currentDirection: TimeoDirection?
+        get() = spinDirection!!.getItemAtPosition(spinDirection!!.selectedItemPosition) as TimeoDirection
 
     /**
      * Gets the bus line that's currently selected.
 
      * @return a line
      */
-    val currentLine: TimeoLine?
+    var currentLine: TimeoLine? = null
         get() = spinLine!!.getItemAtPosition(spinLine!!.selectedItemPosition) as TimeoLine
 
     companion object {

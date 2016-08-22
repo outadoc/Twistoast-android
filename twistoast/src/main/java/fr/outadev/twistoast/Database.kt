@@ -21,7 +21,7 @@ package fr.outadev.twistoast
 import android.content.ContentValues
 import android.database.sqlite.SQLiteConstraintException
 import android.database.sqlite.SQLiteOpenHelper
-import fr.outadev.android.transport.timeo.TimeoIDNameObject
+import fr.outadev.android.transport.timeo.TimeoDirection
 import fr.outadev.android.transport.timeo.TimeoLine
 import fr.outadev.android.transport.timeo.TimeoStop
 import org.joda.time.DateTime
@@ -83,7 +83,7 @@ class Database(private val databaseOpenHelper: SQLiteOpenHelper) {
      * @param line the bus line to add
      */
     private fun addLineToDatabase(line: TimeoLine?) {
-        if (line != null && line.details != null) {
+        if (line != null) {
             val db = databaseOpenHelper.writableDatabase
             val values = ContentValues()
 
@@ -105,7 +105,7 @@ class Database(private val databaseOpenHelper: SQLiteOpenHelper) {
      * @param line the bus line whose direction to add
      */
     private fun addDirectionToDatabase(line: TimeoLine?) {
-        if (line != null && line.direction != null) {
+        if (line != null) {
             val db = databaseOpenHelper.writableDatabase
             val values = ContentValues()
 
@@ -154,21 +154,21 @@ class Database(private val databaseOpenHelper: SQLiteOpenHelper) {
         // while there's a stop available
         while (results.moveToNext()) {
             val line = TimeoLine(
-                    TimeoIDNameObject(
-                            results.getString(results.getColumnIndex("line_id")),
-                            results.getString(results.getColumnIndex("line_name"))),
-                    TimeoIDNameObject(
+                    id = results.getString(results.getColumnIndex("line_id")),
+                    name = results.getString(results.getColumnIndex("line_name")),
+                    direction = TimeoDirection(
                             results.getString(results.getColumnIndex("dir_id")),
                             results.getString(results.getColumnIndex("dir_name"))),
-                    results.getString(results.getColumnIndex("line_color")),
-                    results.getInt(results.getColumnIndex("network_code")))
+                    color = results.getString(results.getColumnIndex("line_color")),
+                    networkCode = results.getInt(results.getColumnIndex("network_code")))
 
             val stop = TimeoStop(
-                    results.getString(results.getColumnIndex("stop_id")),
-                    results.getString(results.getColumnIndex("stop_name")),
-                    results.getString(results.getColumnIndex("stop_ref")),
-                    line,
-                    results.getInt(results.getColumnIndex("notif")) == 1)
+                    id = results.getInt(results.getColumnIndex("stop_id")),
+                    name = results.getString(results.getColumnIndex("stop_name")),
+                    reference = results.getString(results.getColumnIndex("stop_ref")),
+                    line = line)
+
+            stop.isWatched = (results.getInt(results.getColumnIndex("notif")) == 1)
 
             // add it to the list
             stopsList.add(stop)
@@ -222,21 +222,21 @@ class Database(private val databaseOpenHelper: SQLiteOpenHelper) {
 
         if (results.moveToFirst()) {
             val line = TimeoLine(
-                    TimeoIDNameObject(
-                            results.getString(results.getColumnIndex("line_id")),
-                            results.getString(results.getColumnIndex("line_name"))),
-                    TimeoIDNameObject(
+                    id = results.getString(results.getColumnIndex("line_id")),
+                    name = results.getString(results.getColumnIndex("line_name")),
+                    direction = TimeoDirection(
                             results.getString(results.getColumnIndex("dir_id")),
                             results.getString(results.getColumnIndex("dir_name"))),
-                    results.getString(results.getColumnIndex("line_color")),
-                    results.getInt(results.getColumnIndex("network_code")))
+                    color = results.getString(results.getColumnIndex("line_color")),
+                    networkCode = results.getInt(results.getColumnIndex("network_code")))
 
             stop = TimeoStop(
-                    results.getString(results.getColumnIndex("stop_id")),
-                    results.getString(results.getColumnIndex("stop_name")),
-                    results.getString(results.getColumnIndex("stop_ref")),
-                    line,
-                    results.getInt(results.getColumnIndex("notif")) == 1)
+                    id = results.getInt(results.getColumnIndex("stop_id")),
+                    name = results.getString(results.getColumnIndex("stop_name")),
+                    reference = results.getString(results.getColumnIndex("stop_ref")),
+                    line = line)
+
+            stop.isWatched = (results.getInt(results.getColumnIndex("notif")) == 1)
         }
 
         // close the cursor and the database
@@ -289,7 +289,7 @@ class Database(private val databaseOpenHelper: SQLiteOpenHelper) {
         val db = databaseOpenHelper.writableDatabase
 
         db.delete("twi_stop", "stop_id = ? AND line_id = ? AND dir_id = ? AND stop_ref = ? AND network_code = ?",
-                arrayOf(stop.id, stop.line.id, stop.line.direction.id, stop.reference, stop.line.networkCode.toString()))
+                arrayOf(stop.id.toString(), stop.line.id, stop.line.direction.id, stop.reference, stop.line.networkCode.toString()))
 
         db.close()
     }
@@ -306,7 +306,7 @@ class Database(private val databaseOpenHelper: SQLiteOpenHelper) {
         updateClause.put("stop_ref", stop.reference)
 
         db.update("twi_stop", updateClause, "stop_id = ? AND line_id = ? AND dir_id = ? AND network_code = ?",
-                arrayOf(stop.id, stop.line.id, stop.line.direction.id, stop.line.networkCode.toString()))
+                arrayOf(stop.id.toString(), stop.line.id, stop.line.direction.id, stop.line.networkCode.toString()))
 
         db.close()
     }
@@ -354,24 +354,26 @@ class Database(private val databaseOpenHelper: SQLiteOpenHelper) {
             val stopsList = ArrayList<TimeoStop>()
             while (results.moveToNext()) {
                 val line = TimeoLine(
-                        TimeoIDNameObject(
-                                results.getString(results.getColumnIndex("line_id")),
-                                results.getString(results.getColumnIndex("line_name"))),
-                        TimeoIDNameObject(
+                        id = results.getString(results.getColumnIndex("line_id")),
+                        name = results.getString(results.getColumnIndex("line_name")),
+                        direction = TimeoDirection(
                                 results.getString(results.getColumnIndex("dir_id")),
                                 results.getString(results.getColumnIndex("dir_name"))),
-                        results.getString(results.getColumnIndex("line_color")),
-                        results.getInt(results.getColumnIndex("network_code")))
+                        color = results.getString(results.getColumnIndex("line_color")),
+                        networkCode = results.getInt(results.getColumnIndex("network_code")))
 
                 val stop = TimeoStop(
-                        results.getString(results.getColumnIndex("stop_id")),
-                        results.getString(results.getColumnIndex("stop_name")),
-                        results.getString(results.getColumnIndex("stop_ref")),
-                        line,
-                        true,
-                        DateTime(results.getLong(results.getColumnIndex("notif_last_estim"))))
+                        id = results.getInt(results.getColumnIndex("stop_id")),
+                        name = results.getString(results.getColumnIndex("stop_name")),
+                        reference = results.getString(results.getColumnIndex("stop_ref")),
+                        line = line)
+
+                stop.isWatched = true
+                stop.lastETA = DateTime(results.getLong(results.getColumnIndex("notif_last_estim")))
+
                 stopsList.add(stop)
             }
+
             results.close()
             db.close()
 
@@ -409,7 +411,7 @@ class Database(private val databaseOpenHelper: SQLiteOpenHelper) {
 
         db.update("twi_notification", updateClause,
                 "stop_id = ? AND line_id = ? AND dir_id = ? AND network_code = ?",
-                arrayOf(stop.id, stop.line.id, stop.line.direction.id, stop.line.networkCode.toString()))
+                arrayOf(stop.id.toString(), stop.line.id, stop.line.direction.id, stop.line.networkCode.toString()))
 
         db.close()
     }
@@ -429,7 +431,7 @@ class Database(private val databaseOpenHelper: SQLiteOpenHelper) {
 
         db.update("twi_notification", updateClause,
                 "stop_id = ? AND line_id = ? AND dir_id = ? AND network_code = ? AND notif_active = 1",
-                arrayOf(stop.id, stop.line.id, stop.line.direction.id, stop.line.networkCode.toString()))
+                arrayOf(stop.id.toString(), stop.line.id, stop.line.direction.id, stop.line.networkCode.toString()))
 
         db.close()
     }

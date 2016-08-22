@@ -27,7 +27,6 @@ import android.os.AsyncTask
 import android.support.v4.app.NotificationCompat
 import android.util.Log
 
-import fr.outadev.android.transport.timeo.ITimeoRequestHandler
 import fr.outadev.android.transport.timeo.TimeoRequestHandler
 import fr.outadev.android.transport.timeo.TimeoTrafficAlert
 import fr.outadev.twistoast.ConfigurationManager
@@ -39,7 +38,7 @@ import fr.outadev.twistoast.R
 class TrafficAlertTask(private val mContext: Context) : AsyncTask<Void, Void, TimeoTrafficAlert>() {
     private val mConfig: ConfigurationManager
     private var mNotificationManager: NotificationManager? = null
-    private val mRequestHandler: ITimeoRequestHandler
+    private val mRequestHandler: TimeoRequestHandler
 
     private var mLastTrafficId: Int = 0
 

@@ -1,5 +1,5 @@
 /*
- * Twistoast - ILine
+ * Twistoast - TimeoStopSchedule
  * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -16,18 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.android.transport;
+package fr.outadev.android.transport.timeo
 
 /**
- * Created by Baptiste on 2016-02-05.
+ * Used to store a list of schedules, with their corresponding line, direction, and stop
+ * objects.
+
+ * @author outadoc
  */
-public interface ILine {
-
-    INetwork getNetwork();
-
-    int getId();
-
-    String getName();
-    void setName(String name);
-
-}
+data class TimeoStopSchedule (var stop: TimeoStop, var schedules: List<TimeoSingleSchedule> = listOf())

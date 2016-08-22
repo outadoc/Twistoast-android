@@ -1,5 +1,5 @@
 /*
- * Twistoast - ITrafficAlert
+ * Twistoast - TransportAPIException
  * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -16,24 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.android.transport;
+package fr.outadev.android.transport
 
 /**
  * Created by Baptiste on 2016-02-05.
  */
-public interface ITrafficAlert {
+open class TransportAPIException : Exception {
 
-    INetwork getNetwork();
+    constructor() {
+    }
 
-    int getId();
+    constructor(detailMessage: String) : super(detailMessage) {
+    }
 
-    String getTitle();
-    void setTitle(String title);
+    constructor(detailMessage: String, throwable: Throwable) : super(detailMessage, throwable) {
+    }
 
-    String getDescription();
-    void setDescription(String description);
-
-    String getUrl();
-    void setUrl(String url);
-
+    constructor(throwable: Throwable) : super(throwable) {
+    }
 }

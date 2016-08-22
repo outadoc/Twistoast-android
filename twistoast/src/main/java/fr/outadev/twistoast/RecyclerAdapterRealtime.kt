@@ -51,7 +51,7 @@ class RecyclerAdapterRealtime(val activity: Activity, private val stopsList: Mut
     private val database: Database
     private val config: ConfigurationManager
     private val referenceUpdater: TimeoStopReferenceUpdater
-    private val requestHandler: ITimeoRequestHandler
+    private val requestHandler: TimeoRequestHandler
     private val schedules: MutableMap<TimeoStop, TimeoStopSchedule>
 
     private var networkCount = 0
@@ -75,7 +75,7 @@ class RecyclerAdapterRealtime(val activity: Activity, private val stopsList: Mut
             try {
                 // Get the schedules and put them in a list
                 var schedulesList: List<TimeoStopSchedule>?
-                var scheduleMap: Map<TimeoStop, TimeoStopSchedule>?
+                var scheduleMap: Map<TimeoStop, TimeoStopSchedule>
 
                 schedulesList = requestHandler.getMultipleSchedules(stopsList)
                 scheduleMap = schedulesList.associateBy({ it.stop }, { it })
@@ -94,15 +94,12 @@ class RecyclerAdapterRealtime(val activity: Activity, private val stopsList: Mut
 
                 uiThread {
                     schedules.clear()
-
-                    if (scheduleMap != null) {
-                        schedules.putAll(scheduleMap!!)
-                    }
+                    schedules.putAll(scheduleMap)
 
                     networkCount = database.networksCount
 
                     notifyDataSetChanged()
-                    mStopsListContainer.endRefresh(scheduleMap != null)
+                    mStopsListContainer.endRefresh(scheduleMap.isNotEmpty())
                 }
 
             } catch (e: TimeoBlockingMessageException) {
@@ -131,6 +128,7 @@ class RecyclerAdapterRealtime(val activity: Activity, private val stopsList: Mut
             } catch (e: Exception) {
                 e.printStackTrace()
                 uiThread {
+                    mStopsListContainer.endRefresh(false)
                     Snackbar.make(mParentView, R.string.loading_error, Snackbar.LENGTH_LONG)
                             .setAction(R.string.error_retry) { updateScheduleData() }.show()
                 }
@@ -162,7 +160,7 @@ class RecyclerAdapterRealtime(val activity: Activity, private val stopsList: Mut
         // Add the new schedules one by one
         if (schedules.containsKey(currentStop) && schedules[currentStop] != null) {
             // If there are schedules
-            if (schedules[currentStop]!!.schedules != null) {
+            if (schedules[currentStop]!!.schedules.isNotEmpty()) {
                 // Get the schedules for this stop
                 val currScheds = schedules[currentStop]!!.schedules
 

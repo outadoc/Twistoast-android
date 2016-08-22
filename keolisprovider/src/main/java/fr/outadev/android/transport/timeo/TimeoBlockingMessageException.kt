@@ -1,5 +1,5 @@
 /*
- * Twistoast - IRealTimeSchedule
+ * Twistoast - TimeoBlockingMessageException
  * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -16,13 +16,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.android.transport;
+package fr.outadev.android.transport.timeo
 
-import org.joda.time.DateTime;
+import android.app.AlertDialog
+import android.content.Context
 
 /**
- * Created by Baptiste on 2016-02-05.
- */
-public interface IRealTimeSchedule extends Iterable<DateTime> {
+ * A blocking message thrown by the API.
+ * Should be displayed in an alert dialog.
 
+ * @author outadoc
+ */
+class TimeoBlockingMessageException : TimeoException() {
+
+    var messageTitle: String? = null
+    var messageBody: String? = null
+
+    override val message: String?
+        get() = messageTitle
+
+    fun getAlertMessage(context: Context): AlertDialog {
+        return AlertDialog.Builder(context).setTitle(messageTitle).setMessage(messageBody).setNeutralButton("OK", null).create()
+    }
 }

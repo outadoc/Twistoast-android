@@ -1,5 +1,5 @@
 /*
- * Twistoast - IDepartureBoard
+ * Twistoast - TimeoLine
  * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -16,19 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.android.transport;
-
-import org.joda.time.LocalDate;
+package fr.outadev.android.transport.timeo
 
 /**
- * Created by Baptiste on 2016-02-05.
+ * Stores a bus line and its direction.
+
+ * @author outadoc
  */
-public interface IDepartureBoard {
+data class TimeoLine (val id: String, val name: String, val direction: TimeoDirection, val networkCode: Int = TimeoRequestHandler.DEFAULT_NETWORK_CODE, val color: String = "#34495E") {
 
-    INetwork getNetwork();
-
-    IStopArea getStopArea();
-    LocalDate getDay();
-    Iterable<IStopTime> getStopTimes();
-
+    override fun toString(): String = name
 }

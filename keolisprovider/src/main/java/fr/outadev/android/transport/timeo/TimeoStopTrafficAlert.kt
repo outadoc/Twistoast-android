@@ -1,5 +1,5 @@
 /*
- * Twistoast - IDirection
+ * Twistoast - TimeoStopTrafficAlert
  * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -16,19 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.android.transport;
+package fr.outadev.android.transport.timeo
 
 /**
- * Created by Baptiste on 2016-02-05.
+ * Created by outadoc on 2016-07-09.
  */
-public interface IDirection {
-
-    int DIRECTION_A = 0;
-    int DIRECTION_R = 1;
-
-    INetwork getNetwork();
-
-    String getName();
-    int getDirection();
-
-}
+data class TimeoStopTrafficAlert (val title: String, val body: String)

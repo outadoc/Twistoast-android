@@ -1,5 +1,5 @@
 /*
- * Twistoast - ITimeoIDName
+ * Twistoast - IProgressListener
  * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -16,39 +16,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.android.transport.timeo;
+package fr.outadev.android.transport.timeo
 
 /**
- * Defines an object that possesses a name and an identifier.
+ * Defines a progress listener.
+ * Current process and maximum progress will be updated at will.
  */
-public interface ITimeoIDName {
+interface IProgressListener {
 
     /**
-     * Gets the identifier of this object.
-     *
-     * @return the id
-     */
-    String getId();
+     * Updates the current progress.
 
-    /**
-     * Sets the identifier of this object.
-     *
-     * @param id the id
+     * @param current current progress, can't be greater than total
+     * *
+     * @param total   maximum progress
      */
-    void setId(String id);
-
-    /**
-     * Gets the name of this object.
-     *
-     * @return the name
-     */
-    String getName();
-
-    /**
-     * Sets the name of this object.
-     *
-     * @param name the name
-     */
-    void setName(String name);
+    fun onProgress(current: Int, total: Int)
 
 }

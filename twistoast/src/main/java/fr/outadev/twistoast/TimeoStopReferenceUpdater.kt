@@ -32,7 +32,7 @@ import java.io.IOException
 class TimeoStopReferenceUpdater(context: Context) {
 
     private val database: Database
-    private val requestHandler: ITimeoRequestHandler
+    private val requestHandler: TimeoRequestHandler
 
     init {
         database = Database(DatabaseOpenHelper.getInstance(context))
@@ -62,7 +62,7 @@ class TimeoStopReferenceUpdater(context: Context) {
 
             //get the stops for the current line
             lastLine = stop.line
-            val newStops = requestHandler.getStops(lastLine)
+            val newStops = requestHandler.getStops(lastLine!!)
 
             //update all the stops we received.
             //obviously, only the ones existing in the database will be updated.

@@ -179,8 +179,8 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
 
         val watchedStopStateListener = object : IWatchedStopChangeListener {
 
-            override fun onStopWatchingStateChanged(dismissedStop: TimeoStop, watched: Boolean) {
-                stopList!!.filter { stop -> stop == dismissedStop }.forEach {
+            override fun onStopWatchingStateChanged(stop: TimeoStop, watched: Boolean) {
+                stopList!!.filter { stop -> stop == stop }.forEach {
                     stop -> stop.isWatched = watched
                 }
 

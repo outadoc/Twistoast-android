@@ -1,5 +1,5 @@
 /*
- * Twistoast - IStopTrafficAlert
+ * Twistoast - ITimeoIDName
  * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -16,16 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.android.transport;
+package fr.outadev.android.transport.timeo
 
 /**
- * Created by outadoc on 2016-07-09.
+ * Defines an object that possesses a name and an identifier.
  */
-public interface IStopTrafficAlert {
-
-    String getMessageTitle();
-    void setMessageTitle(String title);
-    String getMessageBody();
-    void setMessageBody(String body);
-
-}
+data class TimeoIDName (var id: String, var name: String)
