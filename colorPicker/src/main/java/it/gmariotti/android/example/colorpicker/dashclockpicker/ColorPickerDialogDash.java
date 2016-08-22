@@ -114,7 +114,7 @@ public class ColorPickerDialogDash extends DialogFragment {
 		/**
 		 * Called when a specific color square has been selected.
 		 */
-		public void onColorSelected(int color);
+		void onColorSelected(int color);
 	}
 
 
