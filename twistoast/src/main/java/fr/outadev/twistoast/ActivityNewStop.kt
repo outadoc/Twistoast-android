@@ -50,10 +50,10 @@ import org.jetbrains.anko.uiThread
  */
 class ActivityNewStop : ThemedActivity() {
 
-    private var lineList: List<TimeoLine>
-    private var itemNext: MenuItem? = null
-    private var databaseHandler: Database? = null
+    private lateinit var itemNext: MenuItem
+    private lateinit var databaseHandler: Database
     private var requestHandler: TimeoRequestHandler
+    private var lineList: List<TimeoLine>
 
     init {
         lineList = listOf<TimeoLine>()
@@ -66,8 +66,8 @@ class ActivityNewStop : ThemedActivity() {
         setResult(NO_STOP_ADDED)
 
         setSupportActionBar(toolbar)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_close_white)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close_white)
 
         databaseHandler = Database(DatabaseOpenHelper())
 
@@ -110,7 +110,7 @@ class ActivityNewStop : ThemedActivity() {
      */
     private fun setupListeners() {
         // when a line has been selected
-        spinLine?.onItemSelectedListener = object : OnItemSelectedListener {
+        spinLine.onItemSelectedListener = object : OnItemSelectedListener {
 
             override fun onItemSelected(parentView: AdapterView<*>, view: View, position: Int, id: Long) {
                 // set loading labels
@@ -121,8 +121,8 @@ class ActivityNewStop : ThemedActivity() {
                 viewScheduleContainer.removeAllViewsInLayout()
                 viewScheduleContainer.visibility = View.GONE
 
-                spinStop?.isEnabled = false
-                itemNext?.isEnabled = false
+                spinStop.isEnabled = false
+                itemNext.isEnabled = false
 
                 // get the selected line
                 val item = currentLine
@@ -134,7 +134,7 @@ class ActivityNewStop : ThemedActivity() {
                     val lineDrawable = rowLineIdContainer.background as GradientDrawable
                     lineDrawable.setColor(Colors.getBrighterColor(Color.parseColor(item.color)))
 
-                    spinDirection!!.isEnabled = true
+                    spinDirection.isEnabled = true
 
                     // adapt the size based on the size of the line ID
                     if (rowLineId.text.length > 3) {
@@ -155,7 +155,7 @@ class ActivityNewStop : ThemedActivity() {
         }
 
         // when a direction has been selected
-        spinDirection?.onItemSelectedListener = object : OnItemSelectedListener {
+        spinDirection.onItemSelectedListener = object : OnItemSelectedListener {
 
             override fun onItemSelected(parentView: AdapterView<*>, view: View, position: Int, id: Long) {
                 // set loading labels
@@ -163,8 +163,8 @@ class ActivityNewStop : ThemedActivity() {
                 viewScheduleContainer.removeAllViewsInLayout()
                 viewScheduleContainer.visibility = View.GONE
 
-                itemNext?.isEnabled = false
-                spinStop?.isEnabled = false
+                itemNext.isEnabled = false
+                spinStop.isEnabled = false
 
                 if (currentLine != null
                         && currentDirection != null
@@ -197,7 +197,7 @@ class ActivityNewStop : ThemedActivity() {
         }
 
         // when a stop has been selected
-        spinStop?.onItemSelectedListener = object : OnItemSelectedListener {
+        spinStop.onItemSelectedListener = object : OnItemSelectedListener {
 
             override fun onItemSelected(parentView: AdapterView<*>, view: View, position: Int, id: Long) {
                 rowStopName.text = resources.getString(R.string.loading_data)
@@ -205,7 +205,7 @@ class ActivityNewStop : ThemedActivity() {
                 viewScheduleContainer.visibility = View.GONE
 
                 val stop = currentStop
-                itemNext?.isEnabled = true
+                itemNext.isEnabled = true
 
                 if (stop != null && true) {
                     rowStopName.text = resources.getString(R.string.stop_name, stop.name)
@@ -269,8 +269,8 @@ class ActivityNewStop : ThemedActivity() {
                     lineList = timeoLines
                     spinLine.adapter = ArrayAdapter(this@ActivityNewStop, android.R.layout.simple_spinner_dropdown_item, timeoLines.distinctBy { line -> line.id })
 
-                    spinLine?.isEnabled = true
-                    spinDirection?.isEnabled = true
+                    spinLine.isEnabled = true
+                    spinDirection.isEnabled = true
                 }
             } catch (e: Exception) {
                 uiThread { handleAsyncExceptions(e) }
@@ -315,7 +315,7 @@ class ActivityNewStop : ThemedActivity() {
      */
     private fun registerStopToDatabase() {
         try {
-            databaseHandler!!.addStopToDatabase(currentStop)
+            databaseHandler.addStopToDatabase(currentStop)
             toast(resources.getString(R.string.added_toast, currentStop.toString()))
             setResult(STOP_ADDED)
             finish()
@@ -344,7 +344,7 @@ class ActivityNewStop : ThemedActivity() {
      * @return a stop
      */
     val currentStop: TimeoStop?
-        get() = spinStop!!.getItemAtPosition(spinStop!!.selectedItemPosition) as TimeoStop
+        get() = spinStop.getItemAtPosition(spinStop.selectedItemPosition) as TimeoStop
 
     /**
      * Gets the bus line direction that's currently selected.
@@ -352,7 +352,7 @@ class ActivityNewStop : ThemedActivity() {
      * @return an ID/name object for the direction
      */
     val currentDirection: TimeoDirection?
-        get() = spinDirection!!.getItemAtPosition(spinDirection!!.selectedItemPosition) as TimeoDirection
+        get() = spinDirection.getItemAtPosition(spinDirection.selectedItemPosition) as TimeoDirection
 
     /**
      * Gets the bus line that's currently selected.
@@ -360,7 +360,7 @@ class ActivityNewStop : ThemedActivity() {
      * @return a line
      */
     var currentLine: TimeoLine? = null
-        get() = spinLine!!.getItemAtPosition(spinLine!!.selectedItemPosition) as TimeoLine
+        get() = spinLine.getItemAtPosition(spinLine.selectedItemPosition) as TimeoLine
 
     companion object {
         const val NO_STOP_ADDED = 0

@@ -47,7 +47,7 @@ import org.jetbrains.anko.uiThread
  */
 class ActivityMain : ThemedActivity(), IStopsListContainer, NavigationView.OnNavigationItemSelectedListener {
 
-    private var drawerToggle: ActionBarDrawerToggle? = null
+    private lateinit var drawerToggle: ActionBarDrawerToggle
     private var currentDrawerItem = 0
     private val loadedFragments: SparseArray<Fragment>
 
@@ -78,7 +78,7 @@ class ActivityMain : ThemedActivity(), IStopsListContainer, NavigationView.OnNav
             }
         }
 
-        navigationDrawer.addDrawerListener(drawerToggle!!)
+        navigationDrawer.addDrawerListener(drawerToggle)
 
         if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(this)
@@ -110,12 +110,12 @@ class ActivityMain : ThemedActivity(), IStopsListContainer, NavigationView.OnNav
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
-        drawerToggle!!.syncState()
+        drawerToggle.syncState()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        drawerToggle!!.onConfigurationChanged(newConfig)
+        drawerToggle.onConfigurationChanged(newConfig)
     }
 
     override fun onBackPressed() {
@@ -148,7 +148,7 @@ class ActivityMain : ThemedActivity(), IStopsListContainer, NavigationView.OnNav
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return drawerToggle!!.onOptionsItemSelected(item) || super.onOptionsItemSelected(item)
+        return drawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item)
     }
 
     override fun endRefresh(success: Boolean) {
@@ -178,7 +178,7 @@ class ActivityMain : ThemedActivity(), IStopsListContainer, NavigationView.OnNav
 
     fun refreshActionBarTitle() {
         val item = navigationView.menu.findItem(currentDrawerItem) ?: return
-        supportActionBar!!.title = item.title
+        supportActionBar?.title = item.title
     }
 
     /**
@@ -214,13 +214,13 @@ class ActivityMain : ThemedActivity(), IStopsListContainer, NavigationView.OnNav
             trafficAlertContainer.visibility = View.VISIBLE
 
             // Set view_toolbar elevation to 0, since we'll have the traffic alert just right under it
-            supportActionBar!!.elevation = 0f
+            supportActionBar?.elevation = 0f
         } else if (trafficAlertContainer != null) {
             trafficAlertContainer.visibility = View.GONE
 
             // Set view_toolbar elevation to 4 dp, not 4 px
             val pixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4f, resources.displayMetrics)
-            supportActionBar!!.elevation = pixels
+            supportActionBar?.elevation = pixels
         }
     }
 

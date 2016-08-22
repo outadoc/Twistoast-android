@@ -36,20 +36,20 @@ import fr.outadev.twistoast.R
  * Created by outadoc on 2016-03-07.
  */
 class TrafficAlertTask(private val mContext: Context) : AsyncTask<Void, Void, TimeoTrafficAlert>() {
-    private val mConfig: ConfigurationManager
-    private var mNotificationManager: NotificationManager? = null
-    private val mRequestHandler: TimeoRequestHandler
+    private val config: ConfigurationManager
+    private var notificationManager: NotificationManager? = null
+    private val requestHandler: TimeoRequestHandler
 
-    private var mLastTrafficId: Int = 0
+    private var lastTrafficId: Int = 0
 
     init {
-        mConfig = ConfigurationManager(mContext)
-        mRequestHandler = TimeoRequestHandler()
+        config = ConfigurationManager(mContext)
+        requestHandler = TimeoRequestHandler()
     }
 
     override fun doInBackground(vararg params: Void): TimeoTrafficAlert? {
         try {
-            return mRequestHandler.globalTrafficAlert
+            return requestHandler.globalTrafficAlert
         } catch (e: Exception) {
             e.printStackTrace()
             return null
@@ -58,8 +58,8 @@ class TrafficAlertTask(private val mContext: Context) : AsyncTask<Void, Void, Ti
     }
 
     override fun onPreExecute() {
-        mNotificationManager = mContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        mLastTrafficId = mConfig.lastTrafficNotificationId
+        notificationManager = mContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        lastTrafficId = config.lastTrafficNotificationId
         Log.d(TAG, "checking traffic alert")
     }
 
@@ -67,7 +67,7 @@ class TrafficAlertTask(private val mContext: Context) : AsyncTask<Void, Void, Ti
         if (trafficAlert != null) {
             Log.d(TAG, "found traffic alert #" + trafficAlert.id)
 
-            if (mLastTrafficId != trafficAlert.id) {
+            if (lastTrafficId != trafficAlert.id) {
                 val notificationIntent = Intent(Intent.ACTION_VIEW, Uri.parse(trafficAlert.url))
                 val contentIntent = PendingIntent.getActivity(mContext, 0, notificationIntent, 0)
 
@@ -84,10 +84,10 @@ class TrafficAlertTask(private val mContext: Context) : AsyncTask<Void, Void, Ti
                         .setContentIntent(contentIntent)
                         .setAutoCancel(true)
                         .setOnlyAlertOnce(true)
-                        .setDefaults(NotificationSettings.getNotificationDefaults(mContext, mConfig.trafficNotificationsVibrate, mConfig.trafficNotificationsRing))
+                        .setDefaults(NotificationSettings.getNotificationDefaults(mContext, config.trafficNotificationsVibrate, config.trafficNotificationsRing))
 
-                mNotificationManager!!.notify(trafficAlert.id, mBuilder.build())
-                mConfig.lastTrafficNotificationId = trafficAlert.id
+                notificationManager!!.notify(trafficAlert.id, mBuilder.build())
+                config.lastTrafficNotificationId = trafficAlert.id
 
                 return
             }

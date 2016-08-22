@@ -39,8 +39,8 @@ import org.joda.time.DateTime
  * if watched buses are incoming and the user should be notified.
  */
 class NextStopAlarmReceiver : BroadcastReceiver() {
-    private var context: Context? = null
-    private var requestHandler: TimeoRequestHandler? = null
+    private lateinit var context: Context
+    private lateinit var requestHandler: TimeoRequestHandler
 
     override fun onReceive(context: Context, intent: Intent) {
         this.context = context
@@ -54,7 +54,7 @@ class NextStopAlarmReceiver : BroadcastReceiver() {
         doAsync {
             try {
                 stopsToCheck = database.watchedStops
-                val stopSchedules = requestHandler!!.getMultipleSchedules(stopsToCheck!!)
+                val stopSchedules = requestHandler.getMultipleSchedules(stopsToCheck!!)
 
                 // Look through each schedule
                 stopSchedules.filter { it.schedules.isNotEmpty() }.forEach {
@@ -120,8 +120,8 @@ class NextStopAlarmReceiver : BroadcastReceiver() {
      * @param schedule the schedule to notify about
      */
     private fun notifyForIncomingBus(schedule: TimeoStopSchedule) {
-        val notificationManager = context!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val config = ConfigurationManager(context!!)
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val config = ConfigurationManager(context)
 
         val notificationIntent = Intent(context, ActivityMain::class.java)
         val contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0)
@@ -130,25 +130,25 @@ class NextStopAlarmReceiver : BroadcastReceiver() {
         val stop = schedule.stop.name
         val direction = schedule.stop.line.direction.name
         val lineName = schedule.stop.line.name
-        val time = TimeFormatter.formatTime(context!!, schedule.schedules[0].scheduleTime)
+        val time = TimeFormatter.formatTime(context, schedule.schedules[0].scheduleTime)
 
         // Make a nice notification to inform the user of the bus's imminence
         val builder = NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.ic_directions_bus_white)
-                .setContentTitle(context!!.getString(R.string.notif_watched_content_title, lineName))
-                .setContentText(context!!.getString(R.string.notif_watched_content_text, stop, direction))
+                .setContentTitle(context.getString(R.string.notif_watched_content_title, lineName))
+                .setContentText(context.getString(R.string.notif_watched_content_text, stop, direction))
                 .setStyle(NotificationCompat.InboxStyle()
-                        .addLine(context!!.getString(R.string.notif_watched_line_stop, stop))
-                        .addLine(context!!.getString(R.string.notif_watched_line_direction, direction))
-                        .setSummaryText(context!!.getString(R.string.notif_watched_summary_text, time)))
+                        .addLine(context.getString(R.string.notif_watched_line_stop, stop))
+                        .addLine(context.getString(R.string.notif_watched_line_direction, direction))
+                        .setSummaryText(context.getString(R.string.notif_watched_summary_text, time)))
                 .setCategory(NotificationCompat.CATEGORY_EVENT)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
-                .setColor(context!!.resources.getColor(R.color.icon_color))
+                .setColor(context.resources.getColor(R.color.icon_color))
                 .setContentIntent(contentIntent)
                 .setAutoCancel(true)
                 .setOnlyAlertOnce(true)
-                .setDefaults(NotificationSettings.getNotificationDefaults(context!!, config.watchNotificationsVibrate, config.watchNotificationsRing))
+                .setDefaults(NotificationSettings.getNotificationDefaults(context, config.watchNotificationsVibrate, config.watchNotificationsRing))
 
         notificationManager.notify(Integer.valueOf(schedule.stop.id)!!, builder.build())
 
@@ -164,7 +164,7 @@ class NextStopAlarmReceiver : BroadcastReceiver() {
      * @param schedule the bus schedule that will be included in the notification
      */
     private fun updateStopTimeNotification(schedule: TimeoStopSchedule) {
-        val notificationManager = context!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         val notificationIntent = Intent(context, ActivityMain::class.java)
         val contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0)
@@ -175,22 +175,22 @@ class NextStopAlarmReceiver : BroadcastReceiver() {
         val lineName = schedule.stop.line.name
 
         val inboxStyle = NotificationCompat.InboxStyle()
-                .setSummaryText(context!!.getString(R.string.notif_watched_content_text, lineName, direction))
-                .setBigContentTitle(context!!.getString(R.string.stop_name, stop))
+                .setSummaryText(context.getString(R.string.notif_watched_content_text, lineName, direction))
+                .setBigContentTitle(context.getString(R.string.stop_name, stop))
 
         for (singleSchedule in schedule.schedules) {
-            inboxStyle.addLine(TimeFormatter.formatTime(context!!, singleSchedule.scheduleTime) + " - " + singleSchedule.direction)
+            inboxStyle.addLine(TimeFormatter.formatTime(context, singleSchedule.scheduleTime) + " - " + singleSchedule.direction)
         }
 
         // Make a nice notification to inform the user of the bus's imminence
         val builder = NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.ic_directions_bus_white)
-                .setContentTitle(context!!.getString(R.string.notif_ongoing_content_title, stop, lineName))
-                .setContentText(context!!.getString(R.string.notif_ongoing_content_text, TimeFormatter.formatTime(context!!, schedule.schedules[0].scheduleTime)))
+                .setContentTitle(context.getString(R.string.notif_ongoing_content_title, stop, lineName))
+                .setContentText(context.getString(R.string.notif_ongoing_content_text, TimeFormatter.formatTime(context, schedule.schedules[0].scheduleTime)))
                 .setStyle(inboxStyle)
                 .setCategory(NotificationCompat.CATEGORY_EVENT)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setColor(context!!.resources.getColor(R.color.icon_color))
+                .setColor(context.resources.getColor(R.color.icon_color))
                 .setContentIntent(contentIntent)
                 .setOngoing(true)
 
@@ -201,7 +201,7 @@ class NextStopAlarmReceiver : BroadcastReceiver() {
      * Updates the schedule notification to the user, informing him that there's something wrong with the network.
      */
     private fun notifyNetworkError() {
-        val notificationManager = context!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         val notificationIntent = Intent(context, ActivityMain::class.java)
         val contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0)
@@ -209,9 +209,9 @@ class NextStopAlarmReceiver : BroadcastReceiver() {
         // Make a nice notification to inform the user of an error
         val builder = NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.ic_directions_bus_white)
-                .setContentTitle(context!!.getString(R.string.notif_error_content_title))
-                .setContentText(context!!.getString(R.string.notif_error_content_text))
-                .setColor(context!!.resources.getColor(R.color.icon_color))
+                .setContentTitle(context.getString(R.string.notif_error_content_title))
+                .setContentText(context.getString(R.string.notif_error_content_text))
+                .setColor(context.resources.getColor(R.color.icon_color))
                 .setCategory(NotificationCompat.CATEGORY_ERROR)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setContentIntent(contentIntent).setAutoCancel(true)

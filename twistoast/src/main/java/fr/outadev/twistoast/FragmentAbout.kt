@@ -36,7 +36,6 @@ class FragmentAbout : PreferenceFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val config = ConfigurationManager()
 
         // Load the preferences from an XML resource

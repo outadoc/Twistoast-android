@@ -35,8 +35,8 @@ import android.webkit.WebViewClient
 class FragmentWebView : Fragment() {
 
     private var webView: WebView? = null
-    private var itemRefresh: MenuItem? = null
-    private var itemCancel: MenuItem? = null
+    private lateinit var itemRefresh: MenuItem
+    private lateinit var itemCancel: MenuItem
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,16 +103,16 @@ class FragmentWebView : Fragment() {
                     super.onPageStarted(view, url, favicon)
 
                     //hide refresh button
-                    itemRefresh?.isVisible = false
-                    itemCancel?.isVisible = true
+                    itemRefresh.isVisible = false
+                    itemCancel.isVisible = true
                 }
 
                 override fun onPageFinished(view: WebView, url: String) {
                     super.onPageFinished(view, url)
 
                     //hide cancel button
-                    itemRefresh?.isVisible = true
-                    itemCancel?.isVisible = false
+                    itemRefresh.isVisible = true
+                    itemCancel.isVisible = false
 
                     //load some javascript that will hide the stuff we don't want on the page
                     view.loadUrl("javascript: var a = document.getElementsByClassName(\"title-div\");")

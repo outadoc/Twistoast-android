@@ -42,11 +42,11 @@ import java.util.*
  */
 class PebbleWatchReceiver : PebbleDataReceiver(PebbleWatchReceiver.PEBBLE_UUID) {
 
-    private val mRequestHandler: TimeoRequestHandler
-    private var mDatabase: Database? = null
+    private val requestHandler: TimeoRequestHandler
+    private lateinit var database: Database
 
     init {
-        mRequestHandler = TimeoRequestHandler()
+        requestHandler = TimeoRequestHandler()
     }
 
     override fun receiveData(context: Context, transactionId: Int, data: PebbleDictionary) {
@@ -55,9 +55,9 @@ class PebbleWatchReceiver : PebbleDataReceiver(PebbleWatchReceiver.PEBBLE_UUID) 
         Log.d(TAG, "received a message from pebble " + PEBBLE_UUID)
 
         // open the database and count the stops
-        mDatabase = Database(DatabaseOpenHelper(context))
+        database = Database(DatabaseOpenHelper(context))
 
-        val stopsCount = mDatabase!!.stopsCount
+        val stopsCount = database.stopsCount
         val messageType : Byte = data.getInteger(KEY_TWISTOAST_MESSAGE_TYPE).toByte()
 
         // if we want a schedule and we have buses in the database
@@ -71,14 +71,14 @@ class PebbleWatchReceiver : PebbleDataReceiver(PebbleWatchReceiver.PEBBLE_UUID) 
             val busIndex = (data.getInteger(KEY_STOP_INDEX)!!.toShort() % stopsCount).toShort()
 
             // get the stop that interests us
-            val stop = mDatabase!!.getStopAtIndex(busIndex.toInt())
+            val stop = database.getStopAtIndex(busIndex.toInt())
 
             Log.d(TAG, "loading data for stop #$busIndex...")
 
             // fetch schedule
             doAsync {
                 try {
-                    val schedule = mRequestHandler.getSingleSchedule(stop!!)
+                    val schedule = requestHandler.getSingleSchedule(stop!!)
                     Log.d(TAG, "got data for stop: " + schedule)
                     craftAndSendSchedulePacket(context, schedule)
                 } catch (e: Exception) {

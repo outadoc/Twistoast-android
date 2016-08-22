@@ -39,12 +39,12 @@ import kotlinx.android.synthetic.main.view_realtime_list.*
 class FragmentRealtime : Fragment(), IStopsListContainer {
 
     private val periodicRefreshHandler: Handler
-    private var periodicRefreshRunnable: Runnable? = null
+
+    private lateinit var periodicRefreshRunnable: Runnable
+    private lateinit var databaseHandler: Database
+    private lateinit var config: ConfigurationManager
 
     private var stopList: MutableList<TimeoStop>? = null
-
-    private var databaseHandler: Database? = null
-    private var config: ConfigurationManager? = null
     private var listAdapter: RecyclerAdapterRealtime? = null
 
     override var isRefreshing: Boolean = false
@@ -70,7 +70,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
         databaseHandler = Database(DatabaseOpenHelper())
 
         periodicRefreshRunnable = Runnable {
-            if (config!!.autoRefresh) {
+            if (config.autoRefresh) {
                 refreshAllStopSchedules(false)
             }
         }
@@ -120,12 +120,12 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.sortby_line -> {
-                config!!.listSortOrder = Database.SortBy.LINE
+                config.listSortOrder = Database.SortBy.LINE
                 refreshAllStopSchedules(true)
                 return true
             }
             R.id.sortby_stop -> {
-                config!!.listSortOrder = Database.SortBy.STOP
+                config.listSortOrder = Database.SortBy.STOP
                 refreshAllStopSchedules(true)
                 return true
             }
@@ -193,7 +193,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
     }
 
     private fun setupAdvertisement() {
-        if (!activity.resources.getBoolean(R.bool.enableAds) || config!!.adsAreRemoved) {
+        if (!activity.resources.getBoolean(R.bool.enableAds) || config.adsAreRemoved) {
             // If we don't want ads, hide the view
             adView.visibility = View.GONE
         } else {
@@ -228,9 +228,9 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
         // if we don't do that, bugs will appear when the database has been
         // modified
         if (reloadFromDatabase) {
-            val criteria = config!!.listSortOrder
+            val criteria = config.listSortOrder
 
-            stopList = databaseHandler!!.getAllStops(criteria).toMutableList()
+            stopList = databaseHandler.getAllStops(criteria).toMutableList()
             listAdapter = RecyclerAdapterRealtime(activity, stopList!!, this, stopsRecyclerView)
             stopsRecyclerView.adapter = listAdapter
         }
@@ -244,7 +244,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
         isRefreshing = false
         swipeRefreshContainer.isRefreshing = false
 
-        noContentView.visibility = if (listAdapter!!.itemCount == 0) View.VISIBLE else View.GONE
+        noContentView.visibility = if (listAdapter?.itemCount == 0) View.VISIBLE else View.GONE
 
         // reset the timer loop, and start it again
         // this ensures the list is refreshed automatically every 60 seconds
