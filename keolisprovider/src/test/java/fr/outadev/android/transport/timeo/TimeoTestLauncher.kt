@@ -1,5 +1,5 @@
 /*
- * Twistoast - TimeoRequestHandlerTest.kt
+ * Twistoast - TimeoTestLauncher.kt
  * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -18,44 +18,18 @@
 
 package fr.outadev.android.transport.timeo
 
-import org.junit.Assert.fail
-import org.junit.Before
-import org.junit.Test
+import cucumber.api.CucumberOptions
+import cucumber.api.junit.Cucumber
+import org.junit.runner.RunWith
 
-class TimeoRequestHandlerTest {
+/**
+ * Created by outadoc on 23/08/16.
+ */
+@RunWith(value = Cucumber::class)
+@CucumberOptions(
+        features = arrayOf("src/test/java/fr/outadev/android/transport/timeo"),
+        format = arrayOf("pretty")
+)
+class TimeoTestLauncher {
 
-    @Before
-    fun setUp() {
-
-    }
-
-    @Test
-    fun testGetLines() {
-        fail()
-    }
-
-    @Test
-    fun testGetStops() {
-        fail()
-    }
-
-    @Test
-    fun testGetSingleSchedule() {
-        fail()
-    }
-
-    @Test
-    fun testGetMultipleSchedules() {
-        fail()
-    }
-
-    @Test
-    fun testCheckForOutdatedStops() {
-        fail()
-    }
-
-    @Test
-    fun testGetGlobalTrafficAlert() {
-        fail()
-    }
 }

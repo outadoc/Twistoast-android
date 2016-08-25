@@ -1,0 +1,886 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!--
+  ~ Twistoast - test_lines_list.xml
+  ~ Copyright (C) 2013-2016 Baptiste Candellier
+  ~
+  ~ Twistoast is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Twistoast is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<xmldata>
+    <erreur code="000"></erreur>
+
+    <heure>23:00</heure>
+    <date>2016-08-23</date>
+
+    <expire>26100</expire>
+
+    <alss nb="61">
+        <als id="1">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>TRAM</code>
+                <nom>TRAM</nom>
+                <sens>A</sens>
+                <vers>IFS - GRACE DE DIEU</vers>
+                <couleur>16724736</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="2">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>TRAM</code>
+                <nom>TRAM</nom>
+                <sens>R</sens>
+                <vers>COTE DE NACRE - ST-CLAIR</vers>
+                <couleur>16724736</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="3">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>1</code>
+                <nom>Lianes 1</nom>
+                <sens>A</sens>
+                <vers>MONDEVILLE Centre Commercial</vers>
+                <couleur>13369497</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="4">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>1</code>
+                <nom>Lianes 1</nom>
+                <sens>R</sens>
+                <vers>CAEN CHEMIN VERT BOURGOGNE</vers>
+                <couleur>13369497</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="5">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>2</code>
+                <nom>Lianes 2</nom>
+                <sens>A</sens>
+                <vers>CAEN VENOIX GALLIENI</vers>
+                <couleur>6697983</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="6">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>2</code>
+                <nom>Lianes 2</nom>
+                <sens>R</sens>
+                <vers>CAEN LA FOLIE MEMORIAL</vers>
+                <couleur>6697983</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="7">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>3</code>
+                <nom>Lianes 3</nom>
+                <sens>A</sens>
+                <vers>HEROUVILLE ST-CLAIR</vers>
+                <couleur>3381555</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="8">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>3</code>
+                <nom>Lianes 3</nom>
+                <sens>R</sens>
+                <vers>CARPIQUET AEROPORT</vers>
+                <couleur>3381555</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="9">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>4</code>
+                <nom>Lianes 4</nom>
+                <sens>A</sens>
+                <vers>FLEURY IKEA</vers>
+                <couleur>13395609</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="10">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>4</code>
+                <nom>Lianes 4</nom>
+                <sens>R</sens>
+                <vers>HEROUVILLE PARC TERTIAIRE</vers>
+                <couleur>13395609</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="11">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>5</code>
+                <nom>Ligne 5</nom>
+                <sens>A</sens>
+                <vers>BLAINVILLE PARC</vers>
+                <couleur>13421823</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="12">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>5</code>
+                <nom>Ligne 5</nom>
+                <sens>R</sens>
+                <vers>MONDEVILLE CHARLOTTE CORDAY</vers>
+                <couleur>13421823</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="13">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>6</code>
+                <nom>Ligne 6</nom>
+                <sens>A</sens>
+                <vers>CAEN POINCARE</vers>
+                <couleur>10066380</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="14">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>6</code>
+                <nom>Ligne 6</nom>
+                <sens>R</sens>
+                <vers>CAEN GARE SNCF</vers>
+                <couleur>10066380</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="15">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>7</code>
+                <nom>Ligne 7</nom>
+                <sens>A</sens>
+                <vers>IFS JEAN VILAR</vers>
+                <couleur>6750003</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="16">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>7</code>
+                <nom>Ligne 7</nom>
+                <sens>R</sens>
+                <vers>EPRON MAIRIE</vers>
+                <couleur>6750003</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="17">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>8</code>
+                <nom>Ligne 8</nom>
+                <sens>A</sens>
+                <vers>CAEN BACLESSE</vers>
+                <couleur>10092441</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="18">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>8</code>
+                <nom>Ligne 8</nom>
+                <sens>R</sens>
+                <vers>CAEN BEAULIEU BRAZZA</vers>
+                <couleur>10092441</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="19">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>9</code>
+                <nom>Ligne 9</nom>
+                <sens>A</sens>
+                <vers>COLOMBELLE LIBERA</vers>
+                <couleur>6710784</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="20">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>9</code>
+                <nom>Ligne 9</nom>
+                <sens>R</sens>
+                <vers>ST GERMAIN PL. DES CANADIENS</vers>
+                <couleur>6710784</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="21">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>10</code>
+                <nom>Ligne 10</nom>
+                <sens>A</sens>
+                <vers>JACQUES CARTIER</vers>
+                <couleur>10079487</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="22">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>10</code>
+                <nom>Ligne 10</nom>
+                <sens>R</sens>
+                <vers>CAMBES LE PARC</vers>
+                <couleur>10079487</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="23">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>11</code>
+                <nom>Ligne 11</nom>
+                <sens>A</sens>
+                <vers>CUVERVILLE MAIRIE</vers>
+                <couleur>6710835</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="24">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>11</code>
+                <nom>Ligne 11</nom>
+                <sens>R</sens>
+                <vers>BRETTEVILLE L&apos;ENCLOS</vers>
+                <couleur>6710835</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="25">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>14</code>
+                <nom>Ligne 14</nom>
+                <sens>A</sens>
+                <vers>CAEN THEATRE</vers>
+                <couleur>16776960</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="26">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>14</code>
+                <nom>Ligne 14</nom>
+                <sens>R</sens>
+                <vers>HEROUVILLE VAL ST-CLAIR</vers>
+                <couleur>16776960</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="27">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>15</code>
+                <nom>Ligne 15</nom>
+                <sens>A</sens>
+                <vers>MONDEVILLE VILLAGE OXYLANE</vers>
+                <couleur>16776960</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="28">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>15</code>
+                <nom>Ligne 15</nom>
+                <sens>R</sens>
+                <vers>CAEN ESAM</vers>
+                <couleur>16776960</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="29">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>16</code>
+                <nom>Ligne 16</nom>
+                <sens>A</sens>
+                <vers>MONDEVILLE NIEPCE</vers>
+                <couleur>16764057</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="30">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>16</code>
+                <nom>Ligne 16</nom>
+                <sens>R</sens>
+                <vers>CAEN POINCARE</vers>
+                <couleur>16764057</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="31">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>17</code>
+                <nom>Ligne 17</nom>
+                <sens>A</sens>
+                <vers>IFS BRAS</vers>
+                <couleur>13395711</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="32">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>17</code>
+                <nom>Ligne 17</nom>
+                <sens>R</sens>
+                <vers>CAEN POINCARE</vers>
+                <couleur>13395711</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="33">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>18</code>
+                <nom>Ligne 18</nom>
+                <sens>A</sens>
+                <vers>RUE MICHELET</vers>
+                <couleur>13408563</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="34">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>18</code>
+                <nom>Ligne 18</nom>
+                <sens>R</sens>
+                <vers>ST-CONTEST BURON</vers>
+                <couleur>13408563</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="35">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>19</code>
+                <nom>Ligne 19</nom>
+                <sens>A</sens>
+                <vers>CAEN ST-PIERRE</vers>
+                <couleur>13369344</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="36">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>19</code>
+                <nom>Ligne 19</nom>
+                <sens>R</sens>
+                <vers>BLAINVILLE LES PALMIERS</vers>
+                <couleur>13369344</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="37">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>20</code>
+                <nom>Ligne 20</nom>
+                <sens>A</sens>
+                <vers>CUVERVILLE CHAMP PICOT</vers>
+                <couleur>13107</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="38">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>20</code>
+                <nom>Ligne 20</nom>
+                <sens>R</sens>
+                <vers>CAEN THEATRE</vers>
+                <couleur>13107</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="39">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>21</code>
+                <nom>Ligne 21</nom>
+                <sens>A</sens>
+                <vers>CAEN POINCARE</vers>
+                <couleur>3355443</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="40">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>21</code>
+                <nom>Ligne 21</nom>
+                <sens>R</sens>
+                <vers>ST-GERMAIN ARDENNE</vers>
+                <couleur>3355443</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="41">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>22</code>
+                <nom>Ligne 22</nom>
+                <sens>A</sens>
+                <vers>TOURVILLE VAL D&apos;ODON</vers>
+                <couleur>6710988</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="42">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>22</code>
+                <nom>Ligne 22</nom>
+                <sens>R</sens>
+                <vers>CAEN TOUR LEROY</vers>
+                <couleur>6710988</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="43">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>23</code>
+                <nom>Ligne 23</nom>
+                <sens>A</sens>
+                <vers>CAEN GAMBETTA</vers>
+                <couleur>16764108</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="44">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>23</code>
+                <nom>Ligne 23</nom>
+                <sens>R</sens>
+                <vers>ST ANDRE LUXEMBOURG</vers>
+                <couleur>16764108</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="45">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>24</code>
+                <nom>Ligne 24</nom>
+                <sens>A</sens>
+                <vers>VILLONS COOPERATIVE LINIERE</vers>
+                <couleur>16711680</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="46">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>24</code>
+                <nom>Ligne 24</nom>
+                <sens>R</sens>
+                <vers>CAEN CALVAIRE ST-PIERRE</vers>
+                <couleur>16711680</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="47">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>25</code>
+                <nom>Ligne 25</nom>
+                <sens>A</sens>
+                <vers>CAEN THEATRE</vers>
+                <couleur>10066227</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="48">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>25</code>
+                <nom>Ligne 25</nom>
+                <sens>R</sens>
+                <vers>HEROUVILLE DEPOT TWISTO</vers>
+                <couleur>10066227</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="49">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>26</code>
+                <nom>Ligne 26</nom>
+                <sens>A</sens>
+                <vers>RUE DU STADE</vers>
+                <couleur>26367</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="50">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>26</code>
+                <nom>Ligne 26</nom>
+                <sens>R</sens>
+                <vers>CAEN GARE SNCF</vers>
+                <couleur>26367</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="51">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>27</code>
+                <nom>Ligne 27</nom>
+                <sens>A</sens>
+                <vers>IFS BRAS</vers>
+                <couleur>13395711</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="52">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>27</code>
+                <nom>Ligne 27</nom>
+                <sens>R</sens>
+                <vers>CAEN POINCARE</vers>
+                <couleur>13395711</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="53">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>28</code>
+                <nom>Ligne 28</nom>
+                <sens>A</sens>
+                <vers>COLLEVILLE MONGOMERY ECOL</vers>
+                <couleur>13395456</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="54">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>28</code>
+                <nom>Ligne 28</nom>
+                <sens>R</sens>
+                <vers>HEROUVILLE ST-CLAIR</vers>
+                <couleur>13395456</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="55">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>29</code>
+                <nom>Ligne 29</nom>
+                <sens>A</sens>
+                <vers>ETERVILLE LE ROCREUIL</vers>
+                <couleur>10053324</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="56">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>29</code>
+                <nom>Ligne 29</nom>
+                <sens>R</sens>
+                <vers>CAEN GAMBETTA</vers>
+                <couleur>10053324</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="57">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>32</code>
+                <nom>Ligne 32</nom>
+                <sens>A</sens>
+                <vers>CAEN TOUR LEROY</vers>
+                <couleur>10027008</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="58">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>32</code>
+                <nom>Ligne 32</nom>
+                <sens>R</sens>
+                <vers>LION PLAGE</vers>
+                <couleur>10027008</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="59">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>62</code>
+                <nom>Ligne 62</nom>
+                <sens>A</sens>
+                <vers>CALVAIRE ST-PIERRE</vers>
+                <couleur>13408767</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="60">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>62</code>
+                <nom>Ligne 62</nom>
+                <sens>R</sens>
+                <vers>LION PLAGE</vers>
+                <couleur>13408767</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+        <als id="61">
+            <arret>
+                <code></code>
+                <nom></nom>
+            </arret>
+            <ligne>
+                <code>NZCA</code>
+                <nom>NavCA</nom>
+                <sens>A</sens>
+                <vers>ZI DE CARPIQUET</vers>
+                <couleur>13421772</couleur>
+            </ligne>
+            <refs></refs>
+        </als>
+    </alss>
+
+</xmldata>
