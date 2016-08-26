@@ -22,6 +22,7 @@ import org.apache.commons.lang3.StringUtils.capitalize
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import org.joda.time.LocalTime
+import org.joda.time.Minutes
 import java.util.*
 
 /**
@@ -39,12 +40,15 @@ fun String.getNextDateForTime(): DateTime {
     val minutes = splitTime[1].toInt()
 
     val scheduledTime = LocalTime(hours, minutes)
-    val currDate = LocalDate.now()
-
+    var currDate = LocalDate.now()
     val now = DateTime()
 
-    if (now.hourOfDay > hours || now.hourOfDay == hours && now.minuteOfHour > minutes) {
-        currDate.plusDays(1)
+    // If the time is less than ten minutes in the past, we'll assume that it's still supposed to be
+    // today. Otherwise, we suppose it's a time tomorrow.
+    if (scheduledTime.isBefore(now.toLocalTime())) {
+        if (Minutes.minutesBetween(scheduledTime.toDateTimeToday(), now) > Minutes.minutes(10)) {
+            currDate = currDate.plusDays(1)
+        }
     }
 
     return currDate.toDateTime(scheduledTime)
