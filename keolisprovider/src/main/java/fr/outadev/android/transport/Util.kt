@@ -18,7 +18,7 @@
 
 package fr.outadev.android.transport
 
-import org.apache.commons.lang3.StringUtils
+import org.apache.commons.lang3.StringUtils.capitalize
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import org.joda.time.LocalTime
@@ -54,43 +54,45 @@ fun String.getNextDateForTime(): DateTime {
  * Capitalizes the first letter of every word, like WordUtils.capitalize(); except it does it WELL.
  * The determinants will not be capitalized, whereas some acronyms will.
  *
- * @param str The text to capitalize.
  * @return The capitalized text.
  */
 fun String.smartCapitalize(): String {
-    var str = this
-    var newStr = ""
-    str = str.toLowerCase().trim({ it <= ' ' })
-
-    //these words will never be capitalized
-    val determinants = arrayOf("de", "du", "des", "au", "aux", "à", "la", "le", "les", "d", "et", "l")
-    //these words will always be capitalized
-    val specialWords = arrayOf("sncf", "chu", "chr", "chs", "crous", "suaps", "fpa", "za", "zi", "zac", "cpam", "efs", "mjc")
+    val capitalizedOut: StringBuilder = StringBuilder()
 
     //explode the string with both spaces and apostrophes
-    val words = str.split("( |\\-|'|\\/)".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
+    val str = this.toLowerCase()
+            .trim({ it <= ' ' })
+            .replace(" {2,}".toRegex(), " ")
+
+    val words = str.split("( |-|'|/)".toRegex())
+            .dropLastWhile({ it.isEmpty() })
+            .toTypedArray()
+
+    // These words will never be capitalized
+    val alwaysLower = arrayOf("de", "du", "des", "au", "aux", "à", "la", "le", "les", "d", "et", "l")
+
+    // These words will always be capitalized
+    val alwaysUpper = arrayOf("sncf", "chu", "chr", "chs", "crous", "suaps", "fpa", "za", "zi", "zac", "cpam", "efs", "mjc", "paj")
+
 
     for (word in words) {
-        if (Arrays.asList(*determinants).contains(word)) {
+        if (Arrays.asList(*alwaysLower).contains(word)) {
             //if the word should not be capitalized, just append it to the new string
-            newStr += word
-        } else if (Arrays.asList(*specialWords).contains(word)) {
+            capitalizedOut.append(word)
+        } else if (Arrays.asList(*alwaysUpper).contains(word)) {
             //if the word should be in upper case, do eet
-            newStr += word.toUpperCase(Locale.FRENCH)
+            capitalizedOut.append(word.toUpperCase(Locale.FRENCH))
         } else {
             //if it's a normal word, just capitalize it
-            newStr += StringUtils.capitalize(word)
+            capitalizedOut.append(capitalize(word))
         }
 
-        try {
+        if (capitalizedOut.length < str.length) {
             //we don't know if the next character is a blank space or an apostrophe, so we check that
-            val delimiter = str[newStr.length]
-            newStr += delimiter
-        } catch (ignored: StringIndexOutOfBoundsException) {
-            //will be thrown for the last word of the string
+            val delimiter = str[capitalizedOut.length]
+            capitalizedOut.append(delimiter)
         }
-
     }
 
-    return StringUtils.capitalize(newStr)
+    return capitalize(capitalizedOut.toString())
 }

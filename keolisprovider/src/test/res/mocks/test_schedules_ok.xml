@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!--
+  ~ Twistoast - test_schedules_ok.xml
+  ~ Copyright (C) 2013-2016 Baptiste Candellier
+  ~
+  ~ Twistoast is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Twistoast is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<xmldata>
+  <erreur code="000"></erreur>
+
+  <heure>23:39</heure>
+  <date>2016-08-25</date>
+
+  <reseau>
+    <titre></titre>
+    <texte></texte>
+    <bloquant>false</bloquant>
+  </reseau>
+
+  <horaires nb="6">
+    <horaire id="1">
+      <description>
+        <code>2523</code>
+        <arret>ACADEMIE</arret>
+        <ligne>TRAM</ligne>
+        <ligne_nom>TRAM</ligne_nom>
+        <sens>A</sens>
+        <vers>IFS - GRACE DE DIEU</vers>
+        <couleur>#ff3300</couleur>
+      </description>
+
+      <passages nb="2">
+        <passage id="1">
+          <duree>23:50</duree>
+          <destination>B  CAEN GRACE DE DIEU</destination>
+        </passage>
+        <passage id="2">
+          <duree>05:09</duree>
+          <destination>B  CAEN GRACE DE DIEU</destination>
+        </passage>
+      </passages>
+
+      <messages nb="0">
+      </messages>
+    </horaire>
+    <horaire id="2">
+      <description>
+        <code>131</code>
+        <arret>BERNIERES</arret>
+        <ligne>TRAM</ligne>
+        <ligne_nom>TRAM</ligne_nom>
+        <sens>A</sens>
+        <vers>IFS - GRACE DE DIEU</vers>
+        <couleur>#ff3300</couleur>
+      </description>
+
+      <passages nb="2">
+        <passage id="1">
+          <duree>23:40</duree>
+          <destination>B  CAEN GRACE DE DIEU</destination>
+        </passage>
+        <passage id="2">
+          <duree>23:52</duree>
+          <destination>A  IFS JEAN VILAR</destination>
+        </passage>
+      </passages>
+
+      <messages nb="0">
+      </messages>
+    </horaire>
+    <horaire id="3">
+      <description>
+        <code>8052</code>
+        <arret>RUE HAUTE</arret>
+        <ligne>NZCA</ligne>
+        <ligne_nom>NavCA</ligne_nom>
+        <sens>A</sens>
+        <vers>ZI DE CARPIQUET</vers>
+        <couleur>#cccccc</couleur>
+      </description>
+
+      <passages nb="0">
+      </passages>
+
+      <messages nb="0">
+      </messages>
+    </horaire>
+    <horaire id="4">
+      <description>
+        <code>543</code>
+        <arret>AEROPORT</arret>
+        <ligne>3</ligne>
+        <ligne_nom>Lianes 3</ligne_nom>
+        <sens>A</sens>
+        <vers>HEROUVILLE ST-CLAIR</vers>
+        <couleur>#339933</couleur>
+      </description>
+
+      <passages nb="2">
+        <passage id="1">
+          <duree>23:58</duree>
+          <destination>HEROUVILLE ST-CLAIR</destination>
+        </passage>
+        <passage id="2">
+          <duree>05:25</duree>
+          <destination>HEROUVILLE ST-CLAIR</destination>
+        </passage>
+      </passages>
+
+      <messages nb="0">
+      </messages>
+    </horaire>
+    <horaire id="5">
+      <description>
+        <code>2062</code>
+        <arret>AVIATION</arret>
+        <ligne>6</ligne>
+        <ligne_nom>Ligne 6</ligne_nom>
+        <sens>A</sens>
+        <vers>CAEN POINCARE</vers>
+        <couleur>#9999cc</couleur>
+      </description>
+
+      <passages nb="0">
+      </passages>
+
+      <messages nb="0">
+      </messages>
+    </horaire>
+    <horaire id="6">
+      <description>
+        <code>5421</code>
+        <arret>50 ACRES</arret>
+        <ligne>11</ligne>
+        <ligne_nom>Ligne 11</ligne_nom>
+        <sens>A</sens>
+        <vers>CUVERVILLE MAIRIE</vers>
+        <couleur>#666633</couleur>
+      </description>
+
+      <passages nb="0">
+      </passages>
+
+      <messages nb="0">
+      </messages>
+    </horaire>
+  </horaires>
+</xmldata>

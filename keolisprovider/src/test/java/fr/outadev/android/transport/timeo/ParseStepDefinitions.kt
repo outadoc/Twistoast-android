@@ -29,41 +29,71 @@ import fr.outadev.android.transport.IHttpRequester
 import org.mockito.Mockito
 import java.io.BufferedReader
 import java.io.FileReader
+import java.net.URLEncoder
 
 /**
  * Created by outadoc on 23/08/16.
  */
 class ParseStepDefinitions {
 
-    lateinit var trh: TimeoRequestHandler
+    companion object {
+        const val mockDir = "src/test/res/mocks/"
+    }
+
+    var requester: IHttpRequester? = null
+    var trh: TimeoRequestHandler? = null
 
     var lines: List<TimeoLine>? = null
+    var stops: List<TimeoStop>? = null
 
     @Given("^a connection to the API$")
     @Throws(Throwable::class)
     fun aConnectionToTheAPI() {
-        val requester: IHttpRequester = Mockito.mock(IHttpRequester::class.java)
-
-        whenever(requester.requestWebPage(any(), eq("xml=1"), any()))
-                .thenReturn(readStringFromResFile("src/test/res/mocks/test_lines_list.xml"))
-
-        trh = TimeoRequestHandler(requester)
+        requester = Mockito.mock(IHttpRequester::class.java)
+        trh = TimeoRequestHandler(requester!!)
     }
 
-    @When("^I request a list of lines$")
+    @When("^I request a list of lines with mock (.+)$")
     @Throws(Throwable::class)
-    fun iRequestAListOfLines() {
-        lines = trh.getLines()
+    fun iRequestAListOfLinesWithMock(mock: String) {
+        setupMock("xml=1", mock)
+        lines = trh!!.getLines()
     }
 
     @Then("^I get the following lines$")
     @Throws(Throwable::class)
     fun iGetTheFollowingLines(expected: DataTable) {
-        var lolz = DataTable.create(lines)
         expected.diff(lines)
     }
 
-    fun readStringFromResFile(filename: String): String {
+    @Then("^I get the following stops$")
+    @Throws(Throwable::class)
+    fun iGetTheFollowingStops(expected: DataTable) {
+        expected.diff(stops)
+    }
+
+    @When("^I request a list of stops for line '(.+)' and direction '(A|R)' with mock (.+)$")
+    @Throws(Throwable::class)
+    fun iRequestAListOfStopsForLineAndDirectionWithMock(line: String, dir: String, mock: String) {
+        setupMock("xml=1&ligne=$line&sens=$dir", mock)
+        stops = trh!!.getStops(TimeoLine(line, "", TimeoDirection(dir, "")))
+    }
+
+    @When("^I request a list of schedules for the following stop references with mock (.+)$")
+    @Throws(Throwable::class)
+    fun iRequestAListOfSchedulesForTheFollowingStopReferencesWithMock(mock: String, refs:List<String>) {
+        var refsStr = refs.fold("", { refsStr, ref -> refsStr + ref + ";"})
+        refsStr = refsStr.substring(0, refsStr.length - 1)
+        setupMock("xml=3&refs=${URLEncoder.encode(refsStr, "UTF-8")}&ran=1", mock)
+
+    }
+
+    private fun setupMock(params: String, mockFileName: String) {
+        whenever(requester!!.requestWebPage(any(), eq(params), any()))
+                .thenReturn(readStringFromResFile(mockDir + mockFileName))
+    }
+
+    private fun readStringFromResFile(filename: String): String {
         BufferedReader(FileReader(filename)).use({ br ->
             val sb = StringBuilder()
             var line = br.readLine()

@@ -23,6 +23,7 @@ import com.squareup.okhttp.CacheControl
 import com.squareup.okhttp.OkHttpClient
 import com.squareup.okhttp.Request
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 /**
  * An implementation for the IHttpRequester.
@@ -32,6 +33,10 @@ import java.io.IOException
 class HttpRequester : IHttpRequester {
 
     private val httpClient = OkHttpClient()
+
+    init {
+        httpClient.setConnectTimeout(30, TimeUnit.SECONDS)
+    }
 
     /**
      * Requests a web page via an HTTP GET request.
