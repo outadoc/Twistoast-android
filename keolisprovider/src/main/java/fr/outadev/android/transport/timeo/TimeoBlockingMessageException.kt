@@ -27,15 +27,13 @@ import android.content.Context
  *
  * @author outadoc
  */
-class TimeoBlockingMessageException : TimeoException() {
-
-    var messageTitle: String? = null
-    var messageBody: String? = null
-
-    override val message: String?
-        get() = messageTitle
+class TimeoBlockingMessageException(override var message: String, var details: String? = null): TimeoException(message) {
 
     fun getAlertMessage(context: Context): AlertDialog {
-        return AlertDialog.Builder(context).setTitle(messageTitle).setMessage(messageBody).setNeutralButton("OK", null).create()
+        return AlertDialog.Builder(context)
+                .setTitle(message)
+                .setMessage(details)
+                .setNeutralButton("OK", null)
+                .create()
     }
 }

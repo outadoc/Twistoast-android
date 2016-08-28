@@ -26,6 +26,7 @@ import fr.outadev.android.transport.smartCapitalize
 import fr.outadev.android.transport.timeo.dto.ErreurDTO
 import fr.outadev.android.transport.timeo.dto.ListeHorairesDTO
 import fr.outadev.android.transport.timeo.dto.ListeLignesDTO
+import fr.outadev.android.transport.timeo.dto.MessageDTO
 import org.apache.commons.lang3.StringUtils.leftPad
 import org.json.JSONObject
 import org.json.JSONTokener
@@ -229,9 +230,13 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) {
      * Throws an exception if one is encountered.
      */
     @Throws(TimeoException::class)
-    private fun checkForErrors(error: ErreurDTO?) {
+    private fun checkForErrors(error: ErreurDTO?, message: MessageDTO? = null) {
         if (error?.code != "000") {
             throw TimeoException(errorCode = error!!.code, message = error.message)
+        }
+
+        if (message != null && message.bloquant && message.titre != null) {
+            throw TimeoBlockingMessageException(message.titre!!, message.texte)
         }
     }
 
