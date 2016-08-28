@@ -166,18 +166,20 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) {
         val params = "xml=3&refs=${URLEncoder.encode(refs, "UTF-8")}&ran=1"
 
         val result = http.requestWebPage(getEndpointUrl(networkCode), params, false)
-        val res: ListeHorairesDTO = serializer.read(ListeHorairesDTO::class.java, result) ?: throw TimeoException("Service returned invalid data")
+        val cleanResult = result.replace(" {6}<description>\n {8}<code></code>\n {8}<arret></arret>\n {8}<ligne></ligne>\n {8}<ligne_nom></ligne_nom>\n {8}<sens></sens>\n {8}<vers></vers>\n {8}<couleur>#000000</couleur>\n {6}</description>".toRegex(), "")
+
+        val res: ListeHorairesDTO = serializer.read(ListeHorairesDTO::class.java, cleanResult) ?: throw TimeoException("Service returned invalid data")
 
         checkForErrors(res.erreur)
 
-        val schedules = res.horaires.map {
+        val schedules = res.horaires.filter { it.description != null }.map {
             horaire ->
             TimeoStopSchedule(
                     stop = stops.filter {
                         stop ->
-                        stop.id == horaire.description.code
-                                && stop.line.id == horaire.description.ligne
-                                && stop.line.direction.id == horaire.description.sens
+                        stop.id == horaire.description?.code
+                                && stop.line.id == horaire.description!!.ligne
+                                && stop.line.direction.id == horaire.description!!.sens
                     }.first(),
                     schedules = horaire.passages.map {
                         passage ->
@@ -211,11 +213,9 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) {
             }
 
             for (schedule in schedules.filter { schedule -> schedule.stop.id == stop.id }) {
-                if (schedule.stop.id == stop.id) {
-                    outdated = false
-                    count++
-                    break
-                }
+                outdated = false
+                count++
+                break
             }
 
             stop.isOutdated = outdated
