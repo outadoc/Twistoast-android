@@ -55,9 +55,10 @@ class TimeStepDefinitions {
     }
 
     fun getMinuteDiffBetweenTwoStringTimes(busTime: String, localTime: String): Long {
-        val busDate = busTime.getNextDateForTime()
         val localArray = localTime.split(":")
         val localDate = LocalTime(localArray[0].toInt(), localArray[1].toInt()).toDateTimeToday()
+
+        val busDate = busTime.getNextDateForTime(localDate)
 
         return (busDate.millis - localDate.millis) / 1000 / 60
     }

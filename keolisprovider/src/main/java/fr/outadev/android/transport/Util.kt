@@ -20,7 +20,6 @@ package fr.outadev.android.transport
 
 import org.apache.commons.lang3.StringUtils.capitalize
 import org.joda.time.DateTime
-import org.joda.time.LocalDate
 import org.joda.time.LocalTime
 import org.joda.time.Minutes
 import java.util.*
@@ -33,15 +32,15 @@ import java.util.*
  * @param time a time in a string, separated with a colon: e.g. "14:53"
  * @return a calendar object, with the time in the string set for the next valid day
  */
-fun String.getNextDateForTime(): DateTime {
+fun String.getNextDateForTime(currentDate: DateTime = DateTime.now()): DateTime {
     val splitTime = this.split(":".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
 
     val hours = splitTime[0].toInt()
     val minutes = splitTime[1].toInt()
 
     val scheduledTime = LocalTime(hours, minutes)
-    var currDate = LocalDate.now()
-    val now = DateTime()
+    val now = currentDate
+    var currDate = currentDate.toLocalDate()
 
     // If the time is less than ten minutes in the past, we'll assume that it's still supposed to be
     // today. Otherwise, we suppose it's a time tomorrow.

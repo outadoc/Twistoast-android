@@ -68,7 +68,7 @@ object TimeFormatter {
     }
 
     /**
-     * Computes the interval of time after which the bus shall arrive.
+     * Computes the interval of time after which the )yàuèbus shall arrive.
      *
      * @param schedule the time at which the bus will arrive
      * @return the difference between now and then
