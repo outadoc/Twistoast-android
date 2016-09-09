@@ -20,7 +20,10 @@ package fr.outadev.twistoast
 
 import android.content.Context
 import android.util.Log
-import fr.outadev.android.transport.timeo.*
+import fr.outadev.android.transport.timeo.IProgressListener
+import fr.outadev.android.transport.timeo.TimeoException
+import fr.outadev.android.transport.timeo.TimeoRequestHandler
+import fr.outadev.android.transport.timeo.TimeoStop
 import org.xmlpull.v1.XmlPullParserException
 import java.io.IOException
 
@@ -50,22 +53,24 @@ class TimeoStopReferenceUpdater(context: Context = ApplicationTwistoast.instance
      */
     @Throws(XmlPullParserException::class, IOException::class, TimeoException::class)
     fun updateAllStopReferences(stops: List<TimeoStop>, progressListener: IProgressListener?) {
-        var lastLine: TimeoLine? = null
-
         progressListener?.onProgress(0, stops.size)
 
-        stops.filter { stop -> stop.isOutdated && stop.line != lastLine }.forEachIndexed { i, stop ->
+        stops.filter { stop -> stop.isOutdated }
+                .map { stop -> stop.line }
+                .distinct()
+                .forEachIndexed { i, line ->
             //update the progress
-            Log.d(TAG, "updating stops for line " + stop.line)
+            Log.i(TAG, "updating stop references for line " + line)
             progressListener?.onProgress(i, stops.size)
 
             //get the stops for the current line
-            lastLine = stop.line
-            val newStops = requestHandler.getStops(lastLine!!)
+            val allStopsForLine = requestHandler.getStops(line)
 
             //update all the stops we received.
             //obviously, only the ones existing in the database will be updated.
-            newStops.forEach { database.updateStopReference(it) }
+            allStopsForLine.forEach {
+                stop -> database.updateStopReference(stop)
+            }
         }
     }
 

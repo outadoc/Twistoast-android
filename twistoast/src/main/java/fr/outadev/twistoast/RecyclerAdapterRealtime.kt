@@ -100,6 +100,10 @@ class RecyclerAdapterRealtime(val activity: Activity, private val stopsList: Mut
 
                     notifyDataSetChanged()
                     mStopsListContainer.endRefresh(scheduleMap.isNotEmpty())
+
+                    if (outdated > 0) {
+                        mStopsListContainer.onUpdatedStopReferences()
+                    }
                 }
 
             } catch (e: TimeoBlockingMessageException) {

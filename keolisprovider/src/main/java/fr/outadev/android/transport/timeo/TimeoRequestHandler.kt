@@ -173,7 +173,15 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) {
 
         checkForErrors(res.erreur)
 
-        val schedules = res.horaires.filter { it.description != null }.map {
+        val schedules = res.horaires.filter {
+            horaire ->
+            horaire.description != null && stops.any {
+                stop ->
+                stop.id == horaire.description?.code
+                        && stop.line.id == horaire.description!!.ligne
+                        && stop.line.direction.id == horaire.description!!.sens
+            }
+        }.map {
             horaire ->
             TimeoStopSchedule(
                     stop = stops.filter {
@@ -205,24 +213,16 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) {
             return 0
         }
 
-        var count = 0
-        for (stop in stops) {
-            var outdated = true
+        return stops.fold(0) {
+            outdated, stop ->
 
-            if (stop.reference == null) {
-                count++
+            if (stop.reference == null || schedules.none { schedule -> schedule.stop.id == stop.id }) {
+                stop.isOutdated = true
+                outdated + 1
+            } else {
+                outdated
             }
-
-            for (schedule in schedules.filter { schedule -> schedule.stop.id == stop.id }) {
-                outdated = false
-                count++
-                break
-            }
-
-            stop.isOutdated = outdated
         }
-
-        return count
     }
 
     /**

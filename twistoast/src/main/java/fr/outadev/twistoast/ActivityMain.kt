@@ -154,6 +154,9 @@ class ActivityMain : ThemedActivity(), IStopsListContainer, NavigationView.OnNav
     override fun endRefresh(success: Boolean) {
     }
 
+    override fun onUpdatedStopReferences() {
+    }
+
     override val isRefreshing: Boolean
         get() = false
 

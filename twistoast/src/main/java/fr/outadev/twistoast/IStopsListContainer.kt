@@ -32,6 +32,8 @@ interface IStopsListContainer {
      */
     fun endRefresh(success: Boolean)
 
+    fun onUpdatedStopReferences()
+
     fun setNoContentViewVisible(visible: Boolean)
 
     /**

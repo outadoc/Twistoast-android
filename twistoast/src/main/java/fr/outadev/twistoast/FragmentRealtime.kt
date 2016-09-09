@@ -157,6 +157,10 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
         periodicRefreshHandler.removeCallbacks(periodicRefreshRunnable)
     }
 
+    override fun onUpdatedStopReferences() {
+        refreshAllStopSchedules(true)
+    }
+
     private fun setupListeners() {
         floatingActionButton!!.setOnClickListener {
             val intent = Intent(activity, ActivityNewStop::class.java)
