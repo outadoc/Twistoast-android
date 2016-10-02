@@ -147,13 +147,13 @@ class RecyclerAdapterRealtime(val activity: Activity, private val stopsList: Mut
 
     override fun onBindViewHolder(view: RecyclerAdapterRealtime.ViewHolder, position: Int) {
         // Get the stop we're inflating
-        val currentStop = stopsList[position]
+        val currentStopId = stopsList[position]
 
-        view.lineDrawable.setColor(Colors.getBrighterColor(Color.parseColor(currentStop.line.color)))
+        view.lineDrawable.setColor(Colors.getBrighterColor(Color.parseColor(currentStopId.line.color)))
 
-        view.rowLineId.text = currentStop.line.id
-        view.rowStopName.text = view.rowStopName.context.getString(R.string.stop_name, currentStop.name)
-        view.rowDirectionName.text = view.rowDirectionName.context.getString(R.string.direction_name, currentStop.line.direction.name)
+        view.rowLineId.text = currentStopId.line.id
+        view.rowStopName.text = view.rowStopName.context.getString(R.string.stop_name, currentStopId.name)
+        view.rowDirectionName.text = view.rowDirectionName.context.getString(R.string.direction_name, currentStopId.line.direction.name)
 
         // Clear labels
         for (i in 0..NB_SCHEDULES_DISPLAYED - 1) {
@@ -162,47 +162,49 @@ class RecyclerAdapterRealtime(val activity: Activity, private val stopsList: Mut
         }
 
         // Add the new schedules one by one
-        if (schedules.containsKey(currentStop) && schedules[currentStop] != null) {
-            // If there are schedules
-            if (schedules[currentStop]!!.schedules.isNotEmpty()) {
-                // Get the schedules for this stop
-                val currScheds = schedules[currentStop]!!.schedules
+        if (schedules.containsKey(currentStopId) && schedules[currentStopId] != null) {
+            val currentStop: TimeoStopSchedule = schedules[currentStopId]!!
 
-                var i = 0
-                while (i < currScheds.size && i < NB_SCHEDULES_DISPLAYED) {
-                    val currSched = currScheds[i]
-
-                    // We don't update from database all the time, so we can't figure this out by just updating everything.
-                    // If there is a bus coming, tell the stop that it's not watched anymore.
-                    // This won't work all the time, but it's not too bad.
-                    if (currSched.scheduleTime.isBeforeNow) {
-                        currentStop.isWatched = false
-                    }
-
-                    view.lblScheduleTime[i]?.text = TimeFormatter.formatTime(view.lblScheduleTime[i]!!.context, currSched.scheduleTime)
-                    view.lblScheduleDirection[i]?.text = " — " + currSched.direction
-                    i++
+            // Get the schedules for this stop
+            currentStop.schedules.forEachIndexed {
+                i, currSched ->
+                // We don't update from database all the time, so we can't figure this out by just updating everything.
+                // If there is a bus coming, tell the stop that it's not watched anymore.
+                // This won't work all the time, but it's not too bad.
+                if (currSched.scheduleTime.isBeforeNow) {
+                    currentStopId.isWatched = false
                 }
 
-                if (currScheds.isEmpty()) {
-                    // If no schedules are available, add a fake one to inform the user
-                    view.lblScheduleTime[0]?.setText(R.string.no_upcoming_stops)
-                }
+                view.lblScheduleTime[i]?.text = TimeFormatter.formatTime(view.lblScheduleTime[i]!!.context, currSched.scheduleTime)
+                view.lblScheduleDirection[i]?.text = " — " + currSched.direction
+            }
 
-                // Fade in the row!
-                if (view.container.alpha != 1.0f) {
-                    view.container.alpha = 1.0f
+            if (currentStop.schedules.isEmpty()) {
+                // If no schedules are available, add a fake one to inform the user
+                view.lblScheduleTime[0]?.setText(R.string.no_upcoming_stops)
+            }
 
-                    val alphaAnim = AlphaAnimation(0.4f, 1.0f)
-                    alphaAnim.duration = 500
-                    view.container.startAnimation(alphaAnim)
-                }
+            if (currentStop.trafficMessages.isNotEmpty()) {
+                val message = currentStop.trafficMessages.first()
+                view.lblStopTrafficTitle.text = message.title
+                view.lblStopTrafficMessage.text = message.body
+
+                view.viewStopTrafficInfoContainer.visibility = View.VISIBLE
+            }
+
+            // Fade in the row!
+            if (view.container.alpha != 1.0f) {
+                view.container.alpha = 1.0f
+
+                val alphaAnim = AlphaAnimation(0.4f, 1.0f)
+                alphaAnim.duration = 500
+                view.container.startAnimation(alphaAnim)
             }
 
         } else {
             // If we can't find the schedules we asked for in the hashmap, something went wrong. :c
             // It should be noted that it normally happens the first time the list is loaded, since no data was downloaded yet.
-            Log.e(TAG, "missing stop schedule for $currentStop (ref=${currentStop.reference}); ref outdated?")
+            Log.e(TAG, "missing stop schedule for $currentStopId (ref=${currentStopId.reference}); ref outdated?")
 
             // Make the row look a bit translucent to make it stand out
             view.lblScheduleTime[0]?.setText(R.string.no_upcoming_stops)
@@ -210,7 +212,7 @@ class RecyclerAdapterRealtime(val activity: Activity, private val stopsList: Mut
         }
 
         view.container.setOnLongClickListener { v -> longClickListener.onLongClick(v, position) }
-        view.imgStopWatched.visibility = if (currentStop.isWatched) View.VISIBLE else View.GONE
+        view.imgStopWatched.visibility = if (currentStopId.isWatched) View.VISIBLE else View.GONE
     }
 
     override fun getItemCount(): Int {
@@ -331,20 +333,29 @@ class RecyclerAdapterRealtime(val activity: Activity, private val stopsList: Mut
 
     }
 
+    /**
+     * Container for an item in the list. Here, this corresponds to a bus stop, and all the info
+     * displayed for it (schedules, and metadata).
+     */
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
-        var container: LinearLayout
-        var rowLineIdContainer: FrameLayout
+        val container: LinearLayout
+        val rowLineIdContainer: FrameLayout
 
-        var rowLineId: TextView
-        var rowStopName: TextView
-        var rowDirectionName: TextView
-        var viewScheduleContainer: LinearLayout
-        var imgStopWatched: ImageView
-        var lineDrawable: GradientDrawable
+        val rowLineId: TextView
+        val rowStopName: TextView
+        val rowDirectionName: TextView
+        val viewScheduleContainer: LinearLayout
+        val imgStopWatched: ImageView
+        val lineDrawable: GradientDrawable
 
-        var lblScheduleTime = arrayOfNulls<TextView>(NB_SCHEDULES_DISPLAYED)
-        var lblScheduleDirection = arrayOfNulls<TextView>(NB_SCHEDULES_DISPLAYED)
+        val lblStopTrafficTitle: TextView
+        val lblStopTrafficMessage: TextView
+
+        val lblScheduleTime = arrayOfNulls<TextView>(NB_SCHEDULES_DISPLAYED)
+        val lblScheduleDirection = arrayOfNulls<TextView>(NB_SCHEDULES_DISPLAYED)
+
+        val viewStopTrafficInfoContainer: View
 
         init {
 
@@ -361,6 +372,11 @@ class RecyclerAdapterRealtime(val activity: Activity, private val stopsList: Mut
             viewScheduleContainer = v.findViewById(R.id.viewScheduleContainer) as LinearLayout
             imgStopWatched = v.findViewById(R.id.imgStopWatched) as ImageView
             lineDrawable = rowLineIdContainer.background as GradientDrawable
+
+            lblStopTrafficTitle = v.findViewById(R.id.lblStopTrafficTitle) as TextView
+            lblStopTrafficMessage = v.findViewById(R.id.lblStopTrafficMessage) as TextView
+
+            viewStopTrafficInfoContainer = v.findViewById(R.id.viewStopTrafficInfoContainer)
 
             for (i in 0..NB_SCHEDULES_DISPLAYED - 1) {
                 // Display the current schedule

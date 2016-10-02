@@ -29,7 +29,9 @@
 	android:longClickable="true"
 	android:background="?android:attr/selectableItemBackground">
 
-	<LinearLayout
+    <include layout="@layout/view_stop_traffic_info" />
+
+    <LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:orientation="horizontal"
@@ -70,7 +72,7 @@
 			android:paddingRight="5dp"
 			android:paddingStart="5dp">
 
-			<LinearLayout
+            <LinearLayout
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:orientation="horizontal"
@@ -91,7 +93,7 @@
 					android:id="@+id/rowStopName"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:singleLine="true"
+					android:maxLines="1"
 					android:textAppearance="?android:attr/textAppearanceLarge"
 					android:textSize="19sp" />
 
@@ -101,12 +103,12 @@
 				android:id="@+id/rowDirectionName"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:singleLine="true"
+				android:maxLines="1"
 				android:textAppearance="?android:attr/textAppearanceSmall"
 				android:textSize="15sp"
 				android:textStyle="italic" />
 
-			<LinearLayout
+            <LinearLayout
 				android:id="@+id/viewScheduleContainer"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
