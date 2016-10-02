@@ -19,8 +19,8 @@
 package fr.outadev.android.transport.timeo
 
 /**
- * A traffic alert specific to a stop.
+ * A traffic information message specific to a stop, and usually shown inline.
  *
  * @author outadoc
  */
-data class TimeoStopTrafficAlert (val title: String, val body: String)
+data class TimeoStopTrafficMessage(val title: String, val body: String)

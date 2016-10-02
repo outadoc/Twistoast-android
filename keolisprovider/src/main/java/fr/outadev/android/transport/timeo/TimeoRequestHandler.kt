@@ -184,19 +184,30 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) {
         }.map {
             horaire ->
             TimeoStopSchedule(
+                    // Retrieve the stop corresponding to this schedule in the list that was passed
+                    // to the API, so we can match them
                     stop = stops.filter {
                         stop ->
                         stop.id == horaire.description?.code
                                 && stop.line.id == horaire.description!!.ligne
                                 && stop.line.direction.id == horaire.description!!.sens
                     }.first(),
+                    // Parse the bus schedules
                     schedules = horaire.passages.map {
                         passage ->
                         TimeoSingleSchedule(
                                 scheduleTime = passage.duree!!.getNextDateForTime(),
                                 direction = passage.destination!!.smartCapitalize()
                         )
-                    }
+                    },
+                    // Retrieve the traffic message(s) for this bus stop
+                    trafficMessages = horaire.messages.filter { it.titre != null }.map {
+                        message ->
+                        TimeoStopTrafficMessage(
+                                title = message.titre!!.trim(),
+                                body = message.texte?.trim()!!.replace("  ", " ")
+                        )
+                    }.distinct()
             )
         }
 

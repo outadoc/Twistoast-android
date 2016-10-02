@@ -24,4 +24,4 @@ package fr.outadev.android.transport.timeo
  *
  * @author outadoc
  */
-data class TimeoStopSchedule (var stop: TimeoStop, var schedules: List<TimeoSingleSchedule> = listOf())
+data class TimeoStopSchedule (var stop: TimeoStop, var schedules: List<TimeoSingleSchedule> = listOf(), var trafficMessages: List<TimeoStopTrafficMessage> = listOf())
