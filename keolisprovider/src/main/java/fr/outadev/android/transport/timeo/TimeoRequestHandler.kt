@@ -134,6 +134,41 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) {
     }
 
     /**
+     * Retrieve a list of stops by their code.
+     * Useful to get a stop's info when they're only known by their code.
+     */
+    @Throws(IOException::class, TimeoException::class)
+    fun getStopsByCode(networkCode: Int = DEFAULT_NETWORK_CODE, codes: List<Int>): List<TimeoStop> {
+        var codesCat = codes.fold("", { codesCat, code -> codesCat + code + ","})
+
+        // Don't keep the last comma
+        codesCat = codesCat.substring(0, codesCat.length - 1)
+
+        val params = "xml=1&code=${codesCat}"
+
+        val result = http.requestWebPage(getEndpointUrl(networkCode), params, true)
+        val res: ListeLignesDTO = serializer.read(ListeLignesDTO::class.java, result) ?: throw TimeoException("Service returned invalid data")
+
+        checkForErrors(res.erreur)
+
+        val stopsList = res.alss.filter { it.arret.code != null && it.arret.nom != null }.map {
+            als ->
+            TimeoStop(
+                    id = als.arret.code!!.toInt(),
+                    name = als.arret.nom!!.smartCapitalize(),
+                    reference = als.refs,
+                    line = TimeoLine(
+                            id = als.ligne.code,
+                            name = als.ligne.nom.smartCapitalize(),
+                            direction = TimeoDirection(als.ligne.sens, als.ligne.vers.smartCapitalize()),
+                            color = "#" + leftPad(Integer.toHexString(Integer.valueOf(als.ligne.couleur)), 6, '0'),
+                            networkCode = networkCode))
+        }
+
+        return stopsList
+    }
+
+    /**
      * Fetches the next bus schedules for the specified bus stop.
      */
     @Throws(TimeoException::class, IOException::class, XmlPullParserException::class)

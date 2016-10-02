@@ -85,7 +85,7 @@ class RecyclerAdapterRealtime(val activity: Activity, private val stopsList: Mut
                 // If there are outdated reference numbers, update those stops
                 if (outdated > 0) {
                     Log.e(TAG, "Found $outdated stops, trying to update references")
-                    referenceUpdater.updateAllStopReferences(stopsList, null)
+                    referenceUpdater.updateAllStopReferences(stopsList)
 
                     // Reload with the updated stops
                     schedulesList = requestHandler.getMultipleSchedules(stopsList)
