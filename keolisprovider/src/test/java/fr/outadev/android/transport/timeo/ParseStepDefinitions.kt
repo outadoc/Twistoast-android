@@ -21,7 +21,9 @@ package fr.outadev.android.transport.timeo
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.whenever
+import cucumber.api.CucumberOptions
 import cucumber.api.DataTable
+import cucumber.api.PendingException
 import cucumber.api.java.en.Given
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
@@ -34,10 +36,11 @@ import java.net.URLEncoder
 /**
  * Created by outadoc on 23/08/16.
  */
+@CucumberOptions
 class ParseStepDefinitions {
 
     companion object {
-        const val mockDir = "src/test/res/mocks/"
+        const val mockDir = "keolisprovider/src/test/res/mocks/"
     }
 
     var requester: IHttpRequester? = null
@@ -56,7 +59,7 @@ class ParseStepDefinitions {
     @When("^I request a list of lines with mock (.+)$")
     @Throws(Throwable::class)
     fun iRequestAListOfLinesWithMock(mock: String) {
-        setupMock("xml=1", mock)
+        setupHttpMock("xml=1", mock)
         lines = trh!!.getLines()
     }
 
@@ -75,7 +78,7 @@ class ParseStepDefinitions {
     @When("^I request a list of stops for line '(.+)' and direction '(A|R)' with mock (.+)$")
     @Throws(Throwable::class)
     fun iRequestAListOfStopsForLineAndDirectionWithMock(line: String, dir: String, mock: String) {
-        setupMock("xml=1&ligne=$line&sens=$dir", mock)
+        setupHttpMock("xml=1&ligne=$line&sens=$dir", mock)
         stops = trh!!.getStops(TimeoLine(line, "", TimeoDirection(dir, "")))
     }
 
@@ -84,11 +87,20 @@ class ParseStepDefinitions {
     fun iRequestAListOfSchedulesForTheFollowingStopReferencesWithMock(mock: String, refs:List<String>) {
         var refsStr = refs.fold("", { refsStr, ref -> refsStr + ref + ";"})
         refsStr = refsStr.substring(0, refsStr.length - 1)
-        setupMock("xml=3&refs=${URLEncoder.encode(refsStr, "UTF-8")}&ran=1", mock)
-
+        setupHttpMock("xml=3&refs=${URLEncoder.encode(refsStr, "UTF-8")}&ran=1", mock)
     }
 
-    private fun setupMock(params: String, mockFileName: String) {
+    @Then("^I get a list of schedules for the following stop$")
+    fun i_get_a_list_of_schedules_for_the_following_stop(expected: DataTable) {
+        throw PendingException()
+    }
+
+    @Then("^the list of schedules is$")
+    fun the_list_of_schedules_is(expected: DataTable) {
+        throw PendingException()
+    }
+
+    private fun setupHttpMock(params: String, mockFileName: String) {
         whenever(requester!!.requestWebPage(any(), eq(params), any()))
                 .thenReturn(readStringFromResFile(mockDir + mockFileName))
     }
