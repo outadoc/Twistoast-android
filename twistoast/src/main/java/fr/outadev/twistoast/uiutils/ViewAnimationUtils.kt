@@ -12,6 +12,9 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.Transformation
 
+/**
+ * Expands a view, making it go from 0dp height to wrap_content.
+ */
 fun View.expand() {
     val v = this
 
@@ -39,6 +42,9 @@ fun View.expand() {
     v.startAnimation(a)
 }
 
+/**
+ * Collapses a view, making it go from whatever height to 0dp.
+ */
 fun View.collapse() {
     val v = this
     val initialHeight = v.measuredHeight
