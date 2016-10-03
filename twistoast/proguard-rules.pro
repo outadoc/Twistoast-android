@@ -3,7 +3,6 @@
 -keep public class fr.outadev.twistoast.background.NextStopAlarmReceiver
 -keep public class fr.outadev.twistoast.background.TrafficAlertAlarmReceiver
 -keep public class fr.outadev.twistoast.background.BootReceiver
--keep public class fr.outadev.twistoast.background.TrafficAlertJobService
 
 -keep public enum fr.outadev.twistoast.Database$SortBy
 

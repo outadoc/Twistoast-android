@@ -18,88 +18,83 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<manifest
-    package="fr.outadev.twistoast"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="fr.outadev.twistoast">
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <uses-feature
         android:name="android.hardware.location.network"
-        android:required="false"/>
+        android:required="false" />
     <uses-feature
         android:name="android.hardware.LOCATION"
-        android:required="false"/>
+        android:required="false" />
 
     <application
         android:name=".ApplicationTwistoast"
         android:allowBackup="true"
+        android:fullBackupContent="@xml/backup_rules"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:resizeableActivity="true"
         android:theme="@style/Twistoast.Theme">
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version"/>
+            android:value="@integer/google_play_services_version" />
 
         <activity
             android:name=".ActivityMain"
             android:label="@string/app_name"
             android:launchMode="singleTop"
-            android:windowSoftInputMode="adjustPan"
-            android:theme="@style/Twistoast.Theme.Splash">
+            android:theme="@style/Twistoast.Theme.Splash"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".ActivityNewStop"
             android:label="@string/title_activity_add_stop"
-            android:theme="@style/Twistoast.Theme.NewStopActivity">
-        </activity>
+            android:theme="@style/Twistoast.Theme.NewStopActivity" />
+
         <activity
             android:name="com.google.android.gms.ads.AdActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize">
-        </activity>
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
 
         <receiver
             android:name=".background.BootReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
         <receiver
             android:name=".background.NextStopAlarmReceiver"
             android:enabled="true"
-            android:exported="false">
-        </receiver>
+            android:exported="false" />
+
         <receiver
             android:name=".background.TrafficAlertAlarmReceiver"
             android:enabled="true"
-            android:exported="false">
-        </receiver>
+            android:exported="false" />
+
         <receiver
             android:name=".background.PebbleWatchReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.getpebble.action.app.RECEIVE"/>
-                <action android:name="com.getpebble.action.app.RECEIVE_ACK"/>
+                <action android:name="com.getpebble.action.app.RECEIVE" />
+                <action android:name="com.getpebble.action.app.RECEIVE_ACK" />
             </intent-filter>
         </receiver>
-
-        <service
-            android:name=".background.TrafficAlertJobService"
-            android:exported="true"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
     </application>
 
 </manifest>
