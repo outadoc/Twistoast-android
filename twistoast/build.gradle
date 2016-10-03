@@ -70,6 +70,7 @@ dependencies {
     compile 'org.jetbrains.anko:anko-sdk15:0.9'
     compile 'org.jetbrains.anko:anko-support-v4:0.9'
     compile 'org.jetbrains.anko:anko-appcompat-v7:0.9'
+    compile 'org.jetbrains.anko:anko-sqlite:0.8.3'
 }
 repositories {
     mavenCentral()

@@ -20,9 +20,9 @@ package fr.outadev.twistoast
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
-import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import fr.outadev.android.transport.timeo.TimeoRequestHandler
+import org.jetbrains.anko.db.ManagedSQLiteOpenHelper
 import java.io.FileOutputStream
 import java.io.IOException
 
@@ -31,7 +31,7 @@ import java.io.IOException
  *
  * @author outadoc
  */
-class DatabaseOpenHelper (private val context: Context = ApplicationTwistoast.instance) : SQLiteOpenHelper(context, DatabaseOpenHelper.DATABASE_NAME, null, DatabaseOpenHelper.DATABASE_VERSION) {
+class DatabaseOpenHelper (private val context: Context = ApplicationTwistoast.instance) : ManagedSQLiteOpenHelper(context, DatabaseOpenHelper.DATABASE_NAME, null, DatabaseOpenHelper.DATABASE_VERSION) {
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(LINES_TABLE_CREATE)
