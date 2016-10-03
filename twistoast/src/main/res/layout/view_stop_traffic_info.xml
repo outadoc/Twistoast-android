@@ -5,23 +5,39 @@
     android:layout_height="wrap_content"
     android:id="@+id/viewStopTrafficInfoContainer"
     android:visibility="gone"
-    android:background="@color/traffic_alert_background"
+    android:background="@drawable/stop_traffic_info_background"
     android:padding="10dp"
     android:layout_marginTop="10dp"
     android:layout_marginRight="5dp"
-    android:layout_marginLeft="5dp">
+    android:layout_marginLeft="5dp"
+    android:clickable="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:src="@drawable/ic_traffic_cone"
+            android:contentDescription="@string/drawer_item_traffic"
+            android:tint="@color/traffic_alert_text_primary" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lblStopTrafficTitle"
+            android:textColor="@color/traffic_alert_text_primary"
+            android:textSize="18sp"
+            android:ellipsize="end"
+            android:maxLines="1" />
+
+    </LinearLayout>
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/lblStopTrafficTitle"
-        android:textColor="@color/traffic_alert_text_primary"
-        android:textSize="18sp"
-        android:maxLines="1" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:id="@+id/lblStopTrafficMessage" />
 
 </LinearLayout>

@@ -38,7 +38,10 @@ import android.widget.TextView
 import fr.outadev.android.transport.timeo.*
 import fr.outadev.twistoast.background.BackgroundTasksManager
 import fr.outadev.twistoast.uiutils.Colors
+import fr.outadev.twistoast.uiutils.collapse
+import fr.outadev.twistoast.uiutils.expand
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.onClick
 import org.jetbrains.anko.uiThread
 
 /**
@@ -357,10 +360,14 @@ class RecyclerAdapterRealtime(val activity: Activity, private val stopsList: Mut
 
         val viewStopTrafficInfoContainer: View
 
+        var isExpanded: Boolean
+
         init {
 
             val inflater = LayoutInflater.from(v.context)
             container = v as LinearLayout
+
+            isExpanded = false
 
             // Get references to the views
             rowLineIdContainer = v.findViewById(R.id.rowLineIdContainer) as FrameLayout
@@ -377,6 +384,17 @@ class RecyclerAdapterRealtime(val activity: Activity, private val stopsList: Mut
             lblStopTrafficMessage = v.findViewById(R.id.lblStopTrafficMessage) as TextView
 
             viewStopTrafficInfoContainer = v.findViewById(R.id.viewStopTrafficInfoContainer)
+
+            // Stop traffic info is collapsed by default.
+            // When it's clicked, we display the message.
+            viewStopTrafficInfoContainer.onClick {
+                if (!isExpanded)
+                    lblStopTrafficMessage.expand()
+                else
+                    lblStopTrafficMessage.collapse()
+
+                isExpanded = !isExpanded
+            }
 
             for (i in 0..NB_SCHEDULES_DISPLAYED - 1) {
                 // Display the current schedule
