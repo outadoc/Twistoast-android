@@ -197,7 +197,7 @@ class RecyclerAdapterRealtime(val activity: Activity, private val stopsList: Mut
 
                 val alphaAnim = AlphaAnimation(0.4f, 1.0f)
                 alphaAnim.duration = 500
-                //view.container.startAnimation(alphaAnim)
+                view.container.startAnimation(alphaAnim)
             }
 
         } else {
