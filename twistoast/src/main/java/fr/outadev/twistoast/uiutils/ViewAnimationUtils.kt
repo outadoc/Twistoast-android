@@ -1,17 +1,16 @@
+/*
+ * Smooth animation of View elements.
+ * Provides collapse() and expand() on View objects.
+ *
+ * Copyright Hiren Patel 2015
+ * Cf. http://stackoverflow.com/a/31720191
+ */
 package fr.outadev.twistoast.uiutils
 
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.Transformation
-
-/**
- * Smooth animation of View elements.
- * Provides collapse() and expand() on View objects.
- *
- * @author Hiren Patel
- * @see http://stackoverflow.com/a/31720191
- */
 
 fun View.expand() {
     val v = this
