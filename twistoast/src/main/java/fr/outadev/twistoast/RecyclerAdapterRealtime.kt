@@ -158,13 +158,7 @@ class RecyclerAdapterRealtime(val activity: Activity, private val stopsList: Mut
         view.rowStopName.text = view.rowStopName.context.getString(R.string.stop_name, currentStopId.name)
         view.rowDirectionName.text = view.rowDirectionName.context.getString(R.string.direction_name, currentStopId.line.direction.name)
 
-        // Clear any previous data
-        for (i in 0..NB_SCHEDULES_DISPLAYED - 1) {
-            view.lblScheduleTime[i]?.text = ""
-            view.lblScheduleDirection[i]?.text = ""
-        }
-
-        view.viewStopTrafficInfoContainer.visibility = View.GONE
+        view.resetView()
 
         // Add the new schedules one by one
         if (schedules.containsKey(currentStopId) && schedules[currentStopId] != null) {
@@ -203,7 +197,7 @@ class RecyclerAdapterRealtime(val activity: Activity, private val stopsList: Mut
 
                 val alphaAnim = AlphaAnimation(0.4f, 1.0f)
                 alphaAnim.duration = 500
-                view.container.startAnimation(alphaAnim)
+                //view.container.startAnimation(alphaAnim)
             }
 
         } else {
@@ -395,6 +389,7 @@ class RecyclerAdapterRealtime(val activity: Activity, private val stopsList: Mut
                 else
                     lblStopTrafficMessage.collapse()
 
+                lblStopTrafficMessage.requestLayout()
                 isExpanded = !isExpanded
             }
 
@@ -407,6 +402,18 @@ class RecyclerAdapterRealtime(val activity: Activity, private val stopsList: Mut
 
                 viewScheduleContainer.addView(singleScheduleView)
             }
+        }
+
+        fun resetView() {
+            // Clear any previous data
+            for (i in 0..NB_SCHEDULES_DISPLAYED - 1) {
+                lblScheduleTime[i]?.text = ""
+                lblScheduleDirection[i]?.text = ""
+            }
+
+            viewStopTrafficInfoContainer.visibility = View.GONE
+            lblStopTrafficMessage.layoutParams.height = 0
+            isExpanded = false
         }
 
         interface IOnLongClickListener {
