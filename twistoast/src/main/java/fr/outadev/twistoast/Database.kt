@@ -20,10 +20,12 @@ package fr.outadev.twistoast
 
 import android.content.ContentValues
 import android.database.sqlite.SQLiteConstraintException
+import android.database.sqlite.SQLiteDatabase
 import fr.outadev.android.transport.timeo.TimeoDirection
 import fr.outadev.android.transport.timeo.TimeoLine
 import fr.outadev.android.transport.timeo.TimeoStop
 import org.jetbrains.anko.db.ManagedSQLiteOpenHelper
+import org.jetbrains.anko.db.transaction
 import org.joda.time.DateTime
 import java.util.*
 
@@ -49,10 +51,6 @@ class Database(private val db: ManagedSQLiteOpenHelper) {
     @Throws(IllegalArgumentException::class, SQLiteConstraintException::class)
     fun addStopToDatabase(stop: TimeoStop?) {
         if (stop != null) {
-            // when we want to add a stop, we add the line first, then the
-            // direction
-            addLineToDatabase(stop.line)
-
             // then, open the database, and start enumerating when we'll need to add
             val values = ContentValues()
 
@@ -64,8 +62,14 @@ class Database(private val db: ManagedSQLiteOpenHelper) {
             values.put("network_code", stop.line.networkCode)
 
             db.use {
-                // insert the stop with the specified columns
-                insertOrThrow("twi_stop", null, values)
+                transaction {
+                    // when we want to add a stop, we add the line first, then the
+                    // direction
+                    addLineToDatabase(this, stop.line)
+
+                    // insert the stop with the specified columns
+                    insertOrThrow("twi_stop", null, values)
+                }
             }
 
         } else {
@@ -78,7 +82,7 @@ class Database(private val db: ManagedSQLiteOpenHelper) {
 
      * @param line the bus line to add
      */
-    private fun addLineToDatabase(line: TimeoLine?) {
+    private fun addLineToDatabase(database: SQLiteDatabase, line: TimeoLine?) {
         if (line != null) {
             val values = ContentValues()
 
@@ -87,11 +91,8 @@ class Database(private val db: ManagedSQLiteOpenHelper) {
             values.put("line_color", line.color)
             values.put("network_code", line.networkCode)
 
-            db.use {
-                insert("twi_line", null, values)
-            }
-
-            addDirectionToDatabase(line)
+            database.insert("twi_line", null, values)
+            addDirectionToDatabase(database, line)
         }
     }
 
@@ -100,9 +101,8 @@ class Database(private val db: ManagedSQLiteOpenHelper) {
 
      * @param line the bus line whose direction to add
      */
-    private fun addDirectionToDatabase(line: TimeoLine?) {
+    private fun addDirectionToDatabase(database: SQLiteDatabase, line: TimeoLine?) {
         if (line != null) {
-
             val values = ContentValues()
 
             values.put("dir_id", line.direction.id)
@@ -110,9 +110,7 @@ class Database(private val db: ManagedSQLiteOpenHelper) {
             values.put("dir_name", line.direction.name)
             values.put("network_code", line.networkCode)
 
-            db.use {
-                insert("twi_direction", null, values)
-            }
+            database.insert("twi_direction", null, values)
         }
     }
 
