@@ -158,11 +158,13 @@ class RecyclerAdapterRealtime(val activity: Activity, private val stopsList: Mut
         view.rowStopName.text = view.rowStopName.context.getString(R.string.stop_name, currentStopId.name)
         view.rowDirectionName.text = view.rowDirectionName.context.getString(R.string.direction_name, currentStopId.line.direction.name)
 
-        // Clear labels
+        // Clear any previous data
         for (i in 0..NB_SCHEDULES_DISPLAYED - 1) {
             view.lblScheduleTime[i]?.text = ""
             view.lblScheduleDirection[i]?.text = ""
         }
+
+        view.viewStopTrafficInfoContainer.visibility = View.GONE
 
         // Add the new schedules one by one
         if (schedules.containsKey(currentStopId) && schedules[currentStopId] != null) {
