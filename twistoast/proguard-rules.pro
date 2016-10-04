@@ -30,3 +30,7 @@
 -dontwarn org.joda.time.**
 -keep class org.joda.time.** { *; }
 -keep interface org.joda.time.** { *; }
+
+-keep class javax.xml.stream.** { *; }
+-keep interface javax.xml.stream.** { *; }
+-dontwarn javax.xml.stream.**
