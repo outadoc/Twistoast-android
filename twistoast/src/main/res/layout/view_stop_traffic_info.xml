@@ -59,6 +59,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:visibility="gone"
         android:padding="5dp"
         android:textSize="15sp"
         android:id="@+id/lblStopTrafficMessage" />
