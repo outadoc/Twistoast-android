@@ -39,20 +39,28 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="25dp"
+            android:id="@+id/img_stop_traffic_message_icon"
             android:src="@drawable/ic_traffic_cone"
             android:contentDescription="@string/drawer_item_traffic"
             android:tint="@color/traffic_alert_text_primary" />
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/lblStopTrafficTitle"
             android:textColor="@color/traffic_alert_text_primary"
             android:textSize="18sp"
             android:textStyle="italic"
             android:layout_marginLeft="3dp"
+            android:layout_weight="1"
             android:ellipsize="end"
             android:maxLines="1" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_expand_more_white"
+            android:tint="@color/traffic_alert_text_primary" />
 
     </LinearLayout>
 
@@ -60,7 +68,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:visibility="gone"
-        android:padding="5dp"
+        android:padding="10dp"
         android:textSize="15sp"
         android:id="@+id/lblStopTrafficMessage" />
 
