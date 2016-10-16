@@ -29,11 +29,10 @@ import java.util.*
  * This method will return a calendar of the next day this time will occur; for example, if the string is "13:37" but it's
  * currently 15:45, the method will assume this time is tomorrow's, and set the date of the calendar object in consequence.
  *
- * @param time a time in a string, separated with a colon: e.g. "14:53"
  * @return a calendar object, with the time in the string set for the next valid day
  */
 fun String.getNextDateForTime(currentDate: DateTime = DateTime.now()): DateTime {
-    val splitTime = this.split(":".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
+    val splitTime = this.split(":".toRegex()).dropLastWhile(String::isEmpty).toTypedArray()
 
     val hours = splitTime[0].toInt()
     val minutes = splitTime[1].toInt()
@@ -68,7 +67,7 @@ fun String.smartCapitalize(): String {
             .replace(" {2,}".toRegex(), " ")
 
     val words = str.split("( |-|'|/)".toRegex())
-            .dropLastWhile({ it.isEmpty() })
+            .dropLastWhile(String::isEmpty)
             .toTypedArray()
 
     // These words will never be capitalized

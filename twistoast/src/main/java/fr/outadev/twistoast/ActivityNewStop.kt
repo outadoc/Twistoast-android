@@ -267,7 +267,7 @@ class ActivityNewStop : ThemedActivity() {
 
                 uiThread {
                     lineList = timeoLines
-                    spinLine.adapter = ArrayAdapter(this@ActivityNewStop, android.R.layout.simple_spinner_dropdown_item, timeoLines.distinctBy { line -> line.id })
+                    spinLine.adapter = ArrayAdapter(this@ActivityNewStop, android.R.layout.simple_spinner_dropdown_item, timeoLines.distinctBy(TimeoLine::id))
 
                     spinLine.isEnabled = true
                     spinDirection.isEnabled = true
@@ -335,7 +335,7 @@ class ActivityNewStop : ThemedActivity() {
      * @return a list of ID/name objects containing the id and name of the directions to display
      */
     private fun getDirectionsList(): List<TimeoDirection> {
-        return lineList.filter { line -> line.id == currentLine?.id }.map { line -> line.direction }
+        return lineList.filter { line -> line.id == currentLine?.id }.map(TimeoLine::direction)
     }
 
     /**

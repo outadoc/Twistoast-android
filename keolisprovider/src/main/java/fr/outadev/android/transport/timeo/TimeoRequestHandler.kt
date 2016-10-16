@@ -144,7 +144,7 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) {
         // Don't keep the last comma
         codesCat = codesCat.substring(0, codesCat.length - 1)
 
-        val params = "xml=1&code=${codesCat}"
+        val params = "xml=1&code=$codesCat"
 
         val result = http.requestWebPage(getEndpointUrl(networkCode), params, true)
         val res: ListeLignesDTO = serializer.read(ListeLignesDTO::class.java, result) ?: throw TimeoException("Service returned invalid data")
