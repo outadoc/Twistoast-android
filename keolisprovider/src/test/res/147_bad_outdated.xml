@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!--
+  ~ Twistoast - 147_bad_outdated.xml
+  ~ Copyright (C) 2013-2016 Baptiste Candellier
+  ~
+  ~ Twistoast is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Twistoast is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<xmldata>
+  <erreur code="000"></erreur>
+
+  <heure>10:54</heure>
+  <date>2016-08-28</date>
+
+  <reseau>
+    <titre>Nouveaux horaires</titre>
+    <texte>Nouveaux horaires Twisto à partir du lundi 29 août. + infos sur twisto.fr</texte>
+    <bloquant>false</bloquant>
+  </reseau>
+
+  <horaires nb="6">
+    <horaire id="1">
+      <description>
+        <code>2523</code>
+        <arret>ACADEMIE</arret>
+        <ligne>TRAM</ligne>
+        <ligne_nom>TRAM</ligne_nom>
+        <sens>A</sens>
+        <vers>IFS - GRACE DE DIEU</vers>
+        <couleur>#ff3300</couleur>
+      </description>
+
+      <passages nb="2">
+        <passage id="1">
+          <duree>11:06</duree>
+          <destination>B  CAEN GRACE DE DIEU</destination>
+        </passage>
+        <passage id="2">
+          <duree>11:34</duree>
+          <destination>B  CAEN GRACE DE DIEU</destination>
+        </passage>
+      </passages>
+
+      <messages nb="0">
+      </messages>
+    </horaire>
+    <horaire id="2">
+      <description>
+        <code>131</code>
+        <arret>BERNIERES</arret>
+        <ligne>TRAM</ligne>
+        <ligne_nom>TRAM</ligne_nom>
+        <sens>A</sens>
+        <vers>IFS - GRACE DE DIEU</vers>
+        <couleur>#ff3300</couleur>
+      </description>
+
+      <passages nb="2">
+        <passage id="1">
+          <duree>10:56</duree>
+          <destination>B  CAEN GRACE DE DIEU</destination>
+        </passage>
+        <passage id="2">
+          <duree>11:07</duree>
+          <destination>A  IFS JEAN VILAR</destination>
+        </passage>
+      </passages>
+
+      <messages nb="0">
+      </messages>
+    </horaire>
+    <horaire id="3">
+      <description>
+        <code></code>
+        <arret></arret>
+        <ligne></ligne>
+        <ligne_nom></ligne_nom>
+        <sens></sens>
+        <vers></vers>
+        <couleur>#000000</couleur>
+      </description>
+
+      <passages nb="0"></passages>
+      <messages nb="0">
+      </messages>
+    </horaire>
+    <horaire id="4">
+      <description>
+        <code>543</code>
+        <arret>AEROPORT</arret>
+        <ligne>3</ligne>
+        <ligne_nom>Lianes 3</ligne_nom>
+        <sens>A</sens>
+        <vers>HEROUVILLE ST-CLAIR</vers>
+        <couleur>#339933</couleur>
+      </description>
+
+      <passages nb="2">
+        <passage id="1">
+          <duree>12:26</duree>
+          <destination>HEROUVILLE ST-CLAIR</destination>
+        </passage>
+        <passage id="2">
+          <duree>13:31</duree>
+          <destination>HEROUVILLE ST-CLAIR</destination>
+        </passage>
+      </passages>
+
+      <messages nb="1">
+        <message id="1" type="l">
+          <titre>arrêts reportés</titre>
+          <texte>En raison de la Foire aux Greniers de Carpiquet, les arrêts La Plaine, Les Vallées, Centre aquatique, Place du 27 juin et Square sont reportés aux poteaux provisoires orute de Caumont au niveau de la rue des écoles.</texte>
+          <bloquant>false</bloquant>
+        </message>
+      </messages>
+    </horaire>
+    <horaire id="5">
+      <description>
+        <code>2062</code>
+        <arret>AVIATION</arret>
+        <ligne>6</ligne>
+        <ligne_nom>Ligne 6</ligne_nom>
+        <sens>A</sens>
+        <vers>CAEN POINCARE</vers>
+        <couleur>#9999cc</couleur>
+      </description>
+
+      <passages nb="2">
+        <passage id="1">
+          <duree>11:14</duree>
+          <destination>CAEN POINCARE</destination>
+        </passage>
+        <passage id="2">
+          <duree>12:10</duree>
+          <destination>CAEN POINCARE</destination>
+        </passage>
+      </passages>
+
+      <messages nb="0">
+      </messages>
+    </horaire>
+    <horaire id="6">
+      <description>
+        <code>5421</code>
+        <arret>50 ACRES</arret>
+        <ligne>11</ligne>
+        <ligne_nom>Ligne 11</ligne_nom>
+        <sens>A</sens>
+        <vers>CUVERVILLE MAIRIE</vers>
+        <couleur>#666633</couleur>
+      </description>
+
+      <passages nb="2">
+        <passage id="1">
+          <duree>11:48</duree>
+          <destination>CUVERVILLE CHAMP PICOT</destination>
+        </passage>
+        <passage id="2">
+          <duree>12:54</duree>
+          <destination>CUVERVILLE CHAMP PICOT</destination>
+        </passage>
+      </passages>
+
+      <messages nb="0">
+      </messages>
+    </horaire>
+  </horaires>
+</xmldata>

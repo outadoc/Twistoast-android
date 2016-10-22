@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!--
+  ~ Twistoast - view-source_timeo3.keolis.com_relais_147.php_xml=1&ligne=TRAM&sens=A.xml
+  ~ Copyright (C) 2013-2016 Baptiste Candellier
+  ~
+  ~ Twistoast is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Twistoast is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<xmldata>
+  <erreur code="000"></erreur>
+
+  <heure>23:01</heure>
+  <date>2016-08-25</date>
+
+  <expire>26040</expire>
+
+  <alss nb="33">
+    <als id="1">
+      <arret>
+        <code>2523</code>
+        <nom>ACADEMIE</nom>
+      </arret>
+      <ligne>
+        <code>TRAM</code>
+        <nom>TRAM</nom>
+        <sens>A</sens>
+        <vers>IFS - GRACE DE DIEU</vers>
+        <couleur>16724736</couleur>
+      </ligne>
+      <refs>-1493165598</refs>
+    </als>
+    <als id="2">
+      <arret>
+        <code>2063</code>
+        <nom>AVIATION</nom>
+      </arret>
+      <ligne>
+        <code>TRAM</code>
+        <nom>TRAM</nom>
+        <sens>A</sens>
+        <vers>IFS - GRACE DE DIEU</vers>
+        <couleur>16724736</couleur>
+      </ligne>
+      <refs>-1493165579</refs>
+    </als>
+    <als id="3">
+      <arret>
+        <code>131</code>
+        <nom>BERNIERES</nom>
+      </arret>
+      <ligne>
+        <code>TRAM</code>
+        <nom>TRAM</nom>
+        <sens>A</sens>
+        <vers>IFS - GRACE DE DIEU</vers>
+        <couleur>16724736</couleur>
+      </ligne>
+      <refs>-1493165649|-1493165587</refs>
+    </als>
+    <als id="4">
+      <arret>
+        <code>1991</code>
+        <nom>BOULEVARD LEROY</nom>
+      </arret>
+      <ligne>
+        <code>TRAM</code>
+        <nom>TRAM</nom>
+        <sens>A</sens>
+        <vers>IFS - GRACE DE DIEU</vers>
+        <couleur>16724736</couleur>
+      </ligne>
+      <refs>-1493165645|-1493165583</refs>
+    </als>
+    <als id="5">
+      <arret>
+        <code>2581</code>
+        <nom>CAFE DES IMAGES</nom>
+      </arret>
+      <ligne>
+        <code>TRAM</code>
+        <nom>TRAM</nom>
+        <sens>A</sens>
+        <vers>IFS - GRACE DE DIEU</vers>
+        <couleur>16724736</couleur>
+      </ligne>
+      <refs>-1493165599</refs>
+    </als>
+    <als id="6">
+      <arret>
+        <code>1093</code>
+        <nom>Calvaire St-Pierre</nom>
+      </arret>
+      <ligne>
+        <code>TRAM</code>
+        <nom>TRAM</nom>
+        <sens>A</sens>
+        <vers>IFS - GRACE DE DIEU</vers>
+        <couleur>16724736</couleur>
+      </ligne>
+      <refs>-1493165655|-1493165593</refs>
+    </als>
+    <als id="7">
+      <arret>
+        <code>2593</code>
+        <nom>CHATEAU D&apos;EAU</nom>
+      </arret>
+      <ligne>
+        <code>TRAM</code>
+        <nom>TRAM</nom>
+        <sens>A</sens>
+        <vers>IFS - GRACE DE DIEU</vers>
+        <couleur>16724736</couleur>
+      </ligne>
+      <refs>-1493165597</refs>
+    </als>
+    <als id="8">
+      <arret>
+        <code>1401</code>
+        <nom>CHU</nom>
+      </arret>
+      <ligne>
+        <code>TRAM</code>
+        <nom>TRAM</nom>
+        <sens>A</sens>
+        <vers>IFS - GRACE DE DIEU</vers>
+        <couleur>16724736</couleur>
+      </ligne>
+      <refs>-1493165657</refs>
+    </als>
+    <als id="9">
+      <arret>
+        <code>1611</code>
+        <nom>CITE U LEBISEY</nom>
+      </arret>
+      <ligne>
+        <code>TRAM</code>
+        <nom>TRAM</nom>
+        <sens>A</sens>
+        <vers>IFS - GRACE DE DIEU</vers>
+        <couleur>16724736</couleur>
+      </ligne>
+      <refs>-1493165595</refs>
+    </als>
+    <als id="10">
+      <arret>
+        <code>2601</code>
+        <nom>CITIS</nom>
+      </arret>
+      <ligne>
+        <code>TRAM</code>
+        <nom>TRAM</nom>
+        <sens>A</sens>
+        <vers>IFS - GRACE DE DIEU</vers>
+        <couleur>16724736</couleur>
+      </ligne>
+      <refs>-1493165659</refs>
+    </als>
+    <als id="11">
+      <arret>
+        <code>1481</code>
+        <nom>Claude Bloch/Campus 4</nom>
+      </arret>
+      <ligne>
+        <code>TRAM</code>
+        <nom>TRAM</nom>
+        <sens>A</sens>
+        <vers>IFS - GRACE DE DIEU</vers>
+        <couleur>16724736</couleur>
+      </ligne>
+      <refs>-1493165658</refs>
+    </als>
+    <als id="12">
+      <arret>
+        <code>2083</code>
+        <nom>CONCORDE</nom>
+      </arret>
+      <ligne>
+        <code>TRAM</code>
+        <nom>TRAM</nom>
+        <sens>A</sens>
+        <vers>IFS - GRACE DE DIEU</vers>
+        <couleur>16724736</couleur>
+      </ligne>
+      <refs>-1493165640</refs>
+    </als>
+    <als id="13">
+      <arret>
+        <code>1081</code>
+        <nom>COPERNIC</nom>
+      </arret>
+      <ligne>
+        <code>TRAM</code>
+        <nom>TRAM</nom>
+        <sens>A</sens>
+        <vers>IFS - GRACE DE DIEU</vers>
+        <couleur>16724736</couleur>
+      </ligne>
+      <refs>-1493165656|-1493165594</refs>
+    </als>
+    <als id="14">
+      <arret>
+        <code>1513</code>
+        <nom>COTE DE NACRE</nom>
+      </arret>
+      <ligne>
+        <code>TRAM</code>
+        <nom>TRAM</nom>
+        <sens>A</sens>
+        <vers>IFS - GRACE DE DIEU</vers>
+        <couleur>16724736</couleur>
+      </ligne>
+      <refs>-1493165660</refs>
+    </als>
+    <als id="15">
+      <arret>
+        <code>1001</code>
+        <nom>CROUS-SUAPS</nom>
+      </arret>
+      <ligne>
+        <code>TRAM</code>
+        <nom>TRAM</nom>
+        <sens>A</sens>
+        <vers>IFS - GRACE DE DIEU</vers>
+        <couleur>16724736</couleur>
+      </ligne>
+      <refs>-1493165654|-1493165592</refs>
+    </als>
+    <als id="16">
+      <arret>
+        <code>1871</code>
+        <nom>GARE SNCF</nom>
+      </arret>
+      <ligne>
+        <code>TRAM</code>
+        <nom>TRAM</nom>
+        <sens>A</sens>
+        <vers>IFS - GRACE DE DIEU</vers>
+        <couleur>16724736</couleur>
+      </ligne>
+      <refs>-1493165646|-1493165584</refs>
+    </als>
+    <als id="17">
+      <arret>
+        <code>2213</code>
+        <nom>GRACE DE DIEU</nom>
+      </arret>
+      <ligne>
+        <code>TRAM</code>
+        <nom>TRAM</nom>
+        <sens>A</sens>
+        <vers>IFS - GRACE DE DIEU</vers>
+        <couleur>16724736</couleur>
+      </ligne>
+      <refs>-1493165577</refs>
+    </als>
+    <als id="18">
+      <arret>
+        <code>1971</code>
+        <nom>GUYNEMER</nom>
+      </arret>
+      <ligne>
+        <code>TRAM</code>
+        <nom>TRAM</nom>
+        <sens>A</sens>
+        <vers>IFS - GRACE DE DIEU</vers>
+        <couleur>16724736</couleur>
+      </ligne>
+      <refs>-1493165643|-1493165581</refs>
+    </als>
+    <als id="19">
+      <arret>
+        <code>4867</code>
+        <nom>IFS JEAN VILAR</nom>
+      </arret>
+      <ligne>
+        <code>TRAM</code>
+        <nom>TRAM</nom>
+        <sens>A</sens>
+        <vers>IFS - GRACE DE DIEU</vers>
+        <couleur>16724736</couleur>
+      </ligne>
+      <refs>-1493165638</refs>
+    </als>
+    <als id="20">
+      <arret>
+        <code>2091</code>
+        <nom>LIBERTE</nom>
+      </arret>
+      <ligne>
+        <code>TRAM</code>
+        <nom>TRAM</nom>
+        <sens>A</sens>
+        <vers>IFS - GRACE DE DIEU</vers>
+        <couleur>16724736</couleur>
+      </ligne>
+      <refs>-1493165641</refs>
+    </als>
+    <als id="21">
+      <arret>
+        <code>2001</code>
+        <nom>Lux Victor Lepine</nom>
+      </arret>
+      <ligne>
+        <code>TRAM</code>
+        <nom>TRAM</nom>
+        <sens>A</sens>
+        <vers>IFS - GRACE DE DIEU</vers>
+        <couleur>16724736</couleur>
+      </ligne>
+      <refs>-1493165644|-1493165582</refs>
+    </als>
+    <als id="22">
+      <arret>
+        <code>1504</code>
+        <nom>MARECHAL JUIN</nom>
+      </arret>
+      <ligne>
+        <code>TRAM</code>
+        <nom>TRAM</nom>
+        <sens>A</sens>
+        <vers>IFS - GRACE DE DIEU</vers>
+        <couleur>16724736</couleur>
+      </ligne>
+      <refs>-1493165661</refs>
+    </als>
+    <als id="23">
+      <arret>
+        <code>4913</code>
+        <nom>MODIGLIANI</nom>
+      </arret>
+      <ligne>
+        <code>TRAM</code>
+        <nom>TRAM</nom>
+        <sens>A</sens>
+        <vers>IFS - GRACE DE DIEU</vers>
+        <couleur>16724736</couleur>
+      </ligne>
+      <refs>-1493165639</refs>
+    </als>
+    <als id="24">
+      <arret>
+        <code>1631</code>
+        <nom>PIERRE HEUZE</nom>
+      </arret>
+      <ligne>
+        <code>TRAM</code>
+        <nom>TRAM</nom>
+        <sens>A</sens>
+        <vers>IFS - GRACE DE DIEU</vers>
+        <couleur>16724736</couleur>
+      </ligne>
+      <refs>-1493165596</refs>
+    </als>
+    <als id="25">
+      <arret>
+        <code>971</code>
+        <nom>PLACE DE LA MARE</nom>
+      </arret>
+      <ligne>
+        <code>TRAM</code>
+        <nom>TRAM</nom>
+        <sens>A</sens>
+        <vers>IFS - GRACE DE DIEU</vers>
+        <couleur>16724736</couleur>
+      </ligne>
+      <refs>-1493165652|-1493165590</refs>
+    </als>
+    <als id="26">
+      <arret>
+        <code>1981</code>
+        <nom>POINCARE</nom>
+      </arret>
+      <ligne>
+        <code>TRAM</code>
+        <nom>TRAM</nom>
+        <sens>A</sens>
+        <vers>IFS - GRACE DE DIEU</vers>
+        <couleur>16724736</couleur>
+      </ligne>
+      <refs>-1493165642|-1493165580</refs>
+    </als>
+    <als id="27">
+      <arret>
+        <code>201</code>
+        <nom>QUAI DE JUILLET</nom>
+      </arret>
+      <ligne>
+        <code>TRAM</code>
+        <nom>TRAM</nom>
+        <sens>A</sens>
+        <vers>IFS - GRACE DE DIEU</vers>
+        <couleur>16724736</couleur>
+      </ligne>
+      <refs>-1493165647|-1493165585</refs>
+    </als>
+    <als id="28">
+      <arret>
+        <code>151</code>
+        <nom>QUATRANS</nom>
+      </arret>
+      <ligne>
+        <code>TRAM</code>
+        <nom>TRAM</nom>
+        <sens>A</sens>
+        <vers>IFS - GRACE DE DIEU</vers>
+        <couleur>16724736</couleur>
+      </ligne>
+      <refs>-1493165651|-1493165589</refs>
+    </als>
+    <als id="29">
+      <arret>
+        <code>111</code>
+        <nom>RESISTANCE</nom>
+      </arret>
+      <ligne>
+        <code>TRAM</code>
+        <nom>TRAM</nom>
+        <sens>A</sens>
+        <vers>IFS - GRACE DE DIEU</vers>
+        <couleur>16724736</couleur>
+      </ligne>
+      <refs>-1493165648|-1493165586</refs>
+    </als>
+    <als id="30">
+      <arret>
+        <code>2233</code>
+        <nom>ROSTAND/FRESNEL</nom>
+      </arret>
+      <ligne>
+        <code>TRAM</code>
+        <nom>TRAM</nom>
+        <sens>A</sens>
+        <vers>IFS - GRACE DE DIEU</vers>
+        <couleur>16724736</couleur>
+      </ligne>
+      <refs>-1493165578</refs>
+    </als>
+    <als id="31">
+      <arret>
+        <code>2928</code>
+        <nom>St-Clair</nom>
+      </arret>
+      <ligne>
+        <code>TRAM</code>
+        <nom>TRAM</nom>
+        <sens>A</sens>
+        <vers>IFS - GRACE DE DIEU</vers>
+        <couleur>16724736</couleur>
+      </ligne>
+      <refs>-1493165600</refs>
+    </als>
+    <als id="32">
+      <arret>
+        <code>141</code>
+        <nom>St-Pierre</nom>
+      </arret>
+      <ligne>
+        <code>TRAM</code>
+        <nom>TRAM</nom>
+        <sens>A</sens>
+        <vers>IFS - GRACE DE DIEU</vers>
+        <couleur>16724736</couleur>
+      </ligne>
+      <refs>-1493165650|-1493165588</refs>
+    </als>
+    <als id="33">
+      <arret>
+        <code>981</code>
+        <nom>UNIVERSITE</nom>
+      </arret>
+      <ligne>
+        <code>TRAM</code>
+        <nom>TRAM</nom>
+        <sens>A</sens>
+        <vers>IFS - GRACE DE DIEU</vers>
+        <couleur>16724736</couleur>
+      </ligne>
+      <refs>-1493165653|-1493165591</refs>
+    </als>
+  </alss>
+
+</xmldata>
