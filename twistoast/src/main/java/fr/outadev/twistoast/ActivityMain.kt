@@ -89,6 +89,7 @@ class ActivityMain : ThemedActivity(), IStopsListContainer, NavigationView.OnNav
             currentDrawerItem = savedInstanceState.getInt("key_current_drawer_item")
             trafficAlert = savedInstanceState.get("key_traffic_alert") as TimeoTrafficAlert?
             displayGlobalTrafficInfo()
+            refreshActionBarTitle()
         } else {
             currentDrawerItem = DEFAULT_DRAWER_ITEM
             loadFragmentForDrawerItem(currentDrawerItem)
