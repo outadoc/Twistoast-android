@@ -113,8 +113,4 @@ class StopScheduleViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         isExpanded = false
     }
 
-    interface IOnLongClickListener {
-        fun onLongClick(view: View, position: Int): Boolean
-    }
-
 }

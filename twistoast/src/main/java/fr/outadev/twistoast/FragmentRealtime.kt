@@ -19,9 +19,12 @@
 package fr.outadev.twistoast
 
 import android.app.Fragment
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.support.design.widget.Snackbar
 import android.support.v7.widget.GridLayoutManager
 import android.util.Log
 import android.view.*
@@ -30,6 +33,7 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import fr.outadev.android.transport.timeo.TimeoStop
+import fr.outadev.twistoast.background.BackgroundTasksManager
 import fr.outadev.twistoast.background.NextStopAlarmReceiver
 import fr.outadev.twistoast.uiutils.DividerItemDecoration
 import kotlinx.android.synthetic.main.fragment_realtime.*
@@ -44,7 +48,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
     private lateinit var databaseHandler: Database
     private lateinit var config: ConfigurationManager
 
-    private var stopList: MutableList<TimeoStop>? = null
+    private var stopsList: MutableList<TimeoStop>? = null
     private var listAdapter: RecyclerAdapterRealtime? = null
 
     override var isRefreshing: Boolean = false
@@ -108,8 +112,54 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
             }
         }
 
+        registerForContextMenu(stopsRecyclerView)
+
         setupAdvertisement()
         setupListeners()
+    }
+
+    override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
+        super.onCreateContextMenu(menu, v, menuInfo)
+
+        // If we're refreshing, abort
+        if (isRefreshing || listAdapter?.longPressedItemPosition == null)
+            return
+
+        // Contextual menu (delete or watch stop) creation
+        activity.menuInflater.inflate(R.menu.stops_list_contextual, menu)
+
+        // Get the bus stop that summoned this menu
+        val position = listAdapter!!.longPressedItemPosition
+        val stop = listAdapter!!.getItem(position!!)
+
+        // Show the "watch this stop" if it's not watched already, and vice-versa
+        menu?.findItem(R.id.menu_stop_watch)?.isVisible = !stop?.isWatched!!
+        menu?.findItem(R.id.menu_stop_unwatch)?.isVisible = stop?.isWatched!!
+    }
+
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        // If we're refreshing, abort
+        if (isRefreshing || listAdapter?.longPressedItemPosition == null) return true
+
+        // Get the bus stop that summoned this menu
+        val position = listAdapter!!.longPressedItemPosition
+        val stop = listAdapter!!.getItem(position!!) ?: return true
+
+        when (item.itemId) {
+            R.id.menu_stop_delete -> {
+                deleteStopAction(stop, position)
+                return true
+            }
+            R.id.menu_stop_watch -> {
+                startWatchingStopAction(stop)
+                return true
+            }
+            R.id.menu_stop_unwatch -> {
+                stopWatchingStopAction(stop)
+                return true
+            }
+            else -> return super.onContextItemSelected(item)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -184,11 +234,11 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
         val watchedStopStateListener = object : IWatchedStopChangeListener {
 
             override fun onStopWatchingStateChanged(stop: TimeoStop, watched: Boolean) {
-                stopList!!.filter { stop -> stop == stop }.forEach {
+                stopsList?.filter { stop -> stop == stop }?.forEach {
                     stop -> stop.isWatched = watched
                 }
 
-                listAdapter!!.notifyDataSetChanged()
+                listAdapter?.notifyDataSetChanged()
             }
 
         }
@@ -209,6 +259,69 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
                 adView.loadAd(adRequest)
             }
         }
+    }
+
+    private fun deleteStopAction(stop: TimeoStop, position: Int) {
+        // Remove from the database and the interface
+        databaseHandler.deleteStop(stop)
+        stopsList?.remove(stop)
+
+        if (stop.isWatched) {
+            databaseHandler.stopWatchingStop(stop)
+            stop.isWatched = false
+        }
+
+        if (stopsList?.isEmpty()!!) {
+            setNoContentViewVisible(true)
+        }
+
+        listAdapter?.notifyDataSetChanged()
+
+        Snackbar.make(stopsRecyclerView, R.string.confirm_delete_success, Snackbar.LENGTH_LONG).setAction(R.string.cancel_stop_deletion) {
+            Log.i(RecyclerAdapterRealtime.TAG, "restoring stop " + stop)
+
+            databaseHandler.addStopToDatabase(stop)
+            stopsList?.add(position, stop)
+            listAdapter?.notifyDataSetChanged()
+        }.show()
+    }
+
+    private fun startWatchingStopAction(stop: TimeoStop) {
+        // We wish to get notifications about this upcoming stop
+        databaseHandler.addToWatchedStops(stop)
+        stop.isWatched = true
+        listAdapter?.notifyDataSetChanged()
+
+        // Turn the notifications on
+        BackgroundTasksManager.enableStopAlarmJob(activity.applicationContext)
+
+        Snackbar.make(stopsRecyclerView, getString(R.string.notifs_enable_toast, stop.name), Snackbar.LENGTH_LONG).setAction(R.string.cancel_stop_deletion) {
+            databaseHandler.stopWatchingStop(stop)
+            stop.isWatched = false
+            listAdapter?.notifyDataSetChanged()
+
+            // Turn the notifications back off if necessary
+            if (databaseHandler.watchedStopsCount == 0) {
+                BackgroundTasksManager.disableStopAlarmJob(activity.applicationContext)
+            }
+        }.show()
+    }
+
+    private fun stopWatchingStopAction(stop: TimeoStop) {
+        // JUST STOP THESE NOTIFICATIONS ALREADY GHGHGHBLBLBL
+        databaseHandler.stopWatchingStop(stop)
+        stop.isWatched = false
+        listAdapter?.notifyDataSetChanged()
+
+        // Turn the notifications back off if necessary
+        if (databaseHandler.watchedStopsCount == 0) {
+            BackgroundTasksManager.disableStopAlarmJob(activity.applicationContext)
+        }
+
+        val notificationManager = activity.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancel(Integer.valueOf(stop.id)!!)
+
+        Snackbar.make(stopsRecyclerView, getString(R.string.notifs_disable_toast, stop.name), Snackbar.LENGTH_LONG).show()
     }
 
     /**
@@ -234,8 +347,8 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
         if (reloadFromDatabase) {
             val criteria = config.listSortOrder
 
-            stopList = databaseHandler.getAllStops(criteria).toMutableList()
-            listAdapter = RecyclerAdapterRealtime(activity, stopList!!, this, stopsRecyclerView)
+            stopsList = databaseHandler.getAllStops(criteria).toMutableList()
+            listAdapter = RecyclerAdapterRealtime(activity, stopsList!!, this, stopsRecyclerView)
             stopsRecyclerView.adapter = listAdapter
         }
 

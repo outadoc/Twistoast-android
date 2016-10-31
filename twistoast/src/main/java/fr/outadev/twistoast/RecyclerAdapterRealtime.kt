@@ -19,9 +19,6 @@
 package fr.outadev.twistoast
 
 import android.app.Activity
-import android.app.AlertDialog
-import android.app.NotificationManager
-import android.content.Context
 import android.graphics.Color
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.RecyclerView
@@ -31,7 +28,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AlphaAnimation
 import fr.outadev.android.transport.timeo.*
-import fr.outadev.twistoast.background.BackgroundTasksManager
 import fr.outadev.twistoast.uiutils.Colors
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -41,7 +37,7 @@ import org.jetbrains.anko.uiThread
  *
  * @author outadoc
  */
-class RecyclerAdapterRealtime(val activity: Activity, private val stopsList: MutableList<TimeoStop>, private val mStopsListContainer: IStopsListContainer, private val mParentView: View) : RecyclerView.Adapter<StopScheduleViewHolder>(), IRecyclerAdapterAccess {
+class RecyclerAdapterRealtime(val activity: Activity, private val stopsList: MutableList<TimeoStop>, private val stopsListContainer: IStopsListContainer, private val parentView: View) : RecyclerView.Adapter<StopScheduleViewHolder>(), IRecyclerAdapterAccess {
 
     private val database: Database
     private val config: ConfigurationManager
@@ -50,6 +46,8 @@ class RecyclerAdapterRealtime(val activity: Activity, private val stopsList: Mut
     private val schedules: MutableMap<TimeoStop, TimeoStopSchedule>
 
     private var networkCount = 0
+
+    var longPressedItemPosition: Int? = null
 
     init {
         database = Database(DatabaseOpenHelper())
@@ -94,10 +92,10 @@ class RecyclerAdapterRealtime(val activity: Activity, private val stopsList: Mut
                     networkCount = database.networksCount
 
                     notifyDataSetChanged()
-                    mStopsListContainer.endRefresh(scheduleMap.isNotEmpty())
+                    stopsListContainer.endRefresh(scheduleMap.isNotEmpty())
 
                     if (outdated > 0) {
-                        mStopsListContainer.onUpdatedStopReferences()
+                        stopsListContainer.onUpdatedStopReferences()
                     }
                 }
 
@@ -120,15 +118,15 @@ class RecyclerAdapterRealtime(val activity: Activity, private val stopsList: Mut
                         message = activity.getString(R.string.error_toast_twisto, e.errorCode)
                     }
 
-                    Snackbar.make(mParentView, message, Snackbar.LENGTH_LONG)
+                    Snackbar.make(parentView, message, Snackbar.LENGTH_LONG)
                             .setAction(R.string.error_retry) { updateScheduleData() }.show()
                 }
 
             } catch (e: Exception) {
                 e.printStackTrace()
                 uiThread {
-                    mStopsListContainer.endRefresh(false)
-                    Snackbar.make(mParentView, R.string.loading_error, Snackbar.LENGTH_LONG)
+                    stopsListContainer.endRefresh(false)
+                    Snackbar.make(parentView, R.string.loading_error, Snackbar.LENGTH_LONG)
                             .setAction(R.string.error_retry) { updateScheduleData() }.show()
                 }
             }
@@ -202,8 +200,13 @@ class RecyclerAdapterRealtime(val activity: Activity, private val stopsList: Mut
             view.container.alpha = 0.4f
         }
 
-        view.container.setOnLongClickListener { v -> longClickListener.onLongClick(v, position) }
+        //view.container.setOnLongClickListener { v -> longClickListener.onLongClick(v, position) }
         view.imgStopWatched.visibility = if (currentStopId.isWatched) View.VISIBLE else View.GONE
+
+        view.itemView.setOnLongClickListener {
+            longPressedItemPosition = position
+            false
+        }
     }
 
     override fun getItemCount(): Int {
@@ -230,98 +233,8 @@ class RecyclerAdapterRealtime(val activity: Activity, private val stopsList: Mut
         }
     }
 
-    private val longClickListener = object : StopScheduleViewHolder.IOnLongClickListener {
-
-        override fun onLongClick(view: View, position: Int): Boolean {
-            if (!mStopsListContainer.isRefreshing) {
-                val currentStop = stopsList[position]
-
-                // Menu items
-                val contextualMenuItems = arrayOf(
-                        view.context.getString(R.string.stop_action_delete),
-                        view.context.getString(if (!currentStop.isWatched) R.string.stop_action_watch else R.string.stop_action_unwatch))
-
-                // Build the long click contextual menu
-                val builder = AlertDialog.Builder(activity)
-                builder.setItems(contextualMenuItems) { dialog, which ->
-                    if (which == 0) {
-                        deleteStopAction(currentStop, which)
-                    } else if (which == 1 && !currentStop.isWatched) {
-                        startWatchingStopAction(currentStop)
-                    } else if (which == 1) {
-                        stopWatchingStopAction(currentStop)
-                    }
-                }
-
-                builder.show()
-            }
-
-            return true
-        }
-
-        private fun deleteStopAction(stop: TimeoStop, position: Int) {
-            // Remove from the database and the interface
-            database.deleteStop(stop)
-            stopsList.remove(stop)
-
-            if (stop.isWatched) {
-                database.stopWatchingStop(stop)
-                stop.isWatched = false
-            }
-
-            if (stopsList.isEmpty()) {
-                mStopsListContainer.setNoContentViewVisible(true)
-            }
-
-            notifyDataSetChanged()
-
-            Snackbar.make(mParentView, R.string.confirm_delete_success, Snackbar.LENGTH_LONG).setAction(R.string.cancel_stop_deletion) {
-                Log.i(TAG, "restoring stop " + stop)
-
-                database.addStopToDatabase(stop)
-                stopsList.add(position, stop)
-                notifyDataSetChanged()
-            }.show()
-        }
-
-        private fun startWatchingStopAction(stop: TimeoStop) {
-            // We wish to get notifications about this upcoming stop
-            database.addToWatchedStops(stop)
-            stop.isWatched = true
-            notifyDataSetChanged()
-
-            // Turn the notifications on
-            BackgroundTasksManager.enableStopAlarmJob(activity.applicationContext)
-
-            Snackbar.make(mParentView, mParentView.context.getString(R.string.notifs_enable_toast, stop.name), Snackbar.LENGTH_LONG).setAction(R.string.cancel_stop_deletion) {
-                database.stopWatchingStop(stop)
-                stop.isWatched = false
-                notifyDataSetChanged()
-
-                // Turn the notifications back off if necessary
-                if (database.watchedStopsCount == 0) {
-                    BackgroundTasksManager.disableStopAlarmJob(activity.applicationContext)
-                }
-            }.show()
-        }
-
-        private fun stopWatchingStopAction(stop: TimeoStop) {
-            // JUST STOP THESE NOTIFICATIONS ALREADY GHGHGHBLBLBL
-            database.stopWatchingStop(stop)
-            stop.isWatched = false
-            notifyDataSetChanged()
-
-            // Turn the notifications back off if necessary
-            if (database.watchedStopsCount == 0) {
-                BackgroundTasksManager.disableStopAlarmJob(activity.applicationContext)
-            }
-
-            val notificationManager = activity.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.cancel(Integer.valueOf(stop.id)!!)
-
-            Snackbar.make(mParentView, mParentView.context.getString(R.string.notifs_disable_toast, stop.name), Snackbar.LENGTH_LONG).show()
-        }
-
+    fun getItem(position: Int): TimeoStop? {
+        return stopsList[position]
     }
 
     companion object {
