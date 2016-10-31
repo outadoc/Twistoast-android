@@ -35,8 +35,8 @@
 	<string name="cancel_stop_deletion">Undo</string>
 	<string name="direction_name">→ Dir. %1$s</string>
 	<string name="stop_name">%1$s</string>
-	<string name="error_toast">Error : %1$s</string>
-	<string name="added_toast">Added : %1$s</string>
+	<string name="error_toast">Error: %1$s</string>
+	<string name="added_toast">Added: %1$s</string>
 	<string name="error_retry">Retry</string>
 	<string name="add_error_duplicate">This stop is already in your list.</string>
 	<string name="add_error_illegal_argument">Something\'s wrong, check the values of the line, direction and stop.</string>
