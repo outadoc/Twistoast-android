@@ -41,7 +41,7 @@ import java.util.*
  *
  * @author outadoc
  */
-class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) {
+class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) : ITimeoRequestHandler {
 
     private val serializer: Persister = Persister()
 
@@ -49,7 +49,7 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) {
      * Fetches the bus stops for the specified line.
      */
     @Throws(IOException::class, TimeoException::class)
-    fun getStops(line: TimeoLine): List<TimeoStop> {
+    override fun getStops(line: TimeoLine): List<TimeoStop> {
         return getStops(line.networkCode, line)
     }
 
@@ -57,7 +57,7 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) {
      * Fetches the next bus schedules for the specified bus stop.
      */
     @Throws(TimeoException::class, IOException::class, XmlPullParserException::class)
-    fun getSingleSchedule(stop: TimeoStop): TimeoStopSchedule {
+    override fun getSingleSchedule(stop: TimeoStop): TimeoStopSchedule {
         return getSingleSchedule(stop.line.networkCode, stop)
     }
 
@@ -65,7 +65,7 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) {
      * Fetches the next bus schedules for the specified list of bus stops.
      */
     @Throws(TimeoException::class, IOException::class)
-    fun getMultipleSchedules(stops: List<TimeoStop>): List<TimeoStopSchedule> {
+    override fun getMultipleSchedules(stops: List<TimeoStop>): List<TimeoStopSchedule> {
         //if we don't specify any network code when calling getMultipleSchedules, we'll have to figure them out ourselves.
         //we can only fetch a list of schedules that are all part of the same network.
         //therefore, we'll have to separate them in different lists and request them individually.
@@ -86,7 +86,7 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) {
 
 
     @Throws(IOException::class, TimeoException::class)
-    fun getLines(networkCode: Int = DEFAULT_NETWORK_CODE): List<TimeoLine> {
+    override fun getLines(networkCode: Int): List<TimeoLine> {
         val params = "xml=1"
 
         val result = http.requestWebPage(getEndpointUrl(networkCode), params, true)
@@ -108,7 +108,7 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) {
     }
 
     @Throws(IOException::class, TimeoException::class)
-    fun getStops(networkCode: Int, line: TimeoLine): List<TimeoStop> {
+    override fun getStops(networkCode: Int, line: TimeoLine): List<TimeoStop> {
         val params = "xml=1&ligne=${line.id}&sens=${line.direction.id}"
 
         val result = http.requestWebPage(getEndpointUrl(networkCode), params, true)
@@ -138,7 +138,7 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) {
      * Useful to get a stop's info when they're only known by their code.
      */
     @Throws(IOException::class, TimeoException::class)
-    fun getStopsByCode(networkCode: Int = DEFAULT_NETWORK_CODE, codes: List<Int>): List<TimeoStop> {
+    override fun getStopsByCode(networkCode: Int, codes: List<Int>): List<TimeoStop> {
         var codesCat = codes.fold("", { codesCat, code -> codesCat + code + ","})
 
         // Don't keep the last comma
@@ -172,10 +172,10 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) {
      * Fetches the next bus schedules for the specified bus stop.
      */
     @Throws(TimeoException::class, IOException::class, XmlPullParserException::class)
-    fun getSingleSchedule(networkCode: Int, stop: TimeoStop): TimeoStopSchedule {
+    override fun getSingleSchedule(networkCode: Int, stop: TimeoStop): TimeoStopSchedule {
         val schedules = getMultipleSchedules(networkCode, listOf(stop))
 
-        if (schedules.size > 0) {
+        if (schedules.isNotEmpty()) {
             return schedules[0]
         } else {
             throw TimeoException("No schedules were returned.")
@@ -186,7 +186,7 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) {
      * Fetches the next bus schedules for the specified list of bus stops.
      */
     @Throws(TimeoException::class, IOException::class)
-    fun getMultipleSchedules(networkCode: Int, stops: List<TimeoStop>): List<TimeoStopSchedule> {
+    override fun getMultipleSchedules(networkCode: Int, stops: List<TimeoStop>): List<TimeoStopSchedule> {
         // If no stops are in the list or all refs are null
         if (stops.all { stop -> stop.reference == null }) {
             return listOf()
@@ -254,7 +254,7 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) {
      * by comparing them to a list of schedules returned by the API.
      */
     @Throws(TimeoException::class)
-    fun checkForOutdatedStops(stops: List<TimeoStop>, schedules: List<TimeoStopSchedule>): Int {
+    override fun checkForOutdatedStops(stops: List<TimeoStop>, schedules: List<TimeoStopSchedule>): Int {
         if (stops.size === schedules.size) {
             return 0
         }
