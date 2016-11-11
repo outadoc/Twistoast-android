@@ -22,11 +22,11 @@
 	android:id="@+id/trafficAlertContainer"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
-	android:layout_height="37dp"
+	android:layout_height="40dp"
 	android:background="@color/traffic_alert_background"
 	android:elevation="2dp"
 	android:orientation="horizontal"
-	android:padding="4dp"
+	android:padding="5dp"
 	android:visibility="gone">
 
 	<ImageView

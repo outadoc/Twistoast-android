@@ -28,7 +28,6 @@ import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.util.Log
 import android.util.SparseArray
-import android.util.TypedValue
 import android.view.MenuItem
 import android.view.View
 import fr.outadev.android.transport.timeo.TimeoRequestHandler
@@ -216,15 +215,8 @@ class ActivityMain : ThemedActivity(), IStopsListContainer, NavigationView.OnNav
             trafficAlertMessage.text = trafficAlert?.label?.replace("Info Trafic", "")?.trim({ it <= ' ' })
             trafficAlertMessage.isSelected = true
             trafficAlertContainer.visibility = View.VISIBLE
-
-            // Set view_toolbar elevation to 0, since we'll have the traffic alert just right under it
-            supportActionBar?.elevation = 0f
         } else if (trafficAlertContainer != null) {
             trafficAlertContainer.visibility = View.GONE
-
-            // Set view_toolbar elevation to 4 dp, not 4 px
-            val pixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4f, resources.displayMetrics)
-            supportActionBar?.elevation = pixels
         }
     }
 
