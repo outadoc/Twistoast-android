@@ -220,12 +220,12 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
         adView.adListener = object : AdListener() {
 
             override fun onAdFailedToLoad(errorCode: Int) {
-                adView.visibility = View.GONE
+                adView?.visibility = View.GONE
                 super.onAdFailedToLoad(errorCode)
             }
 
             override fun onAdLoaded() {
-                adView.visibility = View.VISIBLE
+                adView?.visibility = View.VISIBLE
                 super.onAdLoaded()
             }
 
