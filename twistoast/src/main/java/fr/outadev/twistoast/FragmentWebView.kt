@@ -35,8 +35,11 @@ import android.webkit.WebViewClient
 class FragmentWebView : Fragment() {
 
     private var webView: WebView? = null
+
     private lateinit var itemRefresh: MenuItem
     private lateinit var itemCancel: MenuItem
+
+    private var urlToOpen: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +61,7 @@ class FragmentWebView : Fragment() {
     }
 
     private fun loadTwitterTimeline(username: String) {
+        urlToOpen = "https://twitter.com/$username"
         webView?.loadData("<html><body><a class=\"twitter-timeline\" href=\"https://twitter.com/$username\">" +
                 "Tweets by TwistoCaen</a> " +
                 "<script async src=\"https://platform.twitter.com/widgets.js\" charset=\"utf-8\"></script></body></html>",
@@ -88,8 +92,11 @@ class FragmentWebView : Fragment() {
                 return true
             }
             R.id.action_open_website -> {
+                if (urlToOpen == null)
+                    return true
+
                 val i = Intent(Intent.ACTION_VIEW)
-                i.data = Uri.parse(webView!!.url)
+                i.data = Uri.parse(urlToOpen)
                 startActivity(i)
                 return true
             }
@@ -145,7 +152,13 @@ class FragmentWebView : Fragment() {
             settings.javaScriptEnabled = true
         }
 
-        override fun loadUrl(url: String) = super.loadUrl(url, headers)
+        override fun loadUrl(url: String) {
+            super.loadUrl(url, headers)
+
+            if (Regex("^https?:").find(url) != null) {
+                urlToOpen = url
+            }
+        }
 
     }
 
