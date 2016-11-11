@@ -53,6 +53,7 @@ class StopScheduleViewHolder(v: View) : RecyclerView.ViewHolder(v) {
     val lblScheduleDirection = arrayOfNulls<TextView>(RecyclerAdapterRealtime.NB_SCHEDULES_DISPLAYED)
 
     val viewStopTrafficInfoContainer: View
+    val imgStopTrafficExpandIcon: View
 
     var isExpanded: Boolean
 
@@ -77,21 +78,34 @@ class StopScheduleViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         lblStopTrafficMessage = v.findViewById(R.id.lblStopTrafficMessage) as TextView
 
         viewStopTrafficInfoContainer = v.findViewById(R.id.viewStopTrafficInfoContainer)
+        imgStopTrafficExpandIcon = v.findViewById(R.id.imgStopTrafficExpandIcon)
 
         // Stop traffic info is collapsed by default.
         // When it's clicked, we display the message.
         viewStopTrafficInfoContainer.onClick {
-            if (!isExpanded)
+            if (!isExpanded) {
                 lblStopTrafficMessage.expand()
-            else
+                imgStopTrafficExpandIcon
+                        .animate()
+                        .rotation(180.0f)
+                        .start()
+
+            } else {
                 lblStopTrafficMessage.collapse()
+                imgStopTrafficExpandIcon
+                        .animate()
+                        .rotation(0f)
+                        .start()
+            }
 
             isExpanded = !isExpanded
             viewStopTrafficInfoContainer.requestLayout()
         }
 
+        imgStopTrafficExpandIcon.rotation = 0f
+
         for (i in 0..RecyclerAdapterRealtime.NB_SCHEDULES_DISPLAYED - 1) {
-            // Display the current schedule
+            // Create schedule detail views and make them accessible
             val singleScheduleView = inflater.inflate(R.layout.view_single_schedule_label, null)
 
             lblScheduleTime[i] = singleScheduleView.findViewById(R.id.lbl_schedule) as TextView
