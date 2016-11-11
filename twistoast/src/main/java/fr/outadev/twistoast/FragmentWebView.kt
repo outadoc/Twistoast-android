@@ -46,10 +46,26 @@ class FragmentWebView : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         if (webView == null) {
             webView = TwistoastWebView(activity)
-            webView!!.loadUrl(arguments.getString("url"))
+
+            if (arguments.containsKey("url")) {
+                loadUrl(arguments.getString("url"))
+            } else if (arguments.containsKey("twitter_username")) {
+                loadTwitterTimeline(arguments.getString("twitter_username"))
+            }
         }
 
         return webView
+    }
+
+    private fun loadTwitterTimeline(username: String) {
+        webView?.loadData("<html><body><a class=\"twitter-timeline\" href=\"https://twitter.com/$username\">" +
+                "Tweets by TwistoCaen</a> " +
+                "<script async src=\"https://platform.twitter.com/widgets.js\" charset=\"utf-8\"></script></body></html>",
+                "text/html", "utf-8")
+    }
+
+    private fun loadUrl(url: String) {
+        webView?.loadUrl(url)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -64,11 +80,11 @@ class FragmentWebView : Fragment() {
         // Handle presses on the action bar items
         when (item.itemId) {
             R.id.action_refresh_page -> {
-                webView!!.reload()
+                webView?.reload()
                 return true
             }
             R.id.action_cancel_refresh -> {
-                webView!!.stopLoading()
+                webView?.stopLoading()
                 return true
             }
             R.id.action_open_website -> {
@@ -117,7 +133,8 @@ class FragmentWebView : Fragment() {
                     //load some javascript that will hide the stuff we don't want on the page
                     view.loadUrl("javascript: var a = document.getElementsByClassName(\"title-div\");")
                     view.loadUrl("javascript: var b = document.getElementsByClassName(\"contenu\");")
-                    view.loadUrl("javascript:" + Uri.encode("for(var i = a.length-1; i >= 0; i--) { (b[0] != null) ? b[0]" + ".removeChild(a[i]) : document.body.removeChild(a[i]); }"))
+                    view.loadUrl("javascript:" + Uri.encode("for(var i = a.length-1; i >= 0; i--) { " +
+                            "(b[0] != null) ? b[0].removeChild(a[i]) : document.body.removeChild(a[i]); }"))
                 }
 
             })

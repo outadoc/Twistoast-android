@@ -43,7 +43,7 @@ object FragmentFactory {
             R.id.drawer_map -> return getWebViewFragment(context.getString(R.string.url_drawer_map))
             R.id.drawer_traffic -> return getWebViewFragment(context.getString(R.string.url_drawer_traffic))
             R.id.drawer_news -> return getWebViewFragment(context.getString(R.string.url_drawer_news))
-            R.id.drawer_social -> return getWebViewFragment(context.getString(R.string.url_drawer_social))
+            R.id.drawer_social -> return getTimelineWebViewFragment(context.getString(R.string.username_drawer_social))
             R.id.drawer_pricing -> return getWebViewFragment(context.getString(R.string.url_drawer_pricing))
             R.id.drawer_settings -> return FragmentPreferences()
             R.id.drawer_about -> return FragmentAbout()
@@ -55,6 +55,14 @@ object FragmentFactory {
         val frag = FragmentWebView()
         val args = Bundle()
         args.putString("url", url)
+        frag.arguments = args
+        return frag
+    }
+
+    private fun getTimelineWebViewFragment(username: String): Fragment {
+        val frag = FragmentWebView()
+        val args = Bundle()
+        args.putString("twitter_username", username)
         frag.arguments = args
         return frag
     }
