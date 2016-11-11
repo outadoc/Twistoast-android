@@ -359,9 +359,9 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
     override fun endRefresh(success: Boolean) {
         // notify the pull to refresh view that the refresh has finished
         isRefreshing = false
-        swipeRefreshContainer.isRefreshing = false
+        swipeRefreshContainer?.isRefreshing = false
 
-        noContentView.visibility = if (listAdapter?.itemCount == 0) View.VISIBLE else View.GONE
+        noContentView?.visibility = if (listAdapter?.itemCount == 0) View.VISIBLE else View.GONE
 
         // reset the timer loop, and start it again
         // this ensures the list is refreshed automatically every 60 seconds
