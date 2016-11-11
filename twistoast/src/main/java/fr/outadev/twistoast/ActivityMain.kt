@@ -188,7 +188,7 @@ class ActivityMain : ThemedActivity(), IStopsListContainer, NavigationView.OnNav
      * Fetches and stores a global traffic info if there is one available.
      */
     private fun checkForGlobalTrafficInfo() {
-        doAsync() {
+        doAsync {
             val alert = requestHandler.globalTrafficAlert
 
             uiThread {

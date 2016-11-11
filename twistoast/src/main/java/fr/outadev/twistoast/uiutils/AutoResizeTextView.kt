@@ -93,11 +93,10 @@ class AutoResizeTextView @JvmOverloads constructor(context: Context, attrs: Attr
                     textRect.bottom = layout.height.toFloat()
                     var maxWidth = -1
 
-                    for (i in 0..layout.lineCount - 1) {
-                        if (maxWidth < layout.getLineRight(i) - layout.getLineLeft(i)) {
-                            maxWidth = layout.getLineRight(i).toInt() - layout.getLineLeft(i).toInt()
-                        }
-                    }
+                    (0..layout.lineCount - 1)
+                            .asSequence()
+                            .filter { maxWidth < layout.getLineRight(it) - layout.getLineLeft(it) }
+                            .forEach { maxWidth = layout.getLineRight(it).toInt() - layout.getLineLeft(it).toInt() }
 
                     textRect.right = maxWidth.toFloat()
                 }

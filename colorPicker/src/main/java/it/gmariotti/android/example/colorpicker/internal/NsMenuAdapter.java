@@ -17,6 +17,7 @@ package it.gmariotti.android.example.colorpicker.internal;
 
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,7 +95,8 @@ public class NsMenuAdapter extends ArrayAdapter<NsMenuItemModel> {
 	//-----------------------------------------------------------------------------------------------
 
 
-	public View getView(int position, View convertView, ViewGroup parent) {
+	@NonNull
+	public View getView(int position, View convertView, @NonNull ViewGroup parent) {
 
 		NsMenuItemModel item = getItem(position);
 		View view = convertView;
