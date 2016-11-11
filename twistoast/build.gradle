@@ -28,8 +28,8 @@ android {
         applicationId "fr.outadev.twistoast"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 26
-        versionName "3.0-alpha2"
+        versionCode 27
+        versionName "3.0-alpha3"
     }
 
     compileOptions {
@@ -62,7 +62,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.0.0'
     compile 'com.android.support:support-v4:25.0.0'
     compile 'com.android.support:recyclerview-v7:25.0.0'
-    compile 'com.getpebble:pebblekit:3.0.0'
+    compile 'com.getpebble:pebblekit:3.1.0'
     compile 'org.apache.commons:commons-lang3:3.3.2'
     compile 'com.squareup.okhttp:okhttp:2.2.0'
     compile 'joda-time:joda-time:2.9.1'
