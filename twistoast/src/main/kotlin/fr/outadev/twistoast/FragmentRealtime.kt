@@ -460,7 +460,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
                 uiThread {
                     val message: String
 
-                    if (!isDetached && view != null) {
+                    if (!isDetached && view != null && stopsRecyclerView != null) {
                         // If there are details to the error, display them. Otherwise, only display the error code
                         if (!e.message?.trim { it <= ' ' }!!.isEmpty()) {
                             message = activity.getString(R.string.error_toast_twisto_detailed, e.errorCode, e.message)
@@ -468,7 +468,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
                             message = activity.getString(R.string.error_toast_twisto, e.errorCode)
                         }
 
-                        Snackbar.make(view, message, Snackbar.LENGTH_LONG)
+                        Snackbar.make(stopsRecyclerView, message, Snackbar.LENGTH_LONG)
                                 .setAction(R.string.error_retry) { updateScheduleData() }.show()
                     }
                 }
@@ -478,8 +478,8 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
                 uiThread {
                     endRefresh(false)
 
-                    if (!isDetached && view != null) {
-                        Snackbar.make(view, R.string.loading_error, Snackbar.LENGTH_LONG)
+                    if (!isDetached && view != null && stopsRecyclerView != null) {
+                        Snackbar.make(stopsRecyclerView, R.string.loading_error, Snackbar.LENGTH_LONG)
                                 .setAction(R.string.error_retry) { updateScheduleData() }.show()
                     }
                 }
