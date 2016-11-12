@@ -26,6 +26,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.*
 import com.google.android.gms.ads.AdListener
@@ -38,7 +39,6 @@ import fr.outadev.twistoast.background.NextStopAlarmReceiver
 import fr.outadev.twistoast.uiutils.DividerItemDecoration
 import kotlinx.android.synthetic.main.fragment_realtime.*
 import kotlinx.android.synthetic.main.view_no_content.*
-import kotlinx.android.synthetic.main.view_realtime_list.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
@@ -119,6 +119,24 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
                 layoutManager.requestLayout()
             }
         }
+
+        stopsRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                if (dy > 0) {
+                    // Scroll Down
+                    if (floatingActionButton.isShown) {
+                        floatingActionButton.hide()
+                    }
+                } else if (dy < 0) {
+                    // Scroll Up
+                    if (!floatingActionButton.isShown) {
+                        floatingActionButton.show()
+                    }
+                }
+            }
+        })
 
         registerForContextMenu(stopsRecyclerView)
 

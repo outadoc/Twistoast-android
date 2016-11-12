@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Twistoast - fragment_realtime.xml
   ~ Copyright (C) 2013-2016 Baptiste Candellier
   ~
@@ -17,53 +16,68 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<LinearLayout
-	android:id="@+id/main_lin_layout"
-	xmlns:ads="http://schemas.android.com/apk/res-auto"
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:background="?android:attr/colorBackground"
-	android:fitsSystemWindows="true"
-	android:orientation="vertical">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_lin_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?android:attr/colorBackground"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
-	<include layout="@layout/view_traffic_alert" />
+    <include layout="@layout/view_traffic_alert" />
 
-	<RelativeLayout
-		android:layout_width="match_parent"
-		android:layout_height="0dp"
-		android:layout_weight="1">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-		<android.support.v4.widget.SwipeRefreshLayout
-			android:id="@+id/swipeRefreshContainer"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent">
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-			<include layout="@layout/view_realtime_list" />
+            <android.support.design.widget.CoordinatorLayout
+                android:id="@+id/coordinator"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-		</android.support.v4.widget.SwipeRefreshLayout>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/stopsRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:cacheColorHint="@android:color/transparent"
+                    android:clipToPadding="false"
+                    android:divider="@null"
+                    android:listSelector="@android:color/transparent" />
 
-		<include layout="@layout/view_no_content" />
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/floatingActionButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="20dp"
+                    android:contentDescription="@string/fab_add_stop_description"
+                    android:src="@drawable/ic_action_new"
+                    app:layout_anchor="@id/stopsRecyclerView"
+                    app:layout_anchorGravity="bottom|right|end" />
 
-		<android.support.design.widget.FloatingActionButton
-			android:id="@+id/floatingActionButton"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignParentBottom="true"
-			android:layout_alignParentRight="true"
-			android:layout_alignParentEnd="true"
-			android:layout_margin="20dp"
-			android:src="@drawable/ic_action_new"
-			android:contentDescription="@string/fab_add_stop_description" />
+            </android.support.design.widget.CoordinatorLayout>
+        </android.support.v4.widget.SwipeRefreshLayout>
 
-	</RelativeLayout>
+        <include layout="@layout/view_no_content" />
 
-	<com.google.android.gms.ads.AdView
-		android:id="@+id/adView"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:visibility="gone"
-		ads:adSize="SMART_BANNER"
-		ads:adUnitId="@string/admob_adunitid" />
+    </RelativeLayout>
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        ads:adSize="SMART_BANNER"
+        ads:adUnitId="@string/admob_adunitid" />
 
 </LinearLayout>
