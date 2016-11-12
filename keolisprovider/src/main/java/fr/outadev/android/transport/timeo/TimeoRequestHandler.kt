@@ -99,7 +99,7 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) : ITimeoR
                     TimeoLine(
                         id = als.ligne.code,
                         name = als.ligne.nom.smartCapitalize(),
-                        direction = TimeoDirection(als.ligne.sens, als.ligne.vers.smartCapitalize()),
+                        direction = TimeoDirection(als.ligne.sens, als.ligne.vers?.smartCapitalize()),
                         color = "#" + leftPad(Integer.toHexString(Integer.valueOf(als.ligne.couleur)), 6, '0'),
                         networkCode = networkCode)
                 }
@@ -125,7 +125,7 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) : ITimeoR
                     line = TimeoLine(
                             id = als.ligne.code,
                             name = als.ligne.nom.smartCapitalize(),
-                            direction = TimeoDirection(als.ligne.sens, als.ligne.vers.smartCapitalize()),
+                            direction = TimeoDirection(als.ligne.sens, als.ligne.vers?.smartCapitalize()),
                             color = "#" + leftPad(Integer.toHexString(Integer.valueOf(als.ligne.couleur)), 6, '0'),
                             networkCode = networkCode))
         }
@@ -160,7 +160,7 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) : ITimeoR
                     line = TimeoLine(
                             id = als.ligne.code,
                             name = als.ligne.nom.smartCapitalize(),
-                            direction = TimeoDirection(als.ligne.sens, als.ligne.vers.smartCapitalize()),
+                            direction = TimeoDirection(als.ligne.sens, als.ligne.vers?.smartCapitalize()),
                             color = "#" + leftPad(Integer.toHexString(Integer.valueOf(als.ligne.couleur)), 6, '0'),
                             networkCode = networkCode))
         }

@@ -174,7 +174,9 @@ class ActivityNewStop : ThemedActivity() {
                     swipeRefreshContainer.isEnabled = true
                     swipeRefreshContainer.isRefreshing = true
 
-                    rowDirectionName.text = resources.getString(R.string.direction_name, currentDirection!!.name)
+                    val dir = if (currentDirection!!.name != null) currentDirection!!.name else currentDirection!!.id
+                    rowDirectionName.text = resources.getString(R.string.direction_name, dir)
+                    
                     currentLine = currentLine!!.copy(direction = currentDirection!!)
 
                     doAsync {

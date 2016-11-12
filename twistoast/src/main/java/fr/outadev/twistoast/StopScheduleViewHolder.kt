@@ -102,8 +102,6 @@ class StopScheduleViewHolder(v: View) : RecyclerView.ViewHolder(v) {
             viewStopTrafficInfoContainer.requestLayout()
         }
 
-        imgStopTrafficExpandIcon.rotation = 0f
-
         for (i in 0..RecyclerAdapterRealtime.NB_SCHEDULES_DISPLAYED - 1) {
             // Create schedule detail views and make them accessible
             val singleScheduleView = inflater.inflate(R.layout.view_single_schedule_label, null)
@@ -125,6 +123,7 @@ class StopScheduleViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         viewStopTrafficInfoContainer.visibility = View.GONE
         lblStopTrafficMessage.layoutParams.height = 0
         isExpanded = false
+        imgStopTrafficExpandIcon.rotation = 0f
     }
 
 }

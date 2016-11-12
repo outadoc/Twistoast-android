@@ -31,7 +31,7 @@ class DescriptionDTO {
     @field:Element lateinit var ligne: String
     @field:Element lateinit var ligne_nom: String
     @field:Element lateinit var sens: String
-    @field:Element lateinit var vers: String
+    @field:Element(required = false) var vers: String? = null
     @field:Element var couleur: String? = null
 }
 

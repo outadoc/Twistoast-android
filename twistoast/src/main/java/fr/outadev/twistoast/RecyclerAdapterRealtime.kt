@@ -146,7 +146,9 @@ class RecyclerAdapterRealtime(val activity: Activity, private val stopsList: Mut
 
         view.rowLineId.text = currentStopId.line.id
         view.rowStopName.text = view.rowStopName.context.getString(R.string.stop_name, currentStopId.name)
-        view.rowDirectionName.text = view.rowDirectionName.context.getString(R.string.direction_name, currentStopId.line.direction.name)
+
+        val dir = if (currentStopId.line.direction.name != null) currentStopId.line.direction.name else currentStopId.line.direction.id
+        view.rowDirectionName.text = view.rowDirectionName.context.getString(R.string.direction_name, dir)
 
         view.resetView()
 
@@ -165,7 +167,7 @@ class RecyclerAdapterRealtime(val activity: Activity, private val stopsList: Mut
                 }
 
                 view.lblScheduleTime[i]?.text = TimeFormatter.formatTime(view.lblScheduleTime[i]!!.context, currSched.scheduleTime)
-                view.lblScheduleDirection[i]?.text = " — " + currSched.direction
+                view.lblScheduleDirection[i]?.text = " — ${currSched.direction}"
             }
 
             if (currentStop.schedules.isEmpty()) {
