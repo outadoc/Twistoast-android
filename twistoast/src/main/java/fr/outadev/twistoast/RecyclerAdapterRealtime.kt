@@ -37,100 +37,16 @@ import org.jetbrains.anko.uiThread
  *
  * @author outadoc
  */
-class RecyclerAdapterRealtime(val activity: Activity, private val stopsList: MutableList<TimeoStop>, private val stopsListContainer: IStopsListContainer, private val parentView: View) : RecyclerView.Adapter<StopScheduleViewHolder>(), IRecyclerAdapterAccess {
+class RecyclerAdapterRealtime(val activity: Activity, private val stopsList: MutableList<TimeoStop>, private val schedules: MutableMap<TimeoStop, TimeoStopSchedule>) : RecyclerView.Adapter<StopScheduleViewHolder>(), IRecyclerAdapterAccess {
 
     private val database: Database
     private val config: ConfigurationManager
-    private val referenceUpdater: TimeoStopReferenceUpdater
-    private val requestHandler: TimeoRequestHandler
-    private val schedules: MutableMap<TimeoStop, TimeoStopSchedule>
-
-    private var networkCount = 0
 
     var longPressedItemPosition: Int? = null
 
     init {
         database = Database(DatabaseOpenHelper())
-        referenceUpdater = TimeoStopReferenceUpdater()
         config = ConfigurationManager()
-        requestHandler = TimeoRequestHandler()
-
-        schedules = mutableMapOf<TimeoStop, TimeoStopSchedule>()
-        networkCount = database.networksCount
-    }
-
-    /**
-     * Fetches every stop schedule from the API and reloads everything.
-     */
-    fun updateScheduleData() {
-        // start refreshing schedules
-        doAsync {
-            try {
-                // Get the schedules and put them in a list
-                var schedulesList: List<TimeoStopSchedule>?
-                var scheduleMap: Map<TimeoStop, TimeoStopSchedule>
-
-                schedulesList = requestHandler.getMultipleSchedules(stopsList)
-                scheduleMap = schedulesList.associateBy({ it.stop }, { it })
-
-                val outdated = requestHandler.checkForOutdatedStops(stopsList, schedulesList)
-
-                // If there are outdated reference numbers, update those stops
-                if (outdated > 0) {
-                    Log.e(TAG, "Found $outdated stops, trying to update references")
-                    referenceUpdater.updateAllStopReferences(stopsList)
-
-                    // Reload with the updated stops
-                    schedulesList = requestHandler.getMultipleSchedules(stopsList)
-                    scheduleMap = schedulesList.associateBy({ it.stop }, { it })
-                }
-
-                uiThread {
-                    schedules.clear()
-                    schedules.putAll(scheduleMap)
-
-                    networkCount = database.networksCount
-
-                    notifyDataSetChanged()
-                    stopsListContainer.endRefresh(scheduleMap.isNotEmpty())
-
-                    if (outdated > 0) {
-                        stopsListContainer.onUpdatedStopReferences()
-                    }
-                }
-
-            } catch (e: TimeoBlockingMessageException) {
-                e.printStackTrace()
-                uiThread {
-                    // It's it's a blocking message, display it in a dialog
-                    e.getAlertMessage(activity).show()
-                }
-
-            } catch (e: TimeoException) {
-                e.printStackTrace()
-                uiThread {
-                    val message: String
-
-                    // If there are details to the error, display them. Otherwise, only display the error code
-                    if (!e.message?.trim { it <= ' ' }!!.isEmpty()) {
-                        message = activity.getString(R.string.error_toast_twisto_detailed, e.errorCode, e.message)
-                    } else {
-                        message = activity.getString(R.string.error_toast_twisto, e.errorCode)
-                    }
-
-                    Snackbar.make(parentView, message, Snackbar.LENGTH_LONG)
-                            .setAction(R.string.error_retry) { updateScheduleData() }.show()
-                }
-
-            } catch (e: Exception) {
-                e.printStackTrace()
-                uiThread {
-                    stopsListContainer.endRefresh(false)
-                    Snackbar.make(parentView, R.string.loading_error, Snackbar.LENGTH_LONG)
-                            .setAction(R.string.error_retry) { updateScheduleData() }.show()
-                }
-            }
-        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, i: Int): StopScheduleViewHolder {

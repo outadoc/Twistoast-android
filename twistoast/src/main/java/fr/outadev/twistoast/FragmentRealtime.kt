@@ -32,13 +32,15 @@ import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
-import fr.outadev.android.transport.timeo.TimeoStop
+import fr.outadev.android.transport.timeo.*
 import fr.outadev.twistoast.background.BackgroundTasksManager
 import fr.outadev.twistoast.background.NextStopAlarmReceiver
 import fr.outadev.twistoast.uiutils.DividerItemDecoration
 import kotlinx.android.synthetic.main.fragment_realtime.*
 import kotlinx.android.synthetic.main.view_no_content.*
 import kotlinx.android.synthetic.main.view_realtime_list.*
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 
 class FragmentRealtime : Fragment(), IStopsListContainer {
 
@@ -47,8 +49,12 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
     private lateinit var periodicRefreshRunnable: Runnable
     private lateinit var databaseHandler: Database
     private lateinit var config: ConfigurationManager
+    private lateinit var referenceUpdater: TimeoStopReferenceUpdater
+    private lateinit var requestHandler: TimeoRequestHandler
 
-    private var stopsList: MutableList<TimeoStop>? = null
+    private var stopsList: MutableList<TimeoStop> = mutableListOf()
+    private val schedules: MutableMap<TimeoStop, TimeoStopSchedule> = mutableMapOf()
+
     private var listAdapter: RecyclerAdapterRealtime? = null
 
     override var isRefreshing: Boolean = false
@@ -72,6 +78,8 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
 
         config = ConfigurationManager()
         databaseHandler = Database(DatabaseOpenHelper())
+        referenceUpdater = TimeoStopReferenceUpdater()
+        requestHandler = TimeoRequestHandler()
 
         periodicRefreshRunnable = Runnable {
             if (config.autoRefresh) {
@@ -234,7 +242,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
         val watchedStopStateListener = object : IWatchedStopChangeListener {
 
             override fun onStopWatchingStateChanged(stop: TimeoStop, watched: Boolean) {
-                stopsList?.filter { stop -> stop == stop }?.forEach {
+                stopsList.filter { stop -> stop == stop }.forEach {
                     stop -> stop.isWatched = watched
                 }
 
@@ -264,14 +272,14 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
     private fun deleteStopAction(stop: TimeoStop, position: Int) {
         // Remove from the database and the interface
         databaseHandler.deleteStop(stop)
-        stopsList?.remove(stop)
+        stopsList.remove(stop)
 
         if (stop.isWatched) {
             databaseHandler.stopWatchingStop(stop)
             stop.isWatched = false
         }
 
-        if (stopsList?.isEmpty()!!) {
+        if (stopsList.isEmpty()) {
             setNoContentViewVisible(true)
         }
 
@@ -281,7 +289,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
             Log.i(RecyclerAdapterRealtime.TAG, "restoring stop " + stop)
 
             databaseHandler.addStopToDatabase(stop)
-            stopsList?.add(position, stop)
+            stopsList.add(position, stop)
             listAdapter?.notifyDataSetChanged()
         }.show()
     }
@@ -348,12 +356,12 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
             val criteria = config.listSortOrder
 
             stopsList = databaseHandler.getAllStops(criteria).toMutableList()
-            listAdapter = RecyclerAdapterRealtime(activity, stopsList!!, this, stopsRecyclerView)
+            listAdapter = RecyclerAdapterRealtime(activity, stopsList, schedules)
             stopsRecyclerView.adapter = listAdapter
         }
 
         // finally, get the schedule
-        listAdapter!!.updateScheduleData()
+        updateScheduleData()
     }
 
     override fun endRefresh(success: Boolean) {
@@ -380,6 +388,83 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
 
     override fun loadFragmentForDrawerItem(itemId: Int) {
         (activity as IStopsListContainer).loadFragmentForDrawerItem(itemId)
+    }
+
+    /**
+     * Fetches every stop schedule from the API and reloads everything.
+     */
+    fun updateScheduleData() {
+        // start refreshing schedules
+        doAsync {
+            try {
+                // Get the schedules and put them in a list
+                var schedulesList: List<TimeoStopSchedule>?
+                var scheduleMap: Map<TimeoStop, TimeoStopSchedule>
+
+                schedulesList = requestHandler.getMultipleSchedules(stopsList)
+                scheduleMap = schedulesList.associateBy({ it.stop }, { it })
+
+                val outdated = requestHandler.checkForOutdatedStops(stopsList, schedulesList)
+
+                // If there are outdated reference numbers, update those stops
+                if (outdated > 0) {
+                    Log.e(RecyclerAdapterRealtime.TAG, "Found $outdated stops, trying to update references")
+                    referenceUpdater.updateAllStopReferences(stopsList)
+
+                    // Reload with the updated stops
+                    schedulesList = requestHandler.getMultipleSchedules(stopsList)
+                    scheduleMap = schedulesList.associateBy({ it.stop }, { it })
+                }
+
+                uiThread {
+                    schedules.clear()
+                    schedules.putAll(scheduleMap)
+
+                    listAdapter?.notifyDataSetChanged()
+                    endRefresh(scheduleMap.isNotEmpty())
+
+                    if (outdated > 0) {
+                        onUpdatedStopReferences()
+                    }
+                }
+
+            } catch (e: TimeoBlockingMessageException) {
+                e.printStackTrace()
+                uiThread {
+                    // It's it's a blocking message, display it in a dialog
+                    e.getAlertMessage(activity).show()
+                }
+
+            } catch (e: TimeoException) {
+                e.printStackTrace()
+                uiThread {
+                    val message: String
+
+                    if (!isDetached) {
+                        // If there are details to the error, display them. Otherwise, only display the error code
+                        if (!e.message?.trim { it <= ' ' }!!.isEmpty()) {
+                            message = activity.getString(R.string.error_toast_twisto_detailed, e.errorCode, e.message)
+                        } else {
+                            message = activity.getString(R.string.error_toast_twisto, e.errorCode)
+                        }
+
+                        Snackbar.make(view, message, Snackbar.LENGTH_LONG)
+                                .setAction(R.string.error_retry) { updateScheduleData() }.show()
+                    }
+                }
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                uiThread {
+                    endRefresh(false)
+
+                    if (!isDetached) {
+                        Snackbar.make(view, R.string.loading_error, Snackbar.LENGTH_LONG)
+                                .setAction(R.string.error_retry) { updateScheduleData() }.show()
+                    }
+                }
+            }
+        }
     }
 
     companion object {
