@@ -431,8 +431,10 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
             } catch (e: TimeoBlockingMessageException) {
                 e.printStackTrace()
                 uiThread {
-                    // It's it's a blocking message, display it in a dialog
-                    e.getAlertMessage(activity).show()
+                    if (!isDetached && view != null) {
+                        // It's it's a blocking message, display it in a dialog
+                        e.getAlertMessage(activity).show()
+                    }
                 }
 
             } catch (e: TimeoException) {
@@ -440,7 +442,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
                 uiThread {
                     val message: String
 
-                    if (!isDetached) {
+                    if (!isDetached && view != null) {
                         // If there are details to the error, display them. Otherwise, only display the error code
                         if (!e.message?.trim { it <= ' ' }!!.isEmpty()) {
                             message = activity.getString(R.string.error_toast_twisto_detailed, e.errorCode, e.message)
@@ -458,7 +460,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
                 uiThread {
                     endRefresh(false)
 
-                    if (!isDetached) {
+                    if (!isDetached && view != null) {
                         Snackbar.make(view, R.string.loading_error, Snackbar.LENGTH_LONG)
                                 .setAction(R.string.error_retry) { updateScheduleData() }.show()
                     }
