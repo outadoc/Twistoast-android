@@ -449,6 +449,8 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
             } catch (e: TimeoBlockingMessageException) {
                 e.printStackTrace()
                 uiThread {
+                    endRefresh(false)
+
                     if (!isDetached && view != null) {
                         // It's it's a blocking message, display it in a dialog
                         e.getAlertMessage(activity).show()
@@ -458,9 +460,11 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
             } catch (e: TimeoException) {
                 e.printStackTrace()
                 uiThread {
-                    val message: String
+                    endRefresh(false)
 
                     if (!isDetached && view != null && stopsRecyclerView != null) {
+                        val message: String
+
                         // If there are details to the error, display them. Otherwise, only display the error code
                         if (!e.message?.trim { it <= ' ' }!!.isEmpty()) {
                             message = activity.getString(R.string.error_toast_twisto_detailed, e.errorCode, e.message)
