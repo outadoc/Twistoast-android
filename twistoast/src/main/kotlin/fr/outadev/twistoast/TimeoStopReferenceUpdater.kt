@@ -49,18 +49,21 @@ class TimeoStopReferenceUpdater(context: Context = ApplicationTwistoast.instance
      * @throws IOException
      */
     @Throws(XmlPullParserException::class, IOException::class, TimeoException::class)
-    fun updateAllStopReferences(stops: List<TimeoStop>) {
+    fun updateAllStopReferences(stops: List<TimeoStop>): Int {
         //update the progress
         Log.i(TAG, "updating stop references for ${stops.size} stops")
 
         //get the stops for the current line
+        var nbUpdated = 0
         val updatedStops = requestHandler.getStopsByCode(codes = stops.map(TimeoStop::id))
 
         //update all the stops we received.
         //obviously, only the ones existing in the database will be updated.
         updatedStops.forEach {
-            stop -> database.updateStopReference(stop)
+            stop -> nbUpdated += database.updateStopReference(stop)
         }
+
+        return nbUpdated
     }
 
     companion object {

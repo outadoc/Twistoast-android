@@ -25,6 +25,7 @@ import fr.outadev.android.transport.timeo.TimeoDirection
 import fr.outadev.android.transport.timeo.TimeoLine
 import fr.outadev.android.transport.timeo.TimeoStop
 import org.jetbrains.anko.db.ManagedSQLiteOpenHelper
+import org.jetbrains.anko.db.select
 import org.jetbrains.anko.db.transaction
 import org.joda.time.DateTime
 import java.util.*
@@ -283,17 +284,26 @@ class Database(private val db: ManagedSQLiteOpenHelper) {
     /**
      * Update the reference of a stop in the database.
      * @param stop the bus stop whose reference is to be updated
+     * @return number of stops that were updated
      */
-    fun updateStopReference(stop: TimeoStop) {
+    fun updateStopReference(stop: TimeoStop): Int {
         val updateClause = ContentValues()
+        var count: Int = 0
+
         updateClause.put("stop_ref", stop.reference)
 
         db.use {
-            update("twi_stop", updateClause, "stop_id = ? AND line_id = ? AND dir_id = ? AND network_code = ?",
-                    arrayOf(stop.id.toString(), stop.line.id, stop.line.direction.id, stop.line.networkCode.toString()))
+            update("twi_stop", updateClause, "stop_id = ? AND line_id = ? AND dir_id = ? AND network_code = ? AND stop_ref <> ?",
+                    arrayOf(stop.id.toString(), stop.line.id, stop.line.direction.id, stop.line.networkCode.toString(), stop.reference))
 
+            val results = rawQuery("select changes() as nb_changed", null)
+            results.moveToFirst()
+            count = results.getInt(results.getColumnIndex("nb_changed"))
+            results.close()
 
         }
+
+        return count
     }
 
     /**

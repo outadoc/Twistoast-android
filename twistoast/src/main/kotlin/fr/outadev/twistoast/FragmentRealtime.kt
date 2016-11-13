@@ -423,15 +423,19 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
                 scheduleMap = schedulesList.associateBy({ it.stop }, { it })
 
                 val outdated = requestHandler.checkForOutdatedStops(stopsList, schedulesList)
+                var nbUpdated = 0
 
                 // If there are outdated reference numbers, update those stops
                 if (outdated > 0) {
                     Log.e(RecyclerAdapterRealtime.TAG, "Found $outdated stops, trying to update references")
-                    referenceUpdater.updateAllStopReferences(stopsList)
 
-                    // Reload with the updated stops
-                    schedulesList = requestHandler.getMultipleSchedules(stopsList)
-                    scheduleMap = schedulesList.associateBy({ it.stop }, { it })
+                    nbUpdated = referenceUpdater.updateAllStopReferences(stopsList)
+
+                    if (nbUpdated > 0) {
+                        // If there were stops updated successfully, reload data to get the new ones
+                        schedulesList = requestHandler.getMultipleSchedules(stopsList)
+                        scheduleMap = schedulesList.associateBy({ it.stop }, { it })
+                    }
                 }
 
                 uiThread {
@@ -441,7 +445,8 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
                     listAdapter?.notifyDataSetChanged()
                     endRefresh(scheduleMap.isNotEmpty())
 
-                    if (outdated > 0) {
+                    if (outdated > 0 && nbUpdated > 0) {
+                        // If there were stops to update and they were updated successfully
                         onUpdatedStopReferences()
                     }
                 }
