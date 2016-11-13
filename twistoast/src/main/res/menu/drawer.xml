@@ -32,7 +32,7 @@
             android:title="@string/drawer_item_timetables"/>
         <item
             android:id="@+id/drawer_routes"
-            android:icon="@drawable/ic_navigation"
+            android:icon="@drawable/ic_directions"
             android:title="@string/drawer_item_routes"/>
         <item
             android:id="@+id/drawer_map"

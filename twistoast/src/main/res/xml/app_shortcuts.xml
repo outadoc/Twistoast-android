@@ -21,7 +21,7 @@
     <shortcut
         android:shortcutId="realtime"
         android:enabled="true"
-        android:icon="@drawable/ic_directions_bus"
+        android:icon="@drawable/ic_app_shortcut_realtime"
         android:shortcutShortLabel="@string/drawer_item_realtime">
         <intent
             android:action="android.intent.action.VIEW"
@@ -33,7 +33,7 @@
     <shortcut
         android:shortcutId="timetables"
         android:enabled="true"
-        android:icon="@drawable/ic_schedule"
+        android:icon="@drawable/ic_app_shortcut_timetables"
         android:shortcutShortLabel="@string/drawer_item_timetables">
         <intent
             android:action="android.intent.action.VIEW"
@@ -45,7 +45,7 @@
     <shortcut
         android:shortcutId="routes"
         android:enabled="true"
-        android:icon="@drawable/ic_navigation"
+        android:icon="@drawable/ic_app_shortcut_directions"
         android:shortcutShortLabel="@string/drawer_item_routes">
         <intent
             android:action="android.intent.action.VIEW"
@@ -57,7 +57,7 @@
     <shortcut
         android:shortcutId="map"
         android:enabled="true"
-        android:icon="@drawable/ic_map"
+        android:icon="@drawable/ic_app_shortcut_map"
         android:shortcutShortLabel="@string/drawer_item_map">
         <intent
             android:action="android.intent.action.VIEW"

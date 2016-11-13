@@ -1,0 +1,23 @@
+<!--
+  ~ Twistoast - ic_app_shortcut_directions.xml
+  ~ Copyright (C) 2013-2016 Baptiste Candellier
+  ~
+  ~ Twistoast is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Twistoast is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<vector android:height="24dp" android:viewportHeight="48.0"
+    android:viewportWidth="48.0" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
+    <path android:fillColor="#FFF5F5F5" android:pathData="M24,24m-22,0a22,22 0,1 1,44 0a22,22 0,1 1,-44 0"/>
+    <path android:fillColor="#FF37C4E4" android:pathData="M33.7,23.3l-9,-9c-0.4,-0.4 -1,-0.4 -1.4,0l-9,9c-0.4,0.4 -0.4,1 0,1.4l9,9c0.4,0.4 1,0.4 1.4,0l9,-9C34.1,24.3 34.1,23.7 33.7,23.3zM26,26.5V24h-4v3h-2v-4c0,-0.5 0.5,-1 1,-1h5v-2.5l3.5,3.5L26,26.5z"/>
+</vector>
