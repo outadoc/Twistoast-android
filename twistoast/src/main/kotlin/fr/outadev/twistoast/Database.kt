@@ -141,7 +141,7 @@ class Database(private val db: ManagedSQLiteOpenHelper) {
                             "LEFT JOIN twi_notification notif ON (notif.stop_id = stop.stop_id " +
                             "AND notif.line_id = line.line_id AND notif.dir_id = dir.dir_id " +
                             "AND notif.network_code = line.network_code AND notif.notif_active = 1) " +
-                            "ORDER BY line.network_code, " + sortBy + ", dir.dir_name",
+                            "ORDER BY line.network_code, $sortBy, dir.dir_name",
                     null)
 
             // while there's a stop available
