@@ -432,8 +432,6 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
 
                 // If there are outdated reference numbers, update those stops
                 if (outdated > 0) {
-                    Log.e(RecyclerAdapterRealtime.TAG, "Found $outdated stops, trying to update references")
-
                     nbUpdated = referenceUpdater.updateAllStopReferences(stopsList)
 
                     if (nbUpdated > 0) {
@@ -451,6 +449,8 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
                     endRefresh(scheduleMap.isNotEmpty())
 
                     if (outdated > 0 && nbUpdated > 0) {
+                        Log.i(TAG, "Updated some references, refreshing stops")
+
                         // If there were stops to update and they were updated successfully
                         onUpdatedStopReferences()
                     }

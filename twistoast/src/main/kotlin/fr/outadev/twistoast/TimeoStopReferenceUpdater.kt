@@ -63,6 +63,8 @@ class TimeoStopReferenceUpdater(context: Context = ApplicationTwistoast.instance
             stop -> nbUpdated += database.updateStopReference(stop)
         }
 
+        Log.i(TAG, "$nbUpdated stop references updated out of ${stops.size}")
+
         return nbUpdated
     }
 

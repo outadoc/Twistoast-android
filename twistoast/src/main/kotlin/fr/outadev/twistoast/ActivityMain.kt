@@ -84,6 +84,8 @@ class ActivityMain : ThemedActivity(), IStopsListContainer, NavigationView.OnNav
         }
 
         if (intent != null && intent.extras != null && intent.extras.containsKey("show_fragment")) {
+            // Handle app shortcut calls
+            // If we launched the app from a shortcut, show the requested fragment
             currentDrawerItem = when (intent.extras.getString("show_fragment")) {
                 "realtime" -> R.id.drawer_realtime
                 "timetables" -> R.id.drawer_timetables
@@ -96,6 +98,7 @@ class ActivityMain : ThemedActivity(), IStopsListContainer, NavigationView.OnNav
             checkForGlobalTrafficInfo()
 
         } else if (savedInstanceState != null) {
+            // If we're restoring the instance state
             // Handle saved variables and check traffic info if needed
             currentDrawerItem = savedInstanceState.getInt("key_current_drawer_item")
             trafficAlert = savedInstanceState.get("key_traffic_alert") as TimeoTrafficAlert?
@@ -103,6 +106,7 @@ class ActivityMain : ThemedActivity(), IStopsListContainer, NavigationView.OnNav
             refreshActionBarTitle()
 
         } else {
+            // Default behavior, launch the default fragment
             currentDrawerItem = DEFAULT_DRAWER_ITEM
             loadFragmentForDrawerItem(currentDrawerItem)
             checkForGlobalTrafficInfo()
