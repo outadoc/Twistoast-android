@@ -115,8 +115,10 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
                 val cardViewWidth = activity.resources.getDimension(R.dimen.schedule_row_max_size)
                 val newSpanCount = Math.floor((viewWidth / cardViewWidth).toDouble()).toInt()
 
-                layoutManager.spanCount = newSpanCount
-                layoutManager.requestLayout()
+                if (newSpanCount >= 1) {
+                    layoutManager.spanCount = newSpanCount
+                    layoutManager.requestLayout()
+                }
             }
         }
 
@@ -358,19 +360,20 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
      */
     fun refreshAllStopSchedules(reloadFromDatabase: Boolean) {
         // we don't want to try to refresh if we're already refreshing (causes bugs)
-        if (isRefreshing) {
+        if (isRefreshing == true) {
             return
         } else {
             isRefreshing = true
         }
 
         // show the refresh animation
-        swipeRefreshContainer.isRefreshing = true
+        if (swipeRefreshContainer != null)
+            swipeRefreshContainer.isRefreshing = true
 
         // we have to reset the adapter so it correctly loads the stops
         // if we don't do that, bugs will appear when the database has been
         // modified
-        if (reloadFromDatabase) {
+        if (reloadFromDatabase && activity != null) {
             val criteria = config.listSortOrder
 
             stopsList = databaseHandler.getAllStops(criteria).toMutableList()
@@ -385,7 +388,9 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
     override fun endRefresh(success: Boolean) {
         // notify the pull to refresh view that the refresh has finished
         isRefreshing = false
-        swipeRefreshContainer?.isRefreshing = false
+
+        if (swipeRefreshContainer != null)
+            swipeRefreshContainer.isRefreshing = false
 
         noContentView?.visibility = if (listAdapter?.itemCount == 0) View.VISIBLE else View.GONE
 
