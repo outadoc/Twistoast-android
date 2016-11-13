@@ -83,12 +83,25 @@ class ActivityMain : ThemedActivity(), IStopsListContainer, NavigationView.OnNav
             navigationView.setNavigationItemSelectedListener(this)
         }
 
-        // Handle saved variables and check traffic info if needed
-        if (savedInstanceState != null) {
+        if (intent != null && intent.extras != null && intent.extras.containsKey("show_fragment")) {
+            currentDrawerItem = when (intent.extras.getString("show_fragment")) {
+                "realtime" -> R.id.drawer_realtime
+                "timetables" -> R.id.drawer_timetables
+                "routes" -> R.id.drawer_routes
+                "map" -> R.id.drawer_map
+                else -> R.id.drawer_realtime
+            }
+
+            loadFragmentForDrawerItem(currentDrawerItem)
+            checkForGlobalTrafficInfo()
+
+        } else if (savedInstanceState != null) {
+            // Handle saved variables and check traffic info if needed
             currentDrawerItem = savedInstanceState.getInt("key_current_drawer_item")
             trafficAlert = savedInstanceState.get("key_traffic_alert") as TimeoTrafficAlert?
             displayGlobalTrafficInfo()
             refreshActionBarTitle()
+
         } else {
             currentDrawerItem = DEFAULT_DRAWER_ITEM
             loadFragmentForDrawerItem(currentDrawerItem)
@@ -215,6 +228,7 @@ class ActivityMain : ThemedActivity(), IStopsListContainer, NavigationView.OnNav
             trafficAlertMessage.text = trafficAlert?.label?.replace("Info Trafic", "")?.trim({ it <= ' ' })
             trafficAlertMessage.isSelected = true
             trafficAlertContainer.visibility = View.VISIBLE
+
         } else if (trafficAlertContainer != null) {
             trafficAlertContainer.visibility = View.GONE
         }
