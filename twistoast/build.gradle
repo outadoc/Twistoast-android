@@ -28,8 +28,8 @@ android {
         applicationId "fr.outadev.twistoast"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 32
-        versionName "3.0-alpha8"
+        versionCode 33
+        versionName "3.0-alpha9"
     }
 
     compileOptions {
@@ -48,6 +48,7 @@ android {
             proguardFiles 'proguard-rules.pro'
         }
     }
+
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
@@ -72,6 +73,7 @@ dependencies {
     compile 'org.jetbrains.anko:anko-appcompat-v7:0.9'
     compile 'org.jetbrains.anko:anko-sqlite:0.8.3'
 }
+
 repositories {
     mavenCentral()
 }
