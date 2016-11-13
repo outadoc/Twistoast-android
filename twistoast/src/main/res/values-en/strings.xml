@@ -28,8 +28,8 @@
 	<string name="action_delete">Delete</string>
 	<string name="action_refresh">Refresh</string>
 	<string name="action_cancel">Cancel</string>
-	<string name="loading_data">Loading&#8230;</string>
-	<string name="loading_error">Error whilst loading data.</string>
+	<string name="loading_data">Loading…</string>
+	<string name="loading_error">Error loading data.</string>
 	<string name="no_upcoming_stops">No upcoming stops.</string>
 	<string name="confirm_delete_success">Deleted successfully!</string>
 	<string name="cancel_stop_deletion">Undo</string>
@@ -69,12 +69,12 @@
 	<string name="stop_action_unwatch">Stop notifications for this stop</string>
 	<string name="fab_add_stop_description">Add a stop</string>
 	<string name="error_toast_twisto">Twisto error %1$s. Try again later.</string>
-	<string name="error_toast_twisto_detailed">Erreur Twisto %1$s (%2$s). Réessayez plus tard.</string>
+	<string name="error_toast_twisto_detailed">Twisto error %1$s (%2$s). Try again later.</string>
 	<string name="drawer_section_more_twisto_info">Network Info</string>
 	<string name="drawer_action_open">Open drawer</string>
 	<string name="drawer_action_close">Close drawer</string>
 
-	<string name="sort_by_title">Sort by…</string>
+	<string name="sort_by_title">Sort Stops</string>
 	<string name="sort_by_stop">Sort by stop</string>
 	<string name="sort_by_line">Sort by line</string>
 

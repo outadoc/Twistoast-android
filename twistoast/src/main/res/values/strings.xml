@@ -47,7 +47,7 @@
 	<string name="schedule_time_arrival_imminent">Passage imminent</string>
 	<string name="schedule_time_countdown">%1$s minutes</string>
 
-	<string name="add_first_stop_title">Aucun arrêt de bus sauvegardé</string>
+	<string name="add_first_stop_title">Rien pour l\'instant</string>
 
 	<string name="drawer_item_realtime">Temps réel</string>
 	<string name="drawer_item_timetables">Horaires à l\'arrêt</string>
@@ -78,7 +78,7 @@
 	<string name="drawer_action_open">Ouvrir le menu</string>
 	<string name="drawer_action_close">Fermer le menu</string>
 
-	<string name="sort_by_title">Trier</string>
+	<string name="sort_by_title">Trier les arrêts</string>
 	<string name="sort_by_stop">Trier par arrêt</string>
 	<string name="sort_by_line">Trier par ligne</string>
 
