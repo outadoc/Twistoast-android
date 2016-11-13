@@ -25,7 +25,6 @@ import fr.outadev.android.transport.timeo.TimeoDirection
 import fr.outadev.android.transport.timeo.TimeoLine
 import fr.outadev.android.transport.timeo.TimeoStop
 import org.jetbrains.anko.db.ManagedSQLiteOpenHelper
-import org.jetbrains.anko.db.select
 import org.jetbrains.anko.db.transaction
 import org.joda.time.DateTime
 import java.util.*
@@ -129,7 +128,7 @@ class Database(private val db: ManagedSQLiteOpenHelper) {
 
         when (sortCriteria) {
             Database.SortBy.STOP -> sortBy = "stop.stop_name, CAST(line.line_id AS INTEGER)"
-            else -> sortBy = "CAST(line.line_id AS INTEGER), stop.stop_name"
+            else -> sortBy = "CAST(line.line_id AS INTEGER), line.line_id, stop.stop_name"
         }
 
         db.use {
