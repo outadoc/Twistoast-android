@@ -18,12 +18,19 @@
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
+    ext.target_sdk = 25
+    ext.build_tools_version = "23.0.2"
+
     ext.kotlin_version = '1.0.5'
+    ext.support_version = '25.0.1'
+    ext.gps_version = '9.8.0'
+
     repositories {
         jcenter()
     }
+
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath "com.android.tools.build:gradle:2.2.2"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }

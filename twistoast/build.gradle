@@ -21,13 +21,13 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "23.0.2"
+    compileSdkVersion target_sdk
+    buildToolsVersion build_tools_version
 
     defaultConfig {
         applicationId "fr.outadev.twistoast"
         minSdkVersion 15
-        targetSdkVersion 25
+        targetSdkVersion target_sdk
         versionCode 34
         versionName "3.0-beta1"
     }
@@ -57,21 +57,24 @@ android {
 dependencies {
     compile project(':colorPicker')
     compile project(':keolisprovider')
-    compile 'com.google.android.gms:play-services-ads:9.8.0'
-    compile 'com.google.android.gms:play-services-base:9.8.0'
-    compile 'com.android.support:design:25.0.0'
-    compile 'com.android.support:appcompat-v7:25.0.0'
-    compile 'com.android.support:support-v4:25.0.0'
-    compile 'com.android.support:recyclerview-v7:25.0.0'
-    compile 'com.getpebble:pebblekit:3.1.0'
-    compile 'org.apache.commons:commons-lang3:3.3.2'
-    compile 'com.squareup.okhttp:okhttp:2.2.0'
-    compile 'joda-time:joda-time:2.9.1'
+    compile "com.google.android.gms:play-services-ads:$gps_version"
+    compile "com.google.android.gms:play-services-base:$gps_version"
+
+    compile "com.android.support:design:$support_version"
+    compile "com.android.support:appcompat-v7:$support_version"
+    compile "com.android.support:support-v4:$support_version"
+    compile "com.android.support:recyclerview-v7:$support_version"
+
+    compile "org.jetbrains.anko:anko-sdk15:0.9"
+    compile "org.jetbrains.anko:anko-support-v4:0.9"
+    compile "org.jetbrains.anko:anko-appcompat-v7:0.9"
+    compile "org.jetbrains.anko:anko-sqlite:0.9"
+
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile 'org.jetbrains.anko:anko-sdk15:0.9'
-    compile 'org.jetbrains.anko:anko-support-v4:0.9'
-    compile 'org.jetbrains.anko:anko-appcompat-v7:0.9'
-    compile 'org.jetbrains.anko:anko-sqlite:0.8.3'
+    compile "com.getpebble:pebblekit:3.1.0"
+    compile "org.apache.commons:commons-lang3:3.3.2"
+    compile "com.squareup.okhttp:okhttp:2.2.0"
+    compile "joda-time:joda-time:2.9.1"
 }
 
 repositories {
