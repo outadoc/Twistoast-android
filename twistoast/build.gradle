@@ -55,8 +55,6 @@ android {
 }
 
 dependencies {
-    compile project(':colorPicker')
-    compile project(':keolisprovider')
     compile "com.google.android.gms:play-services-ads:$gps_version"
     compile "com.google.android.gms:play-services-base:$gps_version"
 
@@ -70,11 +68,10 @@ dependencies {
     compile "org.jetbrains.anko:anko-appcompat-v7:0.9"
     compile "org.jetbrains.anko:anko-sqlite:0.9"
 
+    compile project(':colorPicker')
+    compile project(':keolisprovider')
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile "com.getpebble:pebblekit:3.1.0"
-    compile "org.apache.commons:commons-lang3:3.3.2"
-    compile "com.squareup.okhttp:okhttp:2.2.0"
-    compile "joda-time:joda-time:2.9.1"
 }
 
 repositories {
