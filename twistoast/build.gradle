@@ -63,14 +63,15 @@ dependencies {
     compile "com.android.support:support-v4:$support_version"
     compile "com.android.support:recyclerview-v7:$support_version"
 
-    compile "org.jetbrains.anko:anko-sdk15:0.9"
-    compile "org.jetbrains.anko:anko-support-v4:0.9"
-    compile "org.jetbrains.anko:anko-appcompat-v7:0.9"
-    compile "org.jetbrains.anko:anko-sqlite:0.9"
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+    compile "org.jetbrains.anko:anko-sdk15:$anko_version"
+    compile "org.jetbrains.anko:anko-support-v4:$anko_version"
+    compile "org.jetbrains.anko:anko-appcompat-v7:$anko_version"
+    compile "org.jetbrains.anko:anko-sqlite:$anko_version"
 
     compile project(':colorPicker')
     compile project(':keolisprovider')
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile "com.getpebble:pebblekit:3.1.0"
 }
 

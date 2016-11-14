@@ -24,6 +24,7 @@ buildscript {
     ext.kotlin_version = '1.0.5'
     ext.support_version = '25.0.1'
     ext.gps_version = '9.8.0'
+    ext.anko_version = '0.9'
 
     repositories {
         jcenter()
