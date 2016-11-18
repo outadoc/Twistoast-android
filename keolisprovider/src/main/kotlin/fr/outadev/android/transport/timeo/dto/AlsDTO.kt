@@ -27,9 +27,9 @@ import org.simpleframework.xml.Element
  * @author outadoc
  */
 class AlsDTO {
-    @field:Attribute var id: Int = -1
-    @field:Element lateinit var arret: ArretDTO
-    @field:Element lateinit var ligne: LigneDTO
-    @field:Element(required = false) var refs: String? = null
+    @field:Attribute(name = "id") var id: Int = -1
+    @field:Element(name = "arret") lateinit var arret: ArretDTO
+    @field:Element(name = "ligne") lateinit var ligne: LigneDTO
+    @field:Element(name = "refs", required = false) var refs: String? = null
 }
 

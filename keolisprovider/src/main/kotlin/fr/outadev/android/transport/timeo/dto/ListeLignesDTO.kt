@@ -27,9 +27,9 @@ import org.simpleframework.xml.ElementList
  * @author outadoc
  */
 class ListeLignesDTO {
-    @field:Element var erreur: ErreurDTO? = null
-    @field:Element var heure: String? = null
-    @field:Element var date: String? = null
-    @field:Element var expire: String? = null
-    @field:ElementList var alss: List<AlsDTO> = mutableListOf()
+    @field:Element(name = "erreur") var erreur: ErreurDTO? = null
+    @field:Element(name = "heure") var heure: String? = null
+    @field:Element(name = "date") var date: String? = null
+    @field:Element(name = "expire") var expire: String? = null
+    @field:ElementList(name = "alss") var alss: List<AlsDTO> = mutableListOf()
 }

@@ -26,6 +26,6 @@ import org.simpleframework.xml.Element
  * @author outadoc
  */
 class ArretDTO {
-    @field:Element(required = false) var code: String? = null
-    @field:Element(required = false) var nom: String? = null
+    @field:Element(name = "code", required = false) var code: String? = null
+    @field:Element(name = "nom", required = false) var nom: String? = null
 }

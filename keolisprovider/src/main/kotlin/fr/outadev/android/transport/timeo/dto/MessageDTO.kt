@@ -27,10 +27,10 @@ import org.simpleframework.xml.Element
  * @author outadoc
  */
 class MessageDTO {
-    @field:Attribute(required = false) var id: Int = -1
-    @field:Attribute(required = false) var type: String? = null
-    @field:Element(required = false) var titre: String? = null
-    @field:Element(required = false) var texte: String? = null
-    @field:Element var bloquant: Boolean = false
+    @field:Attribute(name = "id", required = false) var id: Int = -1
+    @field:Attribute(name = "type", required = false) var type: String? = null
+    @field:Element(name = "titre", required = false) var titre: String? = null
+    @field:Element(name = "texte", required = false) var texte: String? = null
+    @field:Element(name = "bloquant") var bloquant: Boolean = false
 }
 

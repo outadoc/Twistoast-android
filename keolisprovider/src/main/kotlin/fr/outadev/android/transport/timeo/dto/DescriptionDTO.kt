@@ -26,12 +26,12 @@ import org.simpleframework.xml.Element
  * @author outadoc
  */
 class DescriptionDTO {
-    @field:Element var code: Int = -1
-    @field:Element lateinit var arret: String
-    @field:Element lateinit var ligne: String
-    @field:Element lateinit var ligne_nom: String
-    @field:Element lateinit var sens: String
-    @field:Element(required = false) var vers: String? = null
-    @field:Element var couleur: String? = null
+    @field:Element(name = "code") var code: Int = -1
+    @field:Element(name = "arret") lateinit var arret: String
+    @field:Element(name = "ligne") lateinit var ligne: String
+    @field:Element(name = "ligne_nom") lateinit var ligne_nom: String
+    @field:Element(name = "sens") lateinit var sens: String
+    @field:Element(name = "vers", required = false) var vers: String? = null
+    @field:Element(name = "couleur") var couleur: String? = null
 }
 

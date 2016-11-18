@@ -28,8 +28,8 @@ import org.simpleframework.xml.ElementList
  * @author outadoc
  */
 class HoraireDTO {
-    @field:Attribute var id: Int = -1
-    @field:Element(required = false) var description: DescriptionDTO? = null
-    @field:ElementList var passages: List<PassageDTO> = mutableListOf()
-    @field:ElementList var messages: List<MessageDTO> = mutableListOf()
+    @field:Attribute(name = "id") var id: Int = -1
+    @field:Element(name = "description", required = false) var description: DescriptionDTO? = null
+    @field:ElementList(name = "passages") var passages: List<PassageDTO> = mutableListOf()
+    @field:ElementList(name = "messages") var messages: List<MessageDTO> = mutableListOf()
 }

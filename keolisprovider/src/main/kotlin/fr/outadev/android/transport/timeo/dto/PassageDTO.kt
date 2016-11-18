@@ -27,8 +27,8 @@ import org.simpleframework.xml.Element
  * @author outadoc
  */
 class PassageDTO {
-    @field:Attribute var id: Int = -1
-    @field:Element var duree: String? = null
-    @field:Element var destination: String? = null
+    @field:Attribute(name = "id") var id: Int = -1
+    @field:Element(name = "duree") var duree: String? = null
+    @field:Element(name = "destination") var destination: String? = null
 }
 

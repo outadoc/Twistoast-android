@@ -27,6 +27,6 @@ import org.simpleframework.xml.Text
  * @author outadoc
  */
 class ErreurDTO {
-    @field:Attribute var code: String = "000"
+    @field:Attribute(name = "code") var code: String = "000"
     @field:Text(required = false) var message: String = ""
 }

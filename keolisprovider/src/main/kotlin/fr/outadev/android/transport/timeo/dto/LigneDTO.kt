@@ -26,9 +26,9 @@ import org.simpleframework.xml.Element
  * @author outadoc
  */
 class LigneDTO {
-    @field:Element lateinit var code: String
-    @field:Element lateinit var nom: String
-    @field:Element lateinit var sens: String
-    @field:Element(required = false) var vers: String? = null
-    @field:Element var couleur: Int = 0x34495E
+    @field:Element(name = "code") lateinit var code: String
+    @field:Element(name = "nom") lateinit var nom: String
+    @field:Element(name = "sens") lateinit var sens: String
+    @field:Element(name = "vers", required = false) var vers: String? = null
+    @field:Element(name = "couleur") var couleur: Int = 0x34495E
 }

@@ -27,9 +27,9 @@ import org.simpleframework.xml.ElementList
  * @author outadoc
  */
 class ListeHorairesDTO {
-    @field:Element var erreur: ErreurDTO? = null
-    @field:Element var heure: String? = null
-    @field:Element var date: String? = null
-    @field:Element var reseau: MessageDTO? = null
-    @field:ElementList var horaires: List<HoraireDTO> = mutableListOf()
+    @field:Element(name = "erreur") var erreur: ErreurDTO? = null
+    @field:Element(name = "heure") var heure: String? = null
+    @field:Element(name = "date") var date: String? = null
+    @field:Element(name = "reseau") var reseau: MessageDTO? = null
+    @field:ElementList(name = "horaires") var horaires: List<HoraireDTO> = mutableListOf()
 }
