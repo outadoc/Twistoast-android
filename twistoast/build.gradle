@@ -28,8 +28,8 @@ android {
         applicationId "fr.outadev.twistoast"
         minSdkVersion 15
         targetSdkVersion target_sdk
-        versionCode 35
-        versionName "3.0-beta2"
+        versionCode 36
+        versionName "3.0-beta3"
     }
 
     compileOptions {
@@ -44,8 +44,8 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles 'proguard-rules.pro'
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 

@@ -18,7 +18,6 @@
 
 package fr.outadev.twistoast.background
 
-import android.content.Context
 import android.support.v4.app.NotificationCompat
 
 /**
@@ -30,10 +29,9 @@ object NotificationSettings {
      * Gets suitable notification defaults for the notifications of this receiver.
      * Use them with NotificationCompat.Builder.setDefaults().
      *
-     * @param context a context
      * @return an integer to pass to the builder
      */
-    fun getNotificationDefaults(context: Context, vibrate: Boolean, ring: Boolean): Int {
+    fun getNotificationDefaults(vibrate: Boolean, ring: Boolean): Int {
         var defaults = NotificationCompat.DEFAULT_LIGHTS
 
         if (vibrate) {

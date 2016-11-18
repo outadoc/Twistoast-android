@@ -156,8 +156,8 @@ class PebbleWatchReceiver : PebbleDataReceiver(PebbleWatchReceiver.PEBBLE_UUID) 
     }
 
     private fun getOptionalShortDirection(schedule: TimeoSingleSchedule): String {
-        if (schedule.direction != null && schedule.direction!!.matches("(A|B) .+".toRegex())) {
-            return schedule.direction!![0].toString()
+        if (schedule.direction != null && (schedule.direction as String).matches("(A|B) .+".toRegex())) {
+            return (schedule.direction as String)[0].toString()
         } else {
             return " "
         }
