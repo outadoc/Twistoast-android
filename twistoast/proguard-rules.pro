@@ -6,6 +6,8 @@
 
 -keep public enum fr.outadev.twistoast.Database$SortBy
 
+-keep public class fr.outadev.android.transport.timeo.dto.** { *; }
+
 -printmapping build/outputs/mapping/release/mapping.txt
 
 ## Android support libs
@@ -34,3 +36,9 @@
 -keep class javax.xml.stream.** { *; }
 -keep interface javax.xml.stream.** { *; }
 -dontwarn javax.xml.stream.**
+
+-keep interface org.simpleframework.xml.** { *; }
+-keep class org.simpleframework.xml.** { *; }
+
+## Kotlin & Kotlin libs
+-dontwarn org.jetbrains.anko.internals.AnkoInternals

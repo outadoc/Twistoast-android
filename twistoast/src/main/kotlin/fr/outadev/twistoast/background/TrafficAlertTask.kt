@@ -25,6 +25,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.AsyncTask
 import android.support.v4.app.NotificationCompat
+import android.support.v4.content.ContextCompat
 import android.util.Log
 
 import fr.outadev.android.transport.timeo.TimeoRequestHandler
@@ -80,11 +81,11 @@ class TrafficAlertTask(private val mContext: Context) : AsyncTask<Void, Void, Ti
                         .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                         .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                        .setColor(mContext.resources.getColor(R.color.traffic_alert_background))
+                        .setColor(ContextCompat.getColor(mContext, R.color.traffic_alert_background))
                         .setContentIntent(contentIntent)
                         .setAutoCancel(true)
                         .setOnlyAlertOnce(true)
-                        .setDefaults(NotificationSettings.getNotificationDefaults(mContext, config.trafficNotificationsVibrate, config.trafficNotificationsRing))
+                        .setDefaults(NotificationSettings.getNotificationDefaults(config.trafficNotificationsVibrate, config.trafficNotificationsRing))
 
                 notificationManager!!.notify(trafficAlert.id, mBuilder.build())
                 config.lastTrafficNotificationId = trafficAlert.id

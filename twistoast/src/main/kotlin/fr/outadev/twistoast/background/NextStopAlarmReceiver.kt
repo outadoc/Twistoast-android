@@ -26,6 +26,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.SystemClock
 import android.support.v4.app.NotificationCompat
+import android.support.v4.content.ContextCompat
 import android.util.Log
 import fr.outadev.android.transport.timeo.TimeoRequestHandler
 import fr.outadev.android.transport.timeo.TimeoStop
@@ -144,18 +145,16 @@ class NextStopAlarmReceiver : BroadcastReceiver() {
                 .setCategory(NotificationCompat.CATEGORY_EVENT)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
-                .setColor(context.resources.getColor(R.color.icon_color))
+                .setColor(ContextCompat.getColor(context, R.color.icon_color))
                 .setContentIntent(contentIntent)
                 .setAutoCancel(true)
                 .setOnlyAlertOnce(true)
-                .setDefaults(NotificationSettings.getNotificationDefaults(context, config.watchNotificationsVibrate, config.watchNotificationsRing))
+                .setDefaults(NotificationSettings.getNotificationDefaults(config.watchNotificationsVibrate, config.watchNotificationsRing))
 
         notificationManager.notify(Integer.valueOf(schedule.stop.id)!!, builder.build())
 
         // We want the rest of the application to know that this stop is not being watched anymore
-        if (watchedStopStateListener != null) {
-            watchedStopStateListener!!.onStopWatchingStateChanged(schedule.stop, false)
-        }
+        watchedStopStateListener?.onStopWatchingStateChanged(schedule.stop, false)
     }
 
     /**
@@ -190,7 +189,7 @@ class NextStopAlarmReceiver : BroadcastReceiver() {
                 .setStyle(inboxStyle)
                 .setCategory(NotificationCompat.CATEGORY_EVENT)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setColor(context.resources.getColor(R.color.icon_color))
+                .setColor(ContextCompat.getColor(context, R.color.icon_color))
                 .setContentIntent(contentIntent)
                 .setOngoing(true)
 
@@ -211,7 +210,7 @@ class NextStopAlarmReceiver : BroadcastReceiver() {
                 .setSmallIcon(R.drawable.ic_directions_bus_white)
                 .setContentTitle(context.getString(R.string.notif_error_content_title))
                 .setContentText(context.getString(R.string.notif_error_content_text))
-                .setColor(context.resources.getColor(R.color.icon_color))
+                .setColor(ContextCompat.getColor(context, R.color.icon_color))
                 .setCategory(NotificationCompat.CATEGORY_ERROR)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setContentIntent(contentIntent).setAutoCancel(true)
