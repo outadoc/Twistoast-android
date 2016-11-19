@@ -18,6 +18,6 @@
   -->
 
 <full-backup-content>
-    <include domain="sharedpref" path="."/>
+    <include domain="sharedpref" path="fr.outadev.twistoast_preferences.xml"/>
     <include domain="database" path="twistoast.db"/>
 </full-backup-content>
