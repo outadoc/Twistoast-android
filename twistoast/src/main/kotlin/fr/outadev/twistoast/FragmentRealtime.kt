@@ -277,14 +277,17 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
     private fun setupAdvertisement() {
         if (!activity.resources.getBoolean(R.bool.enableAds) || config.adsAreRemoved) {
             // If we don't want ads, hide the view
-            adView.visibility = View.GONE
+            adView?.visibility = View.GONE
         } else {
             // If we want ads, check for availability and load them
             val hasGPS = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(activity)
 
             if (hasGPS == ConnectionResult.SUCCESS) {
-                val adRequest = AdRequest.Builder().addTestDevice(getString(R.string.admob_test_device)).build()
-                adView.loadAd(adRequest)
+                val adRequest = AdRequest.Builder()
+                        .addTestDevice(getString(R.string.admob_test_device))
+                        .build()
+
+                adView?.loadAd(adRequest)
             }
         }
     }
