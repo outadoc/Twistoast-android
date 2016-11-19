@@ -20,17 +20,15 @@ package fr.outadev.twistoast
 
 import android.app.Activity
 import android.graphics.Color
-import android.support.design.widget.Snackbar
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AlphaAnimation
-import fr.outadev.android.transport.timeo.*
+import fr.outadev.android.transport.timeo.TimeoStop
+import fr.outadev.android.transport.timeo.TimeoStopSchedule
 import fr.outadev.twistoast.uiutils.Colors
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 
 /**
  * An array adapter for the main list of bus stops.
@@ -83,7 +81,7 @@ class RecyclerAdapterRealtime(val activity: Activity, private val stopsList: Mut
                 }
 
                 view.lblScheduleTime[i]?.text = TimeFormatter.formatTime(view.lblScheduleTime[i]!!.context, currSched.scheduleTime)
-                view.lblScheduleDirection[i]?.text = " — ${currSched.direction}"
+                view.lblScheduleDirection[i]?.text = currSched.direction
             }
 
             if (currentStop.schedules.isEmpty()) {

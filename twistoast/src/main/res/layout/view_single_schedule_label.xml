@@ -38,6 +38,15 @@
 		android:textSize="16sp" />
 
 	<TextView
+		android:id="@+id/lbl_schedule_separator"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center_vertical"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:text=" — "
+		android:textSize="15sp" />
+
+	<TextView
 		android:id="@+id/lbl_schedule_direction"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"

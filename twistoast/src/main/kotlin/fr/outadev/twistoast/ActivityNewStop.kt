@@ -241,7 +241,7 @@ class ActivityNewStop : ThemedActivity() {
                         val singleScheduleView = inflater.inflate(R.layout.view_single_schedule_label, null)
 
                         singleScheduleView.lbl_schedule.text = TimeFormatter.formatTime(this@ActivityNewStop, currSched.scheduleTime)
-                        singleScheduleView.lbl_schedule_direction.text = " — " + currSched.direction
+                        singleScheduleView.lbl_schedule_direction.text = currSched.direction
 
                         viewScheduleContainer.addView(singleScheduleView)
                     }

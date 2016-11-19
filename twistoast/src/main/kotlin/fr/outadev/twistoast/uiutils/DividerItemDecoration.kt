@@ -22,6 +22,7 @@ import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.ViewUtils
 import android.util.TypedValue
 import android.view.View
 import fr.outadev.twistoast.IRecyclerAdapterAccess
@@ -65,6 +66,8 @@ class DividerItemDecoration(context: Context, orientation: Int) : RecyclerView.I
     }
 
     fun drawVertical(c: Canvas, parent: RecyclerView) {
+        val isRtl = ViewUtils.isLayoutRtl(parent)
+
         val left = parent.paddingLeft + leftAdditionalPadding
         val right = parent.width - parent.paddingRight
 
@@ -82,7 +85,13 @@ class DividerItemDecoration(context: Context, orientation: Int) : RecyclerView.I
             val top = child.bottom + params.bottomMargin
             val bottom = top + divider.intrinsicHeight
 
-            divider.setBounds(left, top, right, bottom)
+            if (!isRtl) {
+                divider.setBounds(left, top, right, bottom)
+            } else {
+                // Fix for right-to-left layout (invert left padding and right padding)
+                divider.setBounds(left - leftAdditionalPadding, top, right - leftAdditionalPadding, bottom)
+            }
+
             divider.draw(c)
         }
     }
