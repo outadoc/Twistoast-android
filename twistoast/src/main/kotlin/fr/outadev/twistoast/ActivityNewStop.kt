@@ -243,6 +243,9 @@ class ActivityNewStop : ThemedActivity() {
                         singleScheduleView.lbl_schedule.text = TimeFormatter.formatTime(this@ActivityNewStop, currSched.scheduleTime)
                         singleScheduleView.lbl_schedule_direction.text = currSched.direction
 
+                        if (!currSched.direction.isNullOrBlank())
+                            singleScheduleView.lbl_schedule_separator.visibility = View.VISIBLE
+
                         viewScheduleContainer.addView(singleScheduleView)
                     }
 
@@ -250,6 +253,7 @@ class ActivityNewStop : ThemedActivity() {
                         viewScheduleContainer.visibility = View.VISIBLE
                     }
                 }
+
             } catch (e: Exception) {
                 uiThread { handleAsyncExceptions(e) }
             }
@@ -302,6 +306,7 @@ class ActivityNewStop : ThemedActivity() {
             } else {
                 message = getString(R.string.error_toast_twisto, e.errorCode)
             }
+
         } else {
             message = getString(R.string.loading_error)
         }
@@ -328,7 +333,6 @@ class ActivityNewStop : ThemedActivity() {
             // one of the fields was null
             longToast(resources.getString(R.string.error_toast, resources.getString(R.string.add_error_illegal_argument)))
         }
-
     }
 
     /**

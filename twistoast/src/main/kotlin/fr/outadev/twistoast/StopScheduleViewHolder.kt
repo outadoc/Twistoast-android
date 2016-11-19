@@ -51,6 +51,7 @@ class StopScheduleViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
     val lblScheduleTime = arrayOfNulls<TextView>(RecyclerAdapterRealtime.NB_SCHEDULES_DISPLAYED)
     val lblScheduleDirection = arrayOfNulls<TextView>(RecyclerAdapterRealtime.NB_SCHEDULES_DISPLAYED)
+    val lblScheduleSeparator = arrayOfNulls<TextView>(RecyclerAdapterRealtime.NB_SCHEDULES_DISPLAYED)
 
     val viewStopTrafficInfoContainer: View
     val imgStopTrafficExpandIcon: View
@@ -108,6 +109,7 @@ class StopScheduleViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
             lblScheduleTime[i] = singleScheduleView.findViewById(R.id.lbl_schedule) as TextView
             lblScheduleDirection[i] = singleScheduleView.findViewById(R.id.lbl_schedule_direction) as TextView
+            lblScheduleSeparator[i] = singleScheduleView.findViewById(R.id.lbl_schedule_separator) as TextView
 
             viewScheduleContainer.addView(singleScheduleView)
         }
@@ -118,6 +120,7 @@ class StopScheduleViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         for (i in 0..RecyclerAdapterRealtime.NB_SCHEDULES_DISPLAYED - 1) {
             lblScheduleTime[i]?.text = ""
             lblScheduleDirection[i]?.text = ""
+            lblScheduleSeparator[i]?.visibility = View.GONE
         }
 
         viewStopTrafficInfoContainer.visibility = View.GONE

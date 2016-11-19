@@ -82,6 +82,9 @@ class RecyclerAdapterRealtime(val activity: Activity, private val stopsList: Mut
 
                 view.lblScheduleTime[i]?.text = TimeFormatter.formatTime(view.lblScheduleTime[i]!!.context, currSched.scheduleTime)
                 view.lblScheduleDirection[i]?.text = currSched.direction
+
+                if (!currSched.direction.isNullOrBlank())
+                    view.lblScheduleSeparator[i]?.visibility = View.VISIBLE
             }
 
             if (currentStop.schedules.isEmpty()) {
