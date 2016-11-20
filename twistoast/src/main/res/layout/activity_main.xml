@@ -36,6 +36,8 @@
 
 			<include layout="@layout/view_toolbar" />
 
+			<include layout="@layout/view_traffic_alert" />
+
 			<FrameLayout
 				android:id="@+id/content_frame"
 				android:layout_width="match_parent"

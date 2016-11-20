@@ -26,8 +26,6 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <include layout="@layout/view_traffic_alert" />
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
