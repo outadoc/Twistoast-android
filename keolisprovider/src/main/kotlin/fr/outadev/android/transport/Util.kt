@@ -71,17 +71,16 @@ fun String.smartCapitalize(): String {
             .toTypedArray()
 
     // These words will never be capitalized
-    val alwaysLower = arrayOf("de", "du", "des", "au", "aux", "à", "la", "le", "les", "d", "et", "l")
+    val alwaysLower = listOf("de", "du", "des", "au", "aux", "à", "la", "le", "les", "d", "et", "l")
 
     // These words will always be capitalized
-    val alwaysUpper = arrayOf("sncf", "chu", "chr", "chs", "crous", "suaps", "fpa", "za", "zi", "zac", "cpam", "efs", "mjc", "paj")
+    val alwaysUpper = listOf("sncf", "chu", "chr", "chs", "crous", "suaps", "fpa", "za", "zi", "zac", "cpam", "efs", "mjc", "paj", "ab")
 
-
-    for (word in words) {
-        if (Arrays.asList(*alwaysLower).contains(word)) {
+    words.forEach { word ->
+        if (alwaysLower.contains(word)) {
             //if the word should not be capitalized, just append it to the new string
             capitalizedOut.append(word)
-        } else if (Arrays.asList(*alwaysUpper).contains(word)) {
+        } else if (alwaysUpper.contains(word)) {
             //if the word should be in upper case, do eet
             capitalizedOut.append(word.toUpperCase(Locale.FRENCH))
         } else {
