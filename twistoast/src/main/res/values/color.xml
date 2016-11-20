@@ -27,4 +27,6 @@
     <color name="traffic_alert_background">#F5A400</color>
     <color name="traffic_alert_text_primary">#fff1a4</color>
 
+    <color name="stop_traffic_alert">#F5A400</color>
+
 </resources>
