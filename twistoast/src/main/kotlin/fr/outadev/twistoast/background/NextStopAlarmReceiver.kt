@@ -94,6 +94,7 @@ class NextStopAlarmReceiver : BroadcastReceiver() {
                         database.updateWatchedStopETA(schedule.stop, busTime)
                     }
                 }
+
             } catch (e: Exception) {
                 e.printStackTrace()
 
