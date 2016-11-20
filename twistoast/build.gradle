@@ -28,8 +28,8 @@ android {
         applicationId "fr.outadev.twistoast"
         minSdkVersion 15
         targetSdkVersion target_sdk
-        versionCode 37
-        versionName "3.0-beta4"
+        versionCode 38
+        versionName "3.0-beta5"
     }
 
     compileOptions {
