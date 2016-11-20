@@ -78,4 +78,6 @@
 	<string name="sort_by_stop">Sort by stop</string>
 	<string name="sort_by_line">Sort by line</string>
 
+	<string name="description_expand">Expand</string>
+
 </resources>

@@ -82,4 +82,6 @@
 	<string name="sort_by_stop">Trier par arrêt</string>
 	<string name="sort_by_line">Trier par ligne</string>
 
+	<string name="description_expand">Détails</string>
+
 </resources>

@@ -29,8 +29,6 @@
 	android:longClickable="true"
 	android:background="?android:attr/selectableItemBackground">
 
-    <include layout="@layout/view_stop_traffic_info" />
-
     <LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
@@ -107,6 +105,8 @@
 				android:textAppearance="?android:attr/textAppearanceSmall"
 				android:textSize="15sp"
 				android:textStyle="italic" />
+
+			<include layout="@layout/view_stop_traffic_info" />
 
             <LinearLayout
 				android:id="@+id/viewScheduleContainer"

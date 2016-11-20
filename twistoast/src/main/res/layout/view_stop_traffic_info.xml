@@ -24,10 +24,10 @@
     android:id="@+id/viewStopTrafficInfoContainer"
     android:visibility="gone"
     android:background="@drawable/stop_traffic_info_background"
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp"
-    android:paddingLeft="5dp"
-    android:paddingRight="5dp"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    android:paddingLeft="3dp"
+    android:paddingRight="3dp"
     android:layout_marginTop="10dp"
     android:clickable="true">
 
@@ -38,7 +38,7 @@
 
         <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="25dp"
+            android:layout_height="23dp"
             android:id="@+id/img_stop_traffic_message_icon"
             android:src="@drawable/ic_traffic_cone"
             android:contentDescription="@string/drawer_item_traffic"
@@ -49,9 +49,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/lblStopTrafficTitle"
             android:textColor="@color/stop_traffic_alert"
-            android:textSize="18sp"
+            android:textSize="17sp"
             android:textStyle="italic"
-            android:layout_marginLeft="3dp"
             android:layout_weight="1"
             android:ellipsize="end"
             android:maxLines="1" />
@@ -61,7 +60,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_expand_more_white"
-            android:tint="@color/stop_traffic_alert" />
+            android:tint="@color/stop_traffic_alert"
+            android:contentDescription="@string/description_expand" />
 
     </LinearLayout>
 
