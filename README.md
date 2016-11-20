@@ -29,15 +29,14 @@ N'hésitez pas à contribuer et à soumettre des pull requests si l'envie ou le 
 <img src="/../master/screenshots/fr_FR/screen_map.png?raw=true" width="280">
 
 ## Obtenir Twistoast
-Twistoast est disponible sur le [Google Play Store](https://play.google.com/store/apps/details?id=fr.outadev.twistoast) et
-le [Chrome Web Store](https://chrome.google.com/webstore/detail/twistoast/olecaebebjbkmcnmobbdhgeicjfhidll?hl=fr).
+Twistoast est disponible sur le [Google Play Store](https://play.google.com/store/apps/details?id=fr.outadev.twistoast).
 
 Pour compiler à partir des sources, clonez simplement le projet, et importez-le dans Android Studio.
 Vous devrez ajouter une ressource string admob_adunitid et admob_test_device, qui correspondent
 respectivement à la clé privée AdMob et l'identifiant AdMob d'un appareil de test.
 
 ## Développement
-Twistoast a été porté depuis Java vers Kotlin afin de profiter des tas de features géniales de ce langage, et améliorer
+Twistoast a été porté depuis Java vers Kotlin afin de profiter des nombreuses features de ce langage, et améliorer
 la stabilité de l'application au passage.
 Si vous ne connaissez pas encore Kotlin, je vous invite à vous familiariser un peu avec le langage
 avant d'essayer de contribuer au projet. Il sera assez familier aux développeurs Java.
