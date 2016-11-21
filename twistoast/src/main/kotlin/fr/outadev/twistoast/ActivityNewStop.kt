@@ -176,8 +176,8 @@ class ActivityNewStop : ThemedActivity() {
 
                     val dir = if (currentDirection!!.name != null) currentDirection!!.name else currentDirection!!.id
                     rowDirectionName.text = resources.getString(R.string.direction_name, dir)
-                    
-                    currentLine = currentLine!!.copy(direction = currentDirection!!)
+
+                    currentLine!!.direction = currentDirection!!
 
                     doAsync {
                         try {

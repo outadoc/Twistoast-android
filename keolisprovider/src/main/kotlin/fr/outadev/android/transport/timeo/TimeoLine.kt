@@ -23,7 +23,7 @@ package fr.outadev.android.transport.timeo
  *
  * @author outadoc
  */
-data class TimeoLine (val id: String, val name: String, val direction: TimeoDirection, val networkCode: Int = TimeoRequestHandler.DEFAULT_NETWORK_CODE, val color: String = "#34495E") {
+data class TimeoLine (val id: String, val name: String, var direction: TimeoDirection, val networkCode: Int = TimeoRequestHandler.DEFAULT_NETWORK_CODE, val color: String = "#34495E") {
 
     override fun toString(): String = name
 }
