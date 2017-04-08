@@ -1,6 +1,6 @@
 /*
  * Twistoast - build.gradle
- * Copyright (C) 2013-2016 Baptiste Candellier
+ * Copyright (C) 2013-2017 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -55,26 +55,27 @@ android {
 }
 
 dependencies {
-    compile "com.google.android.gms:play-services-ads:$gps_version"
-    compile "com.google.android.gms:play-services-base:$gps_version"
-
-    compile "com.android.support:design:$support_version"
-    compile "com.android.support:appcompat-v7:$support_version"
-    compile "com.android.support:support-v4:$support_version"
-    compile "com.android.support:recyclerview-v7:$support_version"
-
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-
-    compile "org.jetbrains.anko:anko-sdk15:$anko_version"
-    compile "org.jetbrains.anko:anko-support-v4:$anko_version"
-    compile "org.jetbrains.anko:anko-appcompat-v7:$anko_version"
-    compile "org.jetbrains.anko:anko-sqlite:$anko_version"
-
     compile project(':colorPicker')
     compile project(':keolisprovider')
-    compile "com.getpebble:pebblekit:3.1.0"
+
+    compile group: 'com.google.android.gms', name: 'play-services-ads', version: gps_version
+    compile group: 'com.google.android.gms', name: 'play-services-base', version: gps_version
+
+    compile group: 'com.android.support', name: 'design', version: support_version
+    compile group: 'com.android.support', name: 'appcompat-v7', version: support_version
+    compile group: 'com.android.support', name: 'support-v4', version: support_version
+    compile group: 'com.android.support', name: 'recyclerview-v7', version: support_version
+
+    compile group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version: kotlin_version
+
+    compile group: 'org.jetbrains.anko', name: 'anko-sdk15', version: anko_version
+    compile group: 'org.jetbrains.anko', name: 'anko-support-v4', version: anko_version
+    compile group: 'org.jetbrains.anko', name: 'anko-appcompat-v7', version: anko_version
+    compile group: 'org.jetbrains.anko', name: 'anko-sqlite', version: anko_version
+
+    compile group: 'com.getpebble', name: 'pebblekit', version: '3.1.0'
 }
 
 repositories {
-    mavenCentral()
+    jcenter()
 }
