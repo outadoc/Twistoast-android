@@ -1,6 +1,6 @@
 /*
  * Twistoast - ParseStepDefinitions.kt
- * Copyright (C) 2013-2016 Baptiste Candellier
+ * Copyright (C) 2013-2017 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@ import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.whenever
 import cucumber.api.CucumberOptions
 import cucumber.api.DataTable
-import cucumber.api.PendingException
 import cucumber.api.java.en.Given
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
@@ -40,7 +39,7 @@ import java.net.URLEncoder
 class ParseStepDefinitions {
 
     companion object {
-        const val mockDir = "keolisprovider/src/test/res/mocks/"
+        const val mockDir = "keolisprovider/src/test/resources/mocks/"
     }
 
     var requester: IHttpRequester? = null
@@ -92,12 +91,10 @@ class ParseStepDefinitions {
 
     @Then("^I get a list of schedules for the following stop$")
     fun i_get_a_list_of_schedules_for_the_following_stop(expected: DataTable) {
-        throw PendingException()
     }
 
     @Then("^the list of schedules is$")
     fun the_list_of_schedules_is(expected: DataTable) {
-        throw PendingException()
     }
 
     private fun setupHttpMock(params: String, mockFileName: String) {

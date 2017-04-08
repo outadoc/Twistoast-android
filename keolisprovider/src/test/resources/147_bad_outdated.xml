@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <!--
-  ~ Twistoast - test_schedules_ok.xml
-  ~ Copyright (C) 2013-2016 Baptiste Candellier
+  ~ Twistoast - 147_bad_outdated.xml
+  ~ Copyright (C) 2013-2017 Baptiste Candellier
   ~
   ~ Twistoast is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -21,12 +21,12 @@
 <xmldata>
   <erreur code="000"></erreur>
 
-  <heure>23:39</heure>
-  <date>2016-08-25</date>
+  <heure>10:54</heure>
+  <date>2016-08-28</date>
 
   <reseau>
-    <titre></titre>
-    <texte></texte>
+    <titre>Nouveaux horaires</titre>
+    <texte>Nouveaux horaires Twisto à partir du lundi 29 août. + infos sur twisto.fr</texte>
     <bloquant>false</bloquant>
   </reseau>
 
@@ -44,11 +44,11 @@
 
       <passages nb="2">
         <passage id="1">
-          <duree>23:50</duree>
+          <duree>11:06</duree>
           <destination>B  CAEN GRACE DE DIEU</destination>
         </passage>
         <passage id="2">
-          <duree>05:09</duree>
+          <duree>11:34</duree>
           <destination>B  CAEN GRACE DE DIEU</destination>
         </passage>
       </passages>
@@ -69,11 +69,11 @@
 
       <passages nb="2">
         <passage id="1">
-          <duree>23:40</duree>
+          <duree>10:56</duree>
           <destination>B  CAEN GRACE DE DIEU</destination>
         </passage>
         <passage id="2">
-          <duree>23:52</duree>
+          <duree>11:07</duree>
           <destination>A  IFS JEAN VILAR</destination>
         </passage>
       </passages>
@@ -83,18 +83,16 @@
     </horaire>
     <horaire id="3">
       <description>
-        <code>8052</code>
-        <arret>RUE HAUTE</arret>
-        <ligne>NZCA</ligne>
-        <ligne_nom>NavCA</ligne_nom>
-        <sens>A</sens>
-        <vers>ZI DE CARPIQUET</vers>
-        <couleur>#cccccc</couleur>
+        <code></code>
+        <arret></arret>
+        <ligne></ligne>
+        <ligne_nom></ligne_nom>
+        <sens></sens>
+        <vers></vers>
+        <couleur>#000000</couleur>
       </description>
 
-      <passages nb="0">
-      </passages>
-
+      <passages nb="0"></passages>
       <messages nb="0">
       </messages>
     </horaire>
@@ -111,16 +109,21 @@
 
       <passages nb="2">
         <passage id="1">
-          <duree>23:58</duree>
+          <duree>12:26</duree>
           <destination>HEROUVILLE ST-CLAIR</destination>
         </passage>
         <passage id="2">
-          <duree>05:25</duree>
+          <duree>13:31</duree>
           <destination>HEROUVILLE ST-CLAIR</destination>
         </passage>
       </passages>
 
-      <messages nb="0">
+      <messages nb="1">
+        <message id="1" type="l">
+          <titre>arrêts reportés</titre>
+          <texte>En raison de la Foire aux Greniers de Carpiquet, les arrêts La Plaine, Les Vallées, Centre aquatique, Place du 27 juin et Square sont reportés aux poteaux provisoires orute de Caumont au niveau de la rue des écoles.</texte>
+          <bloquant>false</bloquant>
+        </message>
       </messages>
     </horaire>
     <horaire id="5">
@@ -134,7 +137,15 @@
         <couleur>#9999cc</couleur>
       </description>
 
-      <passages nb="0">
+      <passages nb="2">
+        <passage id="1">
+          <duree>11:14</duree>
+          <destination>CAEN POINCARE</destination>
+        </passage>
+        <passage id="2">
+          <duree>12:10</duree>
+          <destination>CAEN POINCARE</destination>
+        </passage>
       </passages>
 
       <messages nb="0">
@@ -151,7 +162,15 @@
         <couleur>#666633</couleur>
       </description>
 
-      <passages nb="0">
+      <passages nb="2">
+        <passage id="1">
+          <duree>11:48</duree>
+          <destination>CUVERVILLE CHAMP PICOT</destination>
+        </passage>
+        <passage id="2">
+          <duree>12:54</duree>
+          <destination>CUVERVILLE CHAMP PICOT</destination>
+        </passage>
       </passages>
 
       <messages nb="0">
