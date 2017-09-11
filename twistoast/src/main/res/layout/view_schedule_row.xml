@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Twistoast - view_schedule_row.xml
-  ~ Copyright (C) 2013-2016 Baptiste Candellier
+  ~ Copyright (C) 2013-2017 Baptiste Candellier
   ~
   ~ Twistoast is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -17,17 +17,17 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<LinearLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:layout_gravity="center"
-	android:orientation="vertical"
-	android:paddingLeft="10dp"
-	android:paddingRight="10dp"
-	android:paddingTop="5dp"
-	android:longClickable="true"
-	android:background="?android:attr/selectableItemBackground">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="5dp"
+    android:longClickable="true"
+    android:background="?android:attr/selectableItemBackground">
 
     <LinearLayout
 		android:layout_width="match_parent"
@@ -49,17 +49,17 @@
 			android:elevation="1dp"
 			android:padding="5dp">
 
-			<fr.outadev.twistoast.uiutils.AutoResizeTextView
+			<TextView
 				android:id="@+id/rowLineId"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
-				android:ellipsize="none"
 				android:gravity="center"
-				android:maxLines="1"
-				android:textColor="@android:color/white"
-				android:textSize="30sp"
-				android:textStyle="bold" />
-
+                android:maxLines="1"
+                android:textColor="@android:color/white"
+				android:textStyle="bold"
+                app:autoSizeMinTextSize="10sp"
+                app:autoSizeMaxTextSize="30sp"
+				app:autoSizeTextType="uniform" />
 		</FrameLayout>
 
 		<LinearLayout

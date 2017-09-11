@@ -184,7 +184,7 @@ public class ColorPreference extends Preference {
 			LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
 			View rootView = layoutInflater.inflate(R.layout.dash_dialog_colors, null);
 
-			mColorGrid = (GridView) rootView.findViewById(R.id.color_grid);
+			mColorGrid = rootView.findViewById(R.id.color_grid);
 
 			mColorGrid.setNumColumns(mPreference.mNumColumns);
 
@@ -220,7 +220,7 @@ public class ColorPreference extends Preference {
 		}
 
 		private class ColorGridAdapter extends BaseAdapter {
-			private List<Integer> mChoices = new ArrayList<Integer>();
+			private List<Integer> mChoices = new ArrayList<>();
 			private int mSelectedColor;
 
 			private ColorGridAdapter() {
