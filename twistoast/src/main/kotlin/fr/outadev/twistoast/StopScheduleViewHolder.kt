@@ -35,7 +35,6 @@ import fr.outadev.android.transport.timeo.TimeoStopTrafficMessage
 import fr.outadev.twistoast.uiutils.Colors
 import fr.outadev.twistoast.uiutils.collapse
 import fr.outadev.twistoast.uiutils.expand
-import org.jetbrains.anko.onClick
 
 /**
  * Container for an item in the list. Here, this corresponds to a bus stop, and all the info
@@ -91,7 +90,7 @@ class StopScheduleViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
         // Stop traffic info is collapsed by default.
         // When it's clicked, we display the message.
-        viewStopTrafficInfoContainer.onClick {
+        viewStopTrafficInfoContainer.setOnClickListener {
             if (!isExpanded) {
                 lblStopTrafficMessage.expand()
                 imgStopTrafficExpandIcon
