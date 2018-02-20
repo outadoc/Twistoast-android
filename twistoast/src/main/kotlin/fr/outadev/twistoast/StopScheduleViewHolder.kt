@@ -197,7 +197,7 @@ class StopScheduleViewHolder(v: View) : RecyclerView.ViewHolder(v) {
      */
     fun resetView() {
         // Clear any previous data
-        for (i in 0..RecyclerAdapterRealtime.NB_SCHEDULES_DISPLAYED - 1) {
+        for (i in 0 until RecyclerAdapterRealtime.NB_SCHEDULES_DISPLAYED) {
             lblScheduleTime[i]?.text = ""
             lblScheduleDirection[i]?.text = ""
             lblScheduleSeparator[i]?.visibility = View.GONE

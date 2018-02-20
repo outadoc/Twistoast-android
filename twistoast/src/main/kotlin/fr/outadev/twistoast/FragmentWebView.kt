@@ -149,10 +149,9 @@ class FragmentWebView : Fragment() {
                     itemCancel?.isVisible = false
 
                     // Load some javascript that will hide the stuff we don't want on the page
-                    view.loadUrl("""javascript: var a = document.getElementsByClassName("title-div");""")
+                    view.loadUrl("""javascript: var elements = [document.getElementById("tx_cookies"), document.getElementById("haut"), document.getElementById("menu-sec"), document.getElementsByClassName("titre")[0]];""")
                     view.loadUrl("""javascript: var b = document.getElementsByClassName("contenu");""")
-                    view.loadUrl("javascript:" + Uri.encode("for(var i = a.length-1; i >= 0; i--) { " +
-                            "(b[0] != null) ? b[0].removeChild(a[i]) : document.body.removeChild(a[i]); }"))
+                    view.loadUrl("javascript:" + Uri.encode("for (var i = 0; i < elements.length; i++) { if (elements[i] === null) continue; elements[i].parentNode.removeChild(elements[i]); }"))
                 }
 
                 override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {

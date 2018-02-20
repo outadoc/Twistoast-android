@@ -255,7 +255,7 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) : ITimeoR
      */
     @Throws(TimeoException::class)
     override fun checkForOutdatedStops(stops: List<TimeoStop>, schedules: List<TimeoStopSchedule>): Int {
-        if (stops.size === schedules.size) {
+        if (stops.size == schedules.size) {
             return 0
         }
 

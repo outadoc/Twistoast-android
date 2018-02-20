@@ -48,6 +48,12 @@
 			android:summary="@string/pref_legal_sum"
 			android:title="@string/pref_legal_title" />
 
+
+		<Preference
+			android:summary="@string/pref_cluf_sum"
+			android:title="@string/pref_cluf_title" />
+
+
 	</PreferenceCategory>
 	<PreferenceCategory
 		android:title="@string/pref_cat_oss">

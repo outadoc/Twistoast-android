@@ -19,10 +19,4 @@
 
 <resources>
 
-	<string name="url_drawer_timetables" translatable="false">http://twisto.fr/515-Horaires-aux-arrets.html</string>
-	<string name="url_drawer_traffic" translatable="false">http://twisto.fr/affichage.php?actu_trafic</string>
-	<string name="url_drawer_navigation" translatable="false">http://twisto.fr/514-Itineraires-Twisto.html</string>
-	<string name="url_drawer_news" translatable="false">http://twisto.fr/affichage.php?pageactu=2</string>
-	<string name="url_drawer_pricing" translatable="false">http://twisto.fr/829-Tickets.html</string>
-
 </resources>

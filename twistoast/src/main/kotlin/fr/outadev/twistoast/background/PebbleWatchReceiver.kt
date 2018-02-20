@@ -61,7 +61,7 @@ class PebbleWatchReceiver : PebbleDataReceiver(PebbleWatchReceiver.PEBBLE_UUID) 
         val messageType : Byte = data.getInteger(KEY_TWISTOAST_MESSAGE_TYPE).toByte()
 
         // if we want a schedule and we have buses in the database
-        if (messageType === BUS_STOP_REQUEST
+        if (messageType == BUS_STOP_REQUEST
                 && stopsCount > 0 && cm.activeNetworkInfo != null
                 && cm.activeNetworkInfo.isConnected) {
             Log.d(TAG, "pebble request acknowledged")
