@@ -25,7 +25,9 @@
 	<string name="pref_auto_refresh_sum">Allows you to automatically refresh the schedules when the app is in the foreground.</string>
 	<string name="pref_cat_stops">Stops List</string>
 	<string name="pref_legal_title">Legal</string>
-	<string name="pref_legal_sum">Twistoast is an application developed by Baptiste Candellier. © outa[dev] – 2013–2016.\n\nThe Twisto brand and logo are trademarks of Keolis Caen.\n\nThis app relies on Keolis\' Open-Data API and outa[dev] therefore disclaims any responsibility in the case of erroneous data.</string>
+	<string name="pref_legal_sum">Twistoast is an application developed by Baptiste Candellier. © outa[dev] – 2013–2016.\n\nThe Twisto brand and logo are trademarks of Keolis Caen.</string>
+	<string name="pref_cluf_title">End-user license agreement</string>
+	<string name="pref_cluf_sum">As this application relies on Keolis\' data, the data shown by Twistoast are strictly identical to the ones provided by the official Twisto services and the creators of Twistoast therefore decline any responsibility in case of erroneous data. Please refer to twisto.fr for more guidance on the reliability of the data.</string>
 	<string name="pref_outadev_website_sum">Go to dev.outadoc.fr for more handy apps!</string>
 	<string name="pref_outadev_website_title">More applications</string>
 	<string name="pref_twisto_website_sum">Visit twisto.mobi, the official website for the Twisto network. (in French)</string>
