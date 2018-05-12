@@ -58,20 +58,20 @@ dependencies {
     implementation project(':colorPicker')
     implementation project(':keolisprovider')
 
-    implementation group: 'com.google.android.gms', name: 'play-services-ads', version: '10.2.1'
-    implementation group: 'com.google.android.gms', name: 'play-services-base', version: '10.2.1'
+    implementation group: 'com.google.android.gms', name: 'play-services-ads', version: '15.0.1'
+    implementation group: 'com.google.android.gms', name: 'play-services-base', version: '15.0.1'
 
     implementation group: 'com.android.support', name: 'design', version: '27.1.1'
     implementation group: 'com.android.support', name: 'appcompat-v7', version: '27.1.1'
     implementation group: 'com.android.support', name: 'support-v4', version: '27.1.1'
     implementation group: 'com.android.support', name: 'recyclerview-v7', version: '27.1.1'
 
-    implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version: '1.2.21'
+    implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version: '1.2.41'
 
-    implementation group: 'org.jetbrains.anko', name: 'anko-sdk15', version: '0.9.1'
-    implementation group: 'org.jetbrains.anko', name: 'anko-support-v4', version: '0.9.1'
-    implementation group: 'org.jetbrains.anko', name: 'anko-appcompat-v7', version: '0.9.1'
-    implementation group: 'org.jetbrains.anko', name: 'anko-sqlite', version: '0.9.1'
+    implementation group: 'org.jetbrains.anko', name: 'anko-sdk15', version: '0.10.4'
+    implementation group: 'org.jetbrains.anko', name: 'anko-support-v4', version: '0.10.4'
+    implementation group: 'org.jetbrains.anko', name: 'anko-appcompat-v7', version: '0.10.4'
+    implementation group: 'org.jetbrains.anko', name: 'anko-sqlite', version: '0.10.4'
 
     implementation group: 'com.getpebble', name: 'pebblekit', version: '3.1.0'
 }
