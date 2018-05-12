@@ -36,18 +36,18 @@ object FragmentFactory {
      * @return A new fragment, or null if no corresponding fragment could be found.
      */
     fun getFragmentFromMenuItem(context: Context, itemId: Int): Fragment? {
-        when (itemId) {
-            R.id.drawer_realtime -> return FragmentRealtime()
-            R.id.drawer_timetables -> return getWebViewFragment(context.getString(R.string.url_drawer_timetables))
-            R.id.drawer_routes -> return getWebViewFragment(context.getString(R.string.url_drawer_navigation))
-            R.id.drawer_map -> return getWebViewFragment(context.getString(R.string.url_drawer_map))
-            R.id.drawer_traffic -> return getWebViewFragment(context.getString(R.string.url_drawer_traffic))
-            R.id.drawer_news -> return getWebViewFragment(context.getString(R.string.url_drawer_news))
-            R.id.drawer_social -> return getTimelineWebViewFragment(context.getString(R.string.username_drawer_social))
-            R.id.drawer_pricing -> return getWebViewFragment(context.getString(R.string.url_drawer_pricing))
-            R.id.drawer_settings -> return FragmentPreferences()
-            R.id.drawer_about -> return FragmentAbout()
-            else -> return null
+        return when (itemId) {
+            R.id.drawer_realtime -> FragmentRealtime()
+            R.id.drawer_timetables -> getWebViewFragment(context.getString(R.string.url_drawer_timetables))
+            R.id.drawer_routes -> getWebViewFragment(context.getString(R.string.url_drawer_navigation))
+            R.id.drawer_map -> getWebViewFragment(context.getString(R.string.url_drawer_map))
+            R.id.drawer_traffic -> getWebViewFragment(context.getString(R.string.url_drawer_traffic))
+            R.id.drawer_news -> getWebViewFragment(context.getString(R.string.url_drawer_news))
+            R.id.drawer_social -> getTimelineWebViewFragment(context.getString(R.string.username_drawer_social))
+            R.id.drawer_pricing -> getWebViewFragment(context.getString(R.string.url_drawer_pricing))
+            R.id.drawer_settings -> FragmentPreferences()
+            R.id.drawer_about -> FragmentAbout()
+            else -> null
         }
     }
 
