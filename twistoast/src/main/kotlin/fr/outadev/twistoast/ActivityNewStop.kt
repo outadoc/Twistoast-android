@@ -1,6 +1,6 @@
 /*
  * Twistoast - ActivityNewStop.kt
- * Copyright (C) 2013-2016 Baptiste Candellier
+ * Copyright (C) 2013-2018 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@ import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.support.v7.app.AppCompatActivity
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.Menu
@@ -48,7 +49,7 @@ import org.jetbrains.anko.uiThread
  *
  * @author outadoc
  */
-class ActivityNewStop : ThemedActivity() {
+class ActivityNewStop : AppCompatActivity() {
 
     private lateinit var itemNext: MenuItem
     private lateinit var databaseHandler: Database

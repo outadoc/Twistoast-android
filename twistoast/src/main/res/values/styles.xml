@@ -1,6 +1,6 @@
 <!--
   ~ Twistoast - styles.xml
-  ~ Copyright (C) 2013-2016 Baptiste Candellier
+  ~ Copyright (C) 2013-2018 Baptiste Candellier
   ~
   ~ Twistoast is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -22,11 +22,10 @@
 		<item name="colorPrimary">#0171BB</item>
 		<item name="colorPrimaryDark">#015ba4</item>
 		<item name="colorAccent">#ff01acff</item>
-	</style>
-
-	<style name="Twistoast.Theme" parent="Twistoast.Base.Theme">
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>
+
+	<style name="Twistoast.Theme" parent="Twistoast.Base.Theme" />
 
 	<style name="Twistoast.Theme.Splash" parent="Twistoast.Base.Theme">
 		<item name="android:windowBackground">@drawable/splash_screen</item>

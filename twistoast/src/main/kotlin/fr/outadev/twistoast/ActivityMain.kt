@@ -1,6 +1,6 @@
 /*
  * Twistoast - ActivityMain.kt
- * Copyright (C) 2013-2016 Baptiste Candellier
+ * Copyright (C) 2013-2018 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@ import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.util.SparseArray
 import android.view.MenuItem
@@ -44,7 +45,7 @@ import org.jetbrains.anko.uiThread
  *
  * @author outadoc
  */
-class ActivityMain : ThemedActivity(), IStopsListContainer, NavigationView.OnNavigationItemSelectedListener {
+class ActivityMain : AppCompatActivity(), IStopsListContainer, NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var drawerToggle: ActionBarDrawerToggle
     private var currentDrawerItem = 0
@@ -54,7 +55,11 @@ class ActivityMain : ThemedActivity(), IStopsListContainer, NavigationView.OnNav
     private val requestHandler: TimeoRequestHandler = TimeoRequestHandler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Clear splash screen theme
+        setTheme(R.style.Twistoast_Theme)
+
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_main)
 
         // Toolbar

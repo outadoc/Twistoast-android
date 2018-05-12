@@ -55,7 +55,6 @@ android {
 }
 
 dependencies {
-    implementation project(':colorPicker')
     implementation project(':keolisprovider')
 
     implementation group: 'com.google.android.gms', name: 'play-services-ads', version: '15.0.1'

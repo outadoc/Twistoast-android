@@ -1,6 +1,6 @@
 /*
  * Twistoast - ApplicationTwistoast.kt
- * Copyright (C) 2013-2016 Baptiste Candellier
+ * Copyright (C) 2013-2018 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,12 +38,12 @@ class ApplicationTwistoast : Application() {
     }
 
     private fun getNightModeForPref(pref: String): Int {
-        when (pref) {
-            "day" -> return AppCompatDelegate.MODE_NIGHT_NO
-            "night" -> return AppCompatDelegate.MODE_NIGHT_YES
-            "auto" -> return AppCompatDelegate.MODE_NIGHT_AUTO
-            "system" -> return AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-            else -> return AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+        return when (pref) {
+            "day" -> AppCompatDelegate.MODE_NIGHT_NO
+            "night" -> AppCompatDelegate.MODE_NIGHT_YES
+            "auto" -> AppCompatDelegate.MODE_NIGHT_AUTO
+            "system" -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+            else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
         }
     }
 
