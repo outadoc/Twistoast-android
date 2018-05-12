@@ -24,7 +24,9 @@
 		<item name="colorAccent">#ff01acff</item>
 	</style>
 
-	<style name="Twistoast.Theme" parent="Twistoast.Base.Theme" />
+	<style name="Twistoast.Theme" parent="Twistoast.Base.Theme">
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+    </style>
 
 	<style name="Twistoast.Theme.Splash" parent="Twistoast.Base.Theme">
 		<item name="android:windowBackground">@drawable/splash_screen</item>

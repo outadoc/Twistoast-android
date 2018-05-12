@@ -18,12 +18,12 @@
 
 package fr.outadev.twistoast
 
-import android.app.Fragment
 import android.content.Intent
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.NavigationView
+import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.util.Log
@@ -48,15 +48,10 @@ class ActivityMain : ThemedActivity(), IStopsListContainer, NavigationView.OnNav
 
     private lateinit var drawerToggle: ActionBarDrawerToggle
     private var currentDrawerItem = 0
-    private val loadedFragments: SparseArray<Fragment>
+    private val loadedFragments = SparseArray<Fragment>()
 
     private var trafficAlert: TimeoTrafficAlert? = null
-    private val requestHandler: TimeoRequestHandler
-
-    init {
-        requestHandler = TimeoRequestHandler()
-        loadedFragments = SparseArray<Fragment>()
-    }
+    private val requestHandler: TimeoRequestHandler = TimeoRequestHandler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,16 +61,7 @@ class ActivityMain : ThemedActivity(), IStopsListContainer, NavigationView.OnNav
         setSupportActionBar(toolbar)
 
         // Drawer config
-        drawerToggle = object : ActionBarDrawerToggle(this, navigationDrawer, toolbar, R.string.drawer_action_open, R.string.drawer_action_close) {
-
-            override fun onDrawerOpened(drawerView: View) {
-                super.onDrawerOpened(drawerView)
-            }
-
-            override fun onDrawerClosed(view: View) {
-                super.onDrawerClosed(view)
-            }
-        }
+        drawerToggle = object : ActionBarDrawerToggle(this, navigationDrawer, toolbar, R.string.drawer_action_open, R.string.drawer_action_close) {}
 
         navigationDrawer.addDrawerListener(drawerToggle)
 
@@ -187,7 +173,7 @@ class ActivityMain : ThemedActivity(), IStopsListContainer, NavigationView.OnNav
         loadedFragments.put(itemId, fragmentToOpen)
 
         // Insert the fragment by replacing any existing fragment
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragmentToOpen).commit()
+        supportFragmentManager.beginTransaction().replace(R.id.content_frame, fragmentToOpen).commit()
 
         // Highlight the selected item, update the title, and close the drawer
         refreshActionBarTitle()
@@ -196,7 +182,7 @@ class ActivityMain : ThemedActivity(), IStopsListContainer, NavigationView.OnNav
     }
 
 
-    fun refreshActionBarTitle() {
+    private fun refreshActionBarTitle() {
         val item = navigationView.menu.findItem(currentDrawerItem) ?: return
         supportActionBar?.title = item.title
     }
@@ -245,6 +231,6 @@ class ActivityMain : ThemedActivity(), IStopsListContainer, NavigationView.OnNav
 
     companion object {
         private val TAG = ActivityMain::class.java.simpleName
-        private val DEFAULT_DRAWER_ITEM = R.id.drawer_realtime
+        private const val DEFAULT_DRAWER_ITEM = R.id.drawer_realtime
     }
 }

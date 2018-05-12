@@ -27,10 +27,10 @@ import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.preference.ListPreference
-import android.preference.PreferenceFragment
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.support.v7.preference.ListPreference
+import android.support.v7.preference.PreferenceFragmentCompat
 import fr.outadev.twistoast.background.BackgroundTasksManager
 
 /**
@@ -38,10 +38,8 @@ import fr.outadev.twistoast.background.BackgroundTasksManager
  *
  * @author outadoc
  */
-class FragmentPreferences : PreferenceFragment(), OnSharedPreferenceChangeListener {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+class FragmentPreferences : PreferenceFragmentCompat(), OnSharedPreferenceChangeListener {
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.main_prefs)
     }
 
@@ -65,38 +63,44 @@ class FragmentPreferences : PreferenceFragment(), OnSharedPreferenceChangeListen
                 updatePreferenceStates()
 
                 if (sharedPreferences.getString("pref_night_mode", "system") == "auto") {
-                    val check = ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION)
-                    if (check == PackageManager.PERMISSION_DENIED) {
-                        ActivityCompat.requestPermissions(
-                                activity, arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), PERM_REQUEST_LOCATION)
+                    context?.let {
+                        val check = ContextCompat.checkSelfPermission(it, Manifest.permission.ACCESS_COARSE_LOCATION)
+                        if (check == PackageManager.PERMISSION_DENIED) {
+                            ActivityCompat.requestPermissions(
+                                    activity!!, arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), PERM_REQUEST_LOCATION)
+                        }
                     }
                 }
                 restartApp()
             }
-            "pref_app_theme" -> restartApp()
-            "pref_enable_notif_traffic" -> {
-                if (sharedPreferences.getBoolean("pref_enable_notif_traffic", true)) {
-                    BackgroundTasksManager.enableTrafficAlertJob(activity.applicationContext)
-                } else {
-                    BackgroundTasksManager.disableTrafficAlertJob(activity.applicationContext)
-                }
 
-                updatePreferenceStates()
+            "pref_app_theme" -> restartApp()
+
+            "pref_enable_notif_traffic" -> {
+                context?.let {
+                    if (sharedPreferences.getBoolean("pref_enable_notif_traffic", true)) {
+                        BackgroundTasksManager.enableTrafficAlertJob(it.applicationContext)
+                    } else {
+                        BackgroundTasksManager.disableTrafficAlertJob(it.applicationContext)
+                    }
+
+                    updatePreferenceStates()
+                }
             }
         }
     }
 
     private fun restartApp() {
         val pendingIntentId = 1
-        val mgr = activity.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val mgr = activity!!.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         AlertDialog.Builder(activity)
                 .setTitle(R.string.pref_restart_required_title)
                 .setMessage(R.string.pref_restart_required_message)
                 .setNegativeButton(R.string.pref_restart_required_negative, null)
                 .setPositiveButton(R.string.pref_restart_required_positive) {
-                    dialog, which ->
-                    val intent = activity.packageManager.getLaunchIntentForPackage(activity.packageName)
+                    _, _ ->
+                    val intent = context?.packageManager?.getLaunchIntentForPackage(context?.packageName)
                     val pendingIntent = PendingIntent.getActivity(activity, pendingIntentId, intent, PendingIntent.FLAG_CANCEL_CURRENT)
                     mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, pendingIntent)
                     System.exit(0)
@@ -118,7 +122,7 @@ class FragmentPreferences : PreferenceFragment(), OnSharedPreferenceChangeListen
     }
 
     companion object {
-        val PERM_REQUEST_LOCATION = 1
+        const val PERM_REQUEST_LOCATION = 1
     }
 
 }

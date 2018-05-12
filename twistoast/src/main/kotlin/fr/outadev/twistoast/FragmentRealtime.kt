@@ -18,13 +18,13 @@
 
 package fr.outadev.twistoast
 
-import android.app.Fragment
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.support.design.widget.Snackbar
+import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -44,7 +44,7 @@ import org.jetbrains.anko.uiThread
 
 class FragmentRealtime : Fragment(), IStopsListContainer {
 
-    private val periodicRefreshHandler: Handler
+    private val periodicRefreshHandler = Handler()
 
     private lateinit var periodicRefreshRunnable: Runnable
     private lateinit var databaseHandler: Database
@@ -59,10 +59,6 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
 
     override var isRefreshing: Boolean = false
     private var isInBackground: Boolean = false
-
-    init {
-        periodicRefreshHandler = Handler()
-    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == 0 && resultCode == ActivityNewStop.STOP_ADDED) {
@@ -96,7 +92,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
         return inflater.inflate(R.layout.fragment_realtime, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         swipeRefreshContainer!!.setOnRefreshListener { refreshAllStopSchedules(false) }
@@ -106,13 +102,15 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
 
         val layoutManager = GridLayoutManager(activity, 3)
 
-        stopsRecyclerView.addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL_LIST))
-        stopsRecyclerView.layoutManager = layoutManager
+        context?.let {
+            stopsRecyclerView.addItemDecoration(DividerItemDecoration(it, DividerItemDecoration.VERTICAL_LIST))
+            stopsRecyclerView.layoutManager = layoutManager
+        }
 
         stopsRecyclerView.viewTreeObserver.addOnGlobalLayoutListener {
             if (activity != null) {
                 val viewWidth = stopsRecyclerView.measuredWidth
-                val cardViewWidth = activity.resources.getDimension(R.dimen.schedule_row_max_size)
+                val cardViewWidth = resources.getDimension(R.dimen.schedule_row_max_size)
                 val newSpanCount = Math.floor((viewWidth / cardViewWidth).toDouble()).toInt()
 
                 if (newSpanCount >= 1) {
@@ -123,19 +121,18 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
         }
 
         stopsRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
-                if (dy > 0) {
-                    // Scroll Down
-                    if (floatingActionButton.isShown) {
-                        floatingActionButton.hide()
-                    }
-                } else if (dy < 0) {
-                    // Scroll Up
-                    if (!floatingActionButton.isShown) {
-                        floatingActionButton.show()
-                    }
+                when {
+                    dy > 0 -> // Scroll Down
+                        if (floatingActionButton.isShown) {
+                            floatingActionButton.hide()
+                        }
+                    dy < 0 -> // Scroll Up
+                        if (!floatingActionButton.isShown) {
+                            floatingActionButton.show()
+                        }
                 }
             }
         })
@@ -154,7 +151,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
             return
 
         // Contextual menu (delete or watch stop) creation
-        activity.menuInflater.inflate(R.menu.stops_list_contextual, menu)
+        activity?.menuInflater?.inflate(R.menu.stops_list_contextual, menu)
 
         // Get the bus stop that summoned this menu
         val position = listAdapter!!.longPressedItemPosition
@@ -162,7 +159,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
 
         // Show the "watch this stop" if it's not watched already, and vice-versa
         menu?.findItem(R.id.menu_stop_watch)?.isVisible = !stop?.isWatched!!
-        menu?.findItem(R.id.menu_stop_unwatch)?.isVisible = stop?.isWatched!!
+        menu?.findItem(R.id.menu_stop_unwatch)?.isVisible = stop.isWatched
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
@@ -262,8 +259,8 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
         val watchedStopStateListener = object : IWatchedStopChangeListener {
 
             override fun onStopWatchingStateChanged(stop: TimeoStop, watched: Boolean) {
-                stopsList.filter { stop -> stop == stop }.forEach {
-                    stop -> stop.isWatched = watched
+                stopsList.filter { it == stop }.forEach {
+                    it.isWatched = watched
                 }
 
                 listAdapter?.notifyDataSetChanged()
@@ -275,7 +272,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
     }
 
     private fun setupAdvertisement() {
-        if (!activity.resources.getBoolean(R.bool.enableAds) || config.adsAreRemoved) {
+        if (!resources.getBoolean(R.bool.enableAds) || config.adsAreRemoved) {
             // If we don't want ads, hide the view
             adView?.visibility = View.GONE
         } else {
@@ -309,7 +306,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
         listAdapter?.notifyDataSetChanged()
 
         Snackbar.make(stopsRecyclerView, R.string.confirm_delete_success, Snackbar.LENGTH_LONG).setAction(R.string.cancel_stop_deletion) {
-            Log.i(RecyclerAdapterRealtime.TAG, "restoring stop " + stop)
+            Log.i(RecyclerAdapterRealtime.TAG, "restoring stop $stop")
 
             databaseHandler.addStopToDatabase(stop)
             stopsList.add(position, stop)
@@ -324,7 +321,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
         listAdapter?.notifyDataSetChanged()
 
         // Turn the notifications on
-        BackgroundTasksManager.enableStopAlarmJob(activity.applicationContext)
+        context?.applicationContext?.let { BackgroundTasksManager.enableStopAlarmJob(it) }
 
         Snackbar.make(stopsRecyclerView, getString(R.string.notifs_enable_toast, stop.name), Snackbar.LENGTH_LONG).setAction(R.string.cancel_stop_deletion) {
             databaseHandler.stopWatchingStop(stop)
@@ -333,7 +330,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
 
             // Turn the notifications back off if necessary
             if (databaseHandler.watchedStopsCount == 0) {
-                BackgroundTasksManager.disableStopAlarmJob(activity.applicationContext)
+                context?.applicationContext?.let { appCtx -> BackgroundTasksManager.disableStopAlarmJob(appCtx) }
             }
         }.show()
     }
@@ -346,10 +343,10 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
 
         // Turn the notifications back off if necessary
         if (databaseHandler.watchedStopsCount == 0) {
-            BackgroundTasksManager.disableStopAlarmJob(activity.applicationContext)
+            context?.applicationContext?.let { BackgroundTasksManager.disableStopAlarmJob(it) }
         }
 
-        val notificationManager = activity.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager = activity?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.cancel(Integer.valueOf(stop.id)!!)
 
         Snackbar.make(stopsRecyclerView, getString(R.string.notifs_disable_toast, stop.name), Snackbar.LENGTH_LONG).show()
@@ -363,7 +360,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
      */
     fun refreshAllStopSchedules(reloadFromDatabase: Boolean) {
         // we don't want to try to refresh if we're already refreshing (causes bugs)
-        if (isRefreshing == true) {
+        if (isRefreshing) {
             return
         } else {
             isRefreshing = true
@@ -380,7 +377,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
             val criteria = config.listSortOrder
 
             stopsList = databaseHandler.getAllStops(criteria).toMutableList()
-            listAdapter = RecyclerAdapterRealtime(activity, stopsList, schedules)
+            listAdapter = RecyclerAdapterRealtime(stopsList, schedules)
             stopsRecyclerView.adapter = listAdapter
         }
 
@@ -466,7 +463,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
 
                     if (!isDetached && view != null) {
                         // It's it's a blocking message, display it in a dialog
-                        e.getAlertMessage(activity).show()
+                        e.getAlertMessage(context).show()
                     }
                 }
 
@@ -480,9 +477,9 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
 
                         // If there are details to the error, display them. Otherwise, only display the error code
                         if (!e.message?.trim { it <= ' ' }!!.isEmpty()) {
-                            message = activity.getString(R.string.error_toast_twisto_detailed, e.errorCode, e.message)
+                            message = getString(R.string.error_toast_twisto_detailed, e.errorCode, e.message)
                         } else {
-                            message = activity.getString(R.string.error_toast_twisto, e.errorCode)
+                            message = getString(R.string.error_toast_twisto, e.errorCode)
                         }
 
                         Snackbar.make(stopsRecyclerView, message, Snackbar.LENGTH_LONG)
@@ -506,7 +503,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
 
     companion object {
         //Refresh automatically every 60 seconds.
-        private val REFRESH_INTERVAL = 60000L
+        private const val REFRESH_INTERVAL = 60000L
         private val TAG = FragmentRealtime::class.java.simpleName
     }
 

@@ -65,7 +65,7 @@
 	<string name="pref_license_apache_sum">Apache Commons Lang\nOkHttp by Square\nColor Picker Collection by Gabriele Mariotti\nJoda-Time</string>
 	<string name="prefs_ads_already_disabled">The ads are already disabled. Enjoy!</string>
 	<string name="prefs_ads_disabled">No more ads for you! \\o/</string>
-	<string name="prefs_ads_step_count">Only %1$s more steps to disable the ads</string>
+	<string name="prefs_ads_step_count">Only %1$d more steps to disable the ads</string>
     <string name="pref_restart_required_title">Restart required</string>
     <string name="pref_restart_required_message">Twistoast must be restarted to apply your changes.</string>
     <string name="pref_restart_required_positive">Restart now</string>

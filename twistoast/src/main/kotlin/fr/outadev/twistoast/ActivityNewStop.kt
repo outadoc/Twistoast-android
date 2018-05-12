@@ -56,7 +56,7 @@ class ActivityNewStop : ThemedActivity() {
     private var lineList: List<TimeoLine>
 
     init {
-        lineList = listOf<TimeoLine>()
+        lineList = listOf()
         requestHandler = TimeoRequestHandler()
     }
 

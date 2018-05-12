@@ -18,12 +18,12 @@
 
 package fr.outadev.twistoast
 
-import android.app.Fragment
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.view.*
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -49,14 +49,16 @@ class FragmentWebView : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         if (webView == null) {
-            webView = TwistoastWebView(activity)
+            webView = TwistoastWebView(context!!)
 
-            if (arguments.containsKey("url")) {
-                // Load a classic URL
-                loadUrl(arguments.getString("url"))
-            } else if (arguments.containsKey("twitter_username")) {
-                // Load a Twitter profile
-                loadTwitterTimeline(arguments.getString("twitter_username"))
+            arguments?.let {
+                if (it.containsKey("url")) {
+                    // Load a classic URL
+                    loadUrl(it.getString("url"))
+                } else if (it.containsKey("twitter_username")) {
+                    // Load a Twitter profile
+                    loadTwitterTimeline(it.getString("twitter_username"))
+                }
             }
         }
 
@@ -93,15 +95,17 @@ class FragmentWebView : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle presses on the action bar items
-        when (item.itemId) {
+        return when (item.itemId) {
             R.id.action_refresh_page -> {
                 webView?.reload()
-                return true
+                true
             }
+
             R.id.action_cancel_refresh -> {
                 webView?.stopLoading()
-                return true
+                true
             }
+
             R.id.action_open_website -> {
                 if (urlToOpen == null)
                     return true
@@ -109,14 +113,14 @@ class FragmentWebView : Fragment() {
                 val i = Intent(Intent.ACTION_VIEW)
                 i.data = Uri.parse(urlToOpen)
                 startActivity(i)
-                return true
+                true
             }
-            else -> return super.onOptionsItemSelected(item)
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
     val canGoBack: Boolean
-        get() = webView!!.canGoBack()
+        get() = webView?.canGoBack() ?: false
 
     fun goBack() {
         webView?.goBack()
@@ -131,7 +135,7 @@ class FragmentWebView : Fragment() {
         val headers = mapOf(Pair("X-Requested-With", "com.actigraph.twisto.tabbarapp"))
 
         init {
-            setWebViewClient(object : WebViewClient() {
+            webViewClient = object : WebViewClient() {
 
                 override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
                     super.onPageStarted(view, url, favicon)
@@ -155,7 +159,7 @@ class FragmentWebView : Fragment() {
                 }
 
                 override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-                    if (Regex("^https?:").find(url) != null) {
+                    if (url.isHttpScheme) {
                         urlToOpen = url
                     }
 
@@ -166,11 +170,13 @@ class FragmentWebView : Fragment() {
                     return true
                 }
 
-            })
+            }
 
-            settings.builtInZoomControls = true
-            settings.displayZoomControls = false
-            settings.javaScriptEnabled = true
+            with(settings) {
+                builtInZoomControls = true
+                displayZoomControls = false
+                javaScriptEnabled = true
+            }
         }
 
         override fun loadUrl(url: String) {
@@ -178,11 +184,13 @@ class FragmentWebView : Fragment() {
 
             // If this is a http or https URL, remember it
             // so that we can open it in a browser later on if needed
-            if (Regex("^https?:").find(url) != null) {
+            if (url.isHttpScheme) {
                 urlToOpen = url
             }
         }
 
-    }
+        val String.isHttpScheme: Boolean
+            get() = Regex("^https?:").find(this) != null
 
+    }
 }

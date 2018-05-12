@@ -18,7 +18,6 @@
 
 package fr.outadev.twistoast
 
-import android.app.Activity
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -32,17 +31,11 @@ import fr.outadev.android.transport.timeo.TimeoStopSchedule
  *
  * @author outadoc
  */
-class RecyclerAdapterRealtime(val activity: Activity, private val stopsList: MutableList<TimeoStop>, private val schedules: MutableMap<TimeoStop, TimeoStopSchedule>) : RecyclerView.Adapter<StopScheduleViewHolder>(), IRecyclerAdapterAccess {
+class RecyclerAdapterRealtime(private val stopsList: MutableList<TimeoStop>, private val schedules: MutableMap<TimeoStop, TimeoStopSchedule>) : RecyclerView.Adapter<StopScheduleViewHolder>(), IRecyclerAdapterAccess {
 
-    private val database: Database
-    private val config: ConfigurationManager
+    private val config: ConfigurationManager = ConfigurationManager()
 
     var longPressedItemPosition: Int? = null
-
-    init {
-        database = Database(DatabaseOpenHelper())
-        config = ConfigurationManager()
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, i: Int): StopScheduleViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.view_schedule_row, parent, false)

@@ -19,12 +19,12 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 'android-P'
     buildToolsVersion '28.0.0-rc2'
 
     defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 27
+        minSdkVersion 'P'
+        targetSdkVersion 'P'
     }
 
     buildTypes {
@@ -35,5 +35,5 @@ android {
 }
 
 dependencies {
-    implementation group: 'com.android.support', name: 'support-v4', version: '27.1.1'
+    implementation group: 'com.android.support', name: 'support-v4', version: '28.0.0-alpha1'
 }

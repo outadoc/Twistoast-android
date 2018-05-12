@@ -18,9 +18,9 @@
 
 package fr.outadev.twistoast
 
-import android.app.Fragment
 import android.content.Context
 import android.os.Bundle
+import android.support.v4.app.Fragment
 
 /**
  * A factory that instantiates fragments for the navigation drawer, using the menu item ID.

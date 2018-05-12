@@ -20,8 +20,8 @@ package fr.outadev.twistoast
 
 import android.content.pm.PackageManager.NameNotFoundException
 import android.os.Bundle
-import android.preference.Preference
-import android.preference.PreferenceFragment
+import android.support.v7.preference.Preference
+import android.support.v7.preference.PreferenceFragmentCompat
 import android.widget.Toast
 
 /**
@@ -29,13 +29,11 @@ import android.widget.Toast
  *
  * @author outadoc
  */
-class FragmentAbout : PreferenceFragment() {
-
+class FragmentAbout : PreferenceFragmentCompat() {
     private var easterEggCount = 5
     private var easterEggToast: Toast? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         val config = ConfigurationManager()
 
         // Load the preferences from an XML resource
@@ -56,7 +54,7 @@ class FragmentAbout : PreferenceFragment() {
 
             } else if (easterEggCount <= 3) {
                 // Decrement teh counter
-                easterEggToast = toast(activity.getString(R.string.prefs_ads_step_count, easterEggCount))
+                easterEggToast = toast(getString(R.string.prefs_ads_step_count, easterEggCount))
             }
 
             true
@@ -64,11 +62,11 @@ class FragmentAbout : PreferenceFragment() {
     }
 
     fun toast(resId: Int) : Toast? {
-        return toast(activity.getString(resId))
+        return toast(getString(resId))
     }
 
     fun toast(str: String) : Toast? {
-        val t = Toast.makeText(activity, str, Toast.LENGTH_SHORT)
+        val t = Toast.makeText(context, str, Toast.LENGTH_SHORT)
         t.show()
         return t
     }
@@ -77,8 +75,8 @@ class FragmentAbout : PreferenceFragment() {
         super.onResume()
 
         try {
-            val info = activity.packageManager.getPackageInfo(activity.packageName, 0)
-            findPreference("version").summary = getString(R.string.app_name) + " v" + info.versionName
+            val info = context?.packageManager?.getPackageInfo(activity!!.packageName, 0)
+            findPreference("version").summary = getString(R.string.app_name) + " v" + info?.versionName
         } catch (e1: NameNotFoundException) {
             e1.printStackTrace()
         }
