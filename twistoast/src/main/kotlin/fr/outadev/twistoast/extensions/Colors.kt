@@ -1,6 +1,6 @@
 /*
  * Twistoast - Colors.kt
- * Copyright (C) 2013-2016 Baptiste Candellier
+ * Copyright (C) 2013-2018 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast.uiutils
+package fr.outadev.twistoast.extensions
 
 import android.graphics.Color
 
@@ -25,23 +25,22 @@ import android.graphics.Color
  *
  * @author outadoc
  */
-object Colors {
 
-    fun getBrighterColor(srcColor: Int): Int {
-        var color = srcColor
-        val newColor: Int
-        val hsv = FloatArray(3)
+fun String.toColor(): Color? {
+    return Color.valueOf(Color.parseColor(this))
+}
 
-        if (color == Color.BLACK) {
-            color = Color.parseColor("#404040")
-        }
+fun Color.brighten(): Color {
+    var color = this
+    val hsv = FloatArray(3)
 
-        Color.colorToHSV(color, hsv)
-        hsv[0] -= 35f
-        hsv[2] *= 1.8f
-        newColor = Color.HSVToColor(hsv)
-
-        return newColor
+    if (color.toArgb() == Color.BLACK) {
+        color = Color.valueOf(Color.parseColor("#404040"))
     }
 
+    Color.colorToHSV(color.toArgb(), hsv)
+    hsv[0] -= 35f
+    hsv[2] *= 1.8f
+
+    return Color.valueOf(Color.HSVToColor(hsv))
 }

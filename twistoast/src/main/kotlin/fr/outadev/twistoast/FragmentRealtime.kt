@@ -1,6 +1,6 @@
 /*
  * Twistoast - FragmentRealtime.kt
- * Copyright (C) 2013-2016 Baptiste Candellier
+ * Copyright (C) 2013-2018 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -36,7 +37,6 @@ import com.google.android.gms.common.GoogleApiAvailability
 import fr.outadev.android.transport.timeo.*
 import fr.outadev.twistoast.background.BackgroundTasksManager
 import fr.outadev.twistoast.background.NextStopAlarmReceiver
-import fr.outadev.twistoast.uiutils.DividerItemDecoration
 import kotlinx.android.synthetic.main.fragment_realtime.*
 import kotlinx.android.synthetic.main.view_no_content.*
 import org.jetbrains.anko.doAsync
@@ -103,7 +103,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
         val layoutManager = GridLayoutManager(activity, 3)
 
         context?.let {
-            stopsRecyclerView.addItemDecoration(DividerItemDecoration(it, DividerItemDecoration.VERTICAL_LIST))
+            stopsRecyclerView.addItemDecoration(DividerItemDecoration(it, DividerItemDecoration.VERTICAL))
             stopsRecyclerView.layoutManager = layoutManager
         }
 

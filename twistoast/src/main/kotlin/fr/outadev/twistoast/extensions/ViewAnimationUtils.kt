@@ -5,7 +5,7 @@
  * Copyright Hiren Patel 2015
  * Cf. http://stackoverflow.com/a/31720191
  */
-package fr.outadev.twistoast.uiutils
+package fr.outadev.twistoast.extensions
 
 import android.view.View
 import android.view.ViewGroup

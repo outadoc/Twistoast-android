@@ -1,6 +1,6 @@
 /*
  * Twistoast - StopScheduleViewHolder.kt
- * Copyright (C) 2013-2017 Baptiste Candellier
+ * Copyright (C) 2013-2018 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,6 @@
 
 package fr.outadev.twistoast
 
-import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.support.annotation.StringRes
 import android.support.v7.widget.RecyclerView
@@ -32,9 +31,10 @@ import android.widget.TextView
 import fr.outadev.android.transport.timeo.TimeoStop
 import fr.outadev.android.transport.timeo.TimeoStopSchedule
 import fr.outadev.android.transport.timeo.TimeoStopTrafficMessage
-import fr.outadev.twistoast.uiutils.Colors
-import fr.outadev.twistoast.uiutils.collapse
-import fr.outadev.twistoast.uiutils.expand
+import fr.outadev.twistoast.extensions.brighten
+import fr.outadev.twistoast.extensions.collapse
+import fr.outadev.twistoast.extensions.expand
+import fr.outadev.twistoast.extensions.toColor
 
 /**
  * Container for an item in the list. Here, this corresponds to a bus stop, and all the info
@@ -72,18 +72,18 @@ class StopScheduleViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         isExpanded = false
 
         // Get references to the views
-        rowLineIdContainer = v.findViewById<FrameLayout>(R.id.rowLineIdContainer)
+        rowLineIdContainer = v.findViewById(R.id.rowLineIdContainer)
 
-        rowLineId = v.findViewById<TextView>(R.id.rowLineId)
-        rowStopName = v.findViewById<TextView>(R.id.rowStopName)
-        rowDirectionName = v.findViewById<TextView>(R.id.rowDirectionName)
+        rowLineId = v.findViewById(R.id.rowLineId)
+        rowStopName = v.findViewById(R.id.rowStopName)
+        rowDirectionName = v.findViewById(R.id.rowDirectionName)
 
-        viewScheduleContainer = v.findViewById<LinearLayout>(R.id.viewScheduleContainer)
-        imgStopWatched = v.findViewById<ImageView>(R.id.imgStopWatched)
+        viewScheduleContainer = v.findViewById(R.id.viewScheduleContainer)
+        imgStopWatched = v.findViewById(R.id.imgStopWatched)
         lineDrawable = rowLineIdContainer.background as GradientDrawable
 
-        lblStopTrafficTitle = v.findViewById<TextView>(R.id.lblStopTrafficTitle)
-        lblStopTrafficMessage = v.findViewById<TextView>(R.id.lblStopTrafficMessage)
+        lblStopTrafficTitle = v.findViewById(R.id.lblStopTrafficTitle)
+        lblStopTrafficMessage = v.findViewById(R.id.lblStopTrafficMessage)
 
         viewStopTrafficInfoContainer = v.findViewById(R.id.viewStopTrafficInfoContainer)
         imgStopTrafficExpandIcon = v.findViewById(R.id.imgStopTrafficExpandIcon)
@@ -111,13 +111,13 @@ class StopScheduleViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         }
 
         // Store references to schedule views
-        for (i in 0..RecyclerAdapterRealtime.NB_SCHEDULES_DISPLAYED - 1) {
+        for (i in 0 until RecyclerAdapterRealtime.NB_SCHEDULES_DISPLAYED) {
             // Create schedule detail views and make them accessible
             val singleScheduleView = inflater.inflate(R.layout.view_single_schedule_label, null)
 
-            lblScheduleTime[i] = singleScheduleView.findViewById<TextView>(R.id.lbl_schedule)
-            lblScheduleDirection[i] = singleScheduleView.findViewById<TextView>(R.id.lbl_schedule_direction)
-            lblScheduleSeparator[i] = singleScheduleView.findViewById<TextView>(R.id.lbl_schedule_separator)
+            lblScheduleTime[i] = singleScheduleView.findViewById(R.id.lbl_schedule)
+            lblScheduleDirection[i] = singleScheduleView.findViewById(R.id.lbl_schedule_direction)
+            lblScheduleSeparator[i] = singleScheduleView.findViewById(R.id.lbl_schedule_separator)
 
             scheduleContainers[i] = singleScheduleView
             viewScheduleContainer.addView(singleScheduleView)
@@ -125,7 +125,8 @@ class StopScheduleViewHolder(v: View) : RecyclerView.ViewHolder(v) {
     }
 
     fun displayStopInfo(stop: TimeoStop) {
-        lineDrawable.setColor(Colors.getBrighterColor(Color.parseColor(stop.line.color)))
+        val brighterColor = stop.line.color.toColor()?.brighten()
+        brighterColor?.let { lineDrawable.setColor(it.toArgb()) }
 
         rowLineId.text = stop.line.id
         rowStopName.text = rowStopName.context.getString(R.string.stop_name, stop.name)
@@ -158,7 +159,7 @@ class StopScheduleViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         startFadeIn()
     }
 
-    fun displayTrafficMessage(message: TimeoStopTrafficMessage) {
+    private fun displayTrafficMessage(message: TimeoStopTrafficMessage) {
         lblStopTrafficTitle.text = message.title
         lblStopTrafficMessage.text = message.body
 
@@ -180,7 +181,7 @@ class StopScheduleViewHolder(v: View) : RecyclerView.ViewHolder(v) {
             container.alpha = 0.4f
     }
 
-    fun startFadeIn() {
+    private fun startFadeIn() {
         // Fade in the row!
         if (container.alpha != 1.0f) {
             container.alpha = 1.0f

@@ -1,6 +1,6 @@
 /*
  * Twistoast - TimeoStopReferenceUpdater.kt
- * Copyright (C) 2013-2016 Baptiste Candellier
+ * Copyright (C) 2013-2018 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,13 +33,8 @@ import java.io.IOException
  */
 class TimeoStopReferenceUpdater(context: Context = ApplicationTwistoast.instance) {
 
-    private val database: Database
-    private val requestHandler: TimeoRequestHandler
-
-    init {
-        database = Database(DatabaseOpenHelper(context))
-        requestHandler = TimeoRequestHandler()
-    }
+    private val database: Database = Database(DatabaseOpenHelper(context))
+    private val requestHandler: TimeoRequestHandler = TimeoRequestHandler()
 
     /**
      * Updates all the references of the bus stops in the database.

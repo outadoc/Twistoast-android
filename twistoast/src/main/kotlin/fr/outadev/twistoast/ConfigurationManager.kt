@@ -1,6 +1,6 @@
 /*
  * Twistoast - ConfigurationManager.kt
- * Copyright (C) 2013-2016 Baptiste Candellier
+ * Copyright (C) 2013-2018 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,14 +28,7 @@ import android.preference.PreferenceManager
  */
 class ConfigurationManager(context: Context = ApplicationTwistoast.instance) {
 
-    private val preferences: SharedPreferences
-
-    init {
-        preferences = PreferenceManager.getDefaultSharedPreferences(context)
-    }
-
-    val applicationThemeColor: Int
-        get() = preferences.getInt("pref_app_theme", -1)
+    private val preferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
     val nightMode: String
         get() = preferences.getString("pref_night_mode", "system")
@@ -74,10 +67,10 @@ class ConfigurationManager(context: Context = ApplicationTwistoast.instance) {
         set(sortOrder) = preferences.edit().putString("pref_list_sortby", sortCriteriaToString(sortOrder)).apply()
 
     private fun stringToSortCriteria(sortBy: String): Database.SortBy {
-        when (sortBy.toLowerCase()) {
-            "stop" -> return Database.SortBy.STOP
-            "line" -> return Database.SortBy.LINE
-            else -> return Database.SortBy.LINE
+        return when (sortBy.toLowerCase()) {
+            "stop" -> Database.SortBy.STOP
+            "line" -> Database.SortBy.LINE
+            else -> Database.SortBy.LINE
         }
     }
 

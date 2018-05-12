@@ -1,6 +1,6 @@
 /*
  * Twistoast - FragmentAbout.kt
- * Copyright (C) 2013-2016 Baptiste Candellier
+ * Copyright (C) 2013-2018 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,29 +43,31 @@ class FragmentAbout : PreferenceFragmentCompat() {
             easterEggCount--
             easterEggToast?.cancel()
 
-            if (config.adsAreRemoved) {
-                // Already disabled the ads
-                easterEggToast = toast(R.string.prefs_ads_already_disabled)
+            easterEggToast = when {
+                config.adsAreRemoved -> toast(R.string.prefs_ads_already_disabled)
 
-            } else if (easterEggCount == 0) {
-                // Ready to disable the ads
-                config.adsAreRemoved = true
-                easterEggToast = toast(R.string.prefs_ads_disabled)
+                easterEggCount == 0 -> {
+                    // Ready to disable the ads
+                    config.adsAreRemoved = true
+                    toast(R.string.prefs_ads_disabled)
 
-            } else if (easterEggCount <= 3) {
-                // Decrement teh counter
-                easterEggToast = toast(getString(R.string.prefs_ads_step_count, easterEggCount))
+                }
+
+                easterEggCount <= 3 -> // Decrement teh counter
+                    toast(getString(R.string.prefs_ads_step_count, easterEggCount))
+
+                else -> easterEggToast
             }
 
             true
         }
     }
 
-    fun toast(resId: Int) : Toast? {
+    private fun toast(resId: Int) : Toast? {
         return toast(getString(resId))
     }
 
-    fun toast(str: String) : Toast? {
+    private fun toast(str: String) : Toast? {
         val t = Toast.makeText(context, str, Toast.LENGTH_SHORT)
         t.show()
         return t

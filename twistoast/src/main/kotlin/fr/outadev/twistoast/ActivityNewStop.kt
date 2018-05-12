@@ -20,7 +20,6 @@ package fr.outadev.twistoast
 
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
-import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -34,7 +33,8 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import fr.outadev.android.transport.timeo.*
-import fr.outadev.twistoast.uiutils.Colors
+import fr.outadev.twistoast.extensions.brighten
+import fr.outadev.twistoast.extensions.toColor
 import kotlinx.android.synthetic.main.activity_new_stop.*
 import kotlinx.android.synthetic.main.view_schedule_row.*
 import kotlinx.android.synthetic.main.view_single_schedule_label.view.*
@@ -133,17 +133,16 @@ class ActivityNewStop : AppCompatActivity() {
                     rowLineId.text = item.id
 
                     val lineDrawable = rowLineIdContainer.background as GradientDrawable
-                    lineDrawable.setColor(Colors.getBrighterColor(Color.parseColor(item.color)))
+                    val brighterColor = item.color.toColor()?.brighten()
+                    brighterColor?.let { lineDrawable.setColor(it.toArgb()) }
 
                     spinDirection.isEnabled = true
 
                     // adapt the size based on the size of the line ID
-                    if (rowLineId.text.length > 3) {
-                        rowLineId.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
-                    } else if (rowLineId.text.length > 2) {
-                        rowLineId.setTextSize(TypedValue.COMPLEX_UNIT_SP, 23f)
-                    } else {
-                        rowLineId.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30f)
+                    when {
+                        rowLineId.text.length > 3 -> rowLineId.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
+                        rowLineId.text.length > 2 -> rowLineId.setTextSize(TypedValue.COMPLEX_UNIT_SP, 23f)
+                        else -> rowLineId.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30f)
                     }
 
                     spinDirection.adapter = ArrayAdapter(this@ActivityNewStop, android.R.layout.simple_spinner_dropdown_item, getDirectionsList())

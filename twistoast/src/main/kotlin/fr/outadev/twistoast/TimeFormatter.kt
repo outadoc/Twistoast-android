@@ -1,6 +1,6 @@
 /*
  * Twistoast - TimeFormatter.kt
- * Copyright (C) 2013-2016 Baptiste Candellier
+ * Copyright (C) 2013-2018 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -93,14 +93,11 @@ object TimeFormatter {
             return TimeDisplayMode.FULL
         }
 
-        if (offset <= 0) {
-            return TimeDisplayMode.CURRENTLY_AT_STOP
-        } else if (offset <= IMMINENT_THRESHOLD_MINUTES) {
-            return TimeDisplayMode.ARRIVAL_IMMINENT
-        } else if (offset <= COUNTDOWN_THRESHOLD_MINUTES) {
-            return TimeDisplayMode.COUNTDOWN
-        } else {
-            return TimeDisplayMode.FULL
+        return when {
+            offset <= 0 -> TimeDisplayMode.CURRENTLY_AT_STOP
+            offset <= IMMINENT_THRESHOLD_MINUTES -> TimeDisplayMode.ARRIVAL_IMMINENT
+            offset <= COUNTDOWN_THRESHOLD_MINUTES -> TimeDisplayMode.COUNTDOWN
+            else -> TimeDisplayMode.FULL
         }
     }
 

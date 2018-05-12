@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Twistoast - strings.xml
-  ~ Copyright (C) 2013-2016 Baptiste Candellier
+  ~ Copyright (C) 2013-2018 Baptiste Candellier
   ~
   ~ Twistoast is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@
 
 	<string name="schedule_time_currently_at_stop">Currently at stop</string>
 	<string name="schedule_time_arrival_imminent">Now incoming</string>
-	<string name="schedule_time_countdown">%1$s minutes</string>
+	<string name="schedule_time_countdown">%1$d minutes</string>
 
 	<string name="add_first_stop_title">No saved bus stops yet</string>
 
