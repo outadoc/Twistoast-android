@@ -1,6 +1,6 @@
 /*
  * Twistoast - StopScheduleViewHolder.kt
- * Copyright (C) 2013-2016 Baptiste Candellier
+ * Copyright (C) 2013-2017 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,7 +35,6 @@ import fr.outadev.android.transport.timeo.TimeoStopTrafficMessage
 import fr.outadev.twistoast.uiutils.Colors
 import fr.outadev.twistoast.uiutils.collapse
 import fr.outadev.twistoast.uiutils.expand
-import org.jetbrains.anko.onClick
 
 /**
  * Container for an item in the list. Here, this corresponds to a bus stop, and all the info
@@ -73,25 +72,25 @@ class StopScheduleViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         isExpanded = false
 
         // Get references to the views
-        rowLineIdContainer = v.findViewById(R.id.rowLineIdContainer) as FrameLayout
+        rowLineIdContainer = v.findViewById<FrameLayout>(R.id.rowLineIdContainer)
 
-        rowLineId = v.findViewById(R.id.rowLineId) as TextView
-        rowStopName = v.findViewById(R.id.rowStopName) as TextView
-        rowDirectionName = v.findViewById(R.id.rowDirectionName) as TextView
+        rowLineId = v.findViewById<TextView>(R.id.rowLineId)
+        rowStopName = v.findViewById<TextView>(R.id.rowStopName)
+        rowDirectionName = v.findViewById<TextView>(R.id.rowDirectionName)
 
-        viewScheduleContainer = v.findViewById(R.id.viewScheduleContainer) as LinearLayout
-        imgStopWatched = v.findViewById(R.id.imgStopWatched) as ImageView
+        viewScheduleContainer = v.findViewById<LinearLayout>(R.id.viewScheduleContainer)
+        imgStopWatched = v.findViewById<ImageView>(R.id.imgStopWatched)
         lineDrawable = rowLineIdContainer.background as GradientDrawable
 
-        lblStopTrafficTitle = v.findViewById(R.id.lblStopTrafficTitle) as TextView
-        lblStopTrafficMessage = v.findViewById(R.id.lblStopTrafficMessage) as TextView
+        lblStopTrafficTitle = v.findViewById<TextView>(R.id.lblStopTrafficTitle)
+        lblStopTrafficMessage = v.findViewById<TextView>(R.id.lblStopTrafficMessage)
 
         viewStopTrafficInfoContainer = v.findViewById(R.id.viewStopTrafficInfoContainer)
         imgStopTrafficExpandIcon = v.findViewById(R.id.imgStopTrafficExpandIcon)
 
         // Stop traffic info is collapsed by default.
         // When it's clicked, we display the message.
-        viewStopTrafficInfoContainer.onClick {
+        viewStopTrafficInfoContainer.setOnClickListener {
             if (!isExpanded) {
                 lblStopTrafficMessage.expand()
                 imgStopTrafficExpandIcon
@@ -116,9 +115,9 @@ class StopScheduleViewHolder(v: View) : RecyclerView.ViewHolder(v) {
             // Create schedule detail views and make them accessible
             val singleScheduleView = inflater.inflate(R.layout.view_single_schedule_label, null)
 
-            lblScheduleTime[i] = singleScheduleView.findViewById(R.id.lbl_schedule) as TextView
-            lblScheduleDirection[i] = singleScheduleView.findViewById(R.id.lbl_schedule_direction) as TextView
-            lblScheduleSeparator[i] = singleScheduleView.findViewById(R.id.lbl_schedule_separator) as TextView
+            lblScheduleTime[i] = singleScheduleView.findViewById<TextView>(R.id.lbl_schedule)
+            lblScheduleDirection[i] = singleScheduleView.findViewById<TextView>(R.id.lbl_schedule_direction)
+            lblScheduleSeparator[i] = singleScheduleView.findViewById<TextView>(R.id.lbl_schedule_separator)
 
             scheduleContainers[i] = singleScheduleView
             viewScheduleContainer.addView(singleScheduleView)
