@@ -21,13 +21,13 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion target_sdk
-    buildToolsVersion build_tools_version
+    compileSdkVersion 'android-P'
+    buildToolsVersion '28.0.0-rc2'
 
     defaultConfig {
         applicationId "fr.outadev.twistoast"
-        minSdkVersion 15
-        targetSdkVersion target_sdk
+        minSdkVersion 'P'
+        targetSdkVersion 'P'
         versionCode 41
         versionName "3.0.1"
     }
@@ -55,25 +55,25 @@ android {
 }
 
 dependencies {
-    compile project(':colorPicker')
-    compile project(':keolisprovider')
+    implementation project(':colorPicker')
+    implementation project(':keolisprovider')
 
-    compile group: 'com.google.android.gms', name: 'play-services-ads', version: gps_version
-    compile group: 'com.google.android.gms', name: 'play-services-base', version: gps_version
+    implementation group: 'com.google.android.gms', name: 'play-services-ads', version: '10.2.1'
+    implementation group: 'com.google.android.gms', name: 'play-services-base', version: '10.2.1'
 
-    compile group: 'com.android.support', name: 'design', version: support_version
-    compile group: 'com.android.support', name: 'appcompat-v7', version: support_version
-    compile group: 'com.android.support', name: 'support-v4', version: support_version
-    compile group: 'com.android.support', name: 'recyclerview-v7', version: support_version
+    implementation group: 'com.android.support', name: 'design', version: '27.1.1'
+    implementation group: 'com.android.support', name: 'appcompat-v7', version: '27.1.1'
+    implementation group: 'com.android.support', name: 'support-v4', version: '27.1.1'
+    implementation group: 'com.android.support', name: 'recyclerview-v7', version: '27.1.1'
 
-    compile group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version: kotlin_version
+    implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version: '1.2.21'
 
-    compile group: 'org.jetbrains.anko', name: 'anko-sdk15', version: anko_version
-    compile group: 'org.jetbrains.anko', name: 'anko-support-v4', version: anko_version
-    compile group: 'org.jetbrains.anko', name: 'anko-appcompat-v7', version: anko_version
-    compile group: 'org.jetbrains.anko', name: 'anko-sqlite', version: anko_version
+    implementation group: 'org.jetbrains.anko', name: 'anko-sdk15', version: '0.9.1'
+    implementation group: 'org.jetbrains.anko', name: 'anko-support-v4', version: '0.9.1'
+    implementation group: 'org.jetbrains.anko', name: 'anko-appcompat-v7', version: '0.9.1'
+    implementation group: 'org.jetbrains.anko', name: 'anko-sqlite', version: '0.9.1'
 
-    compile group: 'com.getpebble', name: 'pebblekit', version: '3.1.0'
+    implementation group: 'com.getpebble', name: 'pebblekit', version: '3.1.0'
 }
 
 repositories {
