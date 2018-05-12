@@ -22,7 +22,9 @@
 		<item name="colorPrimary">#0171BB</item>
 		<item name="colorPrimaryDark">#015ba4</item>
 		<item name="colorAccent">#ff01acff</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+		<item name="android:statusBarColor">?attr/colorPrimaryDark</item>
+		<item name="android:windowTranslucentStatus">true</item>
+		<item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>
 
 	<style name="Twistoast.Theme" parent="Twistoast.Base.Theme" />
@@ -34,6 +36,7 @@
 	<style name="Twistoast.Theme.NewStopActivity" parent="Theme.AppCompat.DayNight.DialogWhenLarge">
 		<item name="windowActionBar">false</item>
 		<item name="windowNoTitle">true</item>
+		<item name="android:statusBarColor">?attr/colorPrimaryDark</item>
 	</style>
 
 </resources>
