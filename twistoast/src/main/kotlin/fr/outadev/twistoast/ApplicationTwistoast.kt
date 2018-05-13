@@ -35,8 +35,6 @@ class ApplicationTwistoast : Application() {
         val config = ConfigurationManager()
 
         val nightModeCode = getNightModeForPref(config.nightMode)
-
-        //noinspection WrongConstant,ResourceType
         AppCompatDelegate.setDefaultNightMode(nightModeCode)
 
         // Turn the notifications back off if necessary

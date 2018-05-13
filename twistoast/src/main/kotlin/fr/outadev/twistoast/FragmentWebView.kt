@@ -33,7 +33,7 @@ import android.webkit.WebViewClient
  * A fragment that contains a webview and its controls.
  * Will automatically inject some JS in the pages to make their title disappear, for cosmetic reasons.
  */
-class FragmentWebView : Fragment() {
+class FragmentWebView : Fragment(), IBackNavigationHandler {
 
     private var webView: WebView? = null
 
@@ -119,11 +119,18 @@ class FragmentWebView : Fragment() {
         }
     }
 
-    val canGoBack: Boolean
+    override val canGoBack: Boolean
         get() = webView?.canGoBack() ?: false
 
-    fun goBack() {
-        webView?.goBack()
+    override fun tryGoBack(): Boolean {
+        return when {
+            canGoBack -> {
+                webView?.goBack()
+                true
+            }
+
+            else -> false
+        }
     }
 
     /**
