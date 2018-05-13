@@ -19,7 +19,8 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:orientation="vertical"
@@ -49,17 +50,18 @@
 			android:elevation="1dp"
 			android:padding="5dp">
 
-			<TextView
-				android:id="@+id/rowLineId"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:gravity="center"
+            <TextView
+                android:id="@+id/rowLineId"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
                 android:maxLines="1"
                 android:textColor="@android:color/white"
-				android:textStyle="bold"
-                app:autoSizeMinTextSize="10sp"
+                android:textStyle="bold"
                 app:autoSizeMaxTextSize="30sp"
-				app:autoSizeTextType="uniform" />
+                app:autoSizeMinTextSize="10sp"
+                app:autoSizeTextType="uniform"
+                tools:text="@tools:sample/bus_stops.json/data/line" />
 		</FrameLayout>
 
 		<LinearLayout
@@ -88,26 +90,29 @@
                     android:layout_marginEnd="5dp"
 					android:layout_marginTop="1dp"
 					android:tint="#ff4d4d4d"
-					android:visibility="gone" />
+					android:visibility="gone"
+					tools:visibility="visible" />
 
-				<TextView
-					android:id="@+id/rowStopName"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:maxLines="1"
-					android:textAppearance="?android:attr/textAppearanceLarge"
-					android:textSize="19sp" />
+                <TextView
+                    android:id="@+id/rowStopName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="19sp"
+                    tools:text="@tools:sample/bus_stops.json/data/stop" />
 
 			</LinearLayout>
 
-			<TextView
-				android:id="@+id/rowDirectionName"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:maxLines="1"
-				android:textAppearance="?android:attr/textAppearanceSmall"
-				android:textSize="15sp"
-				android:textStyle="italic" />
+            <TextView
+                android:id="@+id/rowDirectionName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textSize="15sp"
+                android:textStyle="italic"
+                tools:text="@tools:sample/bus_stops.json/data/direction" />
 
 			<include layout="@layout/view_stop_traffic_info" />
 

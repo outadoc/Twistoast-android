@@ -32,6 +32,8 @@ import androidx.navigation.fragment.findNavController
 import fr.outadev.android.transport.timeo.*
 import fr.outadev.twistoast.extensions.brighten
 import fr.outadev.twistoast.extensions.toColor
+import kotlinx.android.synthetic.main.fragment_new_stop.*
+import kotlinx.android.synthetic.main.view_schedule_row.*
 import kotlinx.android.synthetic.main.view_single_schedule_label.view.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.support.v4.longToast

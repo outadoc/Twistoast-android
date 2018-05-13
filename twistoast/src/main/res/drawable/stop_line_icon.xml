@@ -17,11 +17,12 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<shape
-	xmlns:android="http://schemas.android.com/apk/res/android"
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
 	android:shape="oval">
 
 	<solid
-		android:color="#ffbebab3" />
+		android:color="#ffbebab3"
+		tools:color="@tools:sample/bus_stops.json/data/color" />
 
 </shape>

@@ -1,0 +1,9 @@
+{
+  "data" :[
+    {"color": "#000000", "line" : "TRAM", "stop": "Bernières",     "direction" : "Ifs Jean Vilar"},
+    {"color": "#000000", "line" : "AB", "stop": "Rostand/Fresnel", "direction" : "A - Ifs Jean Vilar - Caen Grace de Dieu"},
+    {"color": "#6633ff", "line" : "2",    "stop": "5 Continents",  "direction" : "Caen Venoix"},
+    {"color": "#339933", "line" : "3",    "stop": "Aéroport",      "direction" : "Hérouville St-Clair"},
+    {"color": "#666633", "line" : "11",   "stop": "50 Acres",      "direction" : "Cuverville Mairie"}
+  ]
+}

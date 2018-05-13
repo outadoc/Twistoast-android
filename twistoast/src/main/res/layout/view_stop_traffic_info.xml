@@ -18,6 +18,7 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -29,7 +30,8 @@
     android:paddingLeft="3dp"
     android:paddingRight="3dp"
     android:layout_marginTop="10dp"
-    android:clickable="true">
+    android:clickable="true"
+    tools:visibility="visible">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -45,15 +47,16 @@
             android:tint="@color/stop_traffic_alert" />
 
         <TextView
+            android:id="@+id/lblStopTrafficTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/lblStopTrafficTitle"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textColor="@color/stop_traffic_alert"
             android:textSize="17sp"
             android:textStyle="italic"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:maxLines="1" />
+            tools:text="@tools:sample/lorem" />
 
         <ImageView
             android:id="@+id/imgStopTrafficExpandIcon"
@@ -66,11 +69,13 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/lblStopTrafficMessage"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:visibility="gone"
         android:padding="10dp"
         android:textSize="15sp"
-        android:id="@+id/lblStopTrafficMessage" />
+        android:visibility="gone"
+        tools:text="@tools:sample/lorem/random"
+        tools:visibility="visible" />
 
 </LinearLayout>
