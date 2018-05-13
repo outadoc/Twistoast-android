@@ -53,6 +53,9 @@
         <action
             android:id="@+id/action_dest_real_time_to_dest_map"
             app:destination="@id/dest_map" />
+        <action
+            android:id="@+id/action_dest_real_time_to_dest_social"
+            app:destination="@id/dest_social" />
     </fragment>
     <fragment
         android:id="@+id/dest_new_stop"
@@ -87,7 +90,7 @@
     <fragment
         android:id="@+id/dest_traffic"
         android:name="fr.outadev.twistoast.FragmentWebView"
-        android:label="FragmentWebView">
+        android:label="@string/drawer_item_traffic">
         <argument
             android:name="url"
             android:defaultValue="@string/url_drawer_traffic"
@@ -96,7 +99,7 @@
     <fragment
         android:id="@+id/dest_routes"
         android:name="fr.outadev.twistoast.FragmentWebView"
-        android:label="FragmentWebView">
+        android:label="@string/drawer_item_routes">
         <argument
             android:name="url"
             android:defaultValue="@string/url_drawer_navigation"
@@ -105,7 +108,7 @@
     <fragment
         android:id="@+id/dest_news"
         android:name="fr.outadev.twistoast.FragmentWebView"
-        android:label="FragmentWebView">
+        android:label="@string/drawer_item_news">
         <argument
             android:name="url"
             android:defaultValue="@string/url_drawer_news"
@@ -114,10 +117,19 @@
     <fragment
         android:id="@+id/dest_pricing"
         android:name="fr.outadev.twistoast.FragmentWebView"
-        android:label="FragmentWebView">
+        android:label="@string/drawer_item_pricing">
         <argument
             android:name="url"
             android:defaultValue="@string/url_drawer_pricing"
+            app:type="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/dest_social"
+        android:name="fr.outadev.twistoast.FragmentWebView"
+        android:label="@string/drawer_item_social">
+        <argument
+            android:name="url"
+            android:defaultValue="https://mobile.twitter.com/TwistoCaen"
             app:type="string" />
     </fragment>
 </navigation>

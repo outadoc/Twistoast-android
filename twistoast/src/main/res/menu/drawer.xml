@@ -18,27 +18,6 @@
   -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group
-        android:id="@+id/grp_navigation"
-        android:checkableBehavior="single">
-        <item
-            android:id="@+id/dest_real_time"
-            android:checked="true"
-            android:icon="@drawable/ic_directions_bus"
-            android:title="@string/drawer_item_realtime"/>
-        <item
-            android:id="@+id/dest_time_tables"
-            android:icon="@drawable/ic_schedule"
-            android:title="@string/drawer_item_timetables"/>
-        <item
-            android:id="@+id/dest_routes"
-            android:icon="@drawable/ic_directions"
-            android:title="@string/drawer_item_routes"/>
-        <item
-            android:id="@+id/dest_map"
-            android:icon="@drawable/ic_map"
-            android:title="@string/drawer_item_map"/>
-    </group>
     <item
         android:id="@+id/drawer_group_learn_more"
         android:title="@string/drawer_section_more_twisto_info">
