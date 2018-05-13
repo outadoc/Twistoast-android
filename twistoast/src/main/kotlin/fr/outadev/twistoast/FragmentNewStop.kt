@@ -28,6 +28,7 @@ import android.view.*
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
+import androidx.navigation.fragment.findNavController
 import fr.outadev.android.transport.timeo.*
 import fr.outadev.twistoast.extensions.brighten
 import fr.outadev.twistoast.extensions.toColor
@@ -92,7 +93,7 @@ class FragmentNewStop : Fragment() {
 
             android.R.id.home -> {
                 // go back
-                //finish()
+                findNavController().navigateUp()
                 true
             }
 
@@ -321,7 +322,7 @@ class FragmentNewStop : Fragment() {
             databaseHandler.addStopToDatabase(currentStop)
             toast(getString(R.string.added_toast, currentStop.toString()))
             //setResult(STOP_ADDED)
-            //finish()
+            findNavController().navigateUp()
         } catch (e: SQLiteConstraintException) {
             // stop already in database
             longToast(getString(R.string.error_toast, getString(R.string.add_error_duplicate)))

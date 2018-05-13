@@ -16,146 +16,133 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
-	android:id="@+id/content"
+	android:id="@+id/swipeRefreshContainer"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:orientation="vertical"
 	tools:context=".FragmentNewStop">
 
-	<include
-		android:id="@+id/include"
-		layout="@layout/view_toolbar"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content" />
-
-	<android.support.v4.widget.SwipeRefreshLayout
-		android:id="@+id/swipeRefreshContainer"
+	<ScrollView
 		android:layout_width="wrap_content"
-		android:layout_height="match_parent">
+		android:layout_height="wrap_content"
+		android:background="?android:attr/colorBackground"
+		android:orientation="vertical">
 
-        <ScrollView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?android:attr/colorBackground"
-            android:orientation="vertical">
+		<android.support.constraint.ConstraintLayout
+			android:id="@+id/add_stop_container"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			app:layout_constraintBottom_toBottomOf="@+id/spinDirection"
+			app:layout_constraintTop_toBottomOf="@+id/spinDirection">
 
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/add_stop_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@+id/spinDirection"
-                app:layout_constraintTop_toBottomOf="@+id/spinDirection">
+			<TextView
+				android:id="@+id/lblLine"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:labelFor="@+id/spinLine"
+				android:text="@string/lbl_line"
+				android:textSize="13sp"
+				app:layout_constraintStart_toStartOf="@+id/guideline"
+				app:layout_constraintTop_toTopOf="@+id/guideline3" />
 
-                <TextView
-                    android:id="@+id/lblLine"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:labelFor="@+id/spinLine"
-                    android:text="@string/lbl_line"
-                    android:textSize="13sp"
-                    app:layout_constraintStart_toStartOf="@+id/guideline"
-                    app:layout_constraintTop_toTopOf="@+id/guideline3" />
+			<Spinner
+				android:id="@+id/spinLine"
+				style="@style/Widget.AppCompat.Spinner"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="8dp"
+				app:layout_constraintEnd_toStartOf="@+id/guideline2"
+				app:layout_constraintStart_toStartOf="@+id/guideline"
+				app:layout_constraintTop_toBottomOf="@+id/lblLine" />
 
-                <Spinner
-                    android:id="@+id/spinLine"
-                    style="@style/Widget.AppCompat.Spinner"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline2"
-                    app:layout_constraintStart_toStartOf="@+id/guideline"
-                    app:layout_constraintTop_toBottomOf="@+id/lblLine" />
+			<TextView
+				android:id="@+id/lblDirection"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="16dp"
+				android:labelFor="@+id/spinDirection"
+				android:text="@string/lbl_direction"
+				android:textSize="13sp"
+				app:layout_constraintStart_toStartOf="@+id/guideline"
+				app:layout_constraintTop_toBottomOf="@+id/spinLine" />
 
-                <TextView
-                    android:id="@+id/lblDirection"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:labelFor="@+id/spinDirection"
-                    android:text="@string/lbl_direction"
-                    android:textSize="13sp"
-                    app:layout_constraintStart_toStartOf="@+id/guideline"
-                    app:layout_constraintTop_toBottomOf="@+id/spinLine" />
+			<Spinner
+				android:id="@+id/spinDirection"
+				style="@style/Widget.AppCompat.Spinner"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="8dp"
+				app:layout_constraintEnd_toStartOf="@+id/guideline2"
+				app:layout_constraintStart_toStartOf="@+id/guideline"
+				app:layout_constraintTop_toBottomOf="@+id/lblDirection" />
 
-                <Spinner
-                    android:id="@+id/spinDirection"
-                    style="@style/Widget.AppCompat.Spinner"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline2"
-                    app:layout_constraintStart_toStartOf="@+id/guideline"
-                    app:layout_constraintTop_toBottomOf="@+id/lblDirection" />
+			<TextView
+				android:id="@+id/lblStop"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="18dp"
+				android:labelFor="@+id/spinStop"
+				android:text="@string/lbl_stop"
+				android:textSize="13sp"
+				app:layout_constraintStart_toStartOf="@+id/guideline"
+				app:layout_constraintTop_toBottomOf="@+id/spinDirection" />
 
-                <TextView
-                    android:id="@+id/lblStop"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="18dp"
-                    android:labelFor="@+id/spinStop"
-                    android:text="@string/lbl_stop"
-                    android:textSize="13sp"
-                    app:layout_constraintStart_toStartOf="@+id/guideline"
-                    app:layout_constraintTop_toBottomOf="@+id/spinDirection" />
+			<Spinner
+				android:id="@+id/spinStop"
+				style="@style/Widget.AppCompat.Spinner"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="8dp"
+				app:layout_constraintEnd_toStartOf="@+id/guideline2"
+				app:layout_constraintStart_toStartOf="@+id/guideline"
+				app:layout_constraintTop_toBottomOf="@+id/lblStop" />
 
-                <Spinner
-                    android:id="@+id/spinStop"
-                    style="@style/Widget.AppCompat.Spinner"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline2"
-                    app:layout_constraintStart_toStartOf="@+id/guideline"
-                    app:layout_constraintTop_toBottomOf="@+id/lblStop" />
-
-                <TextView
-                    android:id="@+id/lblPreview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:labelFor="@+id/view_preview"
-                    android:text="@string/lbl_preview"
-                    android:textSize="13sp"
-                    app:layout_constraintStart_toStartOf="@+id/guideline"
-                    app:layout_constraintTop_toBottomOf="@+id/spinStop" />
+			<TextView
+				android:id="@+id/lblPreview"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="16dp"
+				android:labelFor="@+id/view_preview"
+				android:text="@string/lbl_preview"
+				android:textSize="13sp"
+				app:layout_constraintStart_toStartOf="@+id/guideline"
+				app:layout_constraintTop_toBottomOf="@+id/spinStop" />
 
 
-                <include
-                    android:id="@+id/include2"
-                    layout="@layout/view_schedule_row"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline2"
-                    app:layout_constraintStart_toStartOf="@+id/guideline"
-                    app:layout_constraintTop_toBottomOf="@+id/lblPreview" />
+			<include
+				android:id="@+id/include2"
+				layout="@layout/view_schedule_row"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="8dp"
+				app:layout_constraintEnd_toStartOf="@+id/guideline2"
+				app:layout_constraintStart_toStartOf="@+id/guideline"
+				app:layout_constraintTop_toBottomOf="@+id/lblPreview" />
 
-                <android.support.constraint.Guideline
-                    android:id="@+id/guideline"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_begin="16dp" />
+			<android.support.constraint.Guideline
+				android:id="@+id/guideline"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				app:layout_constraintGuide_begin="16dp" />
 
-                <android.support.constraint.Guideline
-                    android:id="@+id/guideline2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_end="16dp" />
+			<android.support.constraint.Guideline
+				android:id="@+id/guideline2"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				app:layout_constraintGuide_end="16dp" />
 
-                <android.support.constraint.Guideline
-                    android:id="@+id/guideline3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    app:layout_constraintGuide_begin="16dp" />
+			<android.support.constraint.Guideline
+				android:id="@+id/guideline3"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal"
+				app:layout_constraintGuide_begin="16dp" />
 
-            </android.support.constraint.ConstraintLayout>
-        </ScrollView>
-	</android.support.v4.widget.SwipeRefreshLayout>
-
-</LinearLayout>
+		</android.support.constraint.ConstraintLayout>
+	</ScrollView>
+</android.support.v4.widget.SwipeRefreshLayout>

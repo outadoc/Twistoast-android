@@ -27,8 +27,7 @@
         android:label="@string/drawer_item_realtime">
         <action
             android:id="@+id/action_fragmentRealtime_to_fragmentNewStop"
-            app:destination="@id/dest_new_stop"
-            app:launchSingleTop="true" />
+            app:destination="@id/dest_new_stop" />
         <action
             android:id="@+id/action_fragmentRealtime_to_fragmentAbout"
             app:destination="@id/dest_about" />
@@ -81,7 +80,7 @@
     <fragment
         android:id="@+id/dest_map"
         android:name="fr.outadev.twistoast.FragmentWebView"
-        android:label="FragmentWebView">
+        android:label="@string/drawer_item_map">
         <argument
             android:name="url"
             android:defaultValue="@string/url_drawer_map"

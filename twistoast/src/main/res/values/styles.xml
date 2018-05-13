@@ -24,7 +24,7 @@
 		<item name="colorAccent">#ff01acff</item>
 		<item name="android:statusBarColor">?attr/colorPrimaryDark</item>
 		<item name="android:windowTranslucentStatus">true</item>
-		<item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+		<item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
 
 	<style name="Twistoast.Theme" parent="Twistoast.Base.Theme" />

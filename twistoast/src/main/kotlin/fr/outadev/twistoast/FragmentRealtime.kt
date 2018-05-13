@@ -30,6 +30,7 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.*
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.common.ConnectionResult
@@ -176,14 +177,17 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
                 deleteStopAction(stop, position)
                 return true
             }
+
             R.id.menu_stop_watch -> {
                 startWatchingStopAction(stop)
                 return true
             }
+
             R.id.menu_stop_unwatch -> {
                 stopWatchingStopAction(stop)
                 return true
             }
+
             else -> return super.onContextItemSelected(item)
         }
     }
@@ -200,6 +204,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
                 refreshAllStopSchedules(true)
                 return true
             }
+
             R.id.sortby_stop -> {
                 config.listSortOrder = Database.SortBy.STOP
                 refreshAllStopSchedules(true)
@@ -238,9 +243,8 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
     }
 
     private fun setupListeners() {
-        floatingActionButton!!.setOnClickListener {
-            //val intent = Intent(activity, ActivityNewStop::class.java)
-            //startActivityForResult(intent, 0)
+        floatingActionButton.setOnClickListener {
+            findNavController().navigate(R.id.dest_new_stop)
         }
 
         adView.adListener = object : AdListener() {
