@@ -35,6 +35,7 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import fr.outadev.android.transport.timeo.*
+import fr.outadev.twistoast.FragmentNewStop.Companion.STOP_ADDED
 import fr.outadev.twistoast.background.BackgroundTasksManager
 import fr.outadev.twistoast.background.NextStopAlarmReceiver
 import kotlinx.android.synthetic.main.fragment_realtime.*
@@ -61,7 +62,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
     private var isInBackground: Boolean = false
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == 0 && resultCode == ActivityNewStop.STOP_ADDED) {
+        if (requestCode == 0 && resultCode == STOP_ADDED) {
             refreshAllStopSchedules(true)
         }
     }
