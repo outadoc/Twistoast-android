@@ -21,6 +21,7 @@ package fr.outadev.twistoast
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import androidx.navigation.findNavController
+import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import kotlinx.android.synthetic.main.activity_main.*
@@ -49,8 +50,8 @@ class ActivityMain : AppCompatActivity() {
         bottomNavigation.setupWithNavController(navController)
     }
 
-
-    override fun onSupportNavigateUp() = findNavController(R.id.nav_host_fragment).navigateUp()
+    override fun onSupportNavigateUp() =
+            NavigationUI.navigateUp(navigationDrawer, findNavController(R.id.nav_host_fragment))
 
     companion object {
         private val TAG = ActivityMain::class.java.simpleName
