@@ -32,8 +32,6 @@ import androidx.navigation.fragment.findNavController
 import fr.outadev.android.transport.timeo.*
 import fr.outadev.twistoast.extensions.brighten
 import fr.outadev.twistoast.extensions.toColor
-import kotlinx.android.synthetic.main.activity_new_stop.*
-import kotlinx.android.synthetic.main.view_schedule_row.*
 import kotlinx.android.synthetic.main.view_single_schedule_label.view.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.support.v4.longToast
@@ -65,7 +63,7 @@ class FragmentNewStop : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.activity_new_stop, container, false)
+        return inflater.inflate(R.layout.fragment_new_stop, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
