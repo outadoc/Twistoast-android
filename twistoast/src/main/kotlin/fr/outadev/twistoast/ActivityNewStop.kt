@@ -91,18 +91,20 @@ class ActivityNewStop : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        return when (item.itemId) {
             R.id.action_ok -> {
                 // add the current stop to the database
                 registerStopToDatabase()
-                return true
+                true
             }
+
             android.R.id.home -> {
                 // go back
                 finish()
-                return true
+                true
             }
-            else -> return super.onOptionsItemSelected(item)
+
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
