@@ -20,6 +20,7 @@ package fr.outadev.twistoast
 
 import android.app.Application
 import android.support.v7.app.AppCompatDelegate
+import fr.outadev.twistoast.background.BackgroundTasksManager
 
 /**
  * Global application class for Twistoast.
@@ -30,11 +31,22 @@ class ApplicationTwistoast : Application() {
         super.onCreate()
         instance = this
 
+        val db = Database(DatabaseOpenHelper())
         val config = ConfigurationManager()
+
         val nightModeCode = getNightModeForPref(config.nightMode)
 
         //noinspection WrongConstant,ResourceType
         AppCompatDelegate.setDefaultNightMode(nightModeCode)
+
+        // Turn the notifications back off if necessary
+        if (db.watchedStopsCount > 0) {
+            BackgroundTasksManager.enableStopAlarmJob(applicationContext)
+        }
+
+        if (config.trafficNotificationsEnabled) {
+            BackgroundTasksManager.enableTrafficAlertJob(applicationContext)
+        }
     }
 
     private fun getNightModeForPref(pref: String): Int {

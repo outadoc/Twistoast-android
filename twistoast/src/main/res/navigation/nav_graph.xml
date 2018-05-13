@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Twistoast - nav_graph.xml
+  ~ Copyright (C) 2013-2018 Baptiste Candellier
+  ~
+  ~ Twistoast is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Twistoast is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:startDestination="@+id/dest_real_time">
+
+    <fragment
+        android:id="@+id/dest_real_time"
+        android:name="fr.outadev.twistoast.FragmentRealtime"
+        android:label="@string/drawer_item_realtime">
+        <action
+            android:id="@+id/action_fragmentRealtime_to_fragmentNewStop"
+            app:destination="@id/dest_new_stop"
+            app:launchSingleTop="true" />
+        <action
+            android:id="@+id/action_fragmentRealtime_to_fragmentAbout"
+            app:destination="@id/dest_about" />
+        <action
+            android:id="@+id/action_fragmentRealtime_to_fragmentPreferences"
+            app:destination="@id/dest_settings" />
+        <action
+            android:id="@+id/action_fragmentRealtime_to_fragmentWebView"
+            app:destination="@id/dest_time_tables" />
+        <action
+            android:id="@+id/action_dest_real_time_to_dest_traffic"
+            app:destination="@id/dest_traffic" />
+        <action
+            android:id="@+id/action_dest_real_time_to_dest_pricing"
+            app:destination="@id/dest_pricing" />
+        <action
+            android:id="@+id/action_dest_real_time_to_dest_news"
+            app:destination="@id/dest_news" />
+        <action
+            android:id="@+id/action_dest_real_time_to_dest_routes"
+            app:destination="@id/dest_routes" />
+        <action
+            android:id="@+id/action_dest_real_time_to_dest_map"
+            app:destination="@id/dest_map" />
+    </fragment>
+    <fragment
+        android:id="@+id/dest_new_stop"
+        android:name="fr.outadev.twistoast.FragmentNewStop"
+        android:label="@string/title_activity_add_stop" />
+    <fragment
+        android:id="@+id/dest_about"
+        android:name="fr.outadev.twistoast.FragmentAbout"
+        android:label="@string/drawer_item_about" />
+    <fragment
+        android:id="@+id/dest_settings"
+        android:name="fr.outadev.twistoast.FragmentPreferences"
+        android:label="@string/drawer_item_preferences" />
+    <fragment
+        android:id="@+id/dest_time_tables"
+        android:name="fr.outadev.twistoast.FragmentWebView"
+        android:label="@string/drawer_item_timetables">
+        <argument
+            android:name="url"
+            android:defaultValue="@string/url_drawer_timetables"
+            app:type="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/dest_map"
+        android:name="fr.outadev.twistoast.FragmentWebView"
+        android:label="FragmentWebView">
+        <argument
+            android:name="url"
+            android:defaultValue="@string/url_drawer_map"
+            app:type="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/dest_traffic"
+        android:name="fr.outadev.twistoast.FragmentWebView"
+        android:label="FragmentWebView">
+        <argument
+            android:name="url"
+            android:defaultValue="@string/url_drawer_traffic"
+            app:type="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/dest_routes"
+        android:name="fr.outadev.twistoast.FragmentWebView"
+        android:label="FragmentWebView">
+        <argument
+            android:name="url"
+            android:defaultValue="@string/url_drawer_navigation"
+            app:type="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/dest_news"
+        android:name="fr.outadev.twistoast.FragmentWebView"
+        android:label="FragmentWebView">
+        <argument
+            android:name="url"
+            android:defaultValue="@string/url_drawer_news"
+            app:type="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/dest_pricing"
+        android:name="fr.outadev.twistoast.FragmentWebView"
+        android:label="FragmentWebView">
+        <argument
+            android:name="url"
+            android:defaultValue="@string/url_drawer_pricing"
+            app:type="string" />
+    </fragment>
+</navigation>

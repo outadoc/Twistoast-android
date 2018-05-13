@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Twistoast - drawer.xml
-  ~ Copyright (C) 2013-2016 Baptiste Candellier
+  ~ Copyright (C) 2013-2018 Baptiste Candellier
   ~
   ~ Twistoast is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -22,20 +22,20 @@
         android:id="@+id/grp_navigation"
         android:checkableBehavior="single">
         <item
-            android:id="@+id/drawer_realtime"
+            android:id="@+id/dest_real_time"
             android:checked="true"
             android:icon="@drawable/ic_directions_bus"
             android:title="@string/drawer_item_realtime"/>
         <item
-            android:id="@+id/drawer_timetables"
+            android:id="@+id/dest_time_tables"
             android:icon="@drawable/ic_schedule"
             android:title="@string/drawer_item_timetables"/>
         <item
-            android:id="@+id/drawer_routes"
+            android:id="@+id/dest_routes"
             android:icon="@drawable/ic_directions"
             android:title="@string/drawer_item_routes"/>
         <item
-            android:id="@+id/drawer_map"
+            android:id="@+id/dest_map"
             android:icon="@drawable/ic_map"
             android:title="@string/drawer_item_map"/>
     </group>
@@ -47,19 +47,19 @@
                 android:id="@+id/grp_info"
                 android:checkableBehavior="single">
                 <item
-                    android:id="@+id/drawer_traffic"
+                    android:id="@+id/dest_traffic"
                     android:icon="@drawable/ic_traffic_cone"
                     android:title="@string/drawer_item_traffic"/>
                 <item
-                    android:id="@+id/drawer_news"
+                    android:id="@+id/dest_news"
                     android:icon="@drawable/ic_books"
                     android:title="@string/drawer_item_news"/>
                 <item
-                    android:id="@+id/drawer_social"
+                    android:id="@+id/dest_social"
                     android:icon="@drawable/ic_twitter"
                     android:title="@string/drawer_item_social"/>
                 <item
-                    android:id="@+id/drawer_pricing"
+                    android:id="@+id/dest_pricing"
                     android:icon="@drawable/ic_payment"
                     android:title="@string/drawer_item_pricing"/>
             </group>
@@ -69,10 +69,10 @@
         android:id="@+id/grp_more"
         android:checkableBehavior="single">
         <item
-            android:id="@+id/drawer_settings"
+            android:id="@+id/dest_settings"
             android:title="@string/drawer_item_preferences"/>
         <item
-            android:id="@+id/drawer_about"
+            android:id="@+id/dest_about"
             android:title="@string/drawer_item_about"/>
     </group>
 </menu>

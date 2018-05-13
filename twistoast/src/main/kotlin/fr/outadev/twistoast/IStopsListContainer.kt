@@ -1,6 +1,6 @@
 /*
  * Twistoast - IStopsListContainer.kt
- * Copyright (C) 2013-2016 Baptiste Candellier
+ * Copyright (C) 2013-2018 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,12 +35,4 @@ interface IStopsListContainer {
     fun onUpdatedStopReferences()
 
     fun setNoContentViewVisible(visible: Boolean)
-
-    /**
-     * Load the fragment at the specified drawer index.
-
-     * @param itemId The identifier of the menu item to load
-     */
-    fun loadFragmentForDrawerItem(itemId: Int)
-
 }

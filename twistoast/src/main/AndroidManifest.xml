@@ -2,7 +2,7 @@
 
 <!--
   ~ Twistoast - AndroidManifest.xml
-  ~ Copyright (C) 2013-2016 Baptiste Candellier
+  ~ Copyright (C) 2013-2018 Baptiste Candellier
   ~
   ~ Twistoast is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -65,11 +65,6 @@
             <meta-data android:name="android.app.shortcuts"
                 android:resource="@xml/app_shortcuts" />
         </activity>
-
-        <activity
-            android:name=".ActivityNewStop"
-            android:label="@string/title_activity_add_stop"
-            android:theme="@style/Twistoast.Theme.NewStopActivity" />
 
         <activity
             android:name="com.google.android.gms.ads.AdActivity"

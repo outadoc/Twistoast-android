@@ -109,8 +109,8 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
         }
 
         stopsRecyclerView.viewTreeObserver.addOnGlobalLayoutListener {
-            if (activity != null) {
-                val viewWidth = stopsRecyclerView.measuredWidth
+            stopsRecyclerView?.let {
+                val viewWidth = it.measuredWidth
                 val cardViewWidth = resources.getDimension(R.dimen.schedule_row_max_size)
                 val newSpanCount = Math.floor((viewWidth / cardViewWidth).toDouble()).toInt()
 
@@ -239,8 +239,8 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
 
     private fun setupListeners() {
         floatingActionButton!!.setOnClickListener {
-            val intent = Intent(activity, ActivityNewStop::class.java)
-            startActivityForResult(intent, 0)
+            //val intent = Intent(activity, ActivityNewStop::class.java)
+            //startActivityForResult(intent, 0)
         }
 
         adView.adListener = object : AdListener() {
@@ -410,14 +410,10 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
         noContentView.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    override fun loadFragmentForDrawerItem(itemId: Int) {
-        (activity as IStopsListContainer).loadFragmentForDrawerItem(itemId)
-    }
-
     /**
      * Fetches every stop schedule from the API and reloads everything.
      */
-    fun updateScheduleData() {
+    private fun updateScheduleData() {
         // start refreshing schedules
         doAsync {
             try {
