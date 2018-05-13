@@ -18,32 +18,27 @@
   -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@+id/drawer_group_learn_more"
-        android:title="@string/drawer_section_more_twisto_info">
-        <menu>
-            <group
-                android:id="@+id/grp_info"
-                android:checkableBehavior="single">
-                <item
-                    android:id="@+id/dest_traffic"
-                    android:icon="@drawable/ic_traffic_cone"
-                    android:title="@string/drawer_item_traffic"/>
-                <item
-                    android:id="@+id/dest_news"
-                    android:icon="@drawable/ic_books"
-                    android:title="@string/drawer_item_news"/>
-                <item
-                    android:id="@+id/dest_social"
-                    android:icon="@drawable/ic_twitter"
-                    android:title="@string/drawer_item_social"/>
-                <item
-                    android:id="@+id/dest_pricing"
-                    android:icon="@drawable/ic_payment"
-                    android:title="@string/drawer_item_pricing"/>
-            </group>
-        </menu>
-    </item>
+    <group
+        android:id="@+id/grp_info"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/dest_traffic"
+            android:icon="@drawable/ic_traffic_cone"
+            android:title="@string/drawer_item_traffic"/>
+        <item
+            android:id="@+id/dest_news"
+            android:icon="@drawable/ic_books"
+            android:title="@string/drawer_item_news"/>
+        <item
+            android:id="@+id/dest_social"
+            android:icon="@drawable/ic_twitter"
+            android:title="@string/drawer_item_social"/>
+        <item
+            android:id="@+id/dest_pricing"
+            android:icon="@drawable/ic_payment"
+            android:title="@string/drawer_item_pricing"/>
+    </group>
+
     <group
         android:id="@+id/grp_more"
         android:checkableBehavior="single">
