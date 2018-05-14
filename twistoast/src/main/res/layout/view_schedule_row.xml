@@ -17,117 +17,136 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:orientation="vertical"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:paddingTop="5dp"
-    android:longClickable="true"
-    android:background="?android:attr/selectableItemBackground">
+	android:layout_height="wrap_content"
+	android:layout_gravity="center"
+	android:background="?android:attr/selectableItemBackground"
+	android:longClickable="true"
+	android:orientation="vertical"
+	android:paddingLeft="10dp"
+	android:paddingTop="5dp"
+	android:paddingRight="10dp">
+
+
+	<FrameLayout
+		android:id="@+id/rowLineIdContainer"
+		android:layout_width="60dp"
+		android:layout_height="60dp"
+		android:background="@drawable/stop_line_icon"
+		android:elevation="1dp"
+		android:padding="5dp"
+		app:layout_constraintStart_toStartOf="@+id/guideline4"
+		app:layout_constraintTop_toTopOf="@+id/guideline6">
+
+		<TextView
+			android:id="@+id/rowLineId"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:gravity="center"
+			android:maxLines="1"
+			android:textColor="@android:color/white"
+			android:textStyle="bold"
+			app:autoSizeMaxTextSize="30sp"
+			app:autoSizeMinTextSize="10sp"
+			app:autoSizeTextType="uniform"
+			tools:text="@sample/bus_stops.json/data/line" />
+	</FrameLayout>
+
+
+	<ImageView
+		android:id="@+id/imgStopWatched"
+		android:layout_width="20dp"
+		android:layout_height="20dp"
+		android:layout_marginStart="16dp"
+		android:src="@drawable/ic_notifications"
+		android:tint="#ff4d4d4d"
+		android:visibility="gone"
+		app:layout_constraintBottom_toBottomOf="@+id/rowStopName"
+		app:layout_constraintStart_toEndOf="@+id/rowLineIdContainer"
+		app:layout_constraintTop_toTopOf="@+id/rowStopName"
+		tools:visibility="visible" />
+
+	<TextView
+		android:id="@+id/rowStopName"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="8dp"
+		android:maxLines="1"
+		android:textAppearance="?android:attr/textAppearanceLarge"
+		android:textSize="19sp"
+		app:layout_constraintStart_toEndOf="@+id/imgStopWatched"
+		app:layout_constraintTop_toTopOf="@+id/guideline6"
+		tools:text="@sample/bus_stops.json/data/stop" />
+
+
+	<TextView
+		android:id="@+id/rowDirectionName"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="16dp"
+		android:maxLines="1"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:textSize="15sp"
+		android:textStyle="italic"
+		app:layout_constraintStart_toEndOf="@+id/rowLineIdContainer"
+		app:layout_constraintTop_toBottomOf="@+id/rowStopName"
+		tools:text="@sample/bus_stops.json/data/direction" />
+
+	<include
+		android:id="@+id/viewStopTrafficInfoContainer"
+		layout="@layout/view_stop_traffic_info"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="16dp"
+		android:layout_marginTop="8dp"
+		app:layout_constraintEnd_toStartOf="@+id/guideline5"
+		app:layout_constraintStart_toEndOf="@+id/rowLineIdContainer"
+		app:layout_constraintTop_toBottomOf="@+id/rowDirectionName" />
 
     <LinearLayout
-		android:layout_width="match_parent"
+        android:id="@+id/viewScheduleContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:animateLayoutChanges="true"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/guideline7"
+        app:layout_constraintEnd_toStartOf="@+id/guideline5"
+        app:layout_constraintStart_toEndOf="@+id/rowLineIdContainer"
+        app:layout_constraintTop_toBottomOf="@+id/viewStopTrafficInfoContainer" />
+
+
+	<android.support.constraint.Guideline
+		android:id="@+id/guideline4"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		app:layout_constraintGuide_begin="16dp" />
+
+	<android.support.constraint.Guideline
+		android:id="@+id/guideline5"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		app:layout_constraintGuide_end="16dp" />
+
+	<android.support.constraint.Guideline
+		android:id="@+id/guideline6"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:orientation="horizontal"
-		android:paddingTop="7dp"
-		android:paddingBottom="7dp">
+		app:layout_constraintGuide_begin="16dp" />
 
-		<FrameLayout
-			android:id="@+id/rowLineIdContainer"
-			android:layout_width="60dp"
-			android:layout_height="60dp"
-			android:layout_gravity="center"
-            android:layout_marginLeft="5dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginEnd="10dp"
-			android:background="@drawable/stop_line_icon"
-			android:elevation="1dp"
-			android:padding="5dp">
+	<android.support.constraint.Guideline
+		android:id="@+id/guideline7"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		app:layout_constraintGuide_end="16dp" />
 
-            <TextView
-                android:id="@+id/rowLineId"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:maxLines="1"
-                android:textColor="@android:color/white"
-                android:textStyle="bold"
-                app:autoSizeMaxTextSize="30sp"
-                app:autoSizeMinTextSize="10sp"
-                app:autoSizeTextType="uniform"
-                tools:text="@tools:sample/bus_stops.json/data/line" />
-		</FrameLayout>
 
-		<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_margin="5dp"
-			android:orientation="vertical"
-			android:paddingEnd="5dp"
-			android:paddingLeft="5dp"
-			android:paddingRight="5dp"
-			android:paddingStart="5dp">
-
-            <LinearLayout
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:orientation="horizontal"
-				android:gravity="center_vertical">
-
-				<ImageView
-					android:id="@+id/imgStopWatched"
-					android:layout_width="20dp"
-					android:layout_height="20dp"
-					android:layout_gravity="center_vertical"
-					android:src="@drawable/ic_notifications"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginEnd="5dp"
-					android:layout_marginTop="1dp"
-					android:tint="#ff4d4d4d"
-					android:visibility="gone"
-					tools:visibility="visible" />
-
-                <TextView
-                    android:id="@+id/rowStopName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxLines="1"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textSize="19sp"
-                    tools:text="@tools:sample/bus_stops.json/data/stop" />
-
-			</LinearLayout>
-
-            <TextView
-                android:id="@+id/rowDirectionName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textSize="15sp"
-                android:textStyle="italic"
-                tools:text="@tools:sample/bus_stops.json/data/direction" />
-
-			<include layout="@layout/view_stop_traffic_info" />
-
-            <LinearLayout
-				android:id="@+id/viewScheduleContainer"
-				android:animateLayoutChanges="true"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginStart="5dp"
-				android:layout_marginTop="5dp"
-				android:orientation="vertical">
-
-			</LinearLayout>
-		</LinearLayout>
-	</LinearLayout>
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

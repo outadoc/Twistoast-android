@@ -23,6 +23,6 @@
 
 	<solid
 		android:color="#ffbebab3"
-		tools:color="@tools:sample/bus_stops.json/data/color" />
+		tools:color="@sample/bus_stops.json/data/color" />
 
 </shape>

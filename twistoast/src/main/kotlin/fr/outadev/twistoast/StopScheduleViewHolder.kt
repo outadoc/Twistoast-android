@@ -18,6 +18,7 @@
 
 package fr.outadev.twistoast
 
+import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.support.annotation.StringRes
 import android.support.v7.widget.RecyclerView
@@ -42,32 +43,35 @@ import fr.outadev.twistoast.extensions.toColor
  */
 class StopScheduleViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
-    val container: LinearLayout
-    val rowLineIdContainer: FrameLayout
+    val container: View
+    val context: Context
 
+    val rowLineIdContainer: FrameLayout
     val rowLineId: TextView
     val rowStopName: TextView
     val rowDirectionName: TextView
     val viewScheduleContainer: LinearLayout
     val imgStopWatched: ImageView
-    val lineDrawable: GradientDrawable
 
     val lblStopTrafficTitle: TextView
     val lblStopTrafficMessage: TextView
 
-    val lblScheduleTime = arrayOfNulls<TextView>(RecyclerAdapterRealtime.NB_SCHEDULES_DISPLAYED)
-    val lblScheduleDirection = arrayOfNulls<TextView>(RecyclerAdapterRealtime.NB_SCHEDULES_DISPLAYED)
-    val lblScheduleSeparator = arrayOfNulls<TextView>(RecyclerAdapterRealtime.NB_SCHEDULES_DISPLAYED)
-    val scheduleContainers = arrayOfNulls<View>(RecyclerAdapterRealtime.NB_SCHEDULES_DISPLAYED)
-
     val viewStopTrafficInfoContainer: View
     val imgStopTrafficExpandIcon: View
 
-    var isExpanded: Boolean
+    private val lblScheduleTime = arrayOfNulls<TextView>(RecyclerAdapterRealtime.NB_SCHEDULES_DISPLAYED)
+    private val lblScheduleDirection = arrayOfNulls<TextView>(RecyclerAdapterRealtime.NB_SCHEDULES_DISPLAYED)
+    private val lblScheduleSeparator = arrayOfNulls<TextView>(RecyclerAdapterRealtime.NB_SCHEDULES_DISPLAYED)
+    private val scheduleContainers = arrayOfNulls<View>(RecyclerAdapterRealtime.NB_SCHEDULES_DISPLAYED)
+
+    private val lineDrawable: GradientDrawable
+
+    private var isExpanded: Boolean
 
     init {
         val inflater = LayoutInflater.from(v.context)
-        container = v as LinearLayout
+        container = v
+        context = v.context
 
         isExpanded = false
 
@@ -125,21 +129,27 @@ class StopScheduleViewHolder(v: View) : RecyclerView.ViewHolder(v) {
     }
 
     fun displayStopInfo(stop: TimeoStop) {
-        val brighterColor = stop.line.color.toColor()?.brighten()
-        brighterColor?.let { lineDrawable.setColor(it.toArgb()) }
+        val color = stop.line.color.toColor()
+        val brighterColor = color?.brighten()
+
+        brighterColor?.let {
+            val mutated = lineDrawable.mutate() as GradientDrawable
+            mutated.color = null
+            mutated.colors = intArrayOf(color.toArgb(), it.toArgb())
+        }
 
         rowLineId.text = stop.line.id
-        rowStopName.text = rowStopName.context.getString(R.string.stop_name, stop.name)
+        rowStopName.text = context.getString(R.string.stop_name, stop.name)
 
-        val dir = if (stop.line.direction.name != null) stop.line.direction.name else stop.line.direction.id
-        rowDirectionName.text = rowDirectionName.context.getString(R.string.direction_name, dir)
+        val dir = stop.line.direction.name ?: stop.line.direction.id
+        rowDirectionName.text = context.getString(R.string.direction_name, dir)
     }
 
     fun displaySchedule(stopSchedule: TimeoStopSchedule) {
         // Get the schedules for this stop
         stopSchedule.schedules.forEachIndexed {
             i, schedule ->
-            lblScheduleTime[i]?.text = TimeFormatter.formatTime(lblScheduleTime[i]!!.context, schedule.scheduleTime)
+            lblScheduleTime[i]?.text = TimeFormatter.formatTime(context, schedule.scheduleTime)
             lblScheduleDirection[i]?.text = schedule.direction
             scheduleContainers[i]?.visibility = View.VISIBLE
 

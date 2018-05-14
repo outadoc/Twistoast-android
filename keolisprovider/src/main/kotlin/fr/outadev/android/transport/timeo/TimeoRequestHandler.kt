@@ -94,7 +94,7 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) : ITimeoR
 
         checkForErrors(res.erreur)
 
-        val linesList = res.alss.map {
+        return res.alss.map {
                     als ->
                     TimeoLine(
                         id = als.ligne.code,
@@ -103,8 +103,6 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) : ITimeoR
                         color = "#" + leftPad(Integer.toHexString(Integer.valueOf(als.ligne.couleur)), 6, '0'),
                         networkCode = networkCode)
                 }
-
-        return linesList
     }
 
     @Throws(IOException::class, TimeoException::class)
@@ -116,7 +114,7 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) : ITimeoR
 
         checkForErrors(res.erreur)
 
-        val stopsList = res.alss.filter { it.arret.code != null && it.arret.nom != null }.map {
+        return res.alss.filter { it.arret.code != null && it.arret.nom != null }.map {
             als ->
             TimeoStop(
                     id = als.arret.code!!.toInt(),
@@ -129,8 +127,6 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) : ITimeoR
                             color = "#" + leftPad(Integer.toHexString(Integer.valueOf(als.ligne.couleur)), 6, '0'),
                             networkCode = networkCode))
         }
-
-        return stopsList
     }
 
     /**
@@ -139,10 +135,9 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) : ITimeoR
      */
     @Throws(IOException::class, TimeoException::class)
     override fun getStopsByCode(networkCode: Int, codes: List<Int>): List<TimeoStop> {
-        var codesCat = codes.fold("", { codesCat, code -> codesCat + code + ","})
-
-        // Don't keep the last comma
-        codesCat = codesCat.substring(0, codesCat.length - 1)
+        val codesCat = codes
+                .filterNot { code -> code == 0 }
+                .joinToString(",")
 
         val params = "xml=1&code=$codesCat"
 
@@ -151,21 +146,21 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) : ITimeoR
 
         checkForErrors(res.erreur)
 
-        val stopsList = res.alss.filter { it.arret.code != null && it.arret.nom != null }.map {
-            als ->
-            TimeoStop(
-                    id = als.arret.code!!.toInt(),
-                    name = als.arret.nom!!.smartCapitalize(),
-                    reference = als.refs,
-                    line = TimeoLine(
-                            id = als.ligne.code,
-                            name = als.ligne.nom.smartCapitalize(),
-                            direction = TimeoDirection(als.ligne.sens, als.ligne.vers?.smartCapitalize()),
-                            color = "#" + leftPad(Integer.toHexString(Integer.valueOf(als.ligne.couleur)), 6, '0'),
-                            networkCode = networkCode))
-        }
-
-        return stopsList
+        return res.alss
+                .filter { it.arret.code != null }
+                .filter { it.arret.nom != null }
+                .map { als ->
+                    TimeoStop(
+                            id = als.arret.code!!.toInt(),
+                            name = als.arret.nom!!.smartCapitalize(),
+                            reference = als.refs,
+                            line = TimeoLine(
+                                    id = als.ligne.code,
+                                    name = als.ligne.nom.smartCapitalize(),
+                                    direction = TimeoDirection(als.ligne.sens, als.ligne.vers?.smartCapitalize()),
+                                    color = "#" + leftPad(Integer.toHexString(Integer.valueOf(als.ligne.couleur)), 6, '0'),
+                                    networkCode = networkCode))
+                }
     }
 
     /**
@@ -193,11 +188,9 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) : ITimeoR
         }
 
         // Append the stop references to the refs to send to the API
-        var refs = stops.filter { stop -> stop.reference != null }
-                .fold("", { refs, stop -> refs + stop.reference + ";"})
-
-        // Don't keep the last semicolon
-        refs = refs.substring(0, refs.length - 1)
+        val refs = stops.filter { stop -> stop.reference != null }
+                        .map { stop -> stop.reference }
+                        .joinToString(";")
 
         val params = "xml=3&refs=${URLEncoder.encode(refs, "UTF-8")}&ran=1"
 
@@ -208,7 +201,7 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) : ITimeoR
 
         checkForErrors(res.erreur)
 
-        val schedules = res.horaires.filter {
+        return res.horaires.filter {
             horaire ->
             horaire.description != null && stops.any {
                 stop ->
@@ -245,8 +238,6 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) : ITimeoR
                     }.distinct()
             )
         }
-
-        return schedules
     }
 
     /**
@@ -301,7 +292,7 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) : ITimeoR
                         val alert = obj.getJSONObject("alerte")
                         return TimeoTrafficAlert(
                                 alert.getInt("id_alerte"),
-                                alert.getString("libelle_alerte").trim { it <= ' ' }.replace("  ".toRegex(), " - "),
+                                alert.getString("libelle_alerte").trim { it <= ' ' }.replace(" {2}".toRegex(), " - "),
                                 alert.getString("url_alerte"))
                     }
                 }
