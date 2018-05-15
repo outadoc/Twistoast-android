@@ -39,7 +39,7 @@ fun Color.brighten(): Color {
     }
 
     Color.colorToHSV(color.toArgb(), hsv)
-    //hsv[0] -= 35f
+    hsv[0] -= 35f
     hsv[2] *= 1.8f
 
     return Color.valueOf(Color.HSVToColor(hsv))

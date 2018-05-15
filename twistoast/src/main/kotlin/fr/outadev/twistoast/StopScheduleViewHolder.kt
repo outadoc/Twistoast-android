@@ -19,6 +19,7 @@
 package fr.outadev.twistoast
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.drawable.GradientDrawable
 import android.support.annotation.StringRes
 import android.support.v7.widget.RecyclerView
@@ -134,8 +135,8 @@ class StopScheduleViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
         brighterColor?.let {
             val mutated = lineDrawable.mutate() as GradientDrawable
-            mutated.color = null
-            mutated.colors = intArrayOf(color.toArgb(), it.toArgb())
+            mutated.color = ColorStateList.valueOf(it.toArgb())
+            //mutated.colors = intArrayOf(color.toArgb(), it.toArgb())
         }
 
         rowLineId.text = stop.line.id
