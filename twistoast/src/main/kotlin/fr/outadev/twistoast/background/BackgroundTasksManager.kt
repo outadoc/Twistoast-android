@@ -30,17 +30,7 @@ import java.util.concurrent.TimeUnit
  */
 object BackgroundTasksManager {
 
-    /**
-     * Enables the periodic background traffic alert job/receiver.
-     * @param context
-     */
-    fun enableTrafficAlertJob(context: Context) = TrafficAlertAlarmReceiver.enable(context)
-
-    /**
-     * Disables the periodic background traffic alert job/receiver.
-     * @param context
-     */
-    fun disableTrafficAlertJob(context: Context) = TrafficAlertAlarmReceiver.disable(context)
+    private const val WORK_ALARM: String = "WORK_ALARM"
 
     /**
      * Enables the periodic stop arrival time alarm receiver.

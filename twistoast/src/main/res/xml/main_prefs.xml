@@ -62,27 +62,6 @@
 			android:title="@string/pref_pebble_color_title" />
 
 	</PreferenceCategory>
-	<PreferenceCategory android:title="@string/pref_cat_notif_traffic">
-
-		<SwitchPreference
-			android:defaultValue="true"
-			android:key="pref_enable_notif_traffic"
-			android:summary="@string/pref_enable_notif_traffic_sum"
-			android:title="@string/pref_enable_notif_traffic_title" />
-
-		<CheckBoxPreference
-			android:defaultValue="false"
-			android:key="pref_notif_traffic_ring"
-			android:summary="@string/pref_notif_traffic_ring_sum"
-			android:title="@string/pref_ringer_title" />
-
-		<CheckBoxPreference
-			android:defaultValue="true"
-			android:key="pref_notif_traffic_vibrate"
-			android:summary="@string/pref_notif_traffic_vibrate_sum"
-			android:title="@string/pref_vibrate_title" />
-
-	</PreferenceCategory>
 	<PreferenceCategory android:title="@string/pref_cat_notif_watched">
 
 		<CheckBoxPreference

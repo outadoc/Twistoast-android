@@ -1,6 +1,6 @@
 /*
  * Twistoast - FragmentPreferences.kt
- * Copyright (C) 2013-2016 Baptiste Candellier
+ * Copyright (C) 2013-2018 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,6 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.preference.ListPreference
 import android.support.v7.preference.PreferenceFragmentCompat
-import fr.outadev.twistoast.background.BackgroundTasksManager
 
 /**
  * A preferences fragment for the preferences of the app.
@@ -75,24 +74,12 @@ class FragmentPreferences : PreferenceFragmentCompat(), OnSharedPreferenceChange
             }
 
             "pref_app_theme" -> restartApp()
-
-            "pref_enable_notif_traffic" -> {
-                context?.let {
-                    if (sharedPreferences.getBoolean("pref_enable_notif_traffic", true)) {
-                        BackgroundTasksManager.enableTrafficAlertJob(it.applicationContext)
-                    } else {
-                        BackgroundTasksManager.disableTrafficAlertJob(it.applicationContext)
-                    }
-
-                    updatePreferenceStates()
-                }
-            }
         }
     }
 
     private fun restartApp() {
         val pendingIntentId = 1
-        val mgr = activity!!.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val mgr = activity?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         AlertDialog.Builder(activity)
                 .setTitle(R.string.pref_restart_required_title)
