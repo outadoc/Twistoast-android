@@ -28,8 +28,11 @@ import android.util.Log
 import androidx.work.Worker
 import fr.outadev.android.transport.timeo.TimeoRequestHandler
 import fr.outadev.android.transport.timeo.TimeoStopSchedule
-import fr.outadev.twistoast.*
+import fr.outadev.twistoast.ActivityMain
+import fr.outadev.twistoast.ConfigurationManager
+import fr.outadev.twistoast.R
 import fr.outadev.twistoast.TimeFormatter.formatTime
+import fr.outadev.twistoast.persistence.StopRepository
 import org.joda.time.DateTime
 
 /**
@@ -40,7 +43,7 @@ class NextStopAlarmReceiver : Worker() {
 
     override fun doWork(): WorkerResult {
         val requestHandler = TimeoRequestHandler()
-        val database = Database(DatabaseOpenHelper(applicationContext))
+        val database = StopRepository()
 
         Log.d(TAG, "checking stop schedules for notifications")
 

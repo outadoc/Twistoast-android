@@ -32,6 +32,8 @@ import androidx.navigation.fragment.findNavController
 import fr.outadev.android.transport.timeo.*
 import fr.outadev.twistoast.extensions.brighten
 import fr.outadev.twistoast.extensions.toColor
+import fr.outadev.twistoast.persistence.IStopRepository
+import fr.outadev.twistoast.persistence.StopRepository
 import kotlinx.android.synthetic.main.fragment_new_stop.*
 import kotlinx.android.synthetic.main.view_schedule_row.*
 import kotlinx.android.synthetic.main.view_single_schedule_label.view.*
@@ -43,7 +45,7 @@ import org.jetbrains.anko.uiThread
 class FragmentNewStop : Fragment() {
 
     private lateinit var itemNext: MenuItem
-    private lateinit var databaseHandler: Database
+    private lateinit var databaseHandler: IStopRepository
     private var requestHandler: TimeoRequestHandler
     private var lineList: List<TimeoLine>
 
@@ -56,7 +58,7 @@ class FragmentNewStop : Fragment() {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
 
-        databaseHandler = Database(DatabaseOpenHelper())
+        databaseHandler = StopRepository()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater?) {

@@ -38,7 +38,8 @@ import com.google.android.gms.common.GoogleApiAvailability
 import fr.outadev.android.transport.timeo.*
 import fr.outadev.twistoast.FragmentNewStop.Companion.STOP_ADDED
 import fr.outadev.twistoast.background.BackgroundTasksManager
-import fr.outadev.twistoast.background.NextStopAlarmReceiver
+import fr.outadev.twistoast.persistence.IStopRepository
+import fr.outadev.twistoast.persistence.StopRepository
 import kotlinx.android.synthetic.main.fragment_realtime.*
 import kotlinx.android.synthetic.main.view_no_content.*
 import org.jetbrains.anko.doAsync
@@ -49,7 +50,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
     private val periodicRefreshHandler = Handler()
 
     private lateinit var periodicRefreshRunnable: Runnable
-    private lateinit var databaseHandler: Database
+    private lateinit var databaseHandler: IStopRepository
     private lateinit var config: ConfigurationManager
     private lateinit var referenceUpdater: TimeoStopReferenceUpdater
     private lateinit var requestHandler: TimeoRequestHandler
@@ -75,7 +76,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
         setHasOptionsMenu(true)
 
         config = ConfigurationManager()
-        databaseHandler = Database(DatabaseOpenHelper())
+        databaseHandler = StopRepository()
         referenceUpdater = TimeoStopReferenceUpdater()
         requestHandler = TimeoRequestHandler()
 

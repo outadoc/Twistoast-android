@@ -21,6 +21,7 @@ package fr.outadev.twistoast
 import android.app.Application
 import android.support.v7.app.AppCompatDelegate
 import fr.outadev.twistoast.background.BackgroundTasksManager
+import fr.outadev.twistoast.persistence.DatabaseOpenHelper
 
 /**
  * Global application class for Twistoast.

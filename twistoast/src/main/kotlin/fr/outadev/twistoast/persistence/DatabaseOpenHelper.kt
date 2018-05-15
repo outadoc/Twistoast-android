@@ -1,6 +1,6 @@
 /*
  * Twistoast - DatabaseOpenHelper.kt
- * Copyright (C) 2013-2016 Baptiste Candellier
+ * Copyright (C) 2013-2018 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,12 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast
+package fr.outadev.twistoast.persistence
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import fr.outadev.android.transport.timeo.TimeoRequestHandler
+import fr.outadev.twistoast.ApplicationTwistoast
 import org.jetbrains.anko.db.ManagedSQLiteOpenHelper
 import java.io.FileOutputStream
 import java.io.IOException
@@ -31,7 +32,7 @@ import java.io.IOException
  *
  * @author outadoc
  */
-class DatabaseOpenHelper (private val context: Context = ApplicationTwistoast.instance) : ManagedSQLiteOpenHelper(context, DatabaseOpenHelper.DATABASE_NAME, null, DatabaseOpenHelper.DATABASE_VERSION) {
+class DatabaseOpenHelper (private val context: Context = ApplicationTwistoast.instance) : ManagedSQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(LINES_TABLE_CREATE)

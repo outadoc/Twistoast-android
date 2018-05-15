@@ -29,9 +29,9 @@ import fr.outadev.android.transport.timeo.TimeoRequestHandler
 import fr.outadev.android.transport.timeo.TimeoSingleSchedule
 import fr.outadev.android.transport.timeo.TimeoStopSchedule
 import fr.outadev.twistoast.ConfigurationManager
-import fr.outadev.twistoast.Database
-import fr.outadev.twistoast.DatabaseOpenHelper
 import fr.outadev.twistoast.TimeFormatter
+import fr.outadev.twistoast.persistence.IStopRepository
+import fr.outadev.twistoast.persistence.StopRepository
 import org.jetbrains.anko.doAsync
 import java.util.*
 
@@ -42,20 +42,16 @@ import java.util.*
  */
 class PebbleWatchReceiver : PebbleDataReceiver(PebbleWatchReceiver.PEBBLE_UUID) {
 
-    private val requestHandler: TimeoRequestHandler
-    private lateinit var database: Database
-
-    init {
-        requestHandler = TimeoRequestHandler()
-    }
+    private val requestHandler: TimeoRequestHandler = TimeoRequestHandler()
+    private lateinit var database: IStopRepository
 
     override fun receiveData(context: Context, transactionId: Int, data: PebbleDictionary) {
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-        Log.d(TAG, "received a message from pebble " + PEBBLE_UUID)
+        Log.d(TAG, "received a message from pebble $PEBBLE_UUID")
 
         // open the database and count the stops
-        database = Database(DatabaseOpenHelper(context))
+        database = StopRepository()
 
         val stopsCount = database.stopsCount
         val messageType : Byte = data.getInteger(KEY_TWISTOAST_MESSAGE_TYPE).toByte()
@@ -79,7 +75,7 @@ class PebbleWatchReceiver : PebbleDataReceiver(PebbleWatchReceiver.PEBBLE_UUID) 
             doAsync {
                 try {
                     val schedule = requestHandler.getSingleSchedule(stop!!)
-                    Log.d(TAG, "got data for stop: " + schedule)
+                    Log.d(TAG, "got data for stop: $schedule")
                     craftAndSendSchedulePacket(context, schedule)
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -151,7 +147,7 @@ class PebbleWatchReceiver : PebbleDataReceiver(PebbleWatchReceiver.PEBBLE_UUID) 
 
         res.addInt32(KEY_BACKGROUND_COLOR, color)
 
-        Log.d(TAG, "sending back: " + res)
+        Log.d(TAG, "sending back: $res")
         PebbleKit.sendDataToPebble(context, PEBBLE_UUID, res)
     }
 

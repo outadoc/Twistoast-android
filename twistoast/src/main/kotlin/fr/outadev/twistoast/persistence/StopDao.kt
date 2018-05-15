@@ -1,6 +1,6 @@
 /*
- * Twistoast - Database.kt
- * Copyright (C) 2013-2016 Baptiste Candellier
+ * Twistoast - StopDao.kt
+ * Copyright (C) 2013-2018 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.twistoast
+package fr.outadev.twistoast.persistence
 
 import android.content.ContentValues
 import android.database.sqlite.SQLiteConstraintException
@@ -34,11 +34,7 @@ import java.util.*
  *
  * @author outadoc
  */
-class Database(private val db: ManagedSQLiteOpenHelper) {
-
-    enum class SortBy {
-        LINE, STOP
-    }
+class StopDao(private val db: ManagedSQLiteOpenHelper) {
 
     /**
      * Adds a bus stop to the database.
@@ -119,7 +115,7 @@ class Database(private val db: ManagedSQLiteOpenHelper) {
 
      * @return a list of all the stops
      */
-    fun getAllStops(sortCriteria: SortBy): List<TimeoStop> {
+    fun getAllStops(sortCriteria: IStopRepository.SortBy): List<TimeoStop> {
         // Clean notification flags that have timed out so they don't interfere
         cleanOutdatedWatchedStops()
 
@@ -127,7 +123,7 @@ class Database(private val db: ManagedSQLiteOpenHelper) {
         val stopsList = ArrayList<TimeoStop>()
 
         when (sortCriteria) {
-            Database.SortBy.STOP -> sortBy = "stop.stop_name, CAST(line.line_id AS INTEGER)"
+            IStopRepository.SortBy.STOP -> sortBy = "stop.stop_name, CAST(line.line_id AS INTEGER)"
             else -> sortBy = "CAST(line.line_id AS INTEGER), line.line_id, stop.stop_name"
         }
 
@@ -181,7 +177,7 @@ class Database(private val db: ManagedSQLiteOpenHelper) {
      * @return the corresponding stop object
      */
     fun getStopAtIndex(index: Int): TimeoStop? {
-        val stopsList = getAllStops(SortBy.STOP)
+        val stopsList = getAllStops(IStopRepository.SortBy.STOP)
 
         if (stopsList.size >= index + 1) {
             return stopsList[index]
