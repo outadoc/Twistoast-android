@@ -272,8 +272,6 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
             }
 
         }
-
-        NextStopAlarmReceiver.setWatchedStopDismissalListener(watchedStopStateListener)
     }
 
     private fun setupAdvertisement() {
@@ -326,7 +324,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
         listAdapter?.notifyDataSetChanged()
 
         // Turn the notifications on
-        context?.applicationContext?.let { BackgroundTasksManager.enableStopAlarmJob(it) }
+        context?.applicationContext?.let { BackgroundTasksManager.enableStopAlarmJob() }
 
         Snackbar.make(stopsRecyclerView, getString(R.string.notifs_enable_toast, stop.name), Snackbar.LENGTH_LONG).setAction(R.string.cancel_stop_deletion) {
             databaseHandler.stopWatchingStop(stop)
@@ -335,7 +333,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
 
             // Turn the notifications back off if necessary
             if (databaseHandler.watchedStopsCount == 0) {
-                context?.applicationContext?.let { appCtx -> BackgroundTasksManager.disableStopAlarmJob(appCtx) }
+                context?.applicationContext?.let { appCtx -> BackgroundTasksManager.disableStopAlarmJob() }
             }
         }.show()
     }
@@ -348,7 +346,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
 
         // Turn the notifications back off if necessary
         if (databaseHandler.watchedStopsCount == 0) {
-            context?.applicationContext?.let { BackgroundTasksManager.disableStopAlarmJob(it) }
+            context?.applicationContext?.let { BackgroundTasksManager.disableStopAlarmJob() }
         }
 
         val notificationManager = activity?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

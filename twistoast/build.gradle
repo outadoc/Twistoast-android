@@ -84,6 +84,8 @@ dependencies {
     implementation "android.arch.navigation:navigation-fragment-ktx:$nav_version"
     implementation "android.arch.navigation:navigation-ui-ktx:$nav_version"
 
+    implementation "android.arch.work:work-runtime-ktx:1.0.0-alpha01"
+
     implementation group: 'joda-time', name: 'joda-time', version: '2.9.1'
     implementation group: 'com.getpebble', name: 'pebblekit', version: '3.1.0'
 }

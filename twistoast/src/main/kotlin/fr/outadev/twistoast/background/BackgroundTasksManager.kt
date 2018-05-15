@@ -1,6 +1,6 @@
 /*
  * Twistoast - BackgroundTasksManager.kt
- * Copyright (C) 2013-2016 Baptiste Candellier
+ * Copyright (C) 2013-2018 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,11 @@
 
 package fr.outadev.twistoast.background
 
-import android.content.Context
+import androidx.work.Constraints
+import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequest
+import androidx.work.WorkManager
+import java.util.concurrent.TimeUnit
 
 /**
  * Manages the enabled/disable state of the background jobs ran by the application.
@@ -40,14 +44,29 @@ object BackgroundTasksManager {
 
     /**
      * Enables the periodic stop arrival time alarm receiver.
-     * @param context
      */
-    fun enableStopAlarmJob(context: Context) = NextStopAlarmReceiver.enable(context)
+    fun enableStopAlarmJob() {
+        val work = PeriodicWorkRequest
+                .Builder(NextStopAlarmReceiver::class.java, 1, TimeUnit.MINUTES)
+                .setConstraints(Constraints.Builder()
+                        .setRequiredNetworkType(NetworkType.CONNECTED)
+                        .build())
+                .addTag(WORK_ALARM)
+                .build()
+
+        WorkManager
+                .getInstance()
+                .enqueue(work)
+
+    }
 
     /**
      * Disables the periodic stop arrival time alarm receiver.
-     * @param context
      */
-    fun disableStopAlarmJob(context: Context) = NextStopAlarmReceiver.disable(context)
+    fun disableStopAlarmJob() {
+        WorkManager
+                .getInstance()
+                .cancelAllWorkByTag(WORK_ALARM)
+    }
 
 }

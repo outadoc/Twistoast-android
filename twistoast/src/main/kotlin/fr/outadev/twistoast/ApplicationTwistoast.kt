@@ -39,11 +39,7 @@ class ApplicationTwistoast : Application() {
 
         // Turn the notifications back off if necessary
         if (db.watchedStopsCount > 0) {
-            BackgroundTasksManager.enableStopAlarmJob(applicationContext)
-        }
-
-        if (config.trafficNotificationsEnabled) {
-            BackgroundTasksManager.enableTrafficAlertJob(applicationContext)
+            BackgroundTasksManager.enableStopAlarmJob()
         }
     }
 
