@@ -1,6 +1,6 @@
 /*
  * Twistoast - Util.kt
- * Copyright (C) 2013-2016 Baptiste Candellier
+ * Copyright (C) 2013-2018 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,8 +18,6 @@
 
 package fr.outadev.android.transport
 
-import android.app.AlertDialog
-import android.content.Context
 import org.apache.commons.lang3.StringUtils.capitalize
 import org.joda.time.DateTime
 import org.joda.time.LocalTime
@@ -40,18 +38,17 @@ fun String.getNextDateForTime(currentDate: DateTime = DateTime.now()): DateTime 
     val minutes = splitTime[1].toInt()
 
     val scheduledTime = LocalTime(hours, minutes)
-    val now = currentDate
-    var currDate = currentDate.toLocalDate()
+    var localDate = currentDate.toLocalDate()
 
     // If the time is less than ten minutes in the past, we'll assume that it's still supposed to be
     // today. Otherwise, we suppose it's a time tomorrow.
-    if (scheduledTime.isBefore(now.toLocalTime())) {
-        if (Minutes.minutesBetween(scheduledTime.toDateTimeToday(), now) > Minutes.minutes(10)) {
-            currDate = currDate.plusDays(1)
+    if (scheduledTime.isBefore(currentDate.toLocalTime())) {
+        if (Minutes.minutesBetween(scheduledTime.toDateTimeToday(), currentDate) > Minutes.minutes(10)) {
+            localDate = localDate.plusDays(1)
         }
     }
 
-    return currDate.toDateTime(scheduledTime)
+    return localDate.toDateTime(scheduledTime)
 }
 
 /**
@@ -61,7 +58,7 @@ fun String.getNextDateForTime(currentDate: DateTime = DateTime.now()): DateTime 
  * @return The capitalized text.
  */
 fun String.smartCapitalize(): String {
-    val capitalizedOut: StringBuilder = StringBuilder()
+    val capitalizedOut = StringBuilder()
 
     //explode the string with both spaces and apostrophes
     val str = this.toLowerCase()
@@ -79,15 +76,13 @@ fun String.smartCapitalize(): String {
     val alwaysUpper = listOf("sncf", "chu", "chr", "chs", "crous", "suaps", "fpa", "za", "zi", "zac", "cpam", "efs", "mjc", "paj", "ab")
 
     words.forEach { word ->
-        if (alwaysLower.contains(word)) {
-            //if the word should not be capitalized, just append it to the new string
-            capitalizedOut.append(word)
-        } else if (alwaysUpper.contains(word)) {
-            //if the word should be in upper case, do eet
-            capitalizedOut.append(word.toUpperCase(Locale.FRENCH))
-        } else {
-            //if it's a normal word, just capitalize it
-            capitalizedOut.append(capitalize(word))
+        when {
+            alwaysLower.contains(word) -> //if the word should not be capitalized, just append it to the new string
+                capitalizedOut.append(word)
+            alwaysUpper.contains(word) -> //if the word should be in upper case, do eet
+                capitalizedOut.append(word.toUpperCase(Locale.FRENCH))
+            else -> //if it's a normal word, just capitalize it
+                capitalizedOut.append(capitalize(word))
         }
 
         if (capitalizedOut.length < str.length) {

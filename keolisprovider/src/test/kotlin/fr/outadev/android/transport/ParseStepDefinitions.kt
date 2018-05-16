@@ -21,11 +21,13 @@ package fr.outadev.android.transport
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.whenever
-import cucumber.api.CucumberOptions
 import cucumber.api.DataTable
 import cucumber.api.java.en.Given
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
+import fr.outadev.twistoast.model.TimeoDirection
+import fr.outadev.twistoast.model.TimeoLine
+import fr.outadev.twistoast.model.TimeoStop
 import org.mockito.Mockito
 import java.io.BufferedReader
 import java.io.FileReader
@@ -34,15 +36,14 @@ import java.net.URLEncoder
 /**
  * Created by outadoc on 23/08/16.
  */
-@CucumberOptions
 class ParseStepDefinitions {
 
     companion object {
-        const val mockDir = "keolisprovider/src/test/resources/mocks/"
+        const val mockDir = "src/test/resources/mocks/"
     }
 
-    var requester: IHttpRequester? = null
-    var trh: TimeoRequestHandler? = null
+    private var requester: IHttpRequester? = null
+    private var trh: TimeoRequestHandler? = null
 
     var lines: List<TimeoLine>? = null
     var stops: List<TimeoStop>? = null
@@ -77,7 +78,7 @@ class ParseStepDefinitions {
     @Throws(Throwable::class)
     fun iRequestAListOfStopsForLineAndDirectionWithMock(line: String, dir: String, mock: String) {
         setupHttpMock("xml=1&ligne=$line&sens=$dir", mock)
-        stops = trh!!.getStops(TimeoLine(line, "", TimeoDirection(dir, "")))
+        stops = trh!!.getStops(TimeoLine(line, "", TimeoDirection(dir, ""), TimeoRequestHandler.DEFAULT_NETWORK_CODE))
     }
 
     @When("^I request a list of schedules for the following stop references with mock (.+)$")
@@ -97,6 +98,7 @@ class ParseStepDefinitions {
     }
 
     private fun setupHttpMock(params: String, mockFileName: String) {
+
         whenever(requester!!.requestWebPage(any(), eq(params), any()))
                 .thenReturn(readStringFromResFile(mockDir + mockFileName))
     }

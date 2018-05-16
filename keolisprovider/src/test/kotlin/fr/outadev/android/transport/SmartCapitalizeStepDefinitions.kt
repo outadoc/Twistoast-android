@@ -36,16 +36,13 @@ package fr.outadev.android.transport
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import cucumber.api.CucumberOptions
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
-import fr.outadev.android.transport.smartCapitalize
 import org.junit.Assert.assertEquals
 
 /**
  * Created by outadoc on 26/08/16.
  */
-@CucumberOptions
 class SmartCapitalizeStepDefinitions {
 
     var capitalizedWord: String? = null

@@ -18,7 +18,6 @@
 
 package fr.outadev.android.transport
 
-import cucumber.api.CucumberOptions
 import cucumber.api.java.en.Given
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
@@ -28,7 +27,6 @@ import org.junit.Assert
 /**
  * Created by outadoc on 27/08/16.
  */
-@CucumberOptions
 class TimeStepDefinitions {
 
     var localTime: String? = null
@@ -54,7 +52,7 @@ class TimeStepDefinitions {
         Assert.assertEquals(-min, getMinuteDiffBetweenTwoStringTimes(busTime!!, localTime!!))
     }
 
-    fun getMinuteDiffBetweenTwoStringTimes(busTime: String, localTime: String): Long {
+    private fun getMinuteDiffBetweenTwoStringTimes(busTime: String, localTime: String): Long {
         val localArray = localTime.split(":")
         val localDate = LocalTime(localArray[0].toInt(), localArray[1].toInt()).toDateTimeToday()
 
