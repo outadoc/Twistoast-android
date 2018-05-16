@@ -21,8 +21,10 @@ package fr.outadev.twistoast
 
 import android.content.Context
 import android.preference.PreferenceManager
+import fr.outadev.twistoast.TimeFormatter.TimeDisplayMode.*
 
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import org.joda.time.Duration
 import org.joda.time.format.DateTimeFormat
 
@@ -34,8 +36,8 @@ import org.joda.time.format.DateTimeFormat
  */
 object TimeFormatter {
 
-    const val IMMINENT_THRESHOLD_MINUTES = 1
-    const val COUNTDOWN_THRESHOLD_MINUTES = 45
+    private const val IMMINENT_THRESHOLD_MINUTES = 1
+    private const val COUNTDOWN_THRESHOLD_MINUTES = 45
 
     /**
      * Formats a date into a more user-friendly fashion.
@@ -49,17 +51,21 @@ object TimeFormatter {
      * xx minutes", if more than that: the untouched time parameter
      */
     fun formatTime(context: Context, time: DateTime): String {
-        when (getTimeDisplayMode(time, context)) {
-            TimeFormatter.TimeDisplayMode.CURRENTLY_AT_STOP -> return context.getString(R.string.schedule_time_currently_at_stop)
-            TimeFormatter.TimeDisplayMode.ARRIVAL_IMMINENT -> return context.getString(R.string.schedule_time_arrival_imminent)
-            TimeFormatter.TimeDisplayMode.COUNTDOWN -> {
-                if (isRelative(context)) {
-                    return context.getString(R.string.schedule_time_countdown, getDurationUntilBus(time).standardMinutes)
+        // Display absolute time in the user's time zone
+        val zone = DateTimeZone.getDefault()
+        val strTime = time.toString(DateTimeFormat.shortTime().withZone(zone))
+
+        return when (getTimeDisplayMode(time, context)) {
+            CURRENTLY_AT_STOP -> context.getString(R.string.schedule_time_currently_at_stop)
+            ARRIVAL_IMMINENT -> context.getString(R.string.schedule_time_arrival_imminent)
+            COUNTDOWN -> {
+                when {
+                    isRelative(context) -> context.getString(R.string.schedule_time_countdown, getDurationUntilBus(time).standardMinutes)
+                    else -> strTime
                 }
-                return time.toString(DateTimeFormat.forPattern("HH:mm"))
+
             }
-            TimeFormatter.TimeDisplayMode.FULL -> return time.toString(DateTimeFormat.forPattern("HH:mm"))
-            else -> return time.toString(DateTimeFormat.forPattern("HH:mm"))
+            FULL -> strTime
         }
     }
 
@@ -90,14 +96,14 @@ object TimeFormatter {
         val offset = getDurationUntilBus(schedule).millis / 1000 / 60
 
         if (!PreferenceManager.getDefaultSharedPreferences(context).getBoolean("pref_relative_time", true)) {
-            return TimeDisplayMode.FULL
+            return FULL
         }
 
         return when {
-            offset <= 0 -> TimeDisplayMode.CURRENTLY_AT_STOP
-            offset <= IMMINENT_THRESHOLD_MINUTES -> TimeDisplayMode.ARRIVAL_IMMINENT
-            offset <= COUNTDOWN_THRESHOLD_MINUTES -> TimeDisplayMode.COUNTDOWN
-            else -> TimeDisplayMode.FULL
+            offset <= 0 -> CURRENTLY_AT_STOP
+            offset <= IMMINENT_THRESHOLD_MINUTES -> ARRIVAL_IMMINENT
+            offset <= COUNTDOWN_THRESHOLD_MINUTES -> COUNTDOWN
+            else -> FULL
         }
     }
 

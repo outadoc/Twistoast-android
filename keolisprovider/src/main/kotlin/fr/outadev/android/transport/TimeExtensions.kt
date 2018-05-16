@@ -18,9 +18,15 @@
 
 package fr.outadev.android.transport
 
+import fr.outadev.android.transport.TimeConfig.DEFAULT_TIMEZONE
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import org.joda.time.LocalTime
 import org.joda.time.Minutes
+
+object TimeConfig {
+    val DEFAULT_TIMEZONE = DateTimeZone.forID("Europe/Paris")!!
+}
 
 /**
  * Converts a time string to a Calendar object.
@@ -29,22 +35,25 @@ import org.joda.time.Minutes
  *
  * @return a calendar object, with the time in the string set for the next valid day
  */
-fun String.getNextDateForTime(currentDate: DateTime = DateTime.now()): DateTime {
-    val splitTime = this.split(":".toRegex()).dropLastWhile(String::isEmpty).toTypedArray()
+fun String.getNextDateForTime(currentDateTime: DateTime = DateTime.now(DEFAULT_TIMEZONE)): DateTime {
+    val splitTime = this
+            .split(":".toRegex())
+            .dropLastWhile(String::isEmpty)
+            .toTypedArray()
 
     val hours = splitTime[0].toInt()
     val minutes = splitTime[1].toInt()
 
     val scheduledTime = LocalTime(hours, minutes)
-    var localDate = currentDate.toLocalDate()
+    var localDate = currentDateTime.toLocalDate()
 
     // If the time is less than ten minutes in the past, we'll assume that it's still supposed to be
     // today. Otherwise, we suppose it's a time tomorrow.
-    if (scheduledTime.isBefore(currentDate.toLocalTime())) {
-        if (Minutes.minutesBetween(scheduledTime.toDateTimeToday(), currentDate) > Minutes.minutes(10)) {
+    if (scheduledTime.isBefore(currentDateTime.toLocalTime())) {
+        if (Minutes.minutesBetween(scheduledTime.toDateTimeToday(), currentDateTime) > Minutes.minutes(10)) {
             localDate = localDate.plusDays(1)
         }
     }
 
-    return localDate.toDateTime(scheduledTime)
+    return localDate.toDateTime(scheduledTime, DEFAULT_TIMEZONE)
 }

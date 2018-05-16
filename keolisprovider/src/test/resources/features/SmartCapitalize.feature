@@ -28,3 +28,7 @@ Feature: Smart capitalization
   Scenario: Double hyphenated acronym
     When I capitalize 'CROUS-SUAPS'
     Then I get 'CROUS-SUAPS'
+
+  Scenario: Capitalize double hyphenated acronym
+    When I capitalize 'crous-suaps'
+    Then I get 'CROUS-SUAPS'
