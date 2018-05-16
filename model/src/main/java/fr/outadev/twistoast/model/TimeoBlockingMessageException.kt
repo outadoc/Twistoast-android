@@ -18,9 +18,6 @@
 
 package fr.outadev.twistoast.model
 
-import android.app.AlertDialog
-import android.content.Context
-
 /**
  * A blocking message thrown by the API.
  * Should be displayed in an alert dialog.

@@ -23,7 +23,13 @@ package fr.outadev.twistoast.model
  *
  * @author outadoc
  */
-data class TimeoLine (val id: String, val name: String, var direction: TimeoDirection, val networkCode: Int, val color: String = "#34495E") {
+data class TimeoLine (
+        val id: String,
+        val name: String,
+        var direction: TimeoDirection,
+        val networkCode: Int,
+        val color: String = "#34495E"
+) {
 
     override fun toString(): String = name
 }

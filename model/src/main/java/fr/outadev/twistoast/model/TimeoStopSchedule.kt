@@ -24,4 +24,8 @@ package fr.outadev.twistoast.model
  *
  * @author outadoc
  */
-data class TimeoStopSchedule (var stop: TimeoStop, var schedules: List<TimeoSingleSchedule> = listOf(), var trafficMessages: List<TimeoStopTrafficMessage> = listOf())
+data class TimeoStopSchedule (
+        var stop: TimeoStop,
+        var schedules: List<TimeoSingleSchedule> = listOf(),
+        var trafficMessages: List<TimeoStopTrafficMessage> = listOf()
+)
