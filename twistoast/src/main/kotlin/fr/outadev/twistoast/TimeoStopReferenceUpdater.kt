@@ -20,9 +20,10 @@ package fr.outadev.twistoast
 
 import android.content.Context
 import android.util.Log
-import fr.outadev.android.transport.timeo.TimeoException
-import fr.outadev.android.transport.timeo.TimeoRequestHandler
-import fr.outadev.android.transport.timeo.TimeoStop
+import fr.outadev.android.transport.ITimeoRequestHandler
+import fr.outadev.android.transport.TimeoRequestHandler
+import fr.outadev.twistoast.model.TimeoException
+import fr.outadev.twistoast.model.TimeoStop
 import fr.outadev.twistoast.persistence.IStopRepository
 import fr.outadev.twistoast.persistence.StopRepository
 import org.xmlpull.v1.XmlPullParserException
@@ -36,7 +37,7 @@ import java.io.IOException
 class TimeoStopReferenceUpdater(context: Context = ApplicationTwistoast.instance) {
 
     private val database: IStopRepository = StopRepository()
-    private val requestHandler: TimeoRequestHandler = TimeoRequestHandler()
+    private val requestHandler: ITimeoRequestHandler = TimeoRequestHandler()
 
     /**
      * Updates all the references of the bus stops in the database.

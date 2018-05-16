@@ -1,5 +1,5 @@
 /*
- * Twistoast - settings.gradle
+ * Twistoast - LigneDTO.kt
  * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -16,5 +16,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include ':twistoast', ':keolisprovider', ':model'
-include ':colorPicker'
+package fr.outadev.android.transport.dto
+
+import org.simpleframework.xml.Element
+
+/**
+ * Represents a bus line returned by the XML API.
+ *
+ * @author outadoc
+ */
+class LigneDTO {
+    @field:Element(name = "code") lateinit var code: String
+    @field:Element(name = "nom") lateinit var nom: String
+    @field:Element(name = "sens") lateinit var sens: String
+    @field:Element(name = "vers", required = false) var vers: String? = null
+    @field:Element(name = "couleur") var couleur: Int = 0x34495E
+}

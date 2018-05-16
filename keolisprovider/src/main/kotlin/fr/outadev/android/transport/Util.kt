@@ -18,6 +18,8 @@
 
 package fr.outadev.android.transport
 
+import android.app.AlertDialog
+import android.content.Context
 import org.apache.commons.lang3.StringUtils.capitalize
 import org.joda.time.DateTime
 import org.joda.time.LocalTime

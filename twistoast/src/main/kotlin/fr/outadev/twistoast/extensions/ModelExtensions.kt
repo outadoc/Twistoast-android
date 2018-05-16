@@ -1,6 +1,6 @@
 /*
- * Twistoast - settings.gradle
- * Copyright (C) 2013-2016 Baptiste Candellier
+ * Twistoast - ModelExtensions.kt
+ * Copyright (C) 2013-2018 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,5 +16,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include ':twistoast', ':keolisprovider', ':model'
-include ':colorPicker'
+package fr.outadev.twistoast.extensions
+
+import android.app.AlertDialog
+import android.content.Context
+import fr.outadev.twistoast.model.TimeoBlockingMessageException
+
+fun TimeoBlockingMessageException.getAlertMessage(context: Context?): AlertDialog {
+    return AlertDialog.Builder(context)
+            .setTitle(message)
+            .setMessage(details)
+            .setNeutralButton("OK", null)
+            .create()
+}
+

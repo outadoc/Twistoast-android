@@ -18,12 +18,14 @@
 
 package fr.outadev.twistoast.persistence
 
+import android.arch.persistence.room.Insert
 import android.content.ContentValues
 import android.database.sqlite.SQLiteConstraintException
 import android.database.sqlite.SQLiteDatabase
-import fr.outadev.android.transport.timeo.TimeoDirection
-import fr.outadev.android.transport.timeo.TimeoLine
-import fr.outadev.android.transport.timeo.TimeoStop
+import fr.outadev.twistoast.SortBy
+import fr.outadev.twistoast.model.TimeoDirection
+import fr.outadev.twistoast.model.TimeoLine
+import fr.outadev.twistoast.model.TimeoStop
 import org.jetbrains.anko.db.ManagedSQLiteOpenHelper
 import org.jetbrains.anko.db.transaction
 import org.joda.time.DateTime
@@ -44,7 +46,6 @@ class StopDao(private val db: ManagedSQLiteOpenHelper) {
      * @throws IllegalArgumentException  if the stop is not valid
      * @throws SQLiteConstraintException if a constraint failed
      */
-    @Throws(IllegalArgumentException::class, SQLiteConstraintException::class)
     fun addStopToDatabase(stop: TimeoStop?) {
         if (stop != null) {
             // then, open the database, and start enumerating when we'll need to add
@@ -115,16 +116,15 @@ class StopDao(private val db: ManagedSQLiteOpenHelper) {
 
      * @return a list of all the stops
      */
-    fun getAllStops(sortCriteria: IStopRepository.SortBy): List<TimeoStop> {
+    fun getAllStops(sortCriteria: SortBy): List<TimeoStop> {
         // Clean notification flags that have timed out so they don't interfere
         cleanOutdatedWatchedStops()
 
-        val sortBy: String
-        val stopsList = ArrayList<TimeoStop>()
+        val stopsList = mutableListOf<TimeoStop>()
 
-        when (sortCriteria) {
-            IStopRepository.SortBy.STOP -> sortBy = "stop.stop_name, CAST(line.line_id AS INTEGER)"
-            else -> sortBy = "CAST(line.line_id AS INTEGER), line.line_id, stop.stop_name"
+        val sortBy: String = when (sortCriteria) {
+            SortBy.STOP -> "stop.stop_name, CAST(line.line_id AS INTEGER)"
+            else -> "CAST(line.line_id AS INTEGER), line.line_id, stop.stop_name"
         }
 
         db.use {
@@ -177,7 +177,7 @@ class StopDao(private val db: ManagedSQLiteOpenHelper) {
      * @return the corresponding stop object
      */
     fun getStopAtIndex(index: Int): TimeoStop? {
-        val stopsList = getAllStops(IStopRepository.SortBy.STOP)
+        val stopsList = getAllStops(SortBy.STOP)
 
         if (stopsList.size >= index + 1) {
             return stopsList[index]

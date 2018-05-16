@@ -29,8 +29,13 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import androidx.navigation.fragment.findNavController
-import fr.outadev.android.transport.timeo.*
+import fr.outadev.android.transport.ITimeoRequestHandler
+import fr.outadev.android.transport.TimeoRequestHandler
+import fr.outadev.twistoast.model.TimeoBlockingMessageException
+import fr.outadev.twistoast.model.TimeoException
+import fr.outadev.twistoast.model.*
 import fr.outadev.twistoast.extensions.brighten
+import fr.outadev.twistoast.extensions.getAlertMessage
 import fr.outadev.twistoast.extensions.toColor
 import fr.outadev.twistoast.persistence.IStopRepository
 import fr.outadev.twistoast.persistence.StopRepository
@@ -46,7 +51,7 @@ class FragmentNewStop : Fragment() {
 
     private lateinit var itemNext: MenuItem
     private lateinit var databaseHandler: IStopRepository
-    private var requestHandler: TimeoRequestHandler
+    private val requestHandler: ITimeoRequestHandler
     private var lineList: List<TimeoLine>
 
     init {

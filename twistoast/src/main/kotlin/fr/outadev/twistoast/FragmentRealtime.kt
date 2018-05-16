@@ -35,9 +35,14 @@ import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
-import fr.outadev.android.transport.timeo.*
+import fr.outadev.android.transport.ITimeoRequestHandler
+import fr.outadev.android.transport.TimeoRequestHandler
+import fr.outadev.twistoast.model.TimeoBlockingMessageException
+import fr.outadev.twistoast.model.TimeoException
+import fr.outadev.twistoast.model.*
 import fr.outadev.twistoast.FragmentNewStop.Companion.STOP_ADDED
 import fr.outadev.twistoast.background.BackgroundTasksManager
+import fr.outadev.twistoast.extensions.getAlertMessage
 import fr.outadev.twistoast.persistence.IStopRepository
 import fr.outadev.twistoast.persistence.StopRepository
 import kotlinx.android.synthetic.main.fragment_realtime.*
@@ -53,7 +58,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
     private lateinit var databaseHandler: IStopRepository
     private lateinit var config: ConfigurationManager
     private lateinit var referenceUpdater: TimeoStopReferenceUpdater
-    private lateinit var requestHandler: TimeoRequestHandler
+    private lateinit var requestHandler: ITimeoRequestHandler
 
     private var stopsList: MutableList<TimeoStop> = mutableListOf()
     private val schedules: MutableMap<TimeoStop, TimeoStopSchedule> = mutableMapOf()
@@ -201,13 +206,13 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.sortby_line -> {
-                config.listSortOrder = Database.SortBy.LINE
+                config.listSortOrder = SortBy.LINE
                 refreshAllStopSchedules(true)
                 return true
             }
 
             R.id.sortby_stop -> {
-                config.listSortOrder = Database.SortBy.STOP
+                config.listSortOrder = SortBy.STOP
                 refreshAllStopSchedules(true)
                 return true
             }

@@ -1,5 +1,5 @@
 /*
- * Twistoast - settings.gradle
+ * Twistoast - ArretDTO.kt
  * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -16,5 +16,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include ':twistoast', ':keolisprovider', ':model'
-include ':colorPicker'
+package fr.outadev.android.transport.dto
+
+import org.simpleframework.xml.Element
+
+/**
+ * Represents a stop in the XML API.
+ *
+ * @author outadoc
+ */
+class ArretDTO {
+    @field:Element(name = "code", required = false) var code: String? = null
+    @field:Element(name = "nom", required = false) var nom: String? = null
+}

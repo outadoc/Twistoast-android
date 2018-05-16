@@ -62,19 +62,19 @@ class ConfigurationManager(context: Context = ApplicationTwistoast.instance) {
         get() = preferences.getInt("last_traffic_notif_id", -1)
         set(id) = preferences.edit().putInt("last_traffic_notif_id", id).apply()
 
-    var listSortOrder: Database.SortBy
+    var listSortOrder: SortBy
         get() = stringToSortCriteria(preferences.getString("pref_list_sortby", "line"))
         set(sortOrder) = preferences.edit().putString("pref_list_sortby", sortCriteriaToString(sortOrder)).apply()
 
-    private fun stringToSortCriteria(sortBy: String): Database.SortBy {
+    private fun stringToSortCriteria(sortBy: String): SortBy {
         return when (sortBy.toLowerCase()) {
-            "stop" -> Database.SortBy.STOP
-            "line" -> Database.SortBy.LINE
-            else -> Database.SortBy.LINE
+            "stop" -> SortBy.STOP
+            "line" -> SortBy.LINE
+            else -> SortBy.LINE
         }
     }
 
-    private fun sortCriteriaToString(sortBy: Database.SortBy): String {
+    private fun sortCriteriaToString(sortBy: SortBy): String {
         return sortBy.name.toLowerCase()
     }
 

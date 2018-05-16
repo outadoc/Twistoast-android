@@ -1,5 +1,5 @@
 /*
- * Twistoast - settings.gradle
+ * Twistoast - ErreurDTO.kt
  * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -16,5 +16,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include ':twistoast', ':keolisprovider', ':model'
-include ':colorPicker'
+package fr.outadev.android.transport.dto
+
+import org.simpleframework.xml.Attribute
+import org.simpleframework.xml.Text
+
+/**
+ * Represents an error returned by the XML API.
+ *
+ * @author outadoc
+ */
+class ErreurDTO {
+    @field:Attribute(name = "code") var code: String = "000"
+    @field:Text(required = false) var message: String = ""
+}

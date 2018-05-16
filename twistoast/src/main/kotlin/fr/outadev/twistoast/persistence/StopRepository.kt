@@ -18,7 +18,8 @@
 
 package fr.outadev.twistoast.persistence
 
-import fr.outadev.android.transport.timeo.TimeoStop
+import fr.outadev.twistoast.SortBy
+import fr.outadev.twistoast.model.TimeoStop
 import org.joda.time.DateTime
 
 class StopRepository : IStopRepository {
@@ -35,7 +36,7 @@ class StopRepository : IStopRepository {
 
     override fun addStopToDatabase(stop: TimeoStop?) = dbHandler.addStopToDatabase(stop)
 
-    override fun getAllStops(sortCriteria: IStopRepository.SortBy) = dbHandler.getAllStops(sortCriteria)
+    override fun getAllStops(sortCriteria: SortBy) = dbHandler.getAllStops(sortCriteria)
 
     override fun getStopAtIndex(index: Int) = dbHandler.getStopAtIndex(index)
 

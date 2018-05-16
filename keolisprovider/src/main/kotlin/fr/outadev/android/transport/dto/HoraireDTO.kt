@@ -1,5 +1,5 @@
 /*
- * Twistoast - settings.gradle
+ * Twistoast - HoraireDTO.kt
  * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -16,5 +16,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include ':twistoast', ':keolisprovider', ':model'
-include ':colorPicker'
+package fr.outadev.android.transport.dto
+
+import org.simpleframework.xml.Attribute
+import org.simpleframework.xml.Element
+import org.simpleframework.xml.ElementList
+
+/**
+ * Represents a list of schedules returned by the XML API.
+ *
+ * @author outadoc
+ */
+class HoraireDTO {
+    @field:Attribute(name = "id") var id: Int = -1
+    @field:Element(name = "description", required = false) var description: DescriptionDTO? = null
+    @field:ElementList(name = "passages") var passages: List<PassageDTO> = mutableListOf()
+    @field:ElementList(name = "messages") var messages: List<MessageDTO> = mutableListOf()
+}

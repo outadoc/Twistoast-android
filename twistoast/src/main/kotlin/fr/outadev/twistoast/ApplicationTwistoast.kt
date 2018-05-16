@@ -21,7 +21,7 @@ package fr.outadev.twistoast
 import android.app.Application
 import android.support.v7.app.AppCompatDelegate
 import fr.outadev.twistoast.background.BackgroundTasksManager
-import fr.outadev.twistoast.persistence.DatabaseOpenHelper
+import fr.outadev.twistoast.persistence.StopRepository
 
 /**
  * Global application class for Twistoast.
@@ -32,7 +32,7 @@ class ApplicationTwistoast : Application() {
         super.onCreate()
         instance = this
 
-        val db = Database(DatabaseOpenHelper())
+        val db = StopRepository()
         val config = ConfigurationManager()
 
         val nightModeCode = getNightModeForPref(config.nightMode)

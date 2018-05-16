@@ -58,6 +58,7 @@ dependencies {
     def nav_version = "1.0.0-alpha01"
     def lifecycle_version = "1.1.1"
 
+    implementation project(':model')
     implementation project(':keolisprovider')
 
     implementation group: 'com.google.android.gms', name: 'play-services-ads', version: '15.0.1'

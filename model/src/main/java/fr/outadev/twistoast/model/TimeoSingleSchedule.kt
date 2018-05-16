@@ -1,5 +1,5 @@
 /*
- * Twistoast - settings.gradle
+ * Twistoast - TimeoSingleSchedule.kt
  * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -16,5 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include ':twistoast', ':keolisprovider', ':model'
-include ':colorPicker'
+package fr.outadev.twistoast.model
+
+import org.joda.time.DateTime
+
+/**
+ * Stores a single schedule, containing a time and a direction.
+ *
+ * @author outadoc
+ */
+data class TimeoSingleSchedule(val scheduleTime: DateTime, val direction: String?)

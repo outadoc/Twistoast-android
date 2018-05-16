@@ -30,9 +30,9 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import fr.outadev.android.transport.timeo.TimeoStop
-import fr.outadev.android.transport.timeo.TimeoStopSchedule
-import fr.outadev.android.transport.timeo.TimeoStopTrafficMessage
+import fr.outadev.twistoast.model.TimeoStop
+import fr.outadev.twistoast.model.TimeoStopSchedule
+import fr.outadev.twistoast.model.TimeoStopTrafficMessage
 import fr.outadev.twistoast.extensions.brighten
 import fr.outadev.twistoast.extensions.collapse
 import fr.outadev.twistoast.extensions.expand

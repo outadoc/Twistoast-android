@@ -26,8 +26,8 @@ import android.support.v4.app.NotificationCompat
 import android.support.v4.content.ContextCompat
 import android.util.Log
 import androidx.work.Worker
-import fr.outadev.android.transport.timeo.TimeoRequestHandler
-import fr.outadev.android.transport.timeo.TimeoStopSchedule
+import fr.outadev.android.transport.TimeoRequestHandler
+import fr.outadev.twistoast.model.TimeoStopSchedule
 import fr.outadev.twistoast.ActivityMain
 import fr.outadev.twistoast.ConfigurationManager
 import fr.outadev.twistoast.R

@@ -1,6 +1,6 @@
 /*
- * Twistoast - settings.gradle
- * Copyright (C) 2013-2016 Baptiste Candellier
+ * Twistoast - TimeoStopSchedule.kt
+ * Copyright (C) 2013-2018 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,5 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include ':twistoast', ':keolisprovider', ':model'
-include ':colorPicker'
+package fr.outadev.twistoast.model
+
+/**
+ * Used to store a list of schedules, with their corresponding line, direction, and stop
+ * objects.
+ *
+ * @author outadoc
+ */
+data class TimeoStopSchedule (var stop: TimeoStop, var schedules: List<TimeoSingleSchedule> = listOf(), var trafficMessages: List<TimeoStopTrafficMessage> = listOf())

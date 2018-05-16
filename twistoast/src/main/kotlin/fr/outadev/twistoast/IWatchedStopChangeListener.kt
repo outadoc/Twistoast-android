@@ -18,7 +18,7 @@
 
 package fr.outadev.twistoast
 
-import fr.outadev.android.transport.timeo.TimeoStop
+import fr.outadev.twistoast.model.TimeoStop
 
 /**
  * A listener that will send a message when a watched bus has just arrived.

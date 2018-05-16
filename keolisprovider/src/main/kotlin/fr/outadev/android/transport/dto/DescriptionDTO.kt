@@ -1,5 +1,5 @@
 /*
- * Twistoast - settings.gradle
+ * Twistoast - DescriptionDTO.kt
  * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -16,5 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include ':twistoast', ':keolisprovider', ':model'
-include ':colorPicker'
+package fr.outadev.android.transport.dto
+
+import org.simpleframework.xml.Element
+
+/**
+ * Represents the details of a stop and line in the XML API.
+ *
+ * @author outadoc
+ */
+class DescriptionDTO {
+    @field:Element(name = "code") var code: Int = -1
+    @field:Element(name = "arret") lateinit var arret: String
+    @field:Element(name = "ligne") lateinit var ligne: String
+    @field:Element(name = "ligne_nom") lateinit var ligne_nom: String
+    @field:Element(name = "sens") lateinit var sens: String
+    @field:Element(name = "vers", required = false) var vers: String? = null
+    @field:Element(name = "couleur") var couleur: String? = null
+}
+

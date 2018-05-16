@@ -1,6 +1,6 @@
 /*
- * Twistoast - settings.gradle
- * Copyright (C) 2013-2016 Baptiste Candellier
+ * Twistoast - TimeoBlockingMessageException.kt
+ * Copyright (C) 2013-2018 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,5 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include ':twistoast', ':keolisprovider', ':model'
-include ':colorPicker'
+package fr.outadev.twistoast.model
+
+import android.app.AlertDialog
+import android.content.Context
+
+/**
+ * A blocking message thrown by the API.
+ * Should be displayed in an alert dialog.
+ *
+ * @author outadoc
+ */
+class TimeoBlockingMessageException(override var message: String, var details: String? = null): TimeoException(message)

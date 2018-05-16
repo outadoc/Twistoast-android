@@ -1,5 +1,5 @@
 /*
- * Twistoast - settings.gradle
+ * Twistoast - AlsDTO.kt
  * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -16,5 +16,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include ':twistoast', ':keolisprovider', ':model'
-include ':colorPicker'
+package fr.outadev.android.transport.dto
+
+import org.simpleframework.xml.Attribute
+import org.simpleframework.xml.Element
+
+/**
+ * Represents a container for a stop and line in the XML API.
+ *
+ * @author outadoc
+ */
+class AlsDTO {
+    @field:Attribute(name = "id") var id: Int = -1
+    @field:Element(name = "arret") lateinit var arret: ArretDTO
+    @field:Element(name = "ligne") lateinit var ligne: LigneDTO
+    @field:Element(name = "refs", required = false) var refs: String? = null
+}
+

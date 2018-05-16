@@ -25,9 +25,9 @@ import android.util.Log
 import com.getpebble.android.kit.PebbleKit
 import com.getpebble.android.kit.PebbleKit.PebbleDataReceiver
 import com.getpebble.android.kit.util.PebbleDictionary
-import fr.outadev.android.transport.timeo.TimeoRequestHandler
-import fr.outadev.android.transport.timeo.TimeoSingleSchedule
-import fr.outadev.android.transport.timeo.TimeoStopSchedule
+import fr.outadev.android.transport.TimeoRequestHandler
+import fr.outadev.twistoast.model.TimeoSingleSchedule
+import fr.outadev.twistoast.model.TimeoStopSchedule
 import fr.outadev.twistoast.ConfigurationManager
 import fr.outadev.twistoast.TimeFormatter
 import fr.outadev.twistoast.persistence.IStopRepository
@@ -42,7 +42,7 @@ import java.util.*
  */
 class PebbleWatchReceiver : PebbleDataReceiver(PebbleWatchReceiver.PEBBLE_UUID) {
 
-    private val requestHandler: TimeoRequestHandler = TimeoRequestHandler()
+    private val requestHandler = TimeoRequestHandler()
     private lateinit var database: IStopRepository
 
     override fun receiveData(context: Context, transactionId: Int, data: PebbleDictionary) {

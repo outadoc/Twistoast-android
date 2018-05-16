@@ -21,7 +21,7 @@ package fr.outadev.twistoast.persistence
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
-import fr.outadev.android.transport.timeo.TimeoRequestHandler
+import fr.outadev.android.transport.TimeoRequestHandler
 import fr.outadev.twistoast.ApplicationTwistoast
 import org.jetbrains.anko.db.ManagedSQLiteOpenHelper
 import java.io.FileOutputStream

@@ -1,5 +1,5 @@
 /*
- * Twistoast - settings.gradle
+ * Twistoast - TimeoStopTrafficMessage.kt
  * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -16,5 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include ':twistoast', ':keolisprovider', ':model'
-include ':colorPicker'
+package fr.outadev.twistoast.model
+
+/**
+ * A traffic information message specific to a stop, and usually shown inline.
+ *
+ * @author outadoc
+ */
+data class TimeoStopTrafficMessage(val title: String, val body: String)

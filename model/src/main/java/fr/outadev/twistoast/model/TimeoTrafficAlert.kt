@@ -1,5 +1,5 @@
 /*
- * Twistoast - settings.gradle
+ * Twistoast - TimeoTrafficAlert.kt
  * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -16,5 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include ':twistoast', ':keolisprovider', ':model'
-include ':colorPicker'
+package fr.outadev.twistoast.model
+
+import java.io.Serializable
+
+/**
+ * Traffic alert. Used to inform the user of traffic perturbations.
+ *
+ * @author outadoc
+ */
+data class TimeoTrafficAlert (var id: Int, var label: String?, var url: String?) : Serializable

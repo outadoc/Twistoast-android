@@ -1,5 +1,5 @@
 /*
- * Twistoast - settings.gradle
+ * Twistoast - TimeoDirection.kt
  * Copyright (C) 2013-2016 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -16,5 +16,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include ':twistoast', ':keolisprovider', ':model'
-include ':colorPicker'
+package fr.outadev.twistoast.model
+
+/**
+ * Represents the direction of a bus line.
+ * Id can be either A or R (in theory, but it's not restricted).
+ */
+data class TimeoDirection (var id: String, var name: String?) {
+
+    override fun toString(): String {
+        return if (name != null) "$id - $name"
+        else id
+    }
+}

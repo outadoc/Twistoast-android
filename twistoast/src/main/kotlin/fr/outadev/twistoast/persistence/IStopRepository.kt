@@ -19,14 +19,11 @@
 package fr.outadev.twistoast.persistence
 
 import android.database.sqlite.SQLiteConstraintException
-import fr.outadev.android.transport.timeo.TimeoStop
+import fr.outadev.twistoast.SortBy
+import fr.outadev.twistoast.model.TimeoStop
 import org.joda.time.DateTime
 
 interface IStopRepository {
-    enum class SortBy {
-        LINE, STOP
-    }
-
     /**
      * Gets the number of stops in the database.
      *

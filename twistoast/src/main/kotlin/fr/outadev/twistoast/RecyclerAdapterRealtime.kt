@@ -23,8 +23,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import fr.outadev.android.transport.timeo.TimeoStop
-import fr.outadev.android.transport.timeo.TimeoStopSchedule
+import fr.outadev.twistoast.model.TimeoStop
+import fr.outadev.twistoast.model.TimeoStopSchedule
 
 /**
  * An array adapter for the main list of bus stops.
@@ -95,7 +95,7 @@ class RecyclerAdapterRealtime(private val stopsList: MutableList<TimeoStop>, pri
 
         val criteria = config.listSortOrder
 
-        if (criteria == Database.SortBy.STOP) {
+        if (criteria == SortBy.STOP) {
             // If the next item's stop is the same as this one, don't draw a separator either
             return !(item.id == nextItem.id || item.name == nextItem.name)
         } else {

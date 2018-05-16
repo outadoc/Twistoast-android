@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/Twistoast-android.iml" filepath="$PROJECT_DIR$/Twistoast-android.iml" />
       <module fileurl="file://$PROJECT_DIR$/colorPicker/colorPicker.iml" filepath="$PROJECT_DIR$/colorPicker/colorPicker.iml" />
       <module fileurl="file://$PROJECT_DIR$/keolisprovider/keolisprovider.iml" filepath="$PROJECT_DIR$/keolisprovider/keolisprovider.iml" />
+      <module fileurl="file://$PROJECT_DIR$/model/model.iml" filepath="$PROJECT_DIR$/model/model.iml" />
       <module fileurl="file://$PROJECT_DIR$/twistoast/twistoast.iml" filepath="$PROJECT_DIR$/twistoast/twistoast.iml" />
     </modules>
   </component>

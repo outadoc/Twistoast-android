@@ -20,47 +20,30 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 'android-P'
-    buildToolsVersion '28.0.0-rc2'
+    compileSdkVersion 27
 
     defaultConfig {
-        minSdkVersion 'P'
-        targetSdkVersion 'P'
+        minSdkVersion 21
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
     }
 
     buildTypes {
         release {
             minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
-        test.java.srcDirs += 'src/test/kotlin'
-    }
 }
 
 dependencies {
-    implementation project(':model')
+    def lifecycle_version = "1.1.1"
 
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version: '1.2.41'
-
-    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.3.2'
-    implementation group: 'com.squareup.okhttp', name: 'okhttp', version: '2.2.0'
     implementation group: 'joda-time', name: 'joda-time', version: '2.9.1'
-    implementation(group: 'org.simpleframework', name: 'simple-xml', version: '2.7.1'){
-        exclude module: 'stax'
-        exclude module: 'stax-api'
-        exclude module: 'xpp3'
-    }
 
-    testImplementation group: 'junit', name: 'junit', version: '4.12'
-    testImplementation group: 'org.mockito', name: 'mockito-core', version: '1.9.5'
-    testImplementation group: 'com.nhaarman', name: 'mockito-kotlin', version: '0.6.0'
-    testImplementation group: 'info.cukes', name: 'cucumber-java', version: '1.2.4'
-    testImplementation group: 'info.cukes', name: 'cucumber-junit', version: '1.2.4'
-}
-
-repositories {
-    jcenter()
+    implementation "android.arch.lifecycle:extensions:$lifecycle_version"
+    annotationProcessor "android.arch.lifecycle:compiler:$lifecycle_version"
 }
