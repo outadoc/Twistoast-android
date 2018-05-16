@@ -1,5 +1,5 @@
 /*
- * Twistoast - Util.kt
+ * Twistoast - TimeExtensions.kt
  * Copyright (C) 2013-2018 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -18,11 +18,9 @@
 
 package fr.outadev.android.transport
 
-import org.apache.commons.lang3.StringUtils.capitalize
 import org.joda.time.DateTime
 import org.joda.time.LocalTime
 import org.joda.time.Minutes
-import java.util.*
 
 /**
  * Converts a time string to a Calendar object.
@@ -49,48 +47,4 @@ fun String.getNextDateForTime(currentDate: DateTime = DateTime.now()): DateTime 
     }
 
     return localDate.toDateTime(scheduledTime)
-}
-
-/**
- * Capitalizes the first letter of every word, like WordUtils.capitalize(); except it does it WELL.
- * The determinants will not be capitalized, whereas some acronyms will.
- *
- * @return The capitalized text.
- */
-fun String.smartCapitalize(): String {
-    val capitalizedOut = StringBuilder()
-
-    //explode the string with both spaces and apostrophes
-    val str = this.toLowerCase()
-            .trim({ it <= ' ' })
-            .replace(" {2,}".toRegex(), " ")
-
-    val words = str.split("( |-|'|/)".toRegex())
-            .dropLastWhile(String::isEmpty)
-            .toTypedArray()
-
-    // These words will never be capitalized
-    val alwaysLower = listOf("de", "du", "des", "au", "aux", "à", "la", "le", "les", "d", "et", "l")
-
-    // These words will always be capitalized
-    val alwaysUpper = listOf("sncf", "chu", "chr", "chs", "crous", "suaps", "fpa", "za", "zi", "zac", "cpam", "efs", "mjc", "paj", "ab")
-
-    words.forEach { word ->
-        when {
-            alwaysLower.contains(word) -> //if the word should not be capitalized, just append it to the new string
-                capitalizedOut.append(word)
-            alwaysUpper.contains(word) -> //if the word should be in upper case, do eet
-                capitalizedOut.append(word.toUpperCase(Locale.FRENCH))
-            else -> //if it's a normal word, just capitalize it
-                capitalizedOut.append(capitalize(word))
-        }
-
-        if (capitalizedOut.length < str.length) {
-            //we don't know if the next character is a blank space or an apostrophe, so we check that
-            val delimiter = str[capitalizedOut.length]
-            capitalizedOut.append(delimiter)
-        }
-    }
-
-    return capitalize(capitalizedOut.toString())
 }
