@@ -17,6 +17,8 @@
  */
 
 package fr.outadev.twistoast
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
 import android.graphics.drawable.GradientDrawable
@@ -29,45 +31,143 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import androidx.navigation.fragment.findNavController
-import fr.outadev.android.transport.ITimeoRequestHandler
-import fr.outadev.android.transport.TimeoRequestHandler
-import fr.outadev.twistoast.model.TimeoBlockingMessageException
-import fr.outadev.twistoast.model.TimeoException
-import fr.outadev.twistoast.model.*
 import fr.outadev.twistoast.extensions.brighten
 import fr.outadev.twistoast.extensions.getAlertMessage
 import fr.outadev.twistoast.extensions.toColor
-import fr.outadev.twistoast.persistence.IStopRepository
-import fr.outadev.twistoast.persistence.StopRepository
+import fr.outadev.twistoast.model.*
 import kotlinx.android.synthetic.main.fragment_new_stop.*
 import kotlinx.android.synthetic.main.view_schedule_row.*
 import kotlinx.android.synthetic.main.view_single_schedule_label.view.*
-import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.support.v4.longToast
 import org.jetbrains.anko.support.v4.toast
-import org.jetbrains.anko.uiThread
+
 
 class FragmentNewStop : Fragment() {
 
     private lateinit var itemNext: MenuItem
-    private lateinit var databaseHandler: IStopRepository
-    private val requestHandler: ITimeoRequestHandler
-    private var lineList: List<TimeoLine>
 
-    init {
-        lineList = listOf()
-        requestHandler = TimeoRequestHandler()
-    }
+    private lateinit var viewModel: NewStopViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
 
-        databaseHandler = StopRepository()
+        viewModel = ViewModelProviders.of(this).get(NewStopViewModel::class.java)
+
+        viewModel.lines.observe(this, Observer { lines ->
+            spinLine.adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, lines)
+        })
+
+        viewModel.directions.observe(this, Observer { directions ->
+            spinDirection.adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, directions)
+        })
+
+        viewModel.stops.observe(this, Observer { stops ->
+            spinLine.adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, stops)
+        })
+
+        viewModel.isLineListEnabled.observe(this, Observer {
+            spinLine.isEnabled = it ?: false
+        })
+
+        viewModel.isDirectionListEnabled.observe(this, Observer {
+            spinDirection.isEnabled = it ?: false
+        })
+
+        viewModel.isStopListEnabled.observe(this, Observer {
+            spinStop.isEnabled = it ?: false
+        })
+
+        viewModel.isRefreshing.observe(this, Observer {
+            swipeRefreshContainer.isEnabled = it ?: false
+            swipeRefreshContainer.isRefreshing = it ?: false
+        })
+
+        viewModel.selectedLine.observe(this, Observer {
+            // set loading labels
+            rowLineId.text = ""
+            rowDirectionName.text = resources.getString(R.string.loading_data)
+            rowStopName.text = resources.getString(R.string.loading_data)
+
+            viewScheduleContainer.removeAllViewsInLayout()
+            viewScheduleContainer.visibility = View.GONE
+
+            itemNext.isEnabled = false
+
+            it?.let { line ->
+                // set the line view
+                rowLineId.text = line.id
+
+                val lineDrawable = rowLineIdContainer.background as GradientDrawable
+                val brighterColor = line.color.toColor()?.brighten()
+                brighterColor?.let { color -> lineDrawable.setColor(color.toArgb()) }
+
+                // adapt the size based on the size of the line ID
+                when {
+                    rowLineId.text.length > 3 -> rowLineId.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
+                    rowLineId.text.length > 2 -> rowLineId.setTextSize(TypedValue.COMPLEX_UNIT_SP, 23f)
+                    else -> rowLineId.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30f)
+                }
+            }
+        })
+
+        viewModel.selectedDirection.observe(this, Observer {
+            // set loading labels
+            rowDirectionName.text = resources.getString(R.string.loading_data)
+            viewScheduleContainer.removeAllViewsInLayout()
+            viewScheduleContainer.visibility = View.GONE
+
+            itemNext.isEnabled = false
+
+            it?.let { direction ->
+                val dir = direction.name ?: direction.id
+                rowDirectionName.text = resources.getString(R.string.direction_name, dir)
+            }
+        })
+
+        viewModel.selectedStop.observe(this, Observer { it ->
+            rowStopName.text = resources.getString(R.string.loading_data)
+            viewScheduleContainer.removeAllViewsInLayout()
+            viewScheduleContainer.visibility = View.GONE
+
+            itemNext.isEnabled = true
+
+            it?.let { stop ->
+                rowStopName.text = resources.getString(R.string.stop_name, stop.name)
+            }
+        })
+
+        viewModel.schedule.observe(this, Observer {
+            it?.let { schedule ->
+                val inflater = activity?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+
+                swipeRefreshContainer.isEnabled = false
+                swipeRefreshContainer.isRefreshing = false
+
+                val schedList = schedule.schedules
+
+                // set the schedule labels, if we need to
+                for (currSched in schedList) {
+                    val singleScheduleView = inflater.inflate(R.layout.view_single_schedule_label, null)
+
+                    singleScheduleView.lbl_schedule.text = context?.let { ctx -> TimeFormatter.formatTime(ctx, currSched.scheduleTime) }
+                    singleScheduleView.lbl_schedule_direction.text = currSched.direction
+
+                    if (!currSched.direction.isNullOrBlank())
+                        singleScheduleView.lbl_schedule_separator.visibility = View.VISIBLE
+
+                    viewScheduleContainer.addView(singleScheduleView)
+                }
+
+                if (schedList.isNotEmpty()) {
+                    viewScheduleContainer.visibility = View.VISIBLE
+                }
+            }
+        })
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.add_stop, menu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.add_stop, menu)
         itemNext = menu.findItem(R.id.action_ok)
     }
 
@@ -82,12 +182,40 @@ class FragmentNewStop : Fragment() {
                 R.color.twisto_primary, R.color.twisto_secondary,
                 R.color.twisto_primary, R.color.twisto_secondary)
 
-        spinLine.isEnabled = false
-        spinDirection.isEnabled = false
-        spinStop.isEnabled = false
+        spinLine.onItemSelectedListener = object : OnItemSelectedListener {
 
-        setupListeners()
-        getLinesFromAPI()
+            override fun onItemSelected(parentView: AdapterView<*>, view: View, position: Int, id: Long) {
+                viewModel.selectedLine.value = spinLine.getItemAtPosition(position) as Line
+            }
+
+            override fun onNothingSelected(parentView: AdapterView<*>) {
+                viewModel.selectedLine.value = null
+            }
+        }
+
+        spinDirection.onItemSelectedListener = object : OnItemSelectedListener {
+
+            override fun onItemSelected(parentView: AdapterView<*>, view: View, position: Int, id: Long) {
+                viewModel.selectedDirection.value = spinDirection.getItemAtPosition(position) as Direction
+            }
+
+            override fun onNothingSelected(parentView: AdapterView<*>) {
+                viewModel.selectedDirection.value = null
+            }
+        }
+
+        spinStop.onItemSelectedListener = object : OnItemSelectedListener {
+
+            override fun onItemSelected(parentView: AdapterView<*>, view: View, position: Int, id: Long) {
+                viewModel.selectedStop.value = spinStop.getItemAtPosition(position) as Stop
+            }
+
+            override fun onNothingSelected(parentView: AdapterView<*>) {
+                viewModel.selectedStop.value = null
+            }
+        }
+
+        viewModel.load()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -109,185 +237,6 @@ class FragmentNewStop : Fragment() {
     }
 
     /**
-     * Initialises, sets up the even listeners, and populates the line spinner.
-     */
-    private fun setupListeners() {
-        // when a line has been selected
-        spinLine.onItemSelectedListener = object : OnItemSelectedListener {
-
-            override fun onItemSelected(parentView: AdapterView<*>, view: View, position: Int, id: Long) {
-                // set loading labels
-                rowLineId.text = ""
-                rowDirectionName.text = resources.getString(R.string.loading_data)
-                rowStopName.text = resources.getString(R.string.loading_data)
-
-                viewScheduleContainer.removeAllViewsInLayout()
-                viewScheduleContainer.visibility = View.GONE
-
-                spinStop.isEnabled = false
-                itemNext.isEnabled = false
-
-                // get the selected line
-                val item = currentLine
-
-                if (item != null) {
-                    // set the line view
-                    rowLineId.text = item.id
-
-                    val lineDrawable = rowLineIdContainer.background as GradientDrawable
-                    val brighterColor = item.color.toColor()?.brighten()
-                    brighterColor?.let { lineDrawable.setColor(it.toArgb()) }
-
-                    spinDirection.isEnabled = true
-
-                    // adapt the size based on the size of the line ID
-                    when {
-                        rowLineId.text.length > 3 -> rowLineId.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
-                        rowLineId.text.length > 2 -> rowLineId.setTextSize(TypedValue.COMPLEX_UNIT_SP, 23f)
-                        else -> rowLineId.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30f)
-                    }
-
-                    spinDirection.adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, getDirectionsList())
-                }
-            }
-
-            override fun onNothingSelected(parentView: AdapterView<*>) {
-            }
-
-        }
-
-        // when a direction has been selected
-        spinDirection.onItemSelectedListener = object : OnItemSelectedListener {
-
-            override fun onItemSelected(parentView: AdapterView<*>, view: View, position: Int, id: Long) {
-                // set loading labels
-                rowDirectionName.text = resources.getString(R.string.loading_data)
-                viewScheduleContainer.removeAllViewsInLayout()
-                viewScheduleContainer.visibility = View.GONE
-
-                itemNext.isEnabled = false
-                spinStop.isEnabled = false
-
-                if (currentLine != null
-                        && currentDirection != null
-                        && currentLine != null
-                        && currentDirection != null) {
-
-                    swipeRefreshContainer.isEnabled = true
-                    swipeRefreshContainer.isRefreshing = true
-
-                    val dir = if (currentDirection!!.name != null) currentDirection!!.name else currentDirection!!.id
-                    rowDirectionName.text = resources.getString(R.string.direction_name, dir)
-
-                    currentLine!!.direction = currentDirection!!
-
-                    doAsync {
-                        try {
-                            val timeoStops = requestHandler.getStops(currentLine!!)
-
-                            uiThread {
-                                spinStop.isEnabled = true
-                                spinStop.adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, timeoStops)
-                            }
-                        } catch (e: Exception) {
-                            uiThread { handleAsyncExceptions(e) }
-                        }
-                    }
-                }
-            }
-
-            override fun onNothingSelected(parentView: AdapterView<*>) {
-            }
-        }
-
-        // when a stop has been selected
-        spinStop.onItemSelectedListener = object : OnItemSelectedListener {
-
-            override fun onItemSelected(parentView: AdapterView<*>, view: View, position: Int, id: Long) {
-                rowStopName.text = resources.getString(R.string.loading_data)
-                viewScheduleContainer.removeAllViewsInLayout()
-                viewScheduleContainer.visibility = View.GONE
-
-                val stop = currentStop
-                itemNext.isEnabled = true
-
-                if (stop != null && true) {
-                    rowStopName.text = resources.getString(R.string.stop_name, stop.name)
-                    updateSchedulePreview()
-                }
-            }
-
-            override fun onNothingSelected(parentView: AdapterView<*>) {
-            }
-        }
-    }
-
-    private fun updateSchedulePreview() {
-        swipeRefreshContainer.isEnabled = true
-        swipeRefreshContainer.isRefreshing = true
-
-        doAsync {
-            try {
-                val schedule = requestHandler.getSingleSchedule(currentStop!!)
-
-                uiThread {
-                    val inflater = activity?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-
-                    swipeRefreshContainer.isEnabled = false
-                    swipeRefreshContainer.isRefreshing = false
-
-                    val schedList = schedule.schedules
-
-                    // set the schedule labels, if we need to
-                    for (currSched in schedList) {
-                        val singleScheduleView = inflater.inflate(R.layout.view_single_schedule_label, null)
-
-                        singleScheduleView.lbl_schedule.text = context?.let { ctx -> TimeFormatter.formatTime(ctx, currSched.scheduleTime) }
-                        singleScheduleView.lbl_schedule_direction.text = currSched.direction
-
-                        if (!currSched.direction.isNullOrBlank())
-                            singleScheduleView.lbl_schedule_separator.visibility = View.VISIBLE
-
-                        viewScheduleContainer.addView(singleScheduleView)
-                    }
-
-                    if (schedList.isNotEmpty()) {
-                        viewScheduleContainer.visibility = View.VISIBLE
-                    }
-                }
-
-            } catch (e: Exception) {
-                uiThread { handleAsyncExceptions(e) }
-            }
-        }
-    }
-
-    /**
-     * Fetches the bus lines from the API, and populates the line spinner when done.
-     */
-    private fun getLinesFromAPI() {
-        swipeRefreshContainer.isEnabled = true
-        swipeRefreshContainer.isRefreshing = true
-
-        doAsync {
-            try {
-                val timeoLines = requestHandler.getLines()
-
-                uiThread {
-                    lineList = timeoLines
-                    spinLine.adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, timeoLines.distinctBy(TimeoLine::id))
-
-                    spinLine.isEnabled = true
-                    spinDirection.isEnabled = true
-                }
-            } catch (e: Exception) {
-                uiThread { handleAsyncExceptions(e) }
-            }
-
-        }
-    }
-
-    /**
      * Displays an exception in a toast on the UI thread.
 
      * @param e the exception to display
@@ -295,29 +244,29 @@ class FragmentNewStop : Fragment() {
     private fun handleAsyncExceptions(e: Exception) {
         e.printStackTrace()
 
-        if (e is TimeoBlockingMessageException) {
+        if (e is BlockingMessageException) {
             e.getAlertMessage(context).show()
             return
         }
 
-        val message: String
-
-        if (e is TimeoException) {
+        val message: String = if (e is DataProviderException) {
             if (!e.message?.trim { it <= ' ' }!!.isEmpty()) {
-                message = getString(R.string.error_toast_twisto_detailed, e.errorCode, e.message)
+                getString(R.string.error_toast_twisto_detailed, e.errorCode, e.message)
             } else {
-                message = getString(R.string.error_toast_twisto, e.errorCode)
+                getString(R.string.error_toast_twisto, e.errorCode)
             }
 
         } else {
-            message = getString(R.string.loading_error)
+            getString(R.string.loading_error)
         }
 
         swipeRefreshContainer.isEnabled = false
         swipeRefreshContainer.isRefreshing = false
 
         view?.let {
-            Snackbar.make(it, message, Snackbar.LENGTH_LONG).setAction(R.string.error_retry) { getLinesFromAPI() }.show()
+            Snackbar.make(it, message, Snackbar.LENGTH_LONG)
+                    .setAction(R.string.error_retry) { viewModel.load() }
+                    .show()
         }
     }
 
@@ -326,8 +275,8 @@ class FragmentNewStop : Fragment() {
      */
     private fun registerStopToDatabase() {
         try {
-            databaseHandler.addStopToDatabase(currentStop)
-            toast(getString(R.string.added_toast, currentStop.toString()))
+            viewModel.registerStopToDatabase()
+            toast(getString(R.string.added_toast, viewModel.selectedStop.toString()))
             //setResult(STOP_ADDED)
             findNavController().navigateUp()
         } catch (e: SQLiteConstraintException) {
@@ -338,39 +287,6 @@ class FragmentNewStop : Fragment() {
             longToast(getString(R.string.error_toast, getString(R.string.add_error_illegal_argument)))
         }
     }
-
-    /**
-     * Gets a list of directions for the selected bus line, as they're stored in the same object.
-
-     * @return a list of ID/name objects containing the id and name of the directions to display
-     */
-    private fun getDirectionsList(): List<TimeoDirection> {
-        return lineList.filter { line -> line.id == currentLine?.id }.map(TimeoLine::direction)
-    }
-
-    /**
-     * Gets the bus stop that's currently selected.
-
-     * @return a stop
-     */
-    val currentStop: TimeoStop?
-        get() = spinStop.getItemAtPosition(spinStop.selectedItemPosition) as TimeoStop
-
-    /**
-     * Gets the bus line direction that's currently selected.
-
-     * @return an ID/name object for the direction
-     */
-    val currentDirection: TimeoDirection?
-        get() = spinDirection.getItemAtPosition(spinDirection.selectedItemPosition) as TimeoDirection
-
-    /**
-     * Gets the bus line that's currently selected.
-
-     * @return a line
-     */
-    var currentLine: TimeoLine? = null
-        get() = spinLine.getItemAtPosition(spinLine.selectedItemPosition) as TimeoLine
 
     companion object {
         const val NO_STOP_ADDED = 0
