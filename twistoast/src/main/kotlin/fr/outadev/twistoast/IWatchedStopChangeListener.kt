@@ -1,6 +1,6 @@
 /*
  * Twistoast - IWatchedStopChangeListener.kt
- * Copyright (C) 2013-2016 Baptiste Candellier
+ * Copyright (C) 2013-2018 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 package fr.outadev.twistoast
 
-import fr.outadev.twistoast.model.TimeoStop
+import fr.outadev.twistoast.model.Stop
 
 /**
  * A listener that will send a message when a watched bus has just arrived.
@@ -27,6 +27,6 @@ import fr.outadev.twistoast.model.TimeoStop
  */
 interface IWatchedStopChangeListener {
 
-    fun onStopWatchingStateChanged(stop: TimeoStop, watched: Boolean)
+    fun onStopWatchingStateChanged(stop: Stop, watched: Boolean)
 
 }

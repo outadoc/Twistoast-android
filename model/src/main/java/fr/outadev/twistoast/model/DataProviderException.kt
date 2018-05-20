@@ -1,5 +1,5 @@
 /*
- * Twistoast - TimeoStop.kt
+ * Twistoast - DataProviderException.kt
  * Copyright (C) 2013-2018 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -18,31 +18,20 @@
 
 package fr.outadev.twistoast.model
 
-import org.joda.time.DateTime
-
 /**
- * A bus stop.
+ * Thrown when an error was encountered while fetching data from the API.
  *
  * @author outadoc
  */
-data class TimeoStop(val id: Int, val name: String, var line: TimeoLine, var reference: String? = null) {
+open class DataProviderException constructor(s: String = "") : Exception(s) {
 
-    /**
-     * Checks if this stop is outdated and its reference needs to be updated.
-     * @return true if it needs to be updated, otherwise false
-     */
-    var isOutdated: Boolean = false
+    var errorCode: String = ""
 
-    /**
-     * Checks if notifications are currently active for this bus stop.
-     */
-    var isWatched: Boolean = false
+    constructor(errorCode: String, message: String) : this(message) {
+        this.errorCode = errorCode
+    }
 
-    /**
-     * Gets the last estimated time of arrival for this bus stop.
-     * @return a timestamp of an approximation of the arrival of the next bus
-     */
-    var lastETA: DateTime? = null
-
-    override fun toString(): String = name
+    override fun toString(): String {
+        return "NavitiaException: [$errorCode] $message"
+    }
 }

@@ -30,13 +30,13 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import fr.outadev.twistoast.model.TimeoStop
-import fr.outadev.twistoast.model.TimeoStopSchedule
-import fr.outadev.twistoast.model.TimeoStopTrafficMessage
 import fr.outadev.twistoast.extensions.brighten
 import fr.outadev.twistoast.extensions.collapse
 import fr.outadev.twistoast.extensions.expand
 import fr.outadev.twistoast.extensions.toColor
+import fr.outadev.twistoast.model.Stop
+import fr.outadev.twistoast.model.StopSchedule
+import fr.outadev.twistoast.model.StopTrafficMessage
 
 /**
  * Container for an item in the list. Here, this corresponds to a bus stop, and all the info
@@ -129,7 +129,7 @@ class StopScheduleViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         }
     }
 
-    fun displayStopInfo(stop: TimeoStop) {
+    fun displayStopInfo(stop: Stop) {
         val color = stop.line.color.toColor()
         val brighterColor = color?.brighten()
 
@@ -146,7 +146,7 @@ class StopScheduleViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         rowDirectionName.text = context.getString(R.string.direction_name, dir)
     }
 
-    fun displaySchedule(stopSchedule: TimeoStopSchedule) {
+    fun displaySchedule(stopSchedule: StopSchedule) {
         // Get the schedules for this stop
         stopSchedule.schedules.forEachIndexed {
             i, schedule ->
@@ -170,7 +170,7 @@ class StopScheduleViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         startFadeIn()
     }
 
-    private fun displayTrafficMessage(message: TimeoStopTrafficMessage) {
+    private fun displayTrafficMessage(message: StopTrafficMessage) {
         lblStopTrafficTitle.text = message.title
         lblStopTrafficMessage.text = message.body
 

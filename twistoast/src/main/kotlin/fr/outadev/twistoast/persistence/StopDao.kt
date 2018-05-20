@@ -18,14 +18,13 @@
 
 package fr.outadev.twistoast.persistence
 
-import android.arch.persistence.room.Insert
 import android.content.ContentValues
 import android.database.sqlite.SQLiteConstraintException
 import android.database.sqlite.SQLiteDatabase
 import fr.outadev.twistoast.SortBy
-import fr.outadev.twistoast.model.TimeoDirection
-import fr.outadev.twistoast.model.TimeoLine
-import fr.outadev.twistoast.model.TimeoStop
+import fr.outadev.twistoast.model.Direction
+import fr.outadev.twistoast.model.Line
+import fr.outadev.twistoast.model.Stop
 import org.jetbrains.anko.db.ManagedSQLiteOpenHelper
 import org.jetbrains.anko.db.transaction
 import org.joda.time.DateTime
@@ -46,7 +45,7 @@ class StopDao(private val db: ManagedSQLiteOpenHelper) {
      * @throws IllegalArgumentException  if the stop is not valid
      * @throws SQLiteConstraintException if a constraint failed
      */
-    fun addStopToDatabase(stop: TimeoStop?) {
+    fun addStopToDatabase(stop: Stop?) {
         if (stop != null) {
             // then, open the database, and start enumerating when we'll need to add
             val values = ContentValues()
@@ -79,7 +78,7 @@ class StopDao(private val db: ManagedSQLiteOpenHelper) {
 
      * @param line the bus line to add
      */
-    private fun addLineToDatabase(database: SQLiteDatabase, line: TimeoLine?) {
+    private fun addLineToDatabase(database: SQLiteDatabase, line: Line?) {
         if (line != null) {
             val values = ContentValues()
 
@@ -98,7 +97,7 @@ class StopDao(private val db: ManagedSQLiteOpenHelper) {
 
      * @param line the bus line whose direction to add
      */
-    private fun addDirectionToDatabase(database: SQLiteDatabase, line: TimeoLine?) {
+    private fun addDirectionToDatabase(database: SQLiteDatabase, line: Line?) {
         if (line != null) {
             val values = ContentValues()
 
@@ -116,11 +115,11 @@ class StopDao(private val db: ManagedSQLiteOpenHelper) {
 
      * @return a list of all the stops
      */
-    fun getAllStops(sortCriteria: SortBy): List<TimeoStop> {
+    fun getAllStops(sortCriteria: SortBy): List<Stop> {
         // Clean notification flags that have timed out so they don't interfere
         cleanOutdatedWatchedStops()
 
-        val stopsList = mutableListOf<TimeoStop>()
+        val stopsList = mutableListOf<Stop>()
 
         val sortBy: String = when (sortCriteria) {
             SortBy.STOP -> "stop.stop_name, CAST(line.line_id AS INTEGER)"
@@ -142,16 +141,16 @@ class StopDao(private val db: ManagedSQLiteOpenHelper) {
 
             // while there's a stop available
             while (results.moveToNext()) {
-                val line = TimeoLine(
+                val line = Line(
                         id = results.getString(results.getColumnIndex("line_id")),
                         name = results.getString(results.getColumnIndex("line_name")),
-                        direction = TimeoDirection(
+                        direction = Direction(
                                 results.getString(results.getColumnIndex("dir_id")),
                                 results.getString(results.getColumnIndex("dir_name"))),
                         color = results.getString(results.getColumnIndex("line_color")),
                         networkCode = results.getInt(results.getColumnIndex("network_code")))
 
-                val stop = TimeoStop(
+                val stop = Stop(
                         id = results.getInt(results.getColumnIndex("stop_id")),
                         name = results.getString(results.getColumnIndex("stop_name")),
                         reference = results.getString(results.getColumnIndex("stop_ref")),
@@ -176,7 +175,7 @@ class StopDao(private val db: ManagedSQLiteOpenHelper) {
      * @param index the index of the stop in the database, sorted by line id, stop name, and direction name
      * @return the corresponding stop object
      */
-    fun getStopAtIndex(index: Int): TimeoStop? {
+    fun getStopAtIndex(index: Int): Stop? {
         val stopsList = getAllStops(SortBy.STOP)
 
         if (stopsList.size >= index + 1) {
@@ -195,8 +194,8 @@ class StopDao(private val db: ManagedSQLiteOpenHelper) {
      *
      * @return the corresponding stop object
      */
-    fun getStop(stopId: String, lineId: String, dirId: String, networkCode: Int): TimeoStop? {
-        var stop: TimeoStop? = null
+    fun getStop(stopId: String, lineId: String, dirId: String, networkCode: Int): Stop? {
+        var stop: Stop? = null
 
         db.use {
             val results = rawQuery(
@@ -207,16 +206,16 @@ class StopDao(private val db: ManagedSQLiteOpenHelper) {
                     arrayOf(stopId, lineId, dirId, networkCode.toString()))
 
             if (results.moveToFirst()) {
-                val line = TimeoLine(
+                val line = Line(
                         id = results.getString(results.getColumnIndex("line_id")),
                         name = results.getString(results.getColumnIndex("line_name")),
-                        direction = TimeoDirection(
+                        direction = Direction(
                                 results.getString(results.getColumnIndex("dir_id")),
                                 results.getString(results.getColumnIndex("dir_name"))),
                         color = results.getString(results.getColumnIndex("line_color")),
                         networkCode = results.getInt(results.getColumnIndex("network_code")))
 
-                stop = TimeoStop(
+                stop = Stop(
                         id = results.getInt(results.getColumnIndex("stop_id")),
                         name = results.getString(results.getColumnIndex("stop_name")),
                         reference = results.getString(results.getColumnIndex("stop_ref")),
@@ -269,7 +268,7 @@ class StopDao(private val db: ManagedSQLiteOpenHelper) {
      * Deletes a bus stop from the database.
      * @param stop the bus stop to delete
      */
-    fun deleteStop(stop: TimeoStop) {
+    fun deleteStop(stop: Stop) {
         db.use {
             delete("twi_stop", "stop_id = ? AND line_id = ? AND dir_id = ? AND stop_ref = ? AND network_code = ?",
                     arrayOf(stop.id.toString(), stop.line.id, stop.line.direction.id, stop.reference, stop.line.networkCode.toString()))
@@ -281,7 +280,7 @@ class StopDao(private val db: ManagedSQLiteOpenHelper) {
      * @param stop the bus stop whose reference is to be updated
      * @return number of stops that were updated
      */
-    fun updateStopReference(stop: TimeoStop): Int {
+    fun updateStopReference(stop: Stop): Int {
         val updateClause = ContentValues()
         var count: Int = 0
 
@@ -322,9 +321,9 @@ class StopDao(private val db: ManagedSQLiteOpenHelper) {
     // while there's a stop available
     // add it to the list
     // close the cursor and the database
-    val watchedStops: List<TimeoStop>
+    val watchedStops: List<Stop>
         get() {
-            val stopsList = ArrayList<TimeoStop>()
+            val stopsList = ArrayList<Stop>()
             cleanOutdatedWatchedStops()
 
             db.use {
@@ -340,16 +339,16 @@ class StopDao(private val db: ManagedSQLiteOpenHelper) {
                         null)
 
                 while (results.moveToNext()) {
-                    val line = TimeoLine(
+                    val line = Line(
                             id = results.getString(results.getColumnIndex("line_id")),
                             name = results.getString(results.getColumnIndex("line_name")),
-                            direction = TimeoDirection(
+                            direction = Direction(
                                     results.getString(results.getColumnIndex("dir_id")),
                                     results.getString(results.getColumnIndex("dir_name"))),
                             color = results.getString(results.getColumnIndex("line_color")),
                             networkCode = results.getInt(results.getColumnIndex("network_code")))
 
-                    val stop = TimeoStop(
+                    val stop = Stop(
                             id = results.getInt(results.getColumnIndex("stop_id")),
                             name = results.getString(results.getColumnIndex("stop_name")),
                             reference = results.getString(results.getColumnIndex("stop_ref")),
@@ -371,7 +370,7 @@ class StopDao(private val db: ManagedSQLiteOpenHelper) {
      * Registers a stop to be watched for notifications.
      * @param stop the bus stop to add to the list
      */
-    fun addToWatchedStops(stop: TimeoStop) {
+    fun addToWatchedStops(stop: Stop) {
         val values = ContentValues()
 
         values.put("stop_id", stop.id)
@@ -389,7 +388,7 @@ class StopDao(private val db: ManagedSQLiteOpenHelper) {
      * No notifications should be sent for this stop anymore, until it's been added back in.
      * @param stop the bus stop that we should stop watching
      */
-    fun stopWatchingStop(stop: TimeoStop) {
+    fun stopWatchingStop(stop: Stop) {
         val updateClause = ContentValues()
         updateClause.put("notif_active", 0)
 
@@ -406,7 +405,7 @@ class StopDao(private val db: ManagedSQLiteOpenHelper) {
      * @param stop    the bus stop we want to update
      * @param lastETA a UNIX timestamp for the last know ETA for this bus
      */
-    fun updateWatchedStopETA(stop: TimeoStop, lastETA: DateTime) {
+    fun updateWatchedStopETA(stop: Stop, lastETA: DateTime) {
         val updateClause = ContentValues()
         updateClause.put("notif_last_estim", lastETA.millis)
 

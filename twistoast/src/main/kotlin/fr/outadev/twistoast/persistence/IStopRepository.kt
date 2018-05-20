@@ -20,7 +20,7 @@ package fr.outadev.twistoast.persistence
 
 import android.database.sqlite.SQLiteConstraintException
 import fr.outadev.twistoast.SortBy
-import fr.outadev.twistoast.model.TimeoStop
+import fr.outadev.twistoast.model.Stop
 import org.joda.time.DateTime
 
 interface IStopRepository {
@@ -37,7 +37,7 @@ interface IStopRepository {
      * @return a list containing the stops to process
      */
 
-    val watchedStops: List<TimeoStop>
+    val watchedStops: List<Stop>
 
     /**
      * Counts the number of bus stops we are currently watching.
@@ -54,14 +54,14 @@ interface IStopRepository {
      * @throws SQLiteConstraintException if a constraint failed
      */
     @Throws(IllegalArgumentException::class, SQLiteConstraintException::class)
-    fun addStopToDatabase(stop: TimeoStop?)
+    fun addStopToDatabase(stop: Stop?)
 
     /**
      * Gets all stops currently stored in the database.
 
      * @return a list of all the stops
      */
-    fun getAllStops(sortCriteria: SortBy): List<TimeoStop>
+    fun getAllStops(sortCriteria: SortBy): List<Stop>
 
     /**
      * Gets a bus stop at a specific index. Useful for Pebble, for example.
@@ -69,7 +69,7 @@ interface IStopRepository {
      * @param index the index of the stop in the database, sorted by line id, stop name, and direction name
      * @return the corresponding stop object
      */
-    fun getStopAtIndex(index: Int): TimeoStop?
+    fun getStopAtIndex(index: Int): Stop?
 
     /**
      * Gets a bus stop with the corresponding primary key.
@@ -80,33 +80,33 @@ interface IStopRepository {
      *
      * @return the corresponding stop object
      */
-    fun getStop(stopId: String, lineId: String, dirId: String, networkCode: Int): TimeoStop?
+    fun getStop(stopId: String, lineId: String, dirId: String, networkCode: Int): Stop?
 
     /**
      * Deletes a bus stop from the database.
      * @param stop the bus stop to delete
      */
-    fun deleteStop(stop: TimeoStop)
+    fun deleteStop(stop: Stop)
 
     /**
      * Update the reference of a stop in the database.
      * @param stop the bus stop whose reference is to be updated
      * @return number of stops that were updated
      */
-    fun updateStopReference(stop: TimeoStop): Int
+    fun updateStopReference(stop: Stop): Int
 
     /**
      * Registers a stop to be watched for notifications.
      * @param stop the bus stop to add to the list
      */
-    fun addToWatchedStops(stop: TimeoStop)
+    fun addToWatchedStops(stop: Stop)
 
     /**
      * Unregisters a stop from the list of watched stops.
      * No notifications should be sent for this stop anymore, until it's been added back in.
      * @param stop the bus stop that we should stop watching
      */
-    fun stopWatchingStop(stop: TimeoStop)
+    fun stopWatchingStop(stop: Stop)
 
     /**
      * Updated the last time of arrival returned by the API for this bus.
@@ -114,5 +114,5 @@ interface IStopRepository {
      * @param stop    the bus stop we want to update
      * @param lastETA a UNIX timestamp for the last know ETA for this bus
      */
-    fun updateWatchedStopETA(stop: TimeoStop, lastETA: DateTime)
+    fun updateWatchedStopETA(stop: Stop, lastETA: DateTime)
 }

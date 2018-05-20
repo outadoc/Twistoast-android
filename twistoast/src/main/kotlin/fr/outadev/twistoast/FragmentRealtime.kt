@@ -37,12 +37,13 @@ import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import fr.outadev.android.transport.ITimeoRequestHandler
 import fr.outadev.android.transport.TimeoRequestHandler
-import fr.outadev.twistoast.model.TimeoBlockingMessageException
-import fr.outadev.twistoast.model.TimeoException
-import fr.outadev.twistoast.model.*
 import fr.outadev.twistoast.FragmentNewStop.Companion.STOP_ADDED
 import fr.outadev.twistoast.background.BackgroundTasksManager
 import fr.outadev.twistoast.extensions.getAlertMessage
+import fr.outadev.twistoast.model.BlockingMessageException
+import fr.outadev.twistoast.model.DataProviderException
+import fr.outadev.twistoast.model.Stop
+import fr.outadev.twistoast.model.StopSchedule
 import fr.outadev.twistoast.persistence.IStopRepository
 import fr.outadev.twistoast.persistence.StopRepository
 import kotlinx.android.synthetic.main.fragment_realtime.*
@@ -60,8 +61,8 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
     private lateinit var referenceUpdater: TimeoStopReferenceUpdater
     private lateinit var requestHandler: ITimeoRequestHandler
 
-    private var stopsList: MutableList<TimeoStop> = mutableListOf()
-    private val schedules: MutableMap<TimeoStop, TimeoStopSchedule> = mutableMapOf()
+    private var stopsList: MutableList<Stop> = mutableListOf()
+    private val schedules: MutableMap<Stop, StopSchedule> = mutableMapOf()
 
     private var listAdapter: RecyclerAdapterRealtime? = null
 
@@ -269,7 +270,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
 
         val watchedStopStateListener = object : IWatchedStopChangeListener {
 
-            override fun onStopWatchingStateChanged(stop: TimeoStop, watched: Boolean) {
+            override fun onStopWatchingStateChanged(stop: Stop, watched: Boolean) {
                 stopsList.filter { it == stop }.forEach {
                     it.isWatched = watched
                 }
@@ -298,7 +299,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
         }
     }
 
-    private fun deleteStopAction(stop: TimeoStop, position: Int) {
+    private fun deleteStopAction(stop: Stop, position: Int) {
         // Remove from the database and the interface
         databaseHandler.deleteStop(stop)
         stopsList.remove(stop)
@@ -323,7 +324,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
         }.show()
     }
 
-    private fun startWatchingStopAction(stop: TimeoStop) {
+    private fun startWatchingStopAction(stop: Stop) {
         // We wish to get notifications about this upcoming stop
         databaseHandler.addToWatchedStops(stop)
         stop.isWatched = true
@@ -344,7 +345,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
         }.show()
     }
 
-    private fun stopWatchingStopAction(stop: TimeoStop) {
+    private fun stopWatchingStopAction(stop: Stop) {
         // JUST STOP THESE NOTIFICATIONS ALREADY GHGHGHBLBLBL
         databaseHandler.stopWatchingStop(stop)
         stop.isWatched = false
@@ -426,8 +427,8 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
         doAsync {
             try {
                 // Get the schedules and put them in a list
-                var schedulesList: List<TimeoStopSchedule>?
-                var scheduleMap: Map<TimeoStop, TimeoStopSchedule>
+                var schedulesList: List<StopSchedule>?
+                var scheduleMap: Map<Stop, StopSchedule>
 
                 schedulesList = requestHandler.getMultipleSchedules(stopsList)
                 scheduleMap = schedulesList.associateBy({ it.stop }, { it })
@@ -461,7 +462,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
                     }
                 }
 
-            } catch (e: TimeoBlockingMessageException) {
+            } catch (e: BlockingMessageException) {
                 e.printStackTrace()
                 uiThread {
                     endRefresh(false)
@@ -472,7 +473,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
                     }
                 }
 
-            } catch (e: TimeoException) {
+            } catch (e: DataProviderException) {
                 e.printStackTrace()
                 uiThread {
                     endRefresh(false)

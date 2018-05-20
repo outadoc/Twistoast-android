@@ -20,9 +20,9 @@ package fr.outadev.twistoast.extensions
 
 import android.app.AlertDialog
 import android.content.Context
-import fr.outadev.twistoast.model.TimeoBlockingMessageException
+import fr.outadev.twistoast.model.BlockingMessageException
 
-fun TimeoBlockingMessageException.getAlertMessage(context: Context?): AlertDialog {
+fun BlockingMessageException.getAlertMessage(context: Context?): AlertDialog {
     return AlertDialog.Builder(context)
             .setTitle(message)
             .setMessage(details)

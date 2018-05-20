@@ -26,10 +26,10 @@ import com.getpebble.android.kit.PebbleKit
 import com.getpebble.android.kit.PebbleKit.PebbleDataReceiver
 import com.getpebble.android.kit.util.PebbleDictionary
 import fr.outadev.android.transport.TimeoRequestHandler
-import fr.outadev.twistoast.model.TimeoSingleSchedule
-import fr.outadev.twistoast.model.TimeoStopSchedule
 import fr.outadev.twistoast.ConfigurationManager
 import fr.outadev.twistoast.TimeFormatter
+import fr.outadev.twistoast.model.ScheduledArrival
+import fr.outadev.twistoast.model.StopSchedule
 import fr.outadev.twistoast.persistence.IStopRepository
 import fr.outadev.twistoast.persistence.StopRepository
 import org.jetbrains.anko.doAsync
@@ -95,7 +95,7 @@ class PebbleWatchReceiver : PebbleDataReceiver(PebbleWatchReceiver.PEBBLE_UUID) 
      * @param context  a context
      * @param schedule the schedule to send back
      */
-    private fun craftAndSendSchedulePacket(context: Context, schedule: TimeoStopSchedule) {
+    private fun craftAndSendSchedulePacket(context: Context, schedule: StopSchedule) {
         val config = ConfigurationManager(context)
         val res = PebbleDictionary()
 
@@ -151,7 +151,7 @@ class PebbleWatchReceiver : PebbleDataReceiver(PebbleWatchReceiver.PEBBLE_UUID) 
         PebbleKit.sendDataToPebble(context, PEBBLE_UUID, res)
     }
 
-    private fun getOptionalShortDirection(schedule: TimeoSingleSchedule): String {
+    private fun getOptionalShortDirection(schedule: ScheduledArrival): String {
         if (schedule.direction != null && (schedule.direction as String).matches("(A|B) .+".toRegex())) {
             return (schedule.direction as String)[0].toString()
         } else {

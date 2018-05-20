@@ -19,7 +19,7 @@
 package fr.outadev.twistoast.persistence
 
 import fr.outadev.twistoast.SortBy
-import fr.outadev.twistoast.model.TimeoStop
+import fr.outadev.twistoast.model.Stop
 import org.joda.time.DateTime
 
 class StopRepository : IStopRepository {
@@ -34,24 +34,24 @@ class StopRepository : IStopRepository {
 
     override val watchedStopsCount = dbHandler.watchedStopsCount
 
-    override fun addStopToDatabase(stop: TimeoStop?) = dbHandler.addStopToDatabase(stop)
+    override fun addStopToDatabase(stop: Stop?) = dbHandler.addStopToDatabase(stop)
 
     override fun getAllStops(sortCriteria: SortBy) = dbHandler.getAllStops(sortCriteria)
 
     override fun getStopAtIndex(index: Int) = dbHandler.getStopAtIndex(index)
 
-    override fun getStop(stopId: String, lineId: String, dirId: String, networkCode: Int): TimeoStop? =
+    override fun getStop(stopId: String, lineId: String, dirId: String, networkCode: Int): Stop? =
             dbHandler.getStop(stopId, lineId, dirId, networkCode)
 
-    override fun deleteStop(stop: TimeoStop) = dbHandler.deleteStop(stop)
+    override fun deleteStop(stop: Stop) = dbHandler.deleteStop(stop)
 
-    override fun updateStopReference(stop: TimeoStop) = dbHandler.updateStopReference(stop)
+    override fun updateStopReference(stop: Stop) = dbHandler.updateStopReference(stop)
 
-    override fun addToWatchedStops(stop: TimeoStop) = dbHandler.addToWatchedStops(stop)
+    override fun addToWatchedStops(stop: Stop) = dbHandler.addToWatchedStops(stop)
 
-    override fun stopWatchingStop(stop: TimeoStop) = dbHandler.stopWatchingStop(stop)
+    override fun stopWatchingStop(stop: Stop) = dbHandler.stopWatchingStop(stop)
 
-    override fun updateWatchedStopETA(stop: TimeoStop, lastETA: DateTime) =
+    override fun updateWatchedStopETA(stop: Stop, lastETA: DateTime) =
             dbHandler.updateWatchedStopETA(stop, lastETA)
 
 }

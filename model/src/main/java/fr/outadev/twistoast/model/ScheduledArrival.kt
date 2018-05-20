@@ -1,6 +1,6 @@
 /*
- * Twistoast - TimeoSingleSchedule.kt
- * Copyright (C) 2013-2016 Baptiste Candellier
+ * Twistoast - ScheduledArrival.kt
+ * Copyright (C) 2013-2018 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,4 +25,4 @@ import org.joda.time.DateTime
  *
  * @author outadoc
  */
-data class TimeoSingleSchedule(val scheduleTime: DateTime, val direction: String?)
+data class ScheduledArrival(val scheduleTime: DateTime, val direction: String?)

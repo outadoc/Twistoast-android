@@ -25,9 +25,9 @@ import cucumber.api.DataTable
 import cucumber.api.java.en.Given
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
-import fr.outadev.twistoast.model.TimeoDirection
-import fr.outadev.twistoast.model.TimeoLine
-import fr.outadev.twistoast.model.TimeoStop
+import fr.outadev.twistoast.model.Direction
+import fr.outadev.twistoast.model.Line
+import fr.outadev.twistoast.model.Stop
 import org.mockito.Mockito
 import java.io.BufferedReader
 import java.io.FileReader
@@ -45,8 +45,8 @@ class ParseStepDefinitions {
     private var requester: IHttpRequester? = null
     private var trh: TimeoRequestHandler? = null
 
-    var lines: List<TimeoLine>? = null
-    var stops: List<TimeoStop>? = null
+    var lines: List<Line>? = null
+    var stops: List<Stop>? = null
 
     @Given("^a connection to the API$")
     @Throws(Throwable::class)
@@ -78,7 +78,7 @@ class ParseStepDefinitions {
     @Throws(Throwable::class)
     fun iRequestAListOfStopsForLineAndDirectionWithMock(line: String, dir: String, mock: String) {
         setupHttpMock("xml=1&ligne=$line&sens=$dir", mock)
-        stops = trh!!.getStops(TimeoLine(line, "", TimeoDirection(dir, ""), TimeoRequestHandler.DEFAULT_NETWORK_CODE))
+        stops = trh!!.getStops(Line(line, "", Direction(dir, ""), TimeoRequestHandler.DEFAULT_NETWORK_CODE))
     }
 
     @When("^I request a list of schedules for the following stop references with mock (.+)$")

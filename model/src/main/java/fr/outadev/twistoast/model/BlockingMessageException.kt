@@ -1,6 +1,6 @@
 /*
- * Twistoast - TimeoStopTrafficMessage.kt
- * Copyright (C) 2013-2016 Baptiste Candellier
+ * Twistoast - BlockingMessageException.kt
+ * Copyright (C) 2013-2018 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,8 +19,9 @@
 package fr.outadev.twistoast.model
 
 /**
- * A traffic information message specific to a stop, and usually shown inline.
+ * A blocking message thrown by the API.
+ * Should be displayed in an alert dialog.
  *
  * @author outadoc
  */
-data class TimeoStopTrafficMessage(val title: String, val body: String)
+class BlockingMessageException(override var message: String, var details: String? = null): DataProviderException(message)

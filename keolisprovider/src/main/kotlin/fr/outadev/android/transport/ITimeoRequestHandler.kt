@@ -18,10 +18,10 @@
 
 package fr.outadev.android.transport
 
-import fr.outadev.twistoast.model.TimeoException
-import fr.outadev.twistoast.model.TimeoLine
-import fr.outadev.twistoast.model.TimeoStop
-import fr.outadev.twistoast.model.TimeoStopSchedule
+import fr.outadev.twistoast.model.DataProviderException
+import fr.outadev.twistoast.model.Line
+import fr.outadev.twistoast.model.Stop
+import fr.outadev.twistoast.model.StopSchedule
 import org.xmlpull.v1.XmlPullParserException
 import java.io.IOException
 
@@ -33,51 +33,51 @@ interface ITimeoRequestHandler {
     /**
      * Fetches the bus stops for the specified line.
      */
-    @Throws(IOException::class, TimeoException::class)
-    fun getStops(line: TimeoLine): List<TimeoStop>
+    @Throws(IOException::class, DataProviderException::class)
+    fun getStops(line: Line): List<Stop>
 
     /**
      * Fetches the next bus schedules for the specified bus stop.
      */
-    @Throws(TimeoException::class, IOException::class, XmlPullParserException::class)
-    fun getSingleSchedule(stop: TimeoStop): TimeoStopSchedule
+    @Throws(DataProviderException::class, IOException::class, XmlPullParserException::class)
+    fun getSingleSchedule(stop: Stop): StopSchedule
 
     /**
      * Fetches the next bus schedules for the specified list of bus stops.
      */
-    @Throws(TimeoException::class, IOException::class)
-    fun getMultipleSchedules(stops: List<TimeoStop>): List<TimeoStopSchedule>
+    @Throws(DataProviderException::class, IOException::class)
+    fun getMultipleSchedules(stops: List<Stop>): List<StopSchedule>
 
-    @Throws(IOException::class, TimeoException::class)
-    fun getLines(networkCode: Int = TimeoRequestHandler.DEFAULT_NETWORK_CODE): List<TimeoLine>
+    @Throws(IOException::class, DataProviderException::class)
+    fun getLines(networkCode: Int = TimeoRequestHandler.DEFAULT_NETWORK_CODE): List<Line>
 
-    @Throws(IOException::class, TimeoException::class)
-    fun getStops(networkCode: Int, line: TimeoLine): List<TimeoStop>
+    @Throws(IOException::class, DataProviderException::class)
+    fun getStops(networkCode: Int, line: Line): List<Stop>
 
     /**
      * Retrieve a list of stops by their code.
      * Useful to get a stop's info when they're only known by their code.
      */
-    @Throws(IOException::class, TimeoException::class)
-    fun getStopsByCode(networkCode: Int = TimeoRequestHandler.DEFAULT_NETWORK_CODE, codes: List<Int>): List<TimeoStop>
+    @Throws(IOException::class, DataProviderException::class)
+    fun getStopsByCode(networkCode: Int = TimeoRequestHandler.DEFAULT_NETWORK_CODE, codes: List<Int>): List<Stop>
 
     /**
      * Fetches the next bus schedules for the specified bus stop.
      */
-    @Throws(TimeoException::class, IOException::class, XmlPullParserException::class)
-    fun getSingleSchedule(networkCode: Int, stop: TimeoStop): TimeoStopSchedule
+    @Throws(DataProviderException::class, IOException::class, XmlPullParserException::class)
+    fun getSingleSchedule(networkCode: Int, stop: Stop): StopSchedule
 
     /**
      * Fetches the next bus schedules for the specified list of bus stops.
      */
-    @Throws(TimeoException::class, IOException::class)
-    fun getMultipleSchedules(networkCode: Int, stops: List<TimeoStop>): List<TimeoStopSchedule>
+    @Throws(DataProviderException::class, IOException::class)
+    fun getMultipleSchedules(networkCode: Int, stops: List<Stop>): List<StopSchedule>
 
     /**
      * Checks if there are outdated stops amongst those in the database,
      * by comparing them to a list of schedules returned by the API.
      */
-    @Throws(TimeoException::class)
-    fun checkForOutdatedStops(stops: List<TimeoStop>, schedules: List<TimeoStopSchedule>): Int
+    @Throws(DataProviderException::class)
+    fun checkForOutdatedStops(stops: List<Stop>, schedules: List<StopSchedule>): Int
 
 }

@@ -45,30 +45,30 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) : ITimeoR
     /**
      * Fetches the bus stops for the specified line.
      */
-    @Throws(IOException::class, TimeoException::class)
-    override fun getStops(line: TimeoLine): List<TimeoStop> {
+    @Throws(IOException::class, DataProviderException::class)
+    override fun getStops(line: Line): List<Stop> {
         return getStops(line.networkCode, line)
     }
 
     /**
      * Fetches the next bus schedules for the specified bus stop.
      */
-    @Throws(TimeoException::class, IOException::class, XmlPullParserException::class)
-    override fun getSingleSchedule(stop: TimeoStop): TimeoStopSchedule {
+    @Throws(DataProviderException::class, IOException::class, XmlPullParserException::class)
+    override fun getSingleSchedule(stop: Stop): StopSchedule {
         return getSingleSchedule(stop.line.networkCode, stop)
     }
 
     /**
      * Fetches the next bus schedules for the specified list of bus stops.
      */
-    @Throws(TimeoException::class, IOException::class)
-    override fun getMultipleSchedules(stops: List<TimeoStop>): List<TimeoStopSchedule> {
+    @Throws(DataProviderException::class, IOException::class)
+    override fun getMultipleSchedules(stops: List<Stop>): List<StopSchedule> {
         //if we don't specify any network code when calling getMultipleSchedules, we'll have to figure them out ourselves.
         //we can only fetch a list of schedules that are all part of the same network.
         //therefore, we'll have to separate them in different lists and request them individually.
 
         //the final list that will contain all of our schedules
-        val finalScheduleList = ArrayList<TimeoStopSchedule>()
+        val finalScheduleList = ArrayList<StopSchedule>()
         val stopsByNetwork = stops.groupBy { it.line.networkCode }
 
         Log.i(TAG, "${stopsByNetwork.count()} different bus networks to refresh")
@@ -82,45 +82,45 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) : ITimeoR
     }
 
 
-    @Throws(IOException::class, TimeoException::class)
-    override fun getLines(networkCode: Int): List<TimeoLine> {
+    @Throws(IOException::class, DataProviderException::class)
+    override fun getLines(networkCode: Int): List<Line> {
         val params = "xml=1"
 
         val result = http.requestWebPage(getEndpointUrl(networkCode), params, true)
-        val res: ListeLignesDTO = serializer.read(ListeLignesDTO::class.java, result) ?: throw TimeoException("Service returned invalid data")
+        val res: ListeLignesDTO = serializer.read(ListeLignesDTO::class.java, result) ?: throw DataProviderException("Service returned invalid data")
 
         checkForErrors(res.erreur)
 
         return res.alss.map {
                     als ->
-            TimeoLine(
+            Line(
                     id = als.ligne.code,
                     name = als.ligne.nom.smartCapitalize(),
-                    direction = TimeoDirection(als.ligne.sens, als.ligne.vers?.smartCapitalize()),
+                    direction = Direction(als.ligne.sens, als.ligne.vers?.smartCapitalize()),
                     color = "#" + leftPad(Integer.toHexString(Integer.valueOf(als.ligne.couleur)), 6, '0'),
                     networkCode = networkCode)
                 }
     }
 
-    @Throws(IOException::class, TimeoException::class)
-    override fun getStops(networkCode: Int, line: TimeoLine): List<TimeoStop> {
+    @Throws(IOException::class, DataProviderException::class)
+    override fun getStops(networkCode: Int, line: Line): List<Stop> {
         val params = "xml=1&ligne=${line.id}&sens=${line.direction.id}"
 
         val result = http.requestWebPage(getEndpointUrl(networkCode), params, true)
-        val res: ListeLignesDTO = serializer.read(ListeLignesDTO::class.java, result) ?: throw TimeoException("Service returned invalid data")
+        val res: ListeLignesDTO = serializer.read(ListeLignesDTO::class.java, result) ?: throw DataProviderException("Service returned invalid data")
 
         checkForErrors(res.erreur)
 
         return res.alss.filter { it.arret.code != null && it.arret.nom != null }.map {
             als ->
-            TimeoStop(
+            Stop(
                     id = als.arret.code!!.toInt(),
                     name = als.arret.nom!!.smartCapitalize(),
                     reference = als.refs,
-                    line = TimeoLine(
+                    line = Line(
                             id = als.ligne.code,
                             name = als.ligne.nom.smartCapitalize(),
-                            direction = TimeoDirection(als.ligne.sens, als.ligne.vers?.smartCapitalize()),
+                            direction = Direction(als.ligne.sens, als.ligne.vers?.smartCapitalize()),
                             color = "#" + leftPad(Integer.toHexString(Integer.valueOf(als.ligne.couleur)), 6, '0'),
                             networkCode = networkCode))
         }
@@ -130,8 +130,8 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) : ITimeoR
      * Retrieve a list of stops by their code.
      * Useful to get a stop's info when they're only known by their code.
      */
-    @Throws(IOException::class, TimeoException::class)
-    override fun getStopsByCode(networkCode: Int, codes: List<Int>): List<TimeoStop> {
+    @Throws(IOException::class, DataProviderException::class)
+    override fun getStopsByCode(networkCode: Int, codes: List<Int>): List<Stop> {
         val codesCat = codes
                 .filterNot { code -> code == 0 }
                 .joinToString(",")
@@ -139,7 +139,7 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) : ITimeoR
         val params = "xml=1&code=$codesCat"
 
         val result = http.requestWebPage(getEndpointUrl(networkCode), params, true)
-        val res: ListeLignesDTO = serializer.read(ListeLignesDTO::class.java, result) ?: throw TimeoException("Service returned invalid data")
+        val res: ListeLignesDTO = serializer.read(ListeLignesDTO::class.java, result) ?: throw DataProviderException("Service returned invalid data")
 
         checkForErrors(res.erreur)
 
@@ -147,14 +147,14 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) : ITimeoR
                 .filter { it.arret.code != null }
                 .filter { it.arret.nom != null }
                 .map { als ->
-                    TimeoStop(
+                    Stop(
                             id = als.arret.code!!.toInt(),
                             name = als.arret.nom!!.smartCapitalize(),
                             reference = als.refs,
-                            line = TimeoLine(
+                            line = Line(
                                     id = als.ligne.code,
                                     name = als.ligne.nom.smartCapitalize(),
-                                    direction = TimeoDirection(als.ligne.sens, als.ligne.vers?.smartCapitalize()),
+                                    direction = Direction(als.ligne.sens, als.ligne.vers?.smartCapitalize()),
                                     color = "#" + leftPad(Integer.toHexString(Integer.valueOf(als.ligne.couleur)), 6, '0'),
                                     networkCode = networkCode))
                 }
@@ -163,22 +163,22 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) : ITimeoR
     /**
      * Fetches the next bus schedules for the specified bus stop.
      */
-    @Throws(TimeoException::class, IOException::class, XmlPullParserException::class)
-    override fun getSingleSchedule(networkCode: Int, stop: TimeoStop): TimeoStopSchedule {
+    @Throws(DataProviderException::class, IOException::class, XmlPullParserException::class)
+    override fun getSingleSchedule(networkCode: Int, stop: Stop): StopSchedule {
         val schedules = getMultipleSchedules(networkCode, listOf(stop))
 
         if (schedules.isNotEmpty()) {
             return schedules[0]
         } else {
-            throw TimeoException("No schedules were returned.")
+            throw DataProviderException("No schedules were returned.")
         }
     }
 
     /**
      * Fetches the next bus schedules for the specified list of bus stops.
      */
-    @Throws(TimeoException::class, IOException::class)
-    override fun getMultipleSchedules(networkCode: Int, stops: List<TimeoStop>): List<TimeoStopSchedule> {
+    @Throws(DataProviderException::class, IOException::class)
+    override fun getMultipleSchedules(networkCode: Int, stops: List<Stop>): List<StopSchedule> {
         // If no stops are in the list or all refs are null
         if (stops.all { stop -> stop.reference == null }) {
             return listOf()
@@ -194,7 +194,7 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) : ITimeoR
         val result = http.requestWebPage(getEndpointUrl(networkCode), params, false)
         val cleanResult = result.replace(" {6}<description>\n {8}<code></code>\n {8}<arret></arret>\n {8}<ligne></ligne>\n {8}<ligne_nom></ligne_nom>\n {8}<sens></sens>\n {8}<vers></vers>\n {8}<couleur>#000000</couleur>\n {6}</description>".toRegex(), "")
 
-        val res: ListeHorairesDTO = serializer.read(ListeHorairesDTO::class.java, cleanResult) ?: throw TimeoException("Service returned invalid data")
+        val res: ListeHorairesDTO = serializer.read(ListeHorairesDTO::class.java, cleanResult) ?: throw DataProviderException("Service returned invalid data")
 
         checkForErrors(res.erreur)
 
@@ -208,7 +208,7 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) : ITimeoR
             }
         }.map {
             horaire ->
-            TimeoStopSchedule(
+            StopSchedule(
                     // Retrieve the stop corresponding to this schedule in the list that was passed
                     // to the API, so we can match them
                     stop = stops.filter { stop ->
@@ -218,14 +218,14 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) : ITimeoR
                     }.first(),
                     // Parse the bus schedules
                     schedules = horaire.passages.map { passage ->
-                        TimeoSingleSchedule(
+                        ScheduledArrival(
                                 scheduleTime = passage.duree!!.getNextDateForTime(),
                                 direction = passage.destination!!.smartCapitalize()
                         )
                     },
                     // Retrieve the traffic message(s) for this bus stop
                     trafficMessages = horaire.messages.filter { it.titre != null }.map { message ->
-                        TimeoStopTrafficMessage(
+                        StopTrafficMessage(
                                 title = message.titre!!.trim(),
                                 body = message.texte?.trim()!!.replace("  ", " ")
                         )
@@ -238,8 +238,8 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) : ITimeoR
      * Checks if there are outdated stops amongst those in the database,
      * by comparing them to a list of schedules returned by the API.
      */
-    @Throws(TimeoException::class)
-    override fun checkForOutdatedStops(stops: List<TimeoStop>, schedules: List<TimeoStopSchedule>): Int {
+    @Throws(DataProviderException::class)
+    override fun checkForOutdatedStops(stops: List<Stop>, schedules: List<StopSchedule>): Int {
         if (stops.size == schedules.size) {
             return 0
         }
@@ -260,21 +260,21 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) : ITimeoR
      * Checks the DTO returned by the API for eventual server-side errors.
      * Throws an exception if one is encountered.
      */
-    @Throws(TimeoException::class)
+    @Throws(DataProviderException::class)
     private fun checkForErrors(error: ErreurDTO?, message: MessageDTO? = null) {
         if (error?.code != "000") {
-            throw TimeoException(errorCode = error!!.code, message = error.message)
+            throw DataProviderException(errorCode = error!!.code, message = error.message)
         }
 
         if (message != null && message.bloquant && message.titre != null) {
-            throw TimeoBlockingMessageException(message.titre!!, message.texte)
+            throw BlockingMessageException(message.titre!!, message.texte)
         }
     }
 
     /**
      * Fetches the current global traffic alert message.
      */
-    val globalTrafficAlert: TimeoTrafficAlert?
+    val globalTrafficAlert: TrafficAlert?
         get() {
             try {
                 val source = http.requestWebPage(PRE_HOME_URL, useCaches = true)
@@ -284,7 +284,7 @@ class TimeoRequestHandler (val http: IHttpRequester = HttpRequester()) : ITimeoR
 
                     if (obj.has("alerte")) {
                         val alert = obj.getJSONObject("alerte")
-                        return TimeoTrafficAlert(
+                        return TrafficAlert(
                                 alert.getInt("id_alerte"),
                                 alert.getString("libelle_alerte").trim { it <= ' ' }.replace(" {2}".toRegex(), " - "),
                                 alert.getString("url_alerte"))

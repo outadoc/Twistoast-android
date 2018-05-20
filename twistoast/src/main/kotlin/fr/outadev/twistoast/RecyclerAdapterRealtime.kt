@@ -1,6 +1,6 @@
 /*
  * Twistoast - RecyclerAdapterRealtime.kt
- * Copyright (C) 2013-2016 Baptiste Candellier
+ * Copyright (C) 2013-2018 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,15 +23,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import fr.outadev.twistoast.model.TimeoStop
-import fr.outadev.twistoast.model.TimeoStopSchedule
+import fr.outadev.twistoast.model.Stop
+import fr.outadev.twistoast.model.StopSchedule
 
 /**
  * An array adapter for the main list of bus stops.
  *
  * @author outadoc
  */
-class RecyclerAdapterRealtime(private val stopsList: MutableList<TimeoStop>, private val schedules: MutableMap<TimeoStop, TimeoStopSchedule>) : RecyclerView.Adapter<StopScheduleViewHolder>(), IRecyclerAdapterAccess {
+class RecyclerAdapterRealtime(private val stopsList: MutableList<Stop>, private val schedules: MutableMap<Stop, StopSchedule>) : RecyclerView.Adapter<StopScheduleViewHolder>(), IRecyclerAdapterAccess {
 
     private val config: ConfigurationManager = ConfigurationManager()
 
@@ -51,7 +51,7 @@ class RecyclerAdapterRealtime(private val stopsList: MutableList<TimeoStop>, pri
 
         // Add the new schedules one by one
         if (schedules.containsKey(stop) && schedules[stop] != null) {
-            val stopSchedule: TimeoStopSchedule = schedules[stop]!!
+            val stopSchedule: StopSchedule = schedules[stop]!!
 
             stopSchedule.schedules.forEach {
                 schedule ->
@@ -104,7 +104,7 @@ class RecyclerAdapterRealtime(private val stopsList: MutableList<TimeoStop>, pri
         }
     }
 
-    fun getItem(position: Int): TimeoStop? {
+    fun getItem(position: Int): Stop? {
         return stopsList[position]
     }
 

@@ -1,5 +1,5 @@
 /*
- * Twistoast - TimeoBlockingMessageException.kt
+ * Twistoast - TrafficAlert.kt
  * Copyright (C) 2013-2018 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -18,10 +18,11 @@
 
 package fr.outadev.twistoast.model
 
+import java.io.Serializable
+
 /**
- * A blocking message thrown by the API.
- * Should be displayed in an alert dialog.
+ * Traffic alert. Used to inform the user of traffic perturbations.
  *
  * @author outadoc
  */
-class TimeoBlockingMessageException(override var message: String, var details: String? = null): TimeoException(message)
+data class TrafficAlert (var id: Int, var label: String?, var url: String?) : Serializable

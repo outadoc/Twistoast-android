@@ -27,11 +27,11 @@ import android.support.v4.content.ContextCompat
 import android.util.Log
 import androidx.work.Worker
 import fr.outadev.android.transport.TimeoRequestHandler
-import fr.outadev.twistoast.model.TimeoStopSchedule
 import fr.outadev.twistoast.ActivityMain
 import fr.outadev.twistoast.ConfigurationManager
 import fr.outadev.twistoast.R
 import fr.outadev.twistoast.TimeFormatter.formatTime
+import fr.outadev.twistoast.model.StopSchedule
 import fr.outadev.twistoast.persistence.StopRepository
 import org.joda.time.DateTime
 
@@ -115,7 +115,7 @@ class NextStopAlarmReceiver : Worker() {
      *
      * @param schedule the schedule to notify about
      */
-    private fun notifyForIncomingBus(schedule: TimeoStopSchedule) {
+    private fun notifyForIncomingBus(schedule: StopSchedule) {
         val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val config = ConfigurationManager(applicationContext)
 
@@ -154,7 +154,7 @@ class NextStopAlarmReceiver : Worker() {
      *
      * @param schedule the bus schedule that will be included in the notification
      */
-    private fun updateStopTimeNotification(schedule: TimeoStopSchedule) {
+    private fun updateStopTimeNotification(schedule: StopSchedule) {
         val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         val notificationIntent = Intent(applicationContext, ActivityMain::class.java)

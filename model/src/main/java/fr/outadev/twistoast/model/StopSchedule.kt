@@ -1,6 +1,6 @@
 /*
- * Twistoast - TimeoDirection.kt
- * Copyright (C) 2013-2016 Baptiste Candellier
+ * Twistoast - StopSchedule.kt
+ * Copyright (C) 2013-2018 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,13 +19,13 @@
 package fr.outadev.twistoast.model
 
 /**
- * Represents the direction of a bus line.
- * Id can be either A or R (in theory, but it's not restricted).
+ * Used to store a list of schedules, with their corresponding line, direction, and stop
+ * objects.
+ *
+ * @author outadoc
  */
-data class TimeoDirection (var id: String, var name: String?) {
-
-    override fun toString(): String {
-        return if (name != null) "$id - $name"
-        else id
-    }
-}
+data class StopSchedule (
+        var stop: Stop,
+        var schedules: List<ScheduledArrival> = listOf(),
+        var trafficMessages: List<StopTrafficMessage> = listOf()
+)
