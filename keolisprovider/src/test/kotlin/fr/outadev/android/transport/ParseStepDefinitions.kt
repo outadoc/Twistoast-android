@@ -43,7 +43,7 @@ class ParseStepDefinitions {
     }
 
     private var requester: IHttpRequester? = null
-    private var trh: TimeoRequestHandler? = null
+    private var trh: KeolisDao? = null
 
     var lines: List<Line>? = null
     var stops: List<Stop>? = null
@@ -52,7 +52,7 @@ class ParseStepDefinitions {
     @Throws(Throwable::class)
     fun aConnectionToTheAPI() {
         requester = Mockito.mock(IHttpRequester::class.java)
-        trh = TimeoRequestHandler(requester!!)
+        trh = KeolisDao(requester!!)
     }
 
     @When("^I request a list of lines with mock (.+)$")
@@ -78,7 +78,7 @@ class ParseStepDefinitions {
     @Throws(Throwable::class)
     fun iRequestAListOfStopsForLineAndDirectionWithMock(line: String, dir: String, mock: String) {
         setupHttpMock("xml=1&ligne=$line&sens=$dir", mock)
-        stops = trh!!.getStops(Line(line, "", Direction(dir, ""), TimeoRequestHandler.DEFAULT_NETWORK_CODE))
+        stops = trh!!.getStops(Line(line, "", Direction(dir, ""), KeolisDao.DEFAULT_NETWORK_CODE))
     }
 
     @When("^I request a list of schedules for the following stop references with mock (.+)$")

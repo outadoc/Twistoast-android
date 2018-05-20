@@ -1,5 +1,5 @@
 /*
- * Twistoast - ITimeoRequestHandler.kt
+ * Twistoast - IBusDataRepository.kt
  * Copyright (C) 2013-2018 Baptiste Candellier
  *
  * Twistoast is free software: you can redistribute it and/or modify
@@ -16,68 +16,58 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.outadev.android.transport
+package fr.outadev.twistoast.providers
 
-import fr.outadev.twistoast.model.DataProviderException
+import fr.outadev.android.transport.KeolisDao
 import fr.outadev.twistoast.model.Line
+import fr.outadev.twistoast.model.Result
 import fr.outadev.twistoast.model.Stop
 import fr.outadev.twistoast.model.StopSchedule
-import org.xmlpull.v1.XmlPullParserException
-import java.io.IOException
 
 /**
  * Request data from the transportation network's API.
  */
-interface ITimeoRequestHandler {
+interface IBusDataRepository {
 
     /**
      * Fetches the bus stops for the specified line.
      */
-    @Throws(IOException::class, DataProviderException::class)
-    fun getStops(line: Line): List<Stop>
+    fun getStops(line: Line): Result<List<Stop>>
 
     /**
      * Fetches the next bus schedules for the specified bus stop.
      */
-    @Throws(DataProviderException::class, IOException::class, XmlPullParserException::class)
-    fun getSingleSchedule(stop: Stop): StopSchedule
+    fun getSingleSchedule(stop: Stop): Result<StopSchedule>
 
     /**
      * Fetches the next bus schedules for the specified list of bus stops.
      */
-    @Throws(DataProviderException::class, IOException::class)
-    fun getMultipleSchedules(stops: List<Stop>): List<StopSchedule>
+    fun getMultipleSchedules(stops: List<Stop>): Result<List<StopSchedule>>
 
-    @Throws(IOException::class, DataProviderException::class)
-    fun getLines(networkCode: Int = TimeoRequestHandler.DEFAULT_NETWORK_CODE): List<Line>
+    fun getLines(networkCode: Int = KeolisDao.DEFAULT_NETWORK_CODE): Result<List<Line>>
 
-    @Throws(IOException::class, DataProviderException::class)
-    fun getStops(networkCode: Int, line: Line): List<Stop>
+    fun getStops(networkCode: Int, line: Line): Result<List<Stop>>
 
     /**
      * Retrieve a list of stops by their code.
      * Useful to get a stop's info when they're only known by their code.
      */
-    @Throws(IOException::class, DataProviderException::class)
-    fun getStopsByCode(networkCode: Int = TimeoRequestHandler.DEFAULT_NETWORK_CODE, codes: List<Int>): List<Stop>
+    fun getStopsByCode(networkCode: Int = KeolisDao.DEFAULT_NETWORK_CODE, codes: List<Int>): Result<List<Stop>>
 
     /**
      * Fetches the next bus schedules for the specified bus stop.
      */
-    @Throws(DataProviderException::class, IOException::class, XmlPullParserException::class)
-    fun getSingleSchedule(networkCode: Int, stop: Stop): StopSchedule
+    fun getSingleSchedule(networkCode: Int, stop: Stop): Result<StopSchedule>
 
     /**
      * Fetches the next bus schedules for the specified list of bus stops.
      */
-    @Throws(DataProviderException::class, IOException::class)
-    fun getMultipleSchedules(networkCode: Int, stops: List<Stop>): List<StopSchedule>
+    fun getMultipleSchedules(networkCode: Int, stops: List<Stop>): Result<List<StopSchedule>>
 
     /**
      * Checks if there are outdated stops amongst those in the database,
      * by comparing them to a list of schedules returned by the API.
      */
-    @Throws(DataProviderException::class)
-    fun checkForOutdatedStops(stops: List<Stop>, schedules: List<StopSchedule>): Int
+    fun checkForOutdatedStops(stops: List<Stop>, schedules: List<StopSchedule>): Result<Int>
 
 }

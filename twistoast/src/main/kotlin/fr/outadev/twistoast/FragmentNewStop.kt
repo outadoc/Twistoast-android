@@ -55,15 +55,30 @@ class FragmentNewStop : Fragment() {
         viewModel = ViewModelProviders.of(this).get(NewStopViewModel::class.java)
 
         viewModel.lines.observe(this, Observer { lines ->
-            spinLine.adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, lines)
+            when (lines) {
+                is Result.Success -> spinLine.adapter =
+                        ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, lines.data)
+
+                is Result.Failure -> displayError(lines.e)
+            }
         })
 
         viewModel.directions.observe(this, Observer { directions ->
-            spinDirection.adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, directions)
+            when (directions) {
+                is Result.Success -> spinDirection.adapter =
+                        ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, directions.data)
+
+                is Result.Failure -> displayError(directions.e)
+            }
         })
 
         viewModel.stops.observe(this, Observer { stops ->
-            spinLine.adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, stops)
+            when (stops) {
+                is Result.Success -> spinLine.adapter =
+                        ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, stops.data)
+
+                is Result.Failure -> displayError(stops.e)
+            }
         })
 
         viewModel.isLineListEnabled.observe(this, Observer {
@@ -138,30 +153,36 @@ class FragmentNewStop : Fragment() {
         })
 
         viewModel.schedule.observe(this, Observer {
-            it?.let { schedule ->
-                val inflater = activity?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            when (it) {
+                is Result.Success -> {
+                    it.data.let { schedule ->
+                        val inflater = activity?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
-                swipeRefreshContainer.isEnabled = false
-                swipeRefreshContainer.isRefreshing = false
+                        swipeRefreshContainer.isEnabled = false
+                        swipeRefreshContainer.isRefreshing = false
 
-                val schedList = schedule.schedules
+                        val schedList = schedule.schedules
 
-                // set the schedule labels, if we need to
-                for (currSched in schedList) {
-                    val singleScheduleView = inflater.inflate(R.layout.view_single_schedule_label, null)
+                        // set the schedule labels, if we need to
+                        for (currSched in schedList) {
+                            val singleScheduleView = inflater.inflate(R.layout.view_single_schedule_label, null)
 
-                    singleScheduleView.lbl_schedule.text = context?.let { ctx -> TimeFormatter.formatTime(ctx, currSched.scheduleTime) }
-                    singleScheduleView.lbl_schedule_direction.text = currSched.direction
+                            singleScheduleView.lbl_schedule.text = context?.let { ctx -> TimeFormatter.formatTime(ctx, currSched.scheduleTime) }
+                            singleScheduleView.lbl_schedule_direction.text = currSched.direction
 
-                    if (!currSched.direction.isNullOrBlank())
-                        singleScheduleView.lbl_schedule_separator.visibility = View.VISIBLE
+                            if (!currSched.direction.isNullOrBlank())
+                                singleScheduleView.lbl_schedule_separator.visibility = View.VISIBLE
 
-                    viewScheduleContainer.addView(singleScheduleView)
+                            viewScheduleContainer.addView(singleScheduleView)
+                        }
+
+                        if (schedList.isNotEmpty()) {
+                            viewScheduleContainer.visibility = View.VISIBLE
+                        }
+                    }
                 }
 
-                if (schedList.isNotEmpty()) {
-                    viewScheduleContainer.visibility = View.VISIBLE
-                }
+                is Result.Failure -> displayError(it.e)
             }
         })
     }
@@ -241,33 +262,33 @@ class FragmentNewStop : Fragment() {
 
      * @param e the exception to display
      */
-    private fun handleAsyncExceptions(e: Exception) {
+    private fun displayError(e: Throwable) {
         e.printStackTrace()
 
-        if (e is BlockingMessageException) {
-            e.getAlertMessage(context).show()
-            return
-        }
+        when (e) {
+            is BlockingMessageException -> e.getAlertMessage(context).show()
+            else -> {
+                val message: String = if (e is DataProviderException) {
+                    if (!e.message?.trim { it <= ' ' }!!.isEmpty()) {
+                        getString(R.string.error_toast_twisto_detailed, e.errorCode, e.message)
+                    } else {
+                        getString(R.string.error_toast_twisto, e.errorCode)
+                    }
 
-        val message: String = if (e is DataProviderException) {
-            if (!e.message?.trim { it <= ' ' }!!.isEmpty()) {
-                getString(R.string.error_toast_twisto_detailed, e.errorCode, e.message)
-            } else {
-                getString(R.string.error_toast_twisto, e.errorCode)
+                } else {
+                    getString(R.string.loading_error)
+                }
+
+                viewModel.isRefreshing.value = false
+
+                view?.let {
+                    Snackbar.make(it, message, Snackbar.LENGTH_LONG)
+                            .setAction(R.string.error_retry) { viewModel.load() }
+                            .show()
+                }
             }
-
-        } else {
-            getString(R.string.loading_error)
         }
 
-        swipeRefreshContainer.isEnabled = false
-        swipeRefreshContainer.isRefreshing = false
-
-        view?.let {
-            Snackbar.make(it, message, Snackbar.LENGTH_LONG)
-                    .setAction(R.string.error_retry) { viewModel.load() }
-                    .show()
-        }
     }
 
     /**
@@ -277,7 +298,6 @@ class FragmentNewStop : Fragment() {
         try {
             viewModel.registerStopToDatabase()
             toast(getString(R.string.added_toast, viewModel.selectedStop.toString()))
-            //setResult(STOP_ADDED)
             findNavController().navigateUp()
         } catch (e: SQLiteConstraintException) {
             // stop already in database
@@ -286,11 +306,6 @@ class FragmentNewStop : Fragment() {
             // one of the fields was null
             longToast(getString(R.string.error_toast, getString(R.string.add_error_illegal_argument)))
         }
-    }
-
-    companion object {
-        const val NO_STOP_ADDED = 0
-        const val STOP_ADDED = 1
     }
 
 }

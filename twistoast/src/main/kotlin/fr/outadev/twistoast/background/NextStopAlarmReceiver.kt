@@ -26,11 +26,12 @@ import android.support.v4.app.NotificationCompat
 import android.support.v4.content.ContextCompat
 import android.util.Log
 import androidx.work.Worker
-import fr.outadev.android.transport.TimeoRequestHandler
+import fr.outadev.android.transport.KeolisDao
 import fr.outadev.twistoast.ActivityMain
 import fr.outadev.twistoast.ConfigurationManager
 import fr.outadev.twistoast.R
 import fr.outadev.twistoast.TimeFormatter.formatTime
+import fr.outadev.twistoast.model.Result
 import fr.outadev.twistoast.model.StopSchedule
 import fr.outadev.twistoast.persistence.StopRepository
 import org.joda.time.DateTime
@@ -42,7 +43,7 @@ import org.joda.time.DateTime
 class NextStopAlarmReceiver : Worker() {
 
     override fun doWork(): WorkerResult {
-        val requestHandler = TimeoRequestHandler()
+        val requestHandler = KeolisDao()
         val database = StopRepository()
 
         Log.d(TAG, "checking stop schedules for notifications")
@@ -50,57 +51,60 @@ class NextStopAlarmReceiver : Worker() {
         val stopsToCheck = database.watchedStops
         val stopSchedules = requestHandler.getMultipleSchedules(stopsToCheck)
 
-        try {
-            // Look through each schedule
-            stopSchedules
-                    .filter { it.schedules.isNotEmpty() }
-                    .forEach { schedule ->
-                        // If there are stops scheduled for this bus
-                        val busTime = schedule.schedules[0].scheduleTime
-                        updateStopTimeNotification(schedule)
+        when (stopSchedules) {
+            is Result.Success -> {
+                // Look through each schedule
+                stopSchedules.data
+                        .filter { it.schedules.isNotEmpty() }
+                        .forEach { schedule ->
+                            // If there are stops scheduled for this bus
+                            val busTime = schedule.schedules[0].scheduleTime
+                            updateStopTimeNotification(schedule)
 
-                        // THE BUS IS COMIIIING
-                        if (busTime.isBefore(DateTime.now().plus(ALARM_TIME_THRESHOLD_MS.toLong()))) {
-                            // Remove from database, and send a notification
-                            notifyForIncomingBus(schedule)
-                            database.stopWatchingStop(schedule.stop)
-                            schedule.stop.isWatched = false
-
-                            Log.d(TAG, "less than two minutes till " + busTime.toString() + ": " + schedule.stop)
-                        } else if (schedule.stop.lastETA != null) {
-                            // Check if there's more than five minutes of difference between the last estimation and the new
-                            // one. If that's the case, send the notification anyways; it may already be too late!
-
-                            // This is to work around the fact that we actually can't know if a bus has passed already,
-                            // we have to make assumptions instead; if a bus is announced for 3 minutes, and then for 10
-                            // minutes the next time we check, it most likely has passed.
-
-                            if (busTime.isBefore(schedule.stop.lastETA?.plus(5 * 60 * 1000.toLong()))) {
+                            // THE BUS IS COMIIIING
+                            if (busTime.isBefore(DateTime.now().plus(ALARM_TIME_THRESHOLD_MS.toLong()))) {
                                 // Remove from database, and send a notification
                                 notifyForIncomingBus(schedule)
                                 database.stopWatchingStop(schedule.stop)
                                 schedule.stop.isWatched = false
 
-                                Log.d(TAG, "last time we saw ${schedule.stop} the bus was scheduled " +
-                                        "for ${schedule.stop.lastETA}, but now the ETA is $busTime, so we're notifying")
+                                Log.d(TAG, "less than two minutes till " + busTime.toString() + ": " + schedule.stop)
+                            } else if (schedule.stop.lastETA != null) {
+                                // Check if there's more than five minutes of difference between the last estimation and the new
+                                // one. If that's the case, send the notification anyways; it may already be too late!
+
+                                // This is to work around the fact that we actually can't know if a bus has passed already,
+                                // we have to make assumptions instead; if a bus is announced for 3 minutes, and then for 10
+                                // minutes the next time we check, it most likely has passed.
+
+                                if (busTime.isBefore(schedule.stop.lastETA?.plus(5 * 60 * 1000.toLong()))) {
+                                    // Remove from database, and send a notification
+                                    notifyForIncomingBus(schedule)
+                                    database.stopWatchingStop(schedule.stop)
+                                    schedule.stop.isWatched = false
+
+                                    Log.d(TAG, "last time we saw ${schedule.stop} the bus was scheduled " +
+                                            "for ${schedule.stop.lastETA}, but now the ETA is $busTime, so we're notifying")
+                                }
+                            } else {
+                                database.updateWatchedStopETA(schedule.stop, busTime)
                             }
-                        } else {
-                            database.updateWatchedStopETA(schedule.stop, busTime)
                         }
-                    }
-
-        } catch (e: Exception) {
-            e.printStackTrace()
-
-            // A network error occurred, or something ;-;
-            val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-            for (stop in stopsToCheck) {
-                notificationManager.cancel(stop.id)
             }
 
-            notifyNetworkError()
-            return WorkerResult.RETRY
+            is Result.Failure -> {
+                stopSchedules.e.printStackTrace()
+
+                // A network error occurred, or something ;-;
+                val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+                for (stop in stopsToCheck) {
+                    notificationManager.cancel(stop.id)
+                }
+
+                notifyNetworkError()
+                return WorkerResult.RETRY
+            }
         }
 
         if (database.watchedStopsCount == 0) {

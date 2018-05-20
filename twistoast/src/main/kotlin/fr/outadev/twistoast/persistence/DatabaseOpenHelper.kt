@@ -21,7 +21,7 @@ package fr.outadev.twistoast.persistence
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
-import fr.outadev.android.transport.TimeoRequestHandler
+import fr.outadev.android.transport.KeolisDao
 import fr.outadev.twistoast.ApplicationTwistoast
 import org.jetbrains.anko.db.ManagedSQLiteOpenHelper
 import java.io.FileOutputStream
@@ -71,9 +71,9 @@ class DatabaseOpenHelper (private val context: Context = ApplicationTwistoast.in
             db.execSQL("ALTER TABLE twi_line ADD COLUMN line_color TEXT")
             db.execSQL("ALTER TABLE twi_stop ADD COLUMN stop_ref TEXT DEFAULT NULL")
 
-            db.execSQL("ALTER TABLE twi_line ADD COLUMN network_code INTEGER DEFAULT " + TimeoRequestHandler.DEFAULT_NETWORK_CODE)
-            db.execSQL("ALTER TABLE twi_direction ADD COLUMN network_code INTEGER DEFAULT " + TimeoRequestHandler.DEFAULT_NETWORK_CODE)
-            db.execSQL("ALTER TABLE twi_stop ADD COLUMN network_code INTEGER DEFAULT " + TimeoRequestHandler.DEFAULT_NETWORK_CODE)
+            db.execSQL("ALTER TABLE twi_line ADD COLUMN network_code INTEGER DEFAULT " + KeolisDao.DEFAULT_NETWORK_CODE)
+            db.execSQL("ALTER TABLE twi_direction ADD COLUMN network_code INTEGER DEFAULT " + KeolisDao.DEFAULT_NETWORK_CODE)
+            db.execSQL("ALTER TABLE twi_stop ADD COLUMN network_code INTEGER DEFAULT " + KeolisDao.DEFAULT_NETWORK_CODE)
 
 
             //set the colour of the lines using the old database
@@ -183,7 +183,7 @@ class DatabaseOpenHelper (private val context: Context = ApplicationTwistoast.in
                         "line_id TEXT, " +
                         "line_name TEXT, " +
                         "line_color TEXT, " +
-                        "network_code INTEGER DEFAULT " + TimeoRequestHandler.DEFAULT_NETWORK_CODE + ", " +
+                        "network_code INTEGER DEFAULT " + KeolisDao.DEFAULT_NETWORK_CODE + ", " +
                         "PRIMARY KEY (line_id, network_code))"
 
         private val DIRECTIONS_TABLE_CREATE =
@@ -191,7 +191,7 @@ class DatabaseOpenHelper (private val context: Context = ApplicationTwistoast.in
                         "dir_id TEXT, " +
                         "line_id TEXT, " +
                         "dir_name TEXT, " +
-                        "network_code INTEGER DEFAULT " + TimeoRequestHandler.DEFAULT_NETWORK_CODE + ", " +
+                        "network_code INTEGER DEFAULT " + KeolisDao.DEFAULT_NETWORK_CODE + ", " +
                         "PRIMARY KEY(dir_id, line_id, network_code), " +
                         "FOREIGN KEY(line_id, network_code) REFERENCES twi_line(line_id, network_code))"
 
@@ -202,7 +202,7 @@ class DatabaseOpenHelper (private val context: Context = ApplicationTwistoast.in
                         "dir_id TEXT, " +
                         "stop_name TEXT, " +
                         "stop_ref TEXT DEFAULT NULL, " +
-                        "network_code INTEGER DEFAULT " + TimeoRequestHandler.DEFAULT_NETWORK_CODE + ", " +
+                        "network_code INTEGER DEFAULT " + KeolisDao.DEFAULT_NETWORK_CODE + ", " +
                         "PRIMARY KEY(stop_id, line_id, dir_id, network_code), " +
                         "FOREIGN KEY(dir_id, line_id, network_code) REFERENCES twi_direction(dir_id, line_id, network_code))"
 
@@ -211,7 +211,7 @@ class DatabaseOpenHelper (private val context: Context = ApplicationTwistoast.in
                         "stop_id INTEGER," +
                         "line_id TEXT," +
                         "dir_id TEXT," +
-                        "network_code INTEGER DEFAULT " + TimeoRequestHandler.DEFAULT_NETWORK_CODE + ", " +
+                        "network_code INTEGER DEFAULT " + KeolisDao.DEFAULT_NETWORK_CODE + ", " +
                         "notif_creation_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
                         "notif_active INTEGER DEFAULT 1, " +
                         "notif_last_estim INTEGER DEFAULT -1, " +

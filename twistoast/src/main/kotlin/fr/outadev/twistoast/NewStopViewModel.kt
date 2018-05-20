@@ -22,33 +22,40 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations.map
 import android.arch.lifecycle.ViewModel
-import fr.outadev.android.transport.TimeoRequestHandler
-import fr.outadev.twistoast.model.Direction
-import fr.outadev.twistoast.model.Line
-import fr.outadev.twistoast.model.Stop
-import fr.outadev.twistoast.model.StopSchedule
+import fr.outadev.twistoast.model.*
+import fr.outadev.twistoast.model.Result.Companion.failure
+import fr.outadev.twistoast.model.Result.Companion.success
 import fr.outadev.twistoast.persistence.StopRepository
+import fr.outadev.twistoast.providers.BusDataRepository
 
 class NewStopViewModel : ViewModel() {
 
     private val repository = StopRepository()
-    private val api = TimeoRequestHandler()
+    private val api = BusDataRepository()
 
-    val lines = MutableLiveData<List<Line>>()
+    val lines = MutableLiveData<Result<List<Line>>>()
 
     val selectedLine = MutableLiveData<Line>()
     val selectedDirection = MutableLiveData<Direction>()
     val selectedStop = MutableLiveData<Stop>()
 
-    val directions: LiveData<List<Direction>> = map(selectedLine, { line ->
-        line?.let {
-            lines.value
-                ?.filter { line -> line.id == line.id }
-                ?.map(Line::direction)
+    val directions: LiveData<Result<List<Direction>>> = map(selectedLine, { selectedLine ->
+        selectedLine?.let {
+            lines.value?.let { lines ->
+                when (lines) {
+                    is Result.Success -> {
+                        success(lines.data
+                                .filter { line -> line.id == selectedLine.id }
+                                .map(Line::direction))
+                    }
+
+                    is Result.Failure -> failure(lines.e)
+                }
+            }
         }
     })
 
-    val stops: LiveData<List<Stop>> = map(selectedDirection, { direction ->
+    val stops: LiveData<Result<List<Stop>>> = map(selectedDirection, { direction ->
         direction?.let {
             selectedLine.value?.let { line ->
                 line.direction = it
@@ -62,7 +69,7 @@ class NewStopViewModel : ViewModel() {
         }
     })
 
-    val schedule: LiveData<StopSchedule> = map(selectedStop, { stop ->
+    val schedule: LiveData<Result<StopSchedule>> = map(selectedStop, { stop ->
         api.getSingleSchedule(stop)
     })
 
@@ -73,7 +80,7 @@ class NewStopViewModel : ViewModel() {
             map(directions, { directions -> directions != null })
 
     val isStopListEnabled: LiveData<Boolean> =
-            map(stops, { stops -> stops != null})
+            map(stops, { stops -> stops != null })
 
     val isRefreshing = MutableLiveData<Boolean>()
 

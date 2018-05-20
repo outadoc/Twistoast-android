@@ -24,14 +24,16 @@ import android.net.ConnectivityManager
 import android.util.Log
 import com.getpebble.android.kit.PebbleKit
 import com.getpebble.android.kit.PebbleKit.PebbleDataReceiver
+import com.getpebble.android.kit.PebbleKit.sendNackToPebble
 import com.getpebble.android.kit.util.PebbleDictionary
-import fr.outadev.android.transport.TimeoRequestHandler
 import fr.outadev.twistoast.ConfigurationManager
 import fr.outadev.twistoast.TimeFormatter
+import fr.outadev.twistoast.model.Result
 import fr.outadev.twistoast.model.ScheduledArrival
 import fr.outadev.twistoast.model.StopSchedule
 import fr.outadev.twistoast.persistence.IStopRepository
 import fr.outadev.twistoast.persistence.StopRepository
+import fr.outadev.twistoast.providers.BusDataRepository
 import org.jetbrains.anko.doAsync
 import java.util.*
 
@@ -42,7 +44,7 @@ import java.util.*
  */
 class PebbleWatchReceiver : PebbleDataReceiver(PebbleWatchReceiver.PEBBLE_UUID) {
 
-    private val requestHandler = TimeoRequestHandler()
+    private val requestHandler = BusDataRepository()
     private lateinit var database: IStopRepository
 
     override fun receiveData(context: Context, transactionId: Int, data: PebbleDictionary) {
@@ -54,7 +56,7 @@ class PebbleWatchReceiver : PebbleDataReceiver(PebbleWatchReceiver.PEBBLE_UUID) 
         database = StopRepository()
 
         val stopsCount = database.stopsCount
-        val messageType : Byte = data.getInteger(KEY_TWISTOAST_MESSAGE_TYPE).toByte()
+        val messageType: Byte = data.getInteger(KEY_TWISTOAST_MESSAGE_TYPE).toByte()
 
         // if we want a schedule and we have buses in the database
         if (messageType == BUS_STOP_REQUEST
@@ -75,16 +77,21 @@ class PebbleWatchReceiver : PebbleDataReceiver(PebbleWatchReceiver.PEBBLE_UUID) 
             doAsync {
                 try {
                     val schedule = requestHandler.getSingleSchedule(stop!!)
+
+                    when (schedule) {
+                        is Result.Success -> craftAndSendSchedulePacket(context, schedule.data)
+                        is Result.Failure -> sendNackToPebble(context, transactionId)
+                    }
+
                     Log.d(TAG, "got data for stop: $schedule")
-                    craftAndSendSchedulePacket(context, schedule)
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    PebbleKit.sendNackToPebble(context, transactionId)
+                    sendNackToPebble(context, transactionId)
                 }
             }
 
         } else {
-            PebbleKit.sendNackToPebble(context, transactionId)
+            sendNackToPebble(context, transactionId)
         }
 
     }

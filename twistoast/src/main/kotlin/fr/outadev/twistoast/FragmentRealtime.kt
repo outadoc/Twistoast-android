@@ -20,7 +20,6 @@ package fr.outadev.twistoast
 
 import android.app.NotificationManager
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.support.design.widget.Snackbar
@@ -35,20 +34,17 @@ import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
-import fr.outadev.android.transport.ITimeoRequestHandler
-import fr.outadev.android.transport.TimeoRequestHandler
-import fr.outadev.twistoast.FragmentNewStop.Companion.STOP_ADDED
 import fr.outadev.twistoast.background.BackgroundTasksManager
 import fr.outadev.twistoast.extensions.getAlertMessage
-import fr.outadev.twistoast.model.BlockingMessageException
-import fr.outadev.twistoast.model.DataProviderException
-import fr.outadev.twistoast.model.Stop
-import fr.outadev.twistoast.model.StopSchedule
+import fr.outadev.twistoast.model.*
 import fr.outadev.twistoast.persistence.IStopRepository
 import fr.outadev.twistoast.persistence.StopRepository
+import fr.outadev.twistoast.providers.BusDataRepository
+import fr.outadev.twistoast.providers.IBusDataRepository
 import kotlinx.android.synthetic.main.fragment_realtime.*
 import kotlinx.android.synthetic.main.view_no_content.*
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.support.v4.onUiThread
 import org.jetbrains.anko.uiThread
 
 class FragmentRealtime : Fragment(), IStopsListContainer {
@@ -59,7 +55,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
     private lateinit var databaseHandler: IStopRepository
     private lateinit var config: ConfigurationManager
     private lateinit var referenceUpdater: TimeoStopReferenceUpdater
-    private lateinit var requestHandler: ITimeoRequestHandler
+    private lateinit var requestHandler: IBusDataRepository
 
     private var stopsList: MutableList<Stop> = mutableListOf()
     private val schedules: MutableMap<Stop, StopSchedule> = mutableMapOf()
@@ -68,12 +64,6 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
 
     override var isRefreshing: Boolean = false
     private var isInBackground: Boolean = false
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == 0 && resultCode == STOP_ADDED) {
-            refreshAllStopSchedules(true)
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,7 +74,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
         config = ConfigurationManager()
         databaseHandler = StopRepository()
         referenceUpdater = TimeoStopReferenceUpdater()
-        requestHandler = TimeoRequestHandler()
+        requestHandler = BusDataRepository()
 
         periodicRefreshRunnable = Runnable {
             if (config.autoRefresh) {
@@ -425,67 +415,89 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
     private fun updateScheduleData() {
         // start refreshing schedules
         doAsync {
-            try {
-                // Get the schedules and put them in a list
-                var schedulesList: List<StopSchedule>?
-                var scheduleMap: Map<Stop, StopSchedule>
+            // Get the schedules and put them in a list
+            var scheduleMap: Map<Stop, StopSchedule>
+            var schedulesList = requestHandler.getMultipleSchedules(stopsList)
 
-                schedulesList = requestHandler.getMultipleSchedules(stopsList)
-                scheduleMap = schedulesList.associateBy({ it.stop }, { it })
+            var didUpdate = false
 
-                val outdated = requestHandler.checkForOutdatedStops(stopsList, schedulesList)
-                var nbUpdated = 0
+            when (schedulesList) {
+                is Result.Success -> {
+                    scheduleMap = schedulesList.data.associateBy({ it.stop }, { it })
 
-                // If there are outdated reference numbers, update those stops
-                if (outdated > 0) {
-                    nbUpdated = referenceUpdater.updateAllStopReferences(stopsList)
+                    val outdated = requestHandler.checkForOutdatedStops(stopsList, schedulesList.data)
 
-                    if (nbUpdated > 0) {
-                        // If there were stops updated successfully, reload data to get the new ones
-                        schedulesList = requestHandler.getMultipleSchedules(stopsList)
-                        scheduleMap = schedulesList.associateBy({ it.stop }, { it })
+                    when (outdated) {
+                        is Result.Success -> {
+                            // If there are outdated reference numbers, update those stops
+                            if (outdated.data > 0) {
+                                val nbUpdated = referenceUpdater.updateAllStopReferences(stopsList)
+
+                                when (nbUpdated) {
+                                    is Result.Success -> {
+                                        if (nbUpdated.data > 0) {
+                                            // If there were stops updated successfully, reload data to get the new ones
+                                            schedulesList = requestHandler.getMultipleSchedules(stopsList)
+
+                                            when (schedulesList) {
+                                                is Result.Success -> {
+                                                    scheduleMap = schedulesList.data.associateBy({ it.stop }, { it })
+                                                    didUpdate = true
+                                                }
+                                                is Result.Failure -> displayErrors(schedulesList.e)
+                                            }
+                                        }
+                                    }
+
+                                    is Result.Failure -> displayErrors(nbUpdated.e)
+                                }
+                            }
+                        }
+
+                        is Result.Failure -> displayErrors(outdated.e)
+                    }
+
+                    uiThread {
+                        schedules.clear()
+                        schedules.putAll(scheduleMap)
+
+                        listAdapter?.notifyDataSetChanged()
+                        endRefresh(scheduleMap.isNotEmpty())
+
+                        if (didUpdate) {
+                            Log.i(TAG, "Updated some references, refreshing stops")
+
+                            // If there were stops to update and they were updated successfully
+                            onUpdatedStopReferences()
+                        }
                     }
                 }
 
-                uiThread {
-                    schedules.clear()
-                    schedules.putAll(scheduleMap)
+                is Result.Failure -> displayErrors(schedulesList.e)
+            }
+        }
+    }
 
-                    listAdapter?.notifyDataSetChanged()
-                    endRefresh(scheduleMap.isNotEmpty())
+    private fun displayErrors(e: Throwable) {
+        onUiThread {
+            endRefresh(false)
 
-                    if (outdated > 0 && nbUpdated > 0) {
-                        Log.i(TAG, "Updated some references, refreshing stops")
-
-                        // If there were stops to update and they were updated successfully
-                        onUpdatedStopReferences()
-                    }
-                }
-
-            } catch (e: BlockingMessageException) {
-                e.printStackTrace()
-                uiThread {
-                    endRefresh(false)
-
+            when (e) {
+                is BlockingMessageException -> {
                     if (!isDetached && view != null) {
                         // It's it's a blocking message, display it in a dialog
                         e.getAlertMessage(context).show()
                     }
                 }
 
-            } catch (e: DataProviderException) {
-                e.printStackTrace()
-                uiThread {
-                    endRefresh(false)
-
+                is DataProviderException -> {
                     if (!isDetached && view != null && stopsRecyclerView != null) {
-                        val message: String
-
                         // If there are details to the error, display them. Otherwise, only display the error code
-                        if (!e.message?.trim { it <= ' ' }!!.isEmpty()) {
-                            message = getString(R.string.error_toast_twisto_detailed, e.errorCode, e.message)
+
+                        val message: String = if (!e.message?.trim { it <= ' ' }!!.isEmpty()) {
+                            getString(R.string.error_toast_twisto_detailed, e.errorCode, e.message)
                         } else {
-                            message = getString(R.string.error_toast_twisto, e.errorCode)
+                            getString(R.string.error_toast_twisto, e.errorCode)
                         }
 
                         Snackbar.make(stopsRecyclerView, message, Snackbar.LENGTH_LONG)
@@ -493,11 +505,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
                     }
                 }
 
-            } catch (e: Exception) {
-                e.printStackTrace()
-                uiThread {
-                    endRefresh(false)
-
+                else -> {
                     if (!isDetached && view != null && stopsRecyclerView != null) {
                         Snackbar.make(stopsRecyclerView, R.string.loading_error, Snackbar.LENGTH_LONG)
                                 .setAction(R.string.error_retry) { updateScheduleData() }.show()

@@ -20,12 +20,13 @@ package fr.outadev.twistoast
 
 import android.content.Context
 import android.util.Log
-import fr.outadev.android.transport.ITimeoRequestHandler
-import fr.outadev.android.transport.TimeoRequestHandler
-import fr.outadev.twistoast.model.DataProviderException
+import fr.outadev.twistoast.model.Result
+import fr.outadev.twistoast.model.Result.Companion.failure
+import fr.outadev.twistoast.model.Result.Companion.success
 import fr.outadev.twistoast.model.Stop
 import fr.outadev.twistoast.persistence.IStopRepository
 import fr.outadev.twistoast.persistence.StopRepository
+import fr.outadev.twistoast.providers.BusDataRepository
 import org.xmlpull.v1.XmlPullParserException
 import java.io.IOException
 
@@ -37,7 +38,7 @@ import java.io.IOException
 class TimeoStopReferenceUpdater(context: Context = ApplicationTwistoast.instance) {
 
     private val database: IStopRepository = StopRepository()
-    private val requestHandler: ITimeoRequestHandler = TimeoRequestHandler()
+    private val requestHandler = BusDataRepository()
 
     /**
      * Updates all the references of the bus stops in the database.
@@ -46,8 +47,7 @@ class TimeoStopReferenceUpdater(context: Context = ApplicationTwistoast.instance
      * @throws XmlPullParserException
      * @throws IOException
      */
-    @Throws(XmlPullParserException::class, IOException::class, DataProviderException::class)
-    fun updateAllStopReferences(stops: List<Stop>): Int {
+    fun updateAllStopReferences(stops: List<Stop>): Result<Int> {
         //update the progress
         Log.i(TAG, "updating stop references for ${stops.size} stops")
 
@@ -55,15 +55,21 @@ class TimeoStopReferenceUpdater(context: Context = ApplicationTwistoast.instance
         var nbUpdated = 0
         val updatedStops = requestHandler.getStopsByCode(codes = stops.map(Stop::id))
 
-        //update all the stops we received.
-        //obviously, only the ones existing in the database will be updated.
-        updatedStops.forEach {
-            stop -> nbUpdated += database.updateStopReference(stop)
+        when (updatedStops) {
+            is Result.Success -> {
+                //update all the stops we received.
+                //obviously, only the ones existing in the database will be updated.
+                updatedStops.data.forEach {
+                    stop -> nbUpdated += database.updateStopReference(stop)
+                }
+            }
+
+            is Result.Failure -> return failure(updatedStops.e)
         }
 
         Log.i(TAG, "$nbUpdated stop references updated out of ${stops.size}")
 
-        return nbUpdated
+        return success(nbUpdated)
     }
 
     companion object {
