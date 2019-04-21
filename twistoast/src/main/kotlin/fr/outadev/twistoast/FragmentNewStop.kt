@@ -54,6 +54,8 @@ class FragmentNewStop : Fragment() {
 
         viewModel = ViewModelProviders.of(this).get(NewStopViewModel::class.java)
 
+        viewModel.load()
+
         viewModel.lines.observe(this, Observer { lines ->
             when (lines) {
                 is Result.Success -> spinLine.adapter =
@@ -235,8 +237,6 @@ class FragmentNewStop : Fragment() {
                 viewModel.selectedStop.value = null
             }
         }
-
-        viewModel.load()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

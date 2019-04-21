@@ -426,7 +426,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
                 endRefresh(it.isNotEmpty())
 
                 // If there were stops to update and they were updated successfully
-                onUpdatedStopReferences()
+                //onUpdatedStopReferences()
             }
         })
 

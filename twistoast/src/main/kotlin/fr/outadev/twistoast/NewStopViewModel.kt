@@ -41,7 +41,7 @@ class NewStopViewModel : ViewModel() {
     val selectedDirection = MutableLiveData<Direction>()
     val selectedStop = MutableLiveData<Stop>()
 
-    val directions: LiveData<Result<List<Direction>>> = map(selectedLine, { selectedLine ->
+    val directions: LiveData<Result<List<Direction>>> = map(selectedLine) { selectedLine ->
         selectedLine?.let {
             lines.value?.let { lines ->
                 when (lines) {
@@ -64,29 +64,29 @@ class NewStopViewModel : ViewModel() {
                 }
             }
         }
-    })
+    }
 
-    val stops: LiveData<Result<List<Stop>>> = switchMap(selectedDirection, { direction ->
+    val stops: LiveData<Result<List<Stop>>> = switchMap(selectedDirection) { direction ->
         direction?.let {
             selectedLine.value?.let { line ->
                 line.direction = it
                 api.getStops(line)
             }
         }
-    })
+    }
 
-    val schedule: LiveData<Result<StopSchedule>> = switchMap(selectedStop, { stop ->
+    val schedule: LiveData<Result<StopSchedule>> = switchMap(selectedStop) { stop ->
         api.getSingleSchedule(stop)
-    })
+    }
 
-    val isLineListEnabled: LiveData<Boolean> =
-            map(lines, { lines -> lines != null })
+    val isLineListEnabled: LiveData<Boolean>
+        get() = map(lines) { lines -> lines != null }
 
     val isDirectionListEnabled: LiveData<Boolean> =
-            map(directions, { directions -> directions != null })
+            map(directions) { directions -> directions != null }
 
     val isStopListEnabled: LiveData<Boolean> =
-            map(stops, { stops -> stops != null })
+            map(stops) { stops -> stops != null }
 
     val isRefreshing = MutableLiveData<Boolean>()
 
