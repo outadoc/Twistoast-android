@@ -18,14 +18,15 @@
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 'android-P'
-    buildToolsVersion '28.0.0-rc2'
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
 
     defaultConfig {
-        minSdkVersion 'P'
-        targetSdkVersion 'P'
+        minSdkVersion 15
+        targetSdkVersion 28
     }
 
     buildTypes {
@@ -41,12 +42,18 @@ android {
 }
 
 dependencies {
+    def lifecycle_version = "1.1.1"
+
     implementation project(':model')
 
-    implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version: '1.2.41'
+    implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version: '1.3.30'
+
+    implementation 'com.github.kittinunf.fuel:fuel:1.13.0'
+    implementation 'com.github.kittinunf.fuel:fuel-android:1.13.0'
+    implementation 'com.github.kittinunf.fuel:fuel-livedata:1.13.0'
+    implementation 'com.github.kittinunf.fuel:fuel-coroutines:1.13.0'
 
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.3.2'
-    implementation group: 'com.squareup.okhttp', name: 'okhttp', version: '2.2.0'
     implementation group: 'joda-time', name: 'joda-time', version: '2.9.1'
     implementation(group: 'org.simpleframework', name: 'simple-xml', version: '2.7.1'){
         exclude module: 'stax'
@@ -54,8 +61,11 @@ dependencies {
         exclude module: 'xpp3'
     }
 
+    implementation "android.arch.lifecycle:extensions:$lifecycle_version"
+    kapt "android.arch.lifecycle:compiler:$lifecycle_version"
+
     testImplementation group: 'junit', name: 'junit', version: '4.12'
-    testImplementation group: 'org.mockito', name: 'mockito-core', version: '1.9.5'
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '2.23.0'
     testImplementation group: 'com.nhaarman', name: 'mockito-kotlin', version: '0.6.0'
     testImplementation group: 'info.cukes', name: 'cucumber-java', version: '1.2.4'
     testImplementation group: 'info.cukes', name: 'cucumber-junit', version: '1.2.4'
