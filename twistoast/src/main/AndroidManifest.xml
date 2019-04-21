@@ -73,16 +73,6 @@
             android:name=".background.TrafficAlertAlarmReceiver"
             android:enabled="true"
             android:exported="false" />
-
-        <receiver
-            android:name=".background.PebbleWatchReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.getpebble.action.app.RECEIVE" />
-                <action android:name="com.getpebble.action.app.RECEIVE_ACK" />
-            </intent-filter>
-        </receiver>
     </application>
 
 </manifest>

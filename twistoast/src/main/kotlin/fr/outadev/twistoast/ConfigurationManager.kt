@@ -31,7 +31,7 @@ class ConfigurationManager(context: Context = ApplicationTwistoast.instance) {
     private val preferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
     val nightMode: String
-        get() = preferences.getString("pref_night_mode", "system")
+        get() = preferences.getString("pref_night_mode", "system")!!
 
     val autoRefresh: Boolean
         get() = preferences.getBoolean("pref_auto_refresh", true)
@@ -39,9 +39,6 @@ class ConfigurationManager(context: Context = ApplicationTwistoast.instance) {
     var adsAreRemoved: Boolean
         get() = preferences.getBoolean("pref_disable_ads", false)
         set(removed) = preferences.edit().putBoolean("pref_disable_ads", removed).apply()
-
-    val useColorInPebbleApp: Boolean
-        get() = preferences.getBoolean("pref_pebble_use_color", true)
 
     val trafficNotificationsEnabled: Boolean
         get() = preferences.getBoolean("pref_enable_notif_traffic", true)
@@ -63,7 +60,7 @@ class ConfigurationManager(context: Context = ApplicationTwistoast.instance) {
         set(id) = preferences.edit().putInt("last_traffic_notif_id", id).apply()
 
     var listSortOrder: SortBy
-        get() = stringToSortCriteria(preferences.getString("pref_list_sortby", "line"))
+        get() = stringToSortCriteria(preferences.getString("pref_list_sortby", "line")!!)
         set(sortOrder) = preferences.edit().putString("pref_list_sortby", sortCriteriaToString(sortOrder)).apply()
 
     private fun stringToSortCriteria(sortBy: String): SortBy {

@@ -51,7 +51,7 @@ class ActivityMain : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp() =
-            NavigationUI.navigateUp(navigationDrawer, findNavController(R.id.nav_host_fragment))
+            NavigationUI.navigateUp(findNavController(R.id.nav_host_fragment), navigationDrawer)
 
     companion object {
         private val TAG = ActivityMain::class.java.simpleName

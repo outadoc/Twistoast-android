@@ -75,7 +75,7 @@
         <argument
             android:name="url"
             android:defaultValue="@string/url_drawer_timetables"
-            app:type="string" />
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/dest_map"
@@ -84,7 +84,7 @@
         <argument
             android:name="url"
             android:defaultValue="@string/url_drawer_map"
-            app:type="string" />
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/dest_traffic"
@@ -93,7 +93,7 @@
         <argument
             android:name="url"
             android:defaultValue="@string/url_drawer_traffic"
-            app:type="string" />
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/dest_routes"
@@ -102,7 +102,7 @@
         <argument
             android:name="url"
             android:defaultValue="@string/url_drawer_navigation"
-            app:type="string" />
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/dest_news"
@@ -111,7 +111,7 @@
         <argument
             android:name="url"
             android:defaultValue="@string/url_drawer_news"
-            app:type="string" />
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/dest_pricing"
@@ -120,7 +120,7 @@
         <argument
             android:name="url"
             android:defaultValue="@string/url_drawer_pricing"
-            app:type="string" />
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/dest_social"
@@ -129,6 +129,6 @@
         <argument
             android:name="url"
             android:defaultValue="https://mobile.twitter.com/TwistoCaen"
-            app:type="string" />
+            app:argType="string" />
     </fragment>
 </navigation>

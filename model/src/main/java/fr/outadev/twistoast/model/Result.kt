@@ -19,10 +19,12 @@
 package fr.outadev.twistoast.model
 
 sealed class Result<T> {
+    data class Loading<T>(var loading: Boolean) : Result<T>()
     data class Success<T>(val data: T): Result<T>()
     data class Failure<T>(val e: Throwable): Result<T>()
 
     companion object {
+        fun <T> loading(isLoading: Boolean): Result<T> = Loading(isLoading)
         fun <T> success(data: T): Result<T> = Success(data)
         fun <T> failure(e: Throwable): Result<T> = Failure(e)
     }

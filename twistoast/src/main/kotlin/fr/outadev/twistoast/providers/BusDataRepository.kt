@@ -51,10 +51,10 @@ class BusDataRepository : IBusDataRepository {
             api.getSingleSchedule(stop)
 
     override fun getMultipleSchedules(stops: List<Stop>) =
-            api.getMultipleSchedules(stops)
+            api.getMultipleSchedules(KeolisDao.DEFAULT_NETWORK_CODE, stops)
 
     override fun getLines(networkCode: Int) =
-            api.getLines(networkCode)
+            api.getLines(KeolisDao.DEFAULT_NETWORK_CODE)
 
     override fun getStops(networkCode: Int, line: Line) =
             api.getStops(networkCode, line)

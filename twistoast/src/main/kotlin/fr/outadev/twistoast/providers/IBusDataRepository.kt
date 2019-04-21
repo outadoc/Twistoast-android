@@ -18,6 +18,7 @@
 
 package fr.outadev.twistoast.providers
 
+import android.arch.lifecycle.LiveData
 import fr.outadev.android.transport.KeolisDao
 import fr.outadev.twistoast.model.Line
 import fr.outadev.twistoast.model.Result
@@ -32,37 +33,37 @@ interface IBusDataRepository {
     /**
      * Fetches the bus stops for the specified line.
      */
-    fun getStops(line: Line): Result<List<Stop>>
+    fun getStops(line: Line): LiveData<Result<List<Stop>>>
 
     /**
      * Fetches the next bus schedules for the specified bus stop.
      */
-    fun getSingleSchedule(stop: Stop): Result<StopSchedule>
+    fun getSingleSchedule(stop: Stop): LiveData<Result<StopSchedule>>
 
     /**
      * Fetches the next bus schedules for the specified list of bus stops.
      */
-    fun getMultipleSchedules(stops: List<Stop>): Result<List<StopSchedule>>
+    fun getMultipleSchedules(stops: List<Stop>): LiveData<Result<List<StopSchedule>>>
 
-    fun getLines(networkCode: Int = KeolisDao.DEFAULT_NETWORK_CODE): Result<List<Line>>
+    fun getLines(networkCode: Int = KeolisDao.DEFAULT_NETWORK_CODE): LiveData<Result<List<Line>>>
 
-    fun getStops(networkCode: Int, line: Line): Result<List<Stop>>
+    fun getStops(networkCode: Int = KeolisDao.DEFAULT_NETWORK_CODE, line: Line): LiveData<Result<List<Stop>>>
 
     /**
      * Retrieve a list of stops by their code.
      * Useful to get a stop's info when they're only known by their code.
      */
-    fun getStopsByCode(networkCode: Int = KeolisDao.DEFAULT_NETWORK_CODE, codes: List<Int>): Result<List<Stop>>
+    fun getStopsByCode(networkCode: Int = KeolisDao.DEFAULT_NETWORK_CODE, codes: List<Int>): LiveData<Result<List<Stop>>>
 
     /**
      * Fetches the next bus schedules for the specified bus stop.
      */
-    fun getSingleSchedule(networkCode: Int, stop: Stop): Result<StopSchedule>
+    fun getSingleSchedule(networkCode: Int = KeolisDao.DEFAULT_NETWORK_CODE, stop: Stop): LiveData<Result<StopSchedule>>
 
     /**
      * Fetches the next bus schedules for the specified list of bus stops.
      */
-    fun getMultipleSchedules(networkCode: Int, stops: List<Stop>): Result<List<StopSchedule>>
+    fun getMultipleSchedules(networkCode: Int = KeolisDao.DEFAULT_NETWORK_CODE, stops: List<Stop>): LiveData<Result<List<StopSchedule>>>
 
     /**
      * Checks if there are outdated stops amongst those in the database,

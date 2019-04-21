@@ -19,6 +19,8 @@
 package fr.outadev.twistoast
 
 import android.app.NotificationManager
+import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Observer
 import android.content.Context
 import android.os.Bundle
 import android.os.Handler
@@ -38,14 +40,13 @@ import fr.outadev.twistoast.background.BackgroundTasksManager
 import fr.outadev.twistoast.extensions.getAlertMessage
 import fr.outadev.twistoast.model.*
 import fr.outadev.twistoast.persistence.IStopRepository
+import fr.outadev.twistoast.persistence.StopReferenceUpdater
 import fr.outadev.twistoast.persistence.StopRepository
 import fr.outadev.twistoast.providers.BusDataRepository
 import fr.outadev.twistoast.providers.IBusDataRepository
 import kotlinx.android.synthetic.main.fragment_realtime.*
 import kotlinx.android.synthetic.main.view_no_content.*
-import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.support.v4.onUiThread
-import org.jetbrains.anko.uiThread
 
 class FragmentRealtime : Fragment(), IStopsListContainer {
 
@@ -54,7 +55,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
     private lateinit var periodicRefreshRunnable: Runnable
     private lateinit var databaseHandler: IStopRepository
     private lateinit var config: ConfigurationManager
-    private lateinit var referenceUpdater: TimeoStopReferenceUpdater
+    private lateinit var referenceUpdater: StopReferenceUpdater
     private lateinit var requestHandler: IBusDataRepository
 
     private var stopsList: MutableList<Stop> = mutableListOf()
@@ -73,7 +74,7 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
 
         config = ConfigurationManager()
         databaseHandler = StopRepository()
-        referenceUpdater = TimeoStopReferenceUpdater()
+        referenceUpdater = StopReferenceUpdater(this)
         requestHandler = BusDataRepository()
 
         periodicRefreshRunnable = Runnable {
@@ -414,16 +415,25 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
      */
     private fun updateScheduleData() {
         // start refreshing schedules
-        doAsync {
-            // Get the schedules and put them in a list
-            var scheduleMap: Map<Stop, StopSchedule>
-            var schedulesList = requestHandler.getMultipleSchedules(stopsList)
+        // Get the schedules and put them in a list
+        val scheduleMap = MutableLiveData<Map<Stop, StopSchedule>>()
+        scheduleMap.observe(this, Observer { res ->
+            res?.let {
+                schedules.clear()
+                schedules.putAll(it)
 
-            var didUpdate = false
+                listAdapter?.notifyDataSetChanged()
+                endRefresh(it.isNotEmpty())
 
+                // If there were stops to update and they were updated successfully
+                onUpdatedStopReferences()
+            }
+        })
+
+        requestHandler.getMultipleSchedules(stopsList).observe(this, Observer { schedulesList ->
             when (schedulesList) {
                 is Result.Success -> {
-                    scheduleMap = schedulesList.data.associateBy({ it.stop }, { it })
+                    scheduleMap.value = schedulesList.data.associateBy({ it.stop }, { it })
 
                     val outdated = requestHandler.checkForOutdatedStops(stopsList, schedulesList.data)
 
@@ -431,51 +441,37 @@ class FragmentRealtime : Fragment(), IStopsListContainer {
                         is Result.Success -> {
                             // If there are outdated reference numbers, update those stops
                             if (outdated.data > 0) {
-                                val nbUpdated = referenceUpdater.updateAllStopReferences(stopsList)
+                                referenceUpdater.updateAllStopReferences(stopsList).observe(this, Observer { nbUpdated ->
 
-                                when (nbUpdated) {
-                                    is Result.Success -> {
-                                        if (nbUpdated.data > 0) {
-                                            // If there were stops updated successfully, reload data to get the new ones
-                                            schedulesList = requestHandler.getMultipleSchedules(stopsList)
+                                    when (nbUpdated) {
+                                        is Result.Success -> {
+                                            if (nbUpdated.data > 0) {
+                                                // If there were stops updated successfully, reload data to get the new ones
+                                                requestHandler.getMultipleSchedules(stopsList).observe(this, Observer { schedulesList ->
+                                                    when (schedulesList) {
+                                                        is Result.Success -> {
+                                                            scheduleMap.value = schedulesList.data.associateBy({ it.stop }, { it })
+                                                        }
 
-                                            when (schedulesList) {
-                                                is Result.Success -> {
-                                                    scheduleMap = schedulesList.data.associateBy({ it.stop }, { it })
-                                                    didUpdate = true
-                                                }
-                                                is Result.Failure -> displayErrors(schedulesList.e)
+                                                        is Result.Failure -> displayErrors(schedulesList.e)
+                                                    }
+                                                })
                                             }
                                         }
-                                    }
 
-                                    is Result.Failure -> displayErrors(nbUpdated.e)
-                                }
+                                        is Result.Failure -> displayErrors(nbUpdated.e)
+                                    }
+                                })
                             }
                         }
 
                         is Result.Failure -> displayErrors(outdated.e)
                     }
-
-                    uiThread {
-                        schedules.clear()
-                        schedules.putAll(scheduleMap)
-
-                        listAdapter?.notifyDataSetChanged()
-                        endRefresh(scheduleMap.isNotEmpty())
-
-                        if (didUpdate) {
-                            Log.i(TAG, "Updated some references, refreshing stops")
-
-                            // If there were stops to update and they were updated successfully
-                            onUpdatedStopReferences()
-                        }
-                    }
                 }
 
                 is Result.Failure -> displayErrors(schedulesList.e)
             }
-        }
+        })
     }
 
     private fun displayErrors(e: Throwable) {

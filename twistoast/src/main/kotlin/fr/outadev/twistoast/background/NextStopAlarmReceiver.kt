@@ -24,32 +24,32 @@ import android.content.Context
 import android.content.Intent
 import android.support.v4.app.NotificationCompat
 import android.support.v4.content.ContextCompat
-import android.util.Log
 import androidx.work.Worker
-import fr.outadev.android.transport.KeolisDao
+import androidx.work.WorkerParameters
 import fr.outadev.twistoast.ActivityMain
 import fr.outadev.twistoast.ConfigurationManager
 import fr.outadev.twistoast.R
 import fr.outadev.twistoast.TimeFormatter.formatTime
-import fr.outadev.twistoast.model.Result
 import fr.outadev.twistoast.model.StopSchedule
-import fr.outadev.twistoast.persistence.StopRepository
-import org.joda.time.DateTime
 
 /**
  * A broadcast receiver called at regular intervals to check
  * if watched buses are incoming and the user should be notified.
  */
-class NextStopAlarmReceiver : Worker() {
+class NextStopAlarmReceiver(appContext: Context,  workerParams: WorkerParameters) : Worker(appContext, workerParams) {
 
-    override fun doWork(): WorkerResult {
-        val requestHandler = KeolisDao()
+    override fun doWork(): Result {
+        // TODO make this work
+        /*val requestHandler = BusDataRepository()
         val database = StopRepository()
 
         Log.d(TAG, "checking stop schedules for notifications")
 
         val stopsToCheck = database.watchedStops
-        val stopSchedules = requestHandler.getMultipleSchedules(stopsToCheck)
+        val stopSchedules = requestHandler.getMultipleSchedules(stopsToCheck).observe(lifecycleOwner, {
+            res ->
+
+        })
 
         when (stopSchedules) {
             is Result.Success -> {
@@ -103,15 +103,19 @@ class NextStopAlarmReceiver : Worker() {
                 }
 
                 notifyNetworkError()
-                return WorkerResult.RETRY
+                return Result.retry()
+            }
+
+            is Result.Loading -> {
+
             }
         }
 
         if (database.watchedStopsCount == 0) {
             BackgroundTasksManager.disableStopAlarmJob()
         }
-
-        return WorkerResult.SUCCESS
+*/
+        return Result.success()
     }
 
     /**
