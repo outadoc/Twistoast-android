@@ -20,7 +20,11 @@ package fr.outadev.twistoast
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.MenuItem
+import android.view.View
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
@@ -44,14 +48,33 @@ class ActivityMain : AppCompatActivity() {
 
         val navController = findNavController(R.id.nav_host_fragment)
 
-        setupActionBarWithNavController(navController, navigationDrawer)
+        val appBarConfiguration = AppBarConfiguration(setOf(
+                R.id.dest_map,
+                R.id.dest_routes,
+                R.id.dest_real_time,
+                R.id.dest_time_tables
+        ), navigationDrawer)
 
-        navigationView.setupWithNavController(navController)
-        bottomNavigation.setupWithNavController(navController)
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
+
+        NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration)
+        NavigationUI.setupWithNavController(navigationView, navController)
+        NavigationUI.setupWithNavController(bottomNavigation, navController)
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            bottomNavigation.visibility = when (destination.id) {
+                    R.id.dest_new_stop,
+                    R.id.dest_about,
+                    R.id.dest_settings,
+                    R.id.dest_news,
+                    R.id.dest_traffic,
+                    R.id.dest_social,
+                    R.id.dest_pricing -> View.GONE
+                else -> View.VISIBLE
+            }
+        }
+
     }
-
-    override fun onSupportNavigateUp() =
-            NavigationUI.navigateUp(findNavController(R.id.nav_host_fragment), navigationDrawer)
 
     companion object {
         private val TAG = ActivityMain::class.java.simpleName

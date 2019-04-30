@@ -40,24 +40,11 @@ class ConfigurationManager(context: Context = ApplicationTwistoast.instance) {
         get() = preferences.getBoolean("pref_disable_ads", false)
         set(removed) = preferences.edit().putBoolean("pref_disable_ads", removed).apply()
 
-    val trafficNotificationsEnabled: Boolean
-        get() = preferences.getBoolean("pref_enable_notif_traffic", true)
-
-    val trafficNotificationsRing: Boolean
-        get() = preferences.getBoolean("pref_notif_traffic_ring", true)
-
-    val trafficNotificationsVibrate: Boolean
-        get() = preferences.getBoolean("pref_notif_traffic_vibrate", true)
-
     val watchNotificationsRing: Boolean
         get() = preferences.getBoolean("pref_notif_watched_ring", true)
 
     val watchNotificationsVibrate: Boolean
         get() = preferences.getBoolean("pref_notif_watched_vibrate", true)
-
-    var lastTrafficNotificationId: Int
-        get() = preferences.getInt("last_traffic_notif_id", -1)
-        set(id) = preferences.edit().putInt("last_traffic_notif_id", id).apply()
 
     var listSortOrder: SortBy
         get() = stringToSortCriteria(preferences.getString("pref_list_sortby", "line")!!)

@@ -33,27 +33,6 @@
         <action
             android:id="@+id/action_fragmentRealtime_to_fragmentPreferences"
             app:destination="@id/dest_settings" />
-        <action
-            android:id="@+id/action_fragmentRealtime_to_fragmentWebView"
-            app:destination="@id/dest_time_tables" />
-        <action
-            android:id="@+id/action_dest_real_time_to_dest_traffic"
-            app:destination="@id/dest_traffic" />
-        <action
-            android:id="@+id/action_dest_real_time_to_dest_pricing"
-            app:destination="@id/dest_pricing" />
-        <action
-            android:id="@+id/action_dest_real_time_to_dest_news"
-            app:destination="@id/dest_news" />
-        <action
-            android:id="@+id/action_dest_real_time_to_dest_routes"
-            app:destination="@id/dest_routes" />
-        <action
-            android:id="@+id/action_dest_real_time_to_dest_map"
-            app:destination="@id/dest_map" />
-        <action
-            android:id="@+id/action_dest_real_time_to_dest_social"
-            app:destination="@id/dest_social" />
     </fragment>
     <fragment
         android:id="@+id/dest_new_stop"
