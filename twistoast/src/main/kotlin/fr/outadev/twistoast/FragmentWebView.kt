@@ -51,13 +51,10 @@ class FragmentWebView : Fragment(), IBackNavigationHandler {
         if (webView == null) {
             webView = TwistoastWebView(context!!)
 
-            arguments?.let {
-                if (it.containsKey("url")) {
-                    // Load a classic URL
-                    loadUrl(it.getString("url"))
-                } else if (it.containsKey("twitter_username")) {
-                    // Load a Twitter profile
-                    loadTwitterTimeline(it.getString("twitter_username"))
+            arguments?.apply {
+                if (containsKey("url")) {
+                    val stringRef = getInt("url")
+                    loadUrl(getString(stringRef))
                 }
             }
         }
@@ -67,18 +64,6 @@ class FragmentWebView : Fragment(), IBackNavigationHandler {
         }*/
 
         return webView
-    }
-
-    private fun loadTwitterTimeline(username: String) {
-        // Load a twitter profile page by injecting the username into some HTML that will be loaded
-        // by the webview
-        urlToOpen = "https://twitter.com/$username"
-
-        val twitterHtmlWrapper = """<html><body><a class="twitter-timeline" href="https://twitter.com/$username">""" +
-                """Tweets by TwistoCaen</a> """ +
-                """<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></body></html>"""
-
-        webView?.loadData(twitterHtmlWrapper, "text/html", "utf-8")
     }
 
     private fun loadUrl(url: String) {

@@ -25,6 +25,7 @@
 	<string name="url_drawer_map" translatable="false">https://twisto.cartographie.pro/v2/</string>
 	<string name="url_drawer_news" translatable="false">https://www.twisto.fr/se-deplacer/actualites.html</string>
 	<string name="url_drawer_pricing" translatable="false">https://www.twisto.fr/titres-et-abonnements/tous-les-titres.html</string>
+	<string name="url_twitter_news" translatable="false">https://mobile.twitter.com/TwistoCaen</string>
 
 	<string name="username_drawer_social" translatable="false">TwistoCaen</string>
 

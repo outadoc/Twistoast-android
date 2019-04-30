@@ -87,7 +87,7 @@ class FragmentPreferences : PreferenceFragmentCompat(), OnSharedPreferenceChange
                 .setNegativeButton(R.string.pref_restart_required_negative, null)
                 .setPositiveButton(R.string.pref_restart_required_positive) {
                     _, _ ->
-                    val intent = context?.packageManager?.getLaunchIntentForPackage(context?.packageName)
+                    val intent = context!!.packageManager.getLaunchIntentForPackage(context!!.packageName)
                     val pendingIntent = PendingIntent.getActivity(activity, pendingIntentId, intent, PendingIntent.FLAG_CANCEL_CURRENT)
                     mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, pendingIntent)
                     System.exit(0)
@@ -99,12 +99,7 @@ class FragmentPreferences : PreferenceFragmentCompat(), OnSharedPreferenceChange
      * For example, this will disable "ring" and "vibrate" options for traffic notifications if the latter are disabled.
      */
     private fun updatePreferenceStates() {
-        val enabled = preferenceScreen.sharedPreferences.getBoolean("pref_enable_notif_traffic", true)
         val nmPref = findPreference("pref_night_mode") as ListPreference
-
-        findPreference("pref_notif_traffic_ring").isEnabled = enabled
-        findPreference("pref_notif_traffic_vibrate").isEnabled = enabled
-
         nmPref.summary = nmPref.entry
     }
 

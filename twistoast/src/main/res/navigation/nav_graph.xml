@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Twistoast - nav_graph.xml
   ~ Copyright (C) 2013-2018 Baptiste Candellier
   ~
@@ -75,7 +74,7 @@
         <argument
             android:name="url"
             android:defaultValue="@string/url_drawer_timetables"
-             />
+            app:argType="reference" />
     </fragment>
     <fragment
         android:id="@+id/dest_map"
@@ -84,7 +83,7 @@
         <argument
             android:name="url"
             android:defaultValue="@string/url_drawer_map"
-             />
+            app:argType="reference" />
     </fragment>
     <fragment
         android:id="@+id/dest_traffic"
@@ -93,7 +92,7 @@
         <argument
             android:name="url"
             android:defaultValue="@string/url_drawer_traffic"
-             />
+            app:argType="reference" />
     </fragment>
     <fragment
         android:id="@+id/dest_routes"
@@ -102,7 +101,7 @@
         <argument
             android:name="url"
             android:defaultValue="@string/url_drawer_navigation"
-             />
+            app:argType="reference" />
     </fragment>
     <fragment
         android:id="@+id/dest_news"
@@ -111,7 +110,7 @@
         <argument
             android:name="url"
             android:defaultValue="@string/url_drawer_news"
-             />
+            app:argType="reference" />
     </fragment>
     <fragment
         android:id="@+id/dest_pricing"
@@ -120,7 +119,7 @@
         <argument
             android:name="url"
             android:defaultValue="@string/url_drawer_pricing"
-             />
+            app:argType="reference" />
     </fragment>
     <fragment
         android:id="@+id/dest_social"
@@ -128,7 +127,7 @@
         android:label="@string/drawer_item_social">
         <argument
             android:name="url"
-            android:defaultValue="https://mobile.twitter.com/TwistoCaen"
-             />
+            android:defaultValue="@string/url_twitter_news"
+            app:argType="reference" />
     </fragment>
 </navigation>
